@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, CardFooter, Text, Heading, Box, Button, Checkbox } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Text, Heading, Box, Button, Checkbox, FormControl } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
 import { Search2Icon, AddIcon } from '@chakra-ui/icons'
 import {
@@ -12,6 +12,7 @@ import {
   TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
+import InputLabel from '../components/InputLabel'
 
 
 export default function ListaInvestigadores() {
@@ -26,8 +27,8 @@ export default function ListaInvestigadores() {
         <br />
 
         <Box display="flex" justifyContent="space-around" width='50%'>
-          <Input htmlSize={4} width='15vw' placeholder='Nombre' />
-          <Input htmlSize={4} width='15vw' placeholder='Grupo' />
+          <InputLabel  placeholder='Nombre' id="AyN" width='15vw'/>
+          <InputLabel  placeholder='Grupo' id="AyN" width='15vw'/>
           <Button colorScheme='blue' variant='outline'><Search2Icon /></Button>
         </Box>
 
@@ -94,8 +95,8 @@ export default function ListaInvestigadores() {
         <br />
 
         <Box display="flex" justifyContent="flex-end" width='100%'>
-            <Button colorScheme='blue' variant='outline' mr='5'>Nuevo Investigador</Button>
-            <Button colorScheme='blue' variant='outline'>Imprimir</Button>
+          <Button colorScheme='blue' variant='outline' mr='5'>Nuevo Investigador</Button>
+          <Button colorScheme='blue' variant='outline'>Imprimir</Button>
         </Box>
 
       </CardBody>
