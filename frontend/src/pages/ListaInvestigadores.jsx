@@ -26,6 +26,7 @@ import investigadores from "../Data/investigadores.json";
 import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import InputLabel from '../components/InputLabel'
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -45,12 +46,10 @@ export default function ListaInvestigadores() {
 
         <br />
 
-        <Box display="flex" justifyContent="space-around" width="50%">
-          <Input htmlSize={4} width="15vw" placeholder="Nombre" />
-          <Input htmlSize={4} width="15vw" placeholder="Grupo" />
-          <Button colorScheme="blue" variant="outline">
-            <Search2Icon />
-          </Button>
+        <Box display="flex" justifyContent="space-around" width='50%'>
+          <InputLabel  placeholder='Nombre' id="AyN" width='15vw'/>
+          <InputLabel  placeholder='Grupo' id="AyN" width='15vw'/>
+          <Button colorScheme='blue' variant='outline'><Search2Icon /></Button>
         </Box>
 
         <br />
@@ -144,13 +143,9 @@ export default function ListaInvestigadores() {
 
         <br />
 
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button colorScheme="blue" variant="outline" mr="5">
-            Nuevo Investigador
-          </Button>
-          <Button colorScheme="blue" variant="outline">
-            Imprimir
-          </Button>
+        <Box display="flex" justifyContent="flex-end" width='100%'>
+          <Button colorScheme='blue' variant='outline' mr='5'>Nuevo Investigador</Button>
+          <Button colorScheme='blue' variant='outline'>Imprimir</Button>
         </Box>
       </CardBody>
     </Card>
