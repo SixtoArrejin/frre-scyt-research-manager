@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Checkbox,
+  IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon } from "@chakra-ui/icons";
@@ -35,6 +36,21 @@ export default function ListaInvestigadores() {
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
+  };
+
+  const totalPages = Math.ceil(investigadores.length / ITEMS_PER_PAGE);
+
+  const handleSelectPage = (event) => {
+    if (parseInt(event.target.value, 10) > totalPages) {
+      handlePageChange(0)
+    } else {
+      if (parseInt(event.target.value, 10) != '') {
+        const selectedPage = parseInt(event.target.value, 10);
+        setCurrentPage(selectedPage - 1);
+      } else {
+        handlePageChange(0)
+      }
+    }
   };
 
   return (
@@ -121,32 +137,33 @@ export default function ListaInvestigadores() {
                 </Tbody>
               </Table>
               <HStack spacing={4} mt={4} justify="center">
-                <Button
-                  disabled={currentPage === 0}
-                  onClick={() =>
-                    handlePageChange({ selected: currentPage - 1 })
-                  }
-                  colorScheme="blue"
-                  variant="outline"
-                >
-                  Anterior
-                </Button>
+                <IconButton
+                  isDisabled={currentPage === 0}
+                  icon={<ChevronLeftIcon />}
+                  onClick={() => {
+                    handlePageChange({ selected: currentPage - 1 });
+                  }}
+                />
 
-                <Text>{currentPage + 1}</Text>
+                <Input
+                  type="number"
+                  value={currentPage + 1}
+                  onChange={handleSelectPage}
+                  style={{ width: "50px", textAlign: "center" }}
+                />
 
-                <Button
-                  disabled={
+                <Text>de {totalPages}</Text>
+
+                <IconButton
+                  isDisabled={
                     currentPage ===
                     Math.ceil(investigadores.length / ITEMS_PER_PAGE) - 1
                   }
-                  onClick={() =>
-                    handlePageChange({ selected: currentPage + 1 })
-                  }
-                  colorScheme="blue"
-                  variant="outline"
-                >
-                  Siguiente
-                </Button>
+                  icon={<ChevronRightIcon />}
+                  onClick={() => {
+                    handlePageChange({ selected: currentPage + 1 });
+                  }}
+                />
               </HStack>
             </TableContainer>
           </CardBody>
