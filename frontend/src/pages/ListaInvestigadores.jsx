@@ -9,7 +9,7 @@ import {
   Button,
   Checkbox,
 } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react";
+import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon } from "@chakra-ui/icons";
 import {
   Table,
@@ -26,7 +26,7 @@ import investigadores from "../Data/investigadores.json";
 import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import InputLabel from '../components/InputLabel'
+import InputLabel from "../components/InputLabel";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -46,10 +46,12 @@ export default function ListaInvestigadores() {
 
         <br />
 
-        <Box display="flex" justifyContent="space-around" width='50%'>
-          <InputLabel  placeholder='Nombre' id="AyN" width='15vw'/>
-          <InputLabel  placeholder='Grupo' id="AyN" width='15vw'/>
-          <Button colorScheme='blue' variant='outline'><Search2Icon /></Button>
+        <Box display="flex" justifyContent="space-around" width="50%">
+          <InputLabel placeholder="Nombre" id="AyN" width="15vw" />
+          <InputLabel placeholder="Grupo" id="AyN" width="15vw" />
+          <Button colorScheme="blue" variant="outline">
+            <Search2Icon />
+          </Button>
         </Box>
 
         <br />
@@ -118,34 +120,47 @@ export default function ListaInvestigadores() {
                     ))}
                 </Tbody>
               </Table>
-              <ReactPaginate
-                previousLabel={<ChevronLeftIcon />}
-                nextLabel={<ChevronRightIcon />}
-                breakLabel="..."
-                breakClassName="break-me"
-                pageCount={Math.ceil(investigadores.length / ITEMS_PER_PAGE)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageChange}
-                containerClassName="pagination"
-                activeClassName="active"
-                pageClassName="pagination-item"
-                previousClassName="pagination-item"
-                nextClassName="pagination-item"
-                disabledClassName="pagination-disabled"
-                previousLinkClassName="pagination-link"
-                nextLinkClassName="pagination-link"
-                pageLinkClassName="pagination-link"
-              />
+              <HStack spacing={4} mt={4} justify="center">
+                <Button
+                  disabled={currentPage === 0}
+                  onClick={() =>
+                    handlePageChange({ selected: currentPage - 1 })
+                  }
+                  colorScheme="blue"
+                  variant="outline"
+                >
+                  Anterior
+                </Button>
+
+                <Text>{currentPage + 1}</Text>
+
+                <Button
+                  disabled={
+                    currentPage ===
+                    Math.ceil(investigadores.length / ITEMS_PER_PAGE) - 1
+                  }
+                  onClick={() =>
+                    handlePageChange({ selected: currentPage + 1 })
+                  }
+                  colorScheme="blue"
+                  variant="outline"
+                >
+                  Siguiente
+                </Button>
+              </HStack>
             </TableContainer>
           </CardBody>
         </Card>
 
         <br />
 
-        <Box display="flex" justifyContent="flex-end" width='100%'>
-          <Button colorScheme='blue' variant='outline' mr='5'>Nuevo Investigador</Button>
-          <Button colorScheme='blue' variant='outline'>Imprimir</Button>
+        <Box display="flex" justifyContent="flex-end" width="100%">
+          <Button colorScheme="blue" variant="outline" mr="5">
+            Nuevo Investigador
+          </Button>
+          <Button colorScheme="blue" variant="outline">
+            Imprimir
+          </Button>
         </Box>
       </CardBody>
     </Card>
