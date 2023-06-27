@@ -34,23 +34,41 @@ const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 export default function ListaInvestigadores() {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
+  const [nombre, setNombre] = useState("");
+  const [grupo, setGrupo] = useState("");
+
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
+    setNombre("");
+    setGrupo("");
   };
 
   const totalPages = Math.ceil(investigadores.length / ITEMS_PER_PAGE);
 
   const handleSelectPage = (event) => {
     if (parseInt(event.target.value, 10) > totalPages) {
-      handlePageChange(0)
+      handlePageChange(0);
     } else {
-      if (parseInt(event.target.value, 10) != '') {
+      if (parseInt(event.target.value, 10) !== "") {
         const selectedPage = parseInt(event.target.value, 10);
         setCurrentPage(selectedPage - 1);
       } else {
-        handlePageChange(0)
+        handlePageChange(0);
       }
     }
+  };
+
+  const filtrarInvestigadores = (nombreFiltro, grupoFiltro) => {
+    return investigadores.filter((investigador) => {
+      const cumpleNombre = investigador.apellidoNombre
+        .toLowerCase()
+        .includes(nombreFiltro.toLowerCase());
+      const cumpleGrupo = investigador.grupo
+        .toLowerCase()
+        .includes(grupoFiltro.toLowerCase());
+
+      return cumpleNombre && cumpleGrupo;
+    });
   };
 
   return (
@@ -63,8 +81,16 @@ export default function ListaInvestigadores() {
         <br />
 
         <Box display="flex" justifyContent="space-around" width="50%">
-          <InputLabel placeholder="Nombre" id="AyN" width="15vw" />
-          <InputLabel placeholder="Grupo" id="AyN" width="15vw" />
+          <InputLabel
+            placeholder="Nombre"
+            id="AyN"
+            width="15vw"
+            onChange={(event) => setNombre(event.target.value)} />
+          <InputLabel
+            placeholder="Grupo"
+            id="AyN"
+            width="15vw"
+            onChange={(event) => setGrupo(event.target.value)} />
           <Button colorScheme="blue" variant="outline">
             <Search2Icon />
           </Button>
@@ -102,7 +128,7 @@ export default function ListaInvestigadores() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {investigadores
+                  {filtrarInvestigadores(nombre, grupo)
                     .slice(
                       currentPage * ITEMS_PER_PAGE,
                       (currentPage + 1) * ITEMS_PER_PAGE
