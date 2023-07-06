@@ -1,12 +1,12 @@
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import SidebarWithHeader from './components/SidebarWithHeader';
-import ListaInvestigadores from './pages/ListaInvestigadores';
+import DetalleInvestigador from './pages/DetalleInvestigador';
 
 function App() {
   return (
     <div>
       <SidebarWithHeader>
-        <ListaInvestigadores />
+        <DetalleInvestigador />
       </SidebarWithHeader>
     </div>
   );
