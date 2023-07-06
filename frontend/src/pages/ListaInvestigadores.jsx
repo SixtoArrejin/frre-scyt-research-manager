@@ -24,10 +24,10 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../Data/investigadores.json";
+import investigadores from "../data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 
-const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
+const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function ListaInvestigadores() {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
@@ -78,144 +78,148 @@ export default function ListaInvestigadores() {
   return (
     <Card>
       <CardBody>
-        <Heading as="h2" size="xl" textAlign="center">
-          INVESTIGADORES
-        </Heading>
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
+          <Heading as="h2" size="xl" textAlign="center">
+            INVESTIGADORES
+          </Heading>
 
-        <br />
+          <br />
 
-        <Box display="flex" justifyContent="space-around" width="50%">
-          <InputLabel
-            placeholder="Nombre"
-            id="AyN"
-            width="15vw"
-            onChange={(event) => setNombre(event.target.value)}
-            value={nombre}
-          />
-          <InputLabel
-            placeholder="Grupo"
-            id="AyN"
-            width="15vw"
-            onChange={(event) => setGrupo(event.target.value)}
-            value={grupo}
-          />
-          <Button colorScheme="blue" variant="outline">
-            <Search2Icon />
-          </Button>
-        </Box>
-        <br />
+          <Box display="flex" width="100%">
+            <Box display="flex" justifyContent="space-around" width="50%">
+              <InputLabel
+                placeholder="Nombre"
+                id="AyN"
+                width="15vw"
+                onChange={(event) => setNombre(event.target.value)}
+                value={nombre}
+              />
+              <InputLabel
+                placeholder="Grupo"
+                id="AyN"
+                width="15vw"
+                onChange={(event) => setGrupo(event.target.value)}
+                value={grupo}
+              />
+            </Box>
+            <Box display="flex" justifyContent="flex-end" width="50%">
+              <Button colorScheme="blue" variant="outline" mr="5">
+                Investigador +
+              </Button>
+            </Box>
+          </Box>
 
-        <Card>
-          <CardBody>
-            <TableContainer>
-              <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                <Thead>
-                  <Tr>
-                    <Th textAlign="center">
-                      <Checkbox border="gray"></Checkbox>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Apellido y Nombre</Text>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Estado</Text>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Grupo</Text>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Cat. UTN</Text>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Cat. Min.</Text>
-                    </Th>
-                    <Th textAlign="center">
-                      <Text fontSize="md">Ver más</Text>
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {(filtroActivo ? investigadoresFiltrados : investigadores)
-                    .slice(
-                      currentPage * ITEMS_PER_PAGE,
-                      (currentPage + 1) * ITEMS_PER_PAGE
-                    )
-                    .map((item, index) => (
-                      <Tr key={index}>
-                        <Td textAlign="center">
-                          <Checkbox border="gray"></Checkbox>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="md">{item.apellidoNombre}</Text>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="md">{item.estado}</Text>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="md">{item.grupo}</Text>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="md">{item.catUTN}</Text>
-                        </Td>
-                        <Td textAlign="center">
-                          <Text fontSize="md">{item.catMin}</Text>
-                        </Td>
-                        <Td textAlign="center">
-                          <Button colorScheme="blue" variant="outline">
-                            Detalle
-                          </Button>
-                        </Td>
-                      </Tr>
-                    ))}
-                </Tbody>
-              </Table>
-              <HStack spacing={4} mt={4} justify="center">
-                <IconButton
-                  isDisabled={currentPage === 0}
-                  icon={<ChevronLeftIcon />}
-                  onClick={() => {
-                    handlePageChange({ selected: currentPage - 1 });
-                  }}
-                />
+          <br />
 
-                <Input
-                  type="number"
-                  value={currentPage + 1}
-                  onChange={handleSelectPage}
-                  style={{ width: "50px", textAlign: "center" }}
-                />
+          <Card width='100%'>
+            <CardBody>
+              <TableContainer>
+                <Table size="sm" variant="striped" colorScheme="blackAlpha">
+                  <Thead>
+                    <Tr>
+                      <Th textAlign="center">
+                        <Checkbox border="gray"></Checkbox>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Apellido y Nombre</Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Estado</Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Grupo</Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Cat. UTN</Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Cat. Min.</Text>
+                      </Th>
+                      <Th textAlign="center">
+                        <Text fontSize="md">Ver más</Text>
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {(filtroActivo ? investigadoresFiltrados : investigadores)
+                      .slice(
+                        currentPage * ITEMS_PER_PAGE,
+                        (currentPage + 1) * ITEMS_PER_PAGE
+                      )
+                      .map((item, index) => (
+                        <Tr key={index}>
+                          <Td textAlign="center">
+                            <Checkbox border="gray"></Checkbox>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="md">{item.apellidoNombre}</Text>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="md">{item.estado}</Text>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="md">{item.grupo}</Text>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="md">{item.catUTN}</Text>
+                          </Td>
+                          <Td textAlign="center">
+                            <Text fontSize="md">{item.catMin}</Text>
+                          </Td>
+                          <Td textAlign="center">
+                            <Button colorScheme="blue" variant="outline">
+                              Detalle
+                            </Button>
+                          </Td>
+                        </Tr>
+                      ))}
+                  </Tbody>
+                </Table>
+                <HStack spacing={4} mt={4} justify="center">
+                  <IconButton
+                    isDisabled={currentPage === 0}
+                    icon={<ChevronLeftIcon />}
+                    onClick={() => {
+                      handlePageChange({ selected: currentPage - 1 });
+                    }}
+                  />
 
-                <Text>de {totalPages}</Text>
+                  <Input
+                    type="number"
+                    value={currentPage + 1}
+                    onChange={handleSelectPage}
+                    style={{ width: "50px", textAlign: "center" }}
+                  />
 
-                <IconButton
-                  isDisabled={
-                    currentPage ===
-                    Math.ceil(
-                      (filtroActivo
-                        ? investigadoresFiltrados
-                        : investigadores
-                      ).length / ITEMS_PER_PAGE
-                    ) - 1
-                  }
-                  icon={<ChevronRightIcon />}
-                  onClick={() => {
-                    handlePageChange({ selected: currentPage + 1 });
-                  }}
-                />
-              </HStack>
-            </TableContainer>
-          </CardBody>
-        </Card>
+                  <Text>de {totalPages}</Text>
 
-        <br />
+                  <IconButton
+                    isDisabled={
+                      currentPage ===
+                      Math.ceil(
+                        (filtroActivo
+                          ? investigadoresFiltrados
+                          : investigadores
+                        ).length / ITEMS_PER_PAGE
+                      ) - 1
+                    }
+                    icon={<ChevronRightIcon />}
+                    onClick={() => {
+                      handlePageChange({ selected: currentPage + 1 });
+                    }}
+                  />
+                </HStack>
+              </TableContainer>
+            </CardBody>
+          </Card>
 
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button colorScheme="blue" variant="outline" mr="5">
-            Nuevo Investigador
-          </Button>
-          <Button colorScheme="blue" variant="outline">
-            Imprimir
-          </Button>
+          <br />
+
+          <Box display="flex" justifyContent="flex-end" width="100%">
+            <Button colorScheme="blue" variant="outline">
+              Imprimir
+            </Button>
+          </Box>
         </Box>
       </CardBody>
     </Card>
