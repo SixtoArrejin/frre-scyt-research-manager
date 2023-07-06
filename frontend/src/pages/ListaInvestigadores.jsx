@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -60,7 +60,8 @@ export default function ListaInvestigadores() {
     }
   };
 
-  const handleFilter = () => {
+  //handleFilter
+  useEffect(() => {
     if (nombre === "" && grupo === "") {
       setInvestigadoresFiltrados([]);
       setFiltroActivo(false);
@@ -74,15 +75,7 @@ export default function ListaInvestigadores() {
       setFiltroActivo(true);
     }
     setCurrentPage(0);
-  };
-
-  const handleClearFilter = () => {
-    setNombre("");
-    setGrupo("");
-    setInvestigadoresFiltrados([]);
-    setFiltroActivo(false);
-    setCurrentPage(0);
-  };
+  }, [nombre, grupo]);
 
   return (
     <Card>
@@ -108,15 +101,8 @@ export default function ListaInvestigadores() {
             onChange={(event) => setGrupo(event.target.value)}
             value={grupo}
           />
-          <Button colorScheme="blue" variant="outline" onClick={handleFilter}>
+          <Button colorScheme="blue" variant="outline">
             <Search2Icon />
-          </Button>
-          <Button
-            colorScheme="blue"
-            variant="outline"
-            onClick={handleClearFilter}
-          >
-            Clear
           </Button>
         </Box>
         <br />
@@ -188,7 +174,7 @@ export default function ListaInvestigadores() {
               <HStack spacing={4} mt={4} justify="center">
                 <IconButton
                   isDisabled={currentPage === 0}
-                  icon={<ChevronLeftIcon /> }
+                  icon={<ChevronLeftIcon />}
                   onClick={() => {
                     handlePageChange({ selected: currentPage - 1 });
                   }}
