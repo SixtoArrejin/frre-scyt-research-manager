@@ -3,98 +3,98 @@
       "apellidoNombre": "Arrejin Sixto",
       "estado": "Activo",
       "grupo": "CINAPTIC",
-      "catUTN": "V",
+      "catUTN": "C",
       "catMin": "IV"
     },
     {
       "apellidoNombre": "Maciel Tobias",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "III",
+      "catUTN": "B",
       "catMin": "II"
     },
     {
       "apellidoNombre": "San Lorenzo Andre",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "VI",
+      "catUTN": "E",
       "catMin": "VI"
     },
     {
       "apellidoNombre": "Orrego Nilson",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "I",
+      "catUTN": "A",
       "catMin": "II"
     },
     {
       "apellidoNombre": "Orrego Nilson",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "I",
+      "catUTN": "A",
       "catMin": "II"
     },
     {
       "apellidoNombre": "Rodriguez Sofia",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "III",
+      "catUTN": "D",
       "catMin": "IV"
     },
     {
       "apellidoNombre": "Gomez Lucas",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "II",
+      "catUTN": "E",
       "catMin": "III"
     },
     {
       "apellidoNombre": "Arrejin Sixto",
       "estado": "Activo",
       "grupo": "CINAPTIC",
-      "catUTN": "V",
+      "catUTN": "C",
       "catMin": "IV"
     },
     {
       "apellidoNombre": "Maciel Tobias",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "III",
+      "catUTN": "B",
       "catMin": "II"
     },
     {
       "apellidoNombre": "San Lorenzo Andre",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "VI",
+      "catUTN": "E",
       "catMin": "VI"
     },
     {
       "apellidoNombre": "Orrego Nilson",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "I",
+      "catUTN": "A",
       "catMin": "II"
     },
     {
       "apellidoNombre": "Orrego Nilson",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "I",
+      "catUTN": "A",
       "catMin": "II"
     },
     {
       "apellidoNombre": "Rodriguez Sofia",
       "estado": "Activo",
       "grupo": "ACHETIQ",
-      "catUTN": "III",
+      "catUTN": "D",
       "catMin": "IV"
     },
     {
       "apellidoNombre": "Gomez Lucas",
       "estado": "Inactivo",
       "grupo": "CINAPTIC",
-      "catUTN": "II",
+      "catUTN": "E",
       "catMin": "III"
     }
   ]
