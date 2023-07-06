@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -11,7 +12,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon } from "@chakra-ui/icons";
+import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -24,18 +25,16 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import investigadores from "../Data/investigadores.json";
-import React, { useState } from "react";
-import ReactPaginate from "react-paginate";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import InputLabel from "../components/InputLabel";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
 export default function ListaInvestigadores() {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
-
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
+  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
+  const [filtroActivo, setFiltroActivo] = useState(false);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
@@ -43,7 +42,10 @@ export default function ListaInvestigadores() {
     setGrupo("");
   };
 
-  const totalPages = Math.ceil(investigadores.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(
+    (filtroActivo ? investigadoresFiltrados : investigadores).length /
+    ITEMS_PER_PAGE
+  );
 
   const handleSelectPage = (event) => {
     if (parseInt(event.target.value, 10) > totalPages) {
@@ -58,17 +60,28 @@ export default function ListaInvestigadores() {
     }
   };
 
-  const filtrarInvestigadores = (nombreFiltro, grupoFiltro) => {
-    return investigadores.filter((investigador) => {
-      const cumpleNombre = investigador.apellidoNombre
-        .toLowerCase()
-        .includes(nombreFiltro.toLowerCase());
-      const cumpleGrupo = investigador.grupo
-        .toLowerCase()
-        .includes(grupoFiltro.toLowerCase());
+  const handleFilter = () => {
+    if (nombre === "" && grupo === "") {
+      setInvestigadoresFiltrados([]);
+      setFiltroActivo(false);
+    } else {
+      const filteredInvestigadores = investigadores.filter(
+        (item) =>
+          item.apellidoNombre.toLowerCase().includes(nombre.toLowerCase()) &&
+          item.grupo.toLowerCase().includes(grupo.toLowerCase())
+      );
+      setInvestigadoresFiltrados(filteredInvestigadores);
+      setFiltroActivo(true);
+    }
+    setCurrentPage(0);
+  };
 
-      return cumpleNombre && cumpleGrupo;
-    });
+  const handleClearFilter = () => {
+    setNombre("");
+    setGrupo("");
+    setInvestigadoresFiltrados([]);
+    setFiltroActivo(false);
+    setCurrentPage(0);
   };
 
   return (
@@ -85,17 +98,27 @@ export default function ListaInvestigadores() {
             placeholder="Nombre"
             id="AyN"
             width="15vw"
-            onChange={(event) => setNombre(event.target.value)} />
+            onChange={(event) => setNombre(event.target.value)}
+            value={nombre}
+          />
           <InputLabel
             placeholder="Grupo"
             id="AyN"
             width="15vw"
-            onChange={(event) => setGrupo(event.target.value)} />
-          <Button colorScheme="blue" variant="outline">
+            onChange={(event) => setGrupo(event.target.value)}
+            value={grupo}
+          />
+          <Button colorScheme="blue" variant="outline" onClick={handleFilter}>
             <Search2Icon />
           </Button>
+          <Button
+            colorScheme="blue"
+            variant="outline"
+            onClick={handleClearFilter}
+          >
+            Clear
+          </Button>
         </Box>
-
         <br />
 
         <Card>
@@ -128,7 +151,7 @@ export default function ListaInvestigadores() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filtrarInvestigadores(nombre, grupo)
+                  {(filtroActivo ? investigadoresFiltrados : investigadores)
                     .slice(
                       currentPage * ITEMS_PER_PAGE,
                       (currentPage + 1) * ITEMS_PER_PAGE
@@ -165,7 +188,7 @@ export default function ListaInvestigadores() {
               <HStack spacing={4} mt={4} justify="center">
                 <IconButton
                   isDisabled={currentPage === 0}
-                  icon={<ChevronLeftIcon />}
+                  icon={<ChevronLeftIcon /> }
                   onClick={() => {
                     handlePageChange({ selected: currentPage - 1 });
                   }}
@@ -183,7 +206,12 @@ export default function ListaInvestigadores() {
                 <IconButton
                   isDisabled={
                     currentPage ===
-                    Math.ceil(investigadores.length / ITEMS_PER_PAGE) - 1
+                    Math.ceil(
+                      (filtroActivo
+                        ? investigadoresFiltrados
+                        : investigadores
+                      ).length / ITEMS_PER_PAGE
+                    ) - 1
                   }
                   icon={<ChevronRightIcon />}
                   onClick={() => {
