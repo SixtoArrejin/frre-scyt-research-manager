@@ -1,0 +1,52 @@
+[
+    {
+      "apellidoNombre": "Arrejin Sixto",
+      "estado": "Activo",
+      "grupo": "CINAPTIC",
+      "catUTN": "V",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Maciel Tobias",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "III",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "San Lorenzo Andre",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "VI",
+      "catMin": "VI"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "I",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "I",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Rodriguez Sofia",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "III",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Gomez Lucas",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "II",
+      "catMin": "III"
+    }
+  ]
+  

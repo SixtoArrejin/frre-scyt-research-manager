@@ -31,14 +31,17 @@ import {
   FiMenu,
   FiBell,
   FiChevronDown,
+  FiUsers,
 } from 'react-icons/fi';
+import { BiNetworkChart, BiTask } from 'react-icons/bi';
+import Logo from '../img/Logo2.jpg';
 
 const LinkItems = [
   { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Investigadores', icon: FiUsers },
+  { name: 'Grupos Investigación', icon: BiNetworkChart },
+  { name: 'Proyectos', icon: BiTask },
+  { name: 'Configuración', icon: FiSettings },
 ];
 
 export default function SidebarWithHeader({ children }) {
@@ -81,9 +84,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
+        
+        <img src={Logo} alt="Logo"  />
+        
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
@@ -174,9 +177,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               <HStack>
                 <Avatar
                   size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
+                  src={'https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png'}
                 />
                 <VStack
                   display={{ base: 'none', md: 'flex' }}
@@ -184,7 +185,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">Usuario</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>
