@@ -38,8 +38,6 @@ export default function ListaInvestigadores() {
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage.selected);
-    setNombre("");
-    setGrupo("");
   };
 
   const totalPages = Math.ceil(
