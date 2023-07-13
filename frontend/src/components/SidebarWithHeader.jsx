@@ -9,7 +9,6 @@ import {
   VStack,
   Icon,
   useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   Text,
@@ -35,13 +34,15 @@ import {
 } from 'react-icons/fi';
 import { BiNetworkChart, BiTask } from 'react-icons/bi';
 import Logo from '../img/Logo2.jpg';
+import { Link } from 'react-router-dom';
 
 const LinkItems = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Investigadores', icon: FiUsers },
-  { name: 'Grupos Investigación', icon: BiNetworkChart },
-  { name: 'Proyectos', icon: BiTask },
-  { name: 'Configuración', icon: FiSettings },
+  { name: 'Home', icon: FiHome, route: '/' },
+  { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
+  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/investigadores' },
+  { name: 'Proyectos', icon: BiTask, route: '/investigadores' },
+  { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
+  { name: 'Detalle Investigador', icon: FiSettings, route: '/detalle-investigador' },
 ];
 
 export default function SidebarWithHeader({ children }) {
@@ -90,7 +91,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} route={link.route}>
           {link.name}
         </NavItem>
       ))}
@@ -98,9 +99,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, children, route, ...rest }) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link to={route} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"
