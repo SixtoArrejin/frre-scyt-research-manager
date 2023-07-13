@@ -12,7 +12,13 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import {
+  Search2Icon,
+  AddIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -24,17 +30,16 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../data/investigadores.json";
+import grupos from "../data/grupos.json";
 import InputLabel from "../components/InputLabel";
-import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
-export default function ListaInvestigadores() {
+export default function ListaGrupos() {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
-  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
+  const [gruposFiltrados, setgruposFiltrados] = useState([]);
   const [filtroActivo, setFiltroActivo] = useState(false);
 
   const handlePageChange = (selectedPage) => {
@@ -42,8 +47,7 @@ export default function ListaInvestigadores() {
   };
 
   const totalPages = Math.ceil(
-    (filtroActivo ? investigadoresFiltrados : investigadores).length /
-    ITEMS_PER_PAGE
+    (filtroActivo ? gruposFiltrados : grupos).length / ITEMS_PER_PAGE
   );
 
   const handleSelectPage = (event) => {
@@ -61,43 +65,40 @@ export default function ListaInvestigadores() {
 
   //handleFilter
   useEffect(() => {
-    if (nombre === "" && grupo === "") {
-      setInvestigadoresFiltrados([]);
+    if (grupo === "") {
+      setgruposFiltrados([]);
       setFiltroActivo(false);
     } else {
-      const filteredInvestigadores = investigadores.filter(
-        (item) =>
-          item.apellidoNombre.toLowerCase().includes(nombre.toLowerCase()) &&
-          item.grupo.toLowerCase().includes(grupo.toLowerCase())
+      const filteredgrupos = grupos.filter((item) =>
+        item.grupo.toLowerCase().includes(grupo.toLowerCase())
       );
-      setInvestigadoresFiltrados(filteredInvestigadores);
+      setgruposFiltrados(filteredgrupos);
       setFiltroActivo(true);
     }
     setCurrentPage(0);
-  }, [nombre, grupo]);
+  }, [grupo]);
 
   return (
     <Card>
       <CardBody>
-        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Heading as="h2" size="xl" textAlign="center">
-            INVESTIGADORES
+            GRUPOS DE INVESTIGACIÓN
           </Heading>
 
           <br />
 
           <Box display="flex" width="100%">
-            <Box display="flex" justifyContent="space-between" width="45%" marginLeft="2%">
-              <InputLabel
-                placeholder="Nombre"
-                id="AyN"
-                width="15vw"
-                onChange={(event) => setNombre(event.target.value)}
-                value={nombre}
-              />
+            <Box display="flex" width="45%" marginLeft="2%">
               <InputLabel
                 placeholder="Grupo"
-                id="AyN"
+                id="grupo"
                 width="15vw"
                 onChange={(event) => setGrupo(event.target.value)}
                 value={grupo}
@@ -105,36 +106,27 @@ export default function ListaInvestigadores() {
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
               <Button colorScheme="blue" variant="outline" mr="5">
-                Investigador +
+                Grupo +
               </Button>
             </Box>
           </Box>
 
           <br />
 
-          <Card width='100%'>
+          <Card width="100%">
             <CardBody>
               <TableContainer>
                 <Table size="sm" variant="striped" colorScheme="blackAlpha">
                   <Thead>
                     <Tr>
                       <Th textAlign="center">
-                        <Checkbox border="gray"></Checkbox>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Apellido y Nombre</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Estado</Text>
-                      </Th>
-                      <Th textAlign="center">
                         <Text fontSize="md">Grupo</Text>
                       </Th>
                       <Th textAlign="center">
-                        <Text fontSize="md">Cat. UTN</Text>
+                        <Text fontSize="md">Resolución</Text>
                       </Th>
                       <Th textAlign="center">
-                        <Text fontSize="md">Cat. Min.</Text>
+                        <Text fontSize="md">Fecha creación</Text>
                       </Th>
                       <Th textAlign="center">
                         <Text fontSize="md">Ver más</Text>
@@ -142,7 +134,7 @@ export default function ListaInvestigadores() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {(filtroActivo ? investigadoresFiltrados : investigadores)
+                    {(filtroActivo ? gruposFiltrados : grupos)
                       .slice(
                         currentPage * ITEMS_PER_PAGE,
                         (currentPage + 1) * ITEMS_PER_PAGE
@@ -150,25 +142,18 @@ export default function ListaInvestigadores() {
                       .map((item, index) => (
                         <Tr key={index}>
                           <Td textAlign="center">
-                            <Checkbox border="gray"></Checkbox>
-                          </Td>
-                          <Td textAlign="center">
-                            <Text fontSize="md">{item.apellidoNombre}</Text>
-                          </Td>
-                          <Td textAlign="center">
-                            <Text fontSize="md">{item.estado}</Text>
-                          </Td>
-                          <Td textAlign="center">
                             <Text fontSize="md">{item.grupo}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.catUTN}</Text>
+                            <Text fontSize="md">{item.resolucion}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.catMin}</Text>
+                            <Text fontSize="md">{item.fecha}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Link><PlusSquareIcon onClick={() => alert("Detalle del investigador")} /></Link>
+                            <Button colorScheme="blue" variant="outline">
+                              Detalle
+                            </Button>
                           </Td>
                         </Tr>
                       ))}
@@ -196,11 +181,10 @@ export default function ListaInvestigadores() {
                     isDisabled={
                       currentPage ===
                       Math.ceil(
-                        (filtroActivo
-                          ? investigadoresFiltrados
-                          : investigadores
-                        ).length / ITEMS_PER_PAGE
-                      ) - 1
+                        (filtroActivo ? gruposFiltrados : grupos).length /
+                          ITEMS_PER_PAGE
+                      ) -
+                        1
                     }
                     icon={<ChevronRightIcon />}
                     onClick={() => {
@@ -211,14 +195,6 @@ export default function ListaInvestigadores() {
               </TableContainer>
             </CardBody>
           </Card>
-
-          <br />
-
-          <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button colorScheme="blue" variant="outline">
-              Imprimir
-            </Button>
-          </Box>
         </Box>
       </CardBody>
     </Card>

@@ -10,6 +10,7 @@ import DetalleInvestigador from './pages/DetalleInvestigador';
 import ListaInvestigadores from './pages/ListaInvestigadores';
 import NuevaCategoria from './pages/NuevaCategoria';
 import NuevoInvestigador from './pages/NuevoInvestigador';
+import ListaGrupos from './pages/ListaGrupos';
 
 
 const routes = [
@@ -17,7 +18,8 @@ const routes = [
   { path: "/investigadores", element: <ListaInvestigadores /> },
   { path: "/detalle-investigador", element: <DetalleInvestigador /> },
   { path: "/nueva-categoria", element: <NuevaCategoria/> },
-  { path: "/nuevo-investigador", element: <NuevoInvestigador /> }
+  { path: "/nuevo-investigador", element: <NuevoInvestigador /> },
+  { path: "/grupos-investigacion", element: <ListaGrupos/> }
 ];
 
 function App() {

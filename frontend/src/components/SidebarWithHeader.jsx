@@ -45,6 +45,7 @@ const LinkItems = [
   { name: 'Detalle Investigador', icon: FiSettings, route: '/detalle-investigador' },
   { name: 'Nueva categoría', icon: FiSettings, route: '/nueva-categoria' },
   { name: 'Nuevo Investigador', icon: FiSettings, route: '/nuevo-investigador' },
+  { name: 'Grupos de investigación', icon: FiSettings, route: '/grupos-investigacion' }
 ];
 
 export default function SidebarWithHeader({ children }) {
