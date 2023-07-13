@@ -86,7 +86,7 @@ export default function ListaInvestigadores() {
           <br />
 
           <Box display="flex" width="100%">
-            <Box display="flex" justifyContent="space-around" width="50%">
+            <Box display="flex" justifyContent="space-between" width="45%" marginLeft="2%">
               <InputLabel
                 placeholder="Nombre"
                 id="AyN"
@@ -102,7 +102,7 @@ export default function ListaInvestigadores() {
                 value={grupo}
               />
             </Box>
-            <Box display="flex" justifyContent="flex-end" width="50%">
+            <Box display="flex" justifyContent="flex-end" width="55%">
               <Button colorScheme="blue" variant="outline" mr="5">
                 Investigador +
               </Button>

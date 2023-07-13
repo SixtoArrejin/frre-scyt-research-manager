@@ -95,16 +95,16 @@ export default function ListaGrupos() {
           <br />
 
           <Box display="flex" width="100%">
-            <Box display="flex" width="50%">
+            <Box display="flex" width="45%" marginLeft="2%">
               <InputLabel
                 placeholder="Grupo"
-                id="AyN"
+                id="grupo"
                 width="15vw"
                 onChange={(event) => setGrupo(event.target.value)}
                 value={grupo}
               />
             </Box>
-            <Box display="flex" justifyContent="flex-end" width="50%">
+            <Box display="flex" justifyContent="flex-end" width="55%">
               <Button colorScheme="blue" variant="outline" mr="5">
                 Grupo +
               </Button>
