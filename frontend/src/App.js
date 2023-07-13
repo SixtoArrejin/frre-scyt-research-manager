@@ -8,12 +8,14 @@ import {
 import SidebarWithHeader from './components/SidebarWithHeader';
 import DetalleInvestigador from './pages/DetalleInvestigador';
 import ListaInvestigadores from './pages/ListaInvestigadores';
+import NuevaCategoria from './pages/NuevaCategoria';
 
 
 const routes = [
   // { path: "/", element: <Navigate to="/home" /> },
   { path: "/investigadores", element: <ListaInvestigadores /> },
-  { path: "/detalle-investigador", element: <DetalleInvestigador /> }
+  { path: "/detalle-investigador", element: <DetalleInvestigador /> },
+  { path: "/nueva-categoria", element: <NuevaCategoria/> }
 ];
 
 function App() {

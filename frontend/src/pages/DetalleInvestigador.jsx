@@ -26,7 +26,7 @@ import {
   FormControl,
   FormLabel
 } from "@chakra-ui/react";
-import investigadores from "../data/investigadores.json";
+import investigadores from "../Data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 import categorias from '../data/ListaCategorias.json'
 import { Link } from 'react-router-dom';
