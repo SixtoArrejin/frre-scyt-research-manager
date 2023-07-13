@@ -24,7 +24,7 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../Data/investigadores.json";
+import investigadores from "../data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
