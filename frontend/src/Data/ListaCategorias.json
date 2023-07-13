@@ -7,21 +7,21 @@
     },
     {
       "fecha": "99/99/9999",
-      "categoria": "V",
+      "categoria": "II",
+      "resolucion": "9999/99",
+      "equiparacion": false
+    },
+    {
+      "fecha": "99/99/9999",
+      "categoria": "IV",
       "resolucion": "9999/99",
       "equiparacion": true
     },
     {
       "fecha": "99/99/9999",
-      "categoria": "V",
+      "categoria": "I",
       "resolucion": "9999/99",
-      "equiparacion": true
-    },
-    {
-      "fecha": "99/99/9999",
-      "categoria": "V",
-      "resolucion": "9999/99",
-      "equiparacion": true
+      "equiparacion": false
     }
   ]
   

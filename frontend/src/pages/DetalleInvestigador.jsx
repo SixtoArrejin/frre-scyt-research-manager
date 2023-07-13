@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, DeleteIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -28,8 +28,9 @@ import {
 } from "@chakra-ui/react";
 import investigadores from "../data/investigadores.json";
 import InputLabel from "../components/InputLabel";
-import categorias from '../data/categorias.json'
+import categorias from '../data/ListaCategorias.json'
 import { Link } from 'react-router-dom';
+import proyectosInv from '../data/proyectosInv.json';
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -57,7 +58,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="20vw"
                   >
-                    <Input name="ayn" placeholder="Apellido y Nombre" value={'Apellido y Nombre'} />
+                    <Input name="ayn" placeholder="Apellido y Nombre" value={'Apellido y Nombre'} disabled/>
                     <FormLabel>Apellido y Nombre</FormLabel>
                   </FormControl>
 
@@ -67,7 +68,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="20vw"
                   >
-                    <Input name="dni" placeholder="DNI" value={45268597} />
+                    <Input name="dni" placeholder="DNI" value={45268597} disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
                 </Box>
@@ -79,7 +80,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="20vw"
                   >
-                    <Input name="estado" placeholder="Estado" value={'Activo'} />
+                    <Input name="estado" placeholder="Estado" value={'Activo'} disabled />
                     <FormLabel>Estado</FormLabel>
                   </FormControl>
                   <FormControl
@@ -88,13 +89,13 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="20vw"
                   >
-                    <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} />
+                    <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} disabled />
                     <FormLabel>Grupo</FormLabel>
                   </FormControl>
                 </Box>
                 <br />
                 <Box display='flex' width='80%' alignItems='center' justifyContent='flex-end' >
-                  <Button colorScheme="blue" variant="outline" mr="5">
+                  <Button colorScheme="blue" variant="outline" onClick={() => alert('Modificar')}>
                     Modificar
                   </Button>
                 </Box>
@@ -102,7 +103,6 @@ export default function DetalleInvestigador() {
 
             </CardBody>
           </Card>
-          <br />
 
           <br />
           <Card width='100%'>
@@ -142,7 +142,7 @@ export default function DetalleInvestigador() {
                               <Text fontSize="md">{item.resolucion}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><DeleteIcon /></Link>
+                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
                             </Td>
                           </Tr>
                         ))}
@@ -151,7 +151,6 @@ export default function DetalleInvestigador() {
                   </TableContainer>
                 </CardBody>
               </Card>
-              <br />
               <br />
               <Text fontSize="md">Categoría UTN</Text>
               <br />
@@ -194,7 +193,7 @@ export default function DetalleInvestigador() {
                               <Text fontSize="md">{item.equiparacion ? 'SI' : 'NO'}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><DeleteIcon /></Link>
+                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
                             </Td>
                           </Tr>
                         ))}
@@ -203,10 +202,95 @@ export default function DetalleInvestigador() {
                   </TableContainer>
                 </CardBody>
               </Card>
+              <br />
+              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' >
+                <Button colorScheme="blue" variant="outline" onClick={() => alert('Agregar nueva categoría')}>
+                  Nueva Categoría
+                </Button>
+              </Box>
             </CardBody>
           </Card>
 
           <br />
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize="md">Proyectos</Text>
+              <br />
+              <Card width='100%'>
+                <CardBody>
+                  <TableContainer>
+                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
+                      <Thead>
+                        <Tr>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Fec. Inicio</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Fec. Fin</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Denominación</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Tipo</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Estado</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Ing. al proyecto</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Rol</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Más</Text>
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {proyectosInv.map((item, index) => (
+                          <Tr key={index}>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.fechaInicio}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.fechaFin}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.denominacion}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.tipo}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.estado}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.fecInicioActividad}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.rol}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Link><PlusSquareIcon onClick={() => alert('Ver más detalles del proyecto')} /></Link>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </CardBody>
+              </Card>
+              <br />
+            </CardBody>
+          </Card>
+          <br />
+          <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' >
+            <Button colorScheme="blue" variant="outline" onClick={() => alert('Generar un reporte con los detalles del investigador')}>
+              Generar Reporte
+            </Button>
+          </Box>
         </Box>
       </CardBody>
     </Card>
