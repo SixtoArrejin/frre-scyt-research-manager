@@ -97,7 +97,7 @@ export default function NuevaCategoria() {
                 >
                   <Box display="flex" alignItems="center">
                     {" "}
-                    <Text>Tipo de categoria: </Text>
+                    <Text paddingRight="1vw">Tipo de categoria: </Text>
                     <RadioGroup
                       onChange={setValueCategoria}
                       value={valueCategoria}
@@ -111,24 +111,40 @@ export default function NuevaCategoria() {
 
                   <Box display="flex" alignItems="center">
                     {" "}
-                    <Text>Categoria: </Text>
-                    <Select placeholder="Seleccione categoría">
-                      {valueCategoria == 1 ? (
-                        // Categorias de Ministerio
-                        <option value="1">Opción 1</option>
-                      ) : (
-                        // Categorias de UTN
-                        <option value="2">Opción 2</option>
-                      )}
+                    <Text paddingRight="1vw">Categoria: </Text>
+                    <Select placeholder="Seleccione categoría" width="20vw">
+                      {valueCategoria == 1
+                        ? // Categorias de Ministerio
+                          [
+                            <option key="1" value="1">
+                              1
+                            </option>,
+                            <option key="2" value="2">
+                              2
+                            </option>,
+                            <option key="3" value="3">
+                              3
+                            </option>,
+                          ]
+                        : // Categorias de UTN
+                          [
+                            <option key="1" value="1">
+                              I
+                            </option>,
+                            <option key="2" value="2">
+                              II{" "}
+                            </option>,
+                            <option key="3" value="3">
+                              III
+                            </option>,
+                          ]}
                     </Select>
                   </Box>
 
                   <Box display="flex" alignItems="center">
                     {" "}
-                    <Text>Equiparacion: </Text>
-                    <RadioGroup
-                      isDisabled={valueCategoria === "1"}
-                    >
+                    <Text paddingRight="1vw">Equiparacion:</Text>
+                    <RadioGroup isDisabled={valueCategoria === "1"}>
                       <Stack direction="row">
                         <Radio value="1">Si</Radio>
                         <Radio value="2">No</Radio>
@@ -143,10 +159,22 @@ export default function NuevaCategoria() {
                   alignItems="center"
                   justifyContent="space-around"
                 >
-                  <InputLabel
-                    placeholder="Resolucion"
-                    id="resolucion"
-                  />
+                  <Box>
+                    <InputLabel
+                      placeholder="Resolucion"
+                      id="resolucion"
+                      width="20vw"
+                    />
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <Text paddingRight="1vw">Fecha:</Text>
+                    <Input
+                      placeholder="Fecha"
+                      size="md"
+                      type="date"
+                      width="20vw"
+                    />
+                  </Box>
                 </Box>
                 <br />
                 <Box
@@ -156,22 +184,15 @@ export default function NuevaCategoria() {
                   justifyContent="flex-end"
                 >
                   <Button colorScheme="blue" variant="outline" mr="5">
-                    Modificar
+                    Cancelar
+                  </Button>
+                  <Button colorScheme="blue" variant="outline" mr="5">
+                    Guardar
                   </Button>
                 </Box>
               </Box>
             </CardBody>
           </Card>
-          <br />
-          <br />
-
-          <br />
-
-          <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button colorScheme="blue" variant="outline">
-              Imprimir
-            </Button>
-          </Box>
         </Box>
       </CardBody>
     </Card>
