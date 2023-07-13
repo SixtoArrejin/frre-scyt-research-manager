@@ -51,12 +51,12 @@ export default function DetalleInvestigador() {
               <Text fontSize="md">Datos del investigador</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                <Box display='flex' width='80%' alignItems='center' justifyContent='space-around' >
+                <Box display='flex' width='90%' alignItems='center' justifyContent='space-between' >
                   <FormControl
                     variant="floating"
                     id="ayn"
                     // onChange={event => setNombreProducto(event.target.value)}
-                    width="20vw"
+                    width="25vw"
                   >
                     <Input name="ayn" placeholder="Apellido y Nombre" value={'Apellido y Nombre'} disabled/>
                     <FormLabel>Apellido y Nombre</FormLabel>
@@ -66,14 +66,33 @@ export default function DetalleInvestigador() {
                     variant="floating"
                     id="dni"
                     // onChange={event => setNombreProducto(event.target.value)}
-                    width="20vw"
+                    width="10vw"
                   >
                     <Input name="dni" placeholder="DNI" value={45268597} disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
+
+                  <FormControl
+                    variant="floating"
+                    id="estado"
+                    // onChange={event => setNombreProducto(event.target.value)}
+                    width="10vw"
+                  >
+                    <Input name="estado" placeholder="Estado" value={'Activo'} disabled />
+                    <FormLabel>Estado</FormLabel>
+                  </FormControl>
+                  <FormControl
+                    variant="floating"
+                    id="grupo"
+                    // onChange={event => setNombreProducto(event.target.value)}
+                    width="15vw"
+                  >
+                    <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} disabled />
+                    <FormLabel>Grupo</FormLabel>
+                  </FormControl>
                 </Box>
                 <br />
-                <Box display='flex' width='80%' alignItems='center' justifyContent='space-around' >
+                {/* <Box display='flex' width='80%' alignItems='center' justifyContent='space-around' >
                   <FormControl
                     variant="floating"
                     id="estado"
@@ -92,9 +111,8 @@ export default function DetalleInvestigador() {
                     <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} disabled />
                     <FormLabel>Grupo</FormLabel>
                   </FormControl>
-                </Box>
-                <br />
-                <Box display='flex' width='80%' alignItems='center' justifyContent='flex-end' >
+                </Box> */}
+                <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
                   <Button colorScheme="blue" variant="outline" onClick={() => alert('Modificar')}>
                     Modificar
                   </Button>

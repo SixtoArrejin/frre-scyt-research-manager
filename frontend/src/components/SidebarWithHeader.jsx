@@ -43,6 +43,7 @@ const LinkItems = [
   { name: 'Proyectos', icon: BiTask, route: '/investigadores' },
   { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
   { name: 'Detalle Investigador', icon: FiSettings, route: '/detalle-investigador' },
+  { name: 'Nueva categoría', icon: FiSettings, route: '/nueva-categoria' },
 ];
 
 export default function SidebarWithHeader({ children }) {
