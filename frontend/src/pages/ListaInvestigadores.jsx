@@ -12,7 +12,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
+import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -26,6 +26,7 @@ import {
 } from "@chakra-ui/react";
 import investigadores from "../data/investigadores.json";
 import InputLabel from "../components/InputLabel";
+import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -167,9 +168,7 @@ export default function ListaInvestigadores() {
                             <Text fontSize="md">{item.catMin}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Button colorScheme="blue" variant="outline">
-                              Detalle
-                            </Button>
+                            <Link><PlusSquareIcon onClick={() => alert("Detalle del investigador")} /></Link>
                           </Td>
                         </Tr>
                       ))}
