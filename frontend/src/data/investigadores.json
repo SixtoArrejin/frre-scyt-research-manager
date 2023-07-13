@@ -1,0 +1,101 @@
+[
+    {
+      "apellidoNombre": "Arrejin Sixto",
+      "estado": "Activo",
+      "grupo": "CINAPTIC",
+      "catUTN": "C",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Maciel Tobias",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "B",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "San Lorenzo Andre",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "E",
+      "catMin": "VI"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "A",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "A",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Rodriguez Sofia",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "D",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Gomez Lucas",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "E",
+      "catMin": "III"
+    },
+    {
+      "apellidoNombre": "Arrejin Sixto",
+      "estado": "Activo",
+      "grupo": "CINAPTIC",
+      "catUTN": "C",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Maciel Tobias",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "B",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "San Lorenzo Andre",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "E",
+      "catMin": "VI"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "A",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Orrego Nilson",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "A",
+      "catMin": "II"
+    },
+    {
+      "apellidoNombre": "Rodriguez Sofia",
+      "estado": "Activo",
+      "grupo": "ACHETIQ",
+      "catUTN": "D",
+      "catMin": "IV"
+    },
+    {
+      "apellidoNombre": "Gomez Lucas",
+      "estado": "Inactivo",
+      "grupo": "CINAPTIC",
+      "catUTN": "E",
+      "catMin": "III"
+    }
+  ]
+  
