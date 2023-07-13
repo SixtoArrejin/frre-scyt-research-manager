@@ -18,6 +18,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  PlusSquareIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -32,6 +33,7 @@ import {
 } from "@chakra-ui/react";
 import grupos from "../data/grupos.json";
 import InputLabel from "../components/InputLabel";
+import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -151,9 +153,7 @@ export default function ListaGrupos() {
                             <Text fontSize="md">{item.fecha}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Button colorScheme="blue" variant="outline">
-                              Detalle
-                            </Button>
+                            <Link><PlusSquareIcon onClick={() => alert("Detalle del grupo")} /></Link>
                           </Td>
                         </Tr>
                       ))}
