@@ -11,6 +11,7 @@ import ListaInvestigadores from './pages/ListaInvestigadores';
 import NuevaCategoria from './pages/NuevaCategoria';
 import NuevoInvestigador from './pages/NuevoInvestigador';
 import ListaGrupos from './pages/ListaGrupos';
+import ModificarInvestigador from './pages/ModificarInvestigador';
 
 
 const routes = [
@@ -19,7 +20,8 @@ const routes = [
   { path: "/detalle-investigador", element: <DetalleInvestigador /> },
   { path: "/nueva-categoria", element: <NuevaCategoria/> },
   { path: "/nuevo-investigador", element: <NuevoInvestigador /> },
-  { path: "/grupos-investigacion", element: <ListaGrupos/> }
+  { path: "/grupos-investigacion", element: <ListaGrupos/> },
+  { path: "/modificar-investigador", element: <ModificarInvestigador /> }
 ];
 
 function App() {
