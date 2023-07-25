@@ -1,14 +1,13 @@
 import express from 'express'
 import cors from 'cors'
+import Grupos from './routes/gruposRoutes.js'
 //importamos nuestro enrutador
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-app.get('/api', (req, res) => {
-    res.json("Hola mundo")
-})
+app.use('/api/grupos', Grupos)
 
 const PORT = process.env.PORT || 8000;
 
