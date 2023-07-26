@@ -36,9 +36,17 @@ export async function deleteRecord(tableName, id) {
 }
 
 
-export async function readAll(tableName) {
+export async function readAll(tableName, includeRelations = []) {
   try {
-    const data = await prisma[tableName].findMany();
+    // Construir el objeto include dinámicamente para las relaciones especificadas
+    const includeObj = {};
+    for (const relation of includeRelations) {
+      includeObj[relation] = true;
+    }
+    console.log(includeObj)
+    const data = await prisma[tableName].findMany({
+      include: includeObj,
+    });
     return data
   } catch (error) {
     throw new Error(`Error al solicitar los datos de ${tableName} en la BD`);

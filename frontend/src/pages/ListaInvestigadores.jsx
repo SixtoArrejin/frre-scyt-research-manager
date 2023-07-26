@@ -38,7 +38,7 @@ export default function ListaInvestigadores() {
   const [filtroActivo, setFiltroActivo] = useState(false);
 
   const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage.selected);
+    setCurrentPage(selectedPage);
   };
 
   const totalPages = Math.ceil(
@@ -179,7 +179,7 @@ export default function ListaInvestigadores() {
                     isDisabled={currentPage === 0}
                     icon={<ChevronLeftIcon />}
                     onClick={() => {
-                      handlePageChange({ selected: currentPage - 1 });
+                      handlePageChange(currentPage - 1);
                     }}
                   />
 
@@ -204,7 +204,7 @@ export default function ListaInvestigadores() {
                     }
                     icon={<ChevronRightIcon />}
                     onClick={() => {
-                      handlePageChange({ selected: currentPage + 1 });
+                      handlePageChange(currentPage + 1);
                     }}
                   />
                 </HStack>
