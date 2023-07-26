@@ -31,7 +31,7 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import grupos from "../data/grupos.json";
+import grupos from "../utils/data/grupos.json";
 import InputLabel from "../components/InputLabel";
 import { Link } from "react-router-dom";
 

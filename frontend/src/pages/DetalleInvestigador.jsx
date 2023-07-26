@@ -26,11 +26,11 @@ import {
   FormControl,
   FormLabel
 } from "@chakra-ui/react";
-import investigadores from "../data/investigadores.json";
+import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
-import categorias from '../data/ListaCategorias.json'
+import categorias from '../utils/data/ListaCategorias.json'
 import { Link } from 'react-router-dom';
-import proyectosInv from '../data/proyectosInv.json';
+import proyectosInv from '../utils/data/proyectosInv.json';
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
