@@ -10,6 +10,7 @@ import {
   Button,
   Checkbox,
   IconButton,
+  useQuery,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -24,11 +25,20 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../data/investigadores.json";
+// import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 import { Link } from "react-router-dom";
+import { getAllPersonas } from "../utils/api";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
+
+async function fetchPersonas() {
+  const res = await fetch("http://localhost:8000/api/personas", {
+    cache: "no-store",
+  });
+  const data = await res.json();
+  return data;
+}
 
 export default function ListaInvestigadores() {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
@@ -36,6 +46,8 @@ export default function ListaInvestigadores() {
   const [grupo, setGrupo] = useState("");
   const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
   const [filtroActivo, setFiltroActivo] = useState(false);
+
+  const [investigadores, setInvestigadores] = useState([]);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
@@ -59,13 +71,22 @@ export default function ListaInvestigadores() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchPersonas();
+      setInvestigadores(data.personas);
+    };
+
+    fetchData();
+  }, []);
+
   //handleFilter
   useEffect(() => {
     if (nombre === "" && grupo === "") {
       setInvestigadoresFiltrados([]);
       setFiltroActivo(false);
     } else {
-      const filteredInvestigadores = investigadores.filter(
+      const filteredInvestigadores = investigadores?.filter(
         (item) =>
           item.apellidoNombre.toLowerCase().includes(nombre.toLowerCase()) &&
           item.grupo.toLowerCase().includes(grupo.toLowerCase())
@@ -153,19 +174,21 @@ export default function ListaInvestigadores() {
                             <Checkbox border="gray"></Checkbox>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.apellidoNombre}</Text>
+                            <Text fontSize="md">{item.apellido} {item.nombre}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.estado}</Text>
+                            <Text fontSize="md">{item.activo ? 'Activo' : 'Inactivo'}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.grupo}</Text>
+                            <Text fontSize="md">{item.siglas}</Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.catUTN}</Text>
+                            {/* <Text fontSize="md">{ item.catUTN } </Text> */}
+                            <Text fontSize="md"> CatUTN </Text>
                           </Td>
                           <Td textAlign="center">
-                            <Text fontSize="md">{item.catMin}</Text>
+                            {/* <Text fontSize="md">{item.catMin}</Text> */}
+                            <Text fontSize="md"> CatMIN</Text>
                           </Td>
                           <Td textAlign="center">
                             <Link><PlusSquareIcon onClick={() => alert("Detalle del investigador")} /></Link>
@@ -218,7 +241,12 @@ export default function ListaInvestigadores() {
             <Button colorScheme="blue" variant="outline">
               Imprimir
             </Button>
+
           </Box>
+          {/* {(data?.personas)?.map((item, index) => (
+            <Text key={index} fontSize="md">{item.nombre}</Text>
+
+          ))} */}
         </Box>
       </CardBody>
     </Card>

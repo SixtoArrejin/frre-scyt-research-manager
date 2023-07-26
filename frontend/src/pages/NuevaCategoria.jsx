@@ -32,7 +32,7 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../data/investigadores.json";
+import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 
