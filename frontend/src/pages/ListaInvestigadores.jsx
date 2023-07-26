@@ -30,7 +30,7 @@ import InputLabel from "../components/InputLabel";
 import { Link } from "react-router-dom";
 import { getAllPersonas } from "../utils/api";
 
-const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
+const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
 async function fetchPersonas() {
   const res = await fetch("http://localhost:8000/api/personas", {
@@ -88,8 +88,12 @@ export default function ListaInvestigadores() {
     } else {
       const filteredInvestigadores = investigadores?.filter(
         (item) =>
-          item.apellidoNombre.toLowerCase().includes(nombre.toLowerCase()) &&
-          item.grupo.toLowerCase().includes(grupo.toLowerCase())
+          // (item.apellido.toLowerCase().includes(nombre.toLowerCase()) ||
+          // item.nombre.toLowerCase().includes(nombre.toLowerCase()))
+          ( (item.apellido.toLowerCase()+' '+item.nombre.toLowerCase() ).includes(nombre.toLowerCase())
+          || (item.nombre.toLowerCase()+' '+item.apellido.toLowerCase()).includes(nombre.toLowerCase() )) 
+          &&
+          item.siglas.toLowerCase().includes(grupo.toLowerCase())
       );
       setInvestigadoresFiltrados(filteredInvestigadores);
       setFiltroActivo(true);
