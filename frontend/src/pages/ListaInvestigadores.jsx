@@ -10,7 +10,6 @@ import {
   Button,
   Checkbox,
   IconButton,
-  useQuery,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -29,6 +28,7 @@ import {
 import InputLabel from "../components/InputLabel";
 import { Link } from "react-router-dom";
 import { getAllPersonas } from "../utils/api";
+import { useQuery } from 'react-query'
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -49,12 +49,18 @@ export default function ListaInvestigadores() {
 
   const [investigadores, setInvestigadores] = useState([]);
 
+  const { data, isLoading, error } = useQuery('personas', getAllPersonas);
+
+  useEffect(() => {
+    setInvestigadores(data?.personas)
+  }, [data]);
+
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
 
   const totalPages = Math.ceil(
-    (filtroActivo ? investigadoresFiltrados : investigadores).length /
+    (filtroActivo ? investigadoresFiltrados : investigadores)?.length /
     ITEMS_PER_PAGE
   );
 
@@ -70,15 +76,6 @@ export default function ListaInvestigadores() {
       }
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchPersonas();
-      setInvestigadores(data.personas);
-    };
-
-    fetchData();
-  }, []);
 
   //handleFilter
   useEffect(() => {
@@ -100,6 +97,10 @@ export default function ListaInvestigadores() {
     }
     setCurrentPage(0);
   }, [nombre, grupo]);
+
+  if (isLoading) {
+    return <Text fontSize="md">Cargando...</Text>
+  }
 
   return (
     <Card>
@@ -168,7 +169,7 @@ export default function ListaInvestigadores() {
                   </Thead>
                   <Tbody>
                     {(filtroActivo ? investigadoresFiltrados : investigadores)
-                      .slice(
+                      ?.slice(
                         currentPage * ITEMS_PER_PAGE,
                         (currentPage + 1) * ITEMS_PER_PAGE
                       )
@@ -226,7 +227,7 @@ export default function ListaInvestigadores() {
                         (filtroActivo
                           ? investigadoresFiltrados
                           : investigadores
-                        ).length / ITEMS_PER_PAGE
+                        )?.length / ITEMS_PER_PAGE
                       ) - 1
                     }
                     icon={<ChevronRightIcon />}
@@ -245,12 +246,7 @@ export default function ListaInvestigadores() {
             <Button colorScheme="blue" variant="outline">
               Imprimir
             </Button>
-
           </Box>
-          {/* {(data?.personas)?.map((item, index) => (
-            <Text key={index} fontSize="md">{item.nombre}</Text>
-
-          ))} */}
         </Box>
       </CardBody>
     </Card>

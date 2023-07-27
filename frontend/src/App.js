@@ -12,29 +12,33 @@ import NuevaCategoria from './pages/NuevaCategoria';
 import NuevoInvestigador from './pages/NuevoInvestigador';
 import ListaGrupos from './pages/ListaGrupos';
 import ModificarInvestigador from './pages/ModificarInvestigador';
+import { QueryClient, QueryClientProvider } from 'react-query'
 
+const queryClient = new QueryClient();
 
 const routes = [
   // { path: "/", element: <Navigate to="/home" /> },
   { path: "/investigadores", element: <ListaInvestigadores /> },
   { path: "/detalle-investigador", element: <DetalleInvestigador /> },
-  { path: "/nueva-categoria", element: <NuevaCategoria/> },
+  { path: "/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/nuevo-investigador", element: <NuevoInvestigador /> },
-  { path: "/grupos-investigacion", element: <ListaGrupos/> },
+  { path: "/grupos-investigacion", element: <ListaGrupos /> },
   { path: "/modificar-investigador", element: <ModificarInvestigador /> }
 ];
 
 function App() {
   return (
-    <Router>
-      <SidebarWithHeader>
-        <Routes>
-         {routes.map((route, index) => (
-            <Route key={index} path={route.path} element={route.element} />
-          ))}
-        </Routes>
-      </SidebarWithHeader>
-    </Router>
+    <QueryClientProvider client={queryClient} >
+      <Router>
+        <SidebarWithHeader>
+          <Routes>
+            {routes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </SidebarWithHeader>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
