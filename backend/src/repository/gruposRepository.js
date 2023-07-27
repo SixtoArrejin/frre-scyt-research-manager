@@ -1,7 +1,7 @@
-import { readAll } from './baseRepository.js';
+import { getAll } from './baseRepository.js';
 import {prisma} from '../db.js'
 
-export async function readAllGrupos() {
+export async function getAllGrupos() {
     const includeRelations = ['persona', 'tiene']
-    return await readAll('grupoinvestigacion', includeRelations);
+    return await getAll('grupoinvestigacion', includeRelations);
 }

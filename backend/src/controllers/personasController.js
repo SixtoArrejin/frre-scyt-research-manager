@@ -1,9 +1,20 @@
-import { readAllPersonasService } from '../services/personasService.js';
+import { getAllPersonasService } from '../services/personasService.js';
+import { createPersonaService } from '../services/personasService.js';
 
 export async function getPersonas(req, res) {
   try {
-    const personas = await readAllPersonasService();
+    const personas = await getAllPersonasService();
     return res.status(200).json({ message: 'Personas encontradas', success: true, personas });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function createPersona(req, res) {
+  try {
+    const personaData = req.body;
+    const newPersona = await createPersonaService(personaData);
+    return res.status(201).json({ message: 'Persona creada exitosamente', success: true, newPersona });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

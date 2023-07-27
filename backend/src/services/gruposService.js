@@ -1,10 +1,10 @@
 
-import { readAllGrupos} from '../repository/gruposRepository.js';
+import { getAllGrupos} from '../repository/gruposRepository.js';
 
  
-export async function readAllGruposService() {
+export async function getAllGruposService() {
     try {
-      const grupos = await readAllGrupos();
+      const grupos = await getAllGrupos();
         return grupos
     } catch (error) {
       throw new Error(error.message);
