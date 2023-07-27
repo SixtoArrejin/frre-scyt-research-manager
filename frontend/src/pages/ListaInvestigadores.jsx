@@ -27,25 +27,13 @@ import {
 // import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 import { Link } from "react-router-dom";
-import { getAllPersonas } from "../utils/api";
+import { getAllPersonas } from "../utils/api/personasApi";
 import { useQuery } from 'react-query'
-
-const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
-
-async function fetchPersonas() {
-  const res = await fetch("http://localhost:8000/api/personas", {
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data;
-}
+import TablaInvestigadores from "../components/TablaInvestigadores";
 
 export default function ListaInvestigadores() {
-  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
-  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
-  const [filtroActivo, setFiltroActivo] = useState(false);
 
   const [investigadores, setInvestigadores] = useState([]);
 
@@ -54,49 +42,6 @@ export default function ListaInvestigadores() {
   useEffect(() => {
     setInvestigadores(data?.personas)
   }, [data]);
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage);
-  };
-
-  const totalPages = Math.ceil(
-    (filtroActivo ? investigadoresFiltrados : investigadores)?.length /
-    ITEMS_PER_PAGE
-  );
-
-  const handleSelectPage = (event) => {
-    if (parseInt(event.target.value, 10) > totalPages) {
-      handlePageChange(0);
-    } else {
-      if (parseInt(event.target.value, 10) !== "") {
-        const selectedPage = parseInt(event.target.value, 10);
-        setCurrentPage(selectedPage - 1);
-      } else {
-        handlePageChange(0);
-      }
-    }
-  };
-
-  //handleFilter
-  useEffect(() => {
-    if (nombre === "" && grupo === "") {
-      setInvestigadoresFiltrados([]);
-      setFiltroActivo(false);
-    } else {
-      const filteredInvestigadores = investigadores?.filter(
-        (item) =>
-          // (item.apellido.toLowerCase().includes(nombre.toLowerCase()) ||
-          // item.nombre.toLowerCase().includes(nombre.toLowerCase()))
-          ( (item.apellido.toLowerCase()+' '+item.nombre.toLowerCase() ).includes(nombre.toLowerCase())
-          || (item.nombre.toLowerCase()+' '+item.apellido.toLowerCase()).includes(nombre.toLowerCase() )) 
-          &&
-          item.siglas.toLowerCase().includes(grupo.toLowerCase())
-      );
-      setInvestigadoresFiltrados(filteredInvestigadores);
-      setFiltroActivo(true);
-    }
-    setCurrentPage(0);
-  }, [nombre, grupo]);
 
   if (isLoading) {
     return <Text fontSize="md">Cargando...</Text>
@@ -138,107 +83,11 @@ export default function ListaInvestigadores() {
 
           <br />
 
-          <Card width='100%'>
-            <CardBody>
-              <TableContainer>
-                <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                  <Thead>
-                    <Tr>
-                      <Th textAlign="center">
-                        <Checkbox border="gray"></Checkbox>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Apellido y Nombre</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Estado</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Grupo</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Cat. UTN</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Cat. Min.</Text>
-                      </Th>
-                      <Th textAlign="center">
-                        <Text fontSize="md">Ver más</Text>
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {(filtroActivo ? investigadoresFiltrados : investigadores)
-                      ?.slice(
-                        currentPage * ITEMS_PER_PAGE,
-                        (currentPage + 1) * ITEMS_PER_PAGE
-                      )
-                      .map((item, index) => (
-                        <Tr key={index}>
-                          <Td textAlign="center">
-                            <Checkbox border="gray"></Checkbox>
-                          </Td>
-                          <Td textAlign="center">
-                            <Text fontSize="md">{item.apellido} {item.nombre}</Text>
-                          </Td>
-                          <Td textAlign="center">
-                            <Text fontSize="md">{item.activo ? 'Activo' : 'Inactivo'}</Text>
-                          </Td>
-                          <Td textAlign="center">
-                            <Text fontSize="md">{item.siglas}</Text>
-                          </Td>
-                          <Td textAlign="center">
-                            {/* <Text fontSize="md">{ item.catUTN } </Text> */}
-                            <Text fontSize="md"> CatUTN </Text>
-                          </Td>
-                          <Td textAlign="center">
-                            {/* <Text fontSize="md">{item.catMin}</Text> */}
-                            <Text fontSize="md"> CatMIN</Text>
-                          </Td>
-                          <Td textAlign="center">
-                            <Link><PlusSquareIcon onClick={() => alert("Detalle del investigador")} /></Link>
-                          </Td>
-                        </Tr>
-                      ))}
-                  </Tbody>
-                </Table>
-                <HStack spacing={4} mt={4} justify="center">
-                  <IconButton
-                    isDisabled={currentPage === 0}
-                    icon={<ChevronLeftIcon />}
-                    onClick={() => {
-                      handlePageChange(currentPage - 1);
-                    }}
-                  />
-
-                  <Input
-                    type="number"
-                    value={currentPage + 1}
-                    onChange={handleSelectPage}
-                    style={{ width: "50px", textAlign: "center" }}
-                  />
-
-                  <Text>de {totalPages}</Text>
-
-                  <IconButton
-                    isDisabled={
-                      currentPage ===
-                      Math.ceil(
-                        (filtroActivo
-                          ? investigadoresFiltrados
-                          : investigadores
-                        )?.length / ITEMS_PER_PAGE
-                      ) - 1
-                    }
-                    icon={<ChevronRightIcon />}
-                    onClick={() => {
-                      handlePageChange(currentPage + 1);
-                    }}
-                  />
-                </HStack>
-              </TableContainer>
-            </CardBody>
-          </Card>
+          <TablaInvestigadores
+            investigadores= {investigadores}
+            searchNombre = {nombre}
+            searchGrupo = {grupo}
+          />
 
           <br />
 
