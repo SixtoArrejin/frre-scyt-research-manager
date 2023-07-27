@@ -27,9 +27,36 @@ export function post(url, data) {
   return fetchData(url, options);
 }
 
-// Define otras funciones para PUT, DELETE, etc.
+export function put(url, data) {
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  };
+  return fetchData(url, options);
+}
 
+export function del(url) {
+  const options = {
+    method: 'DELETE',
+  };
+  return fetchData(url, options);
+}
 
 export async function getAllPersonas() {
   return get('/api/personas')
+}
+
+export async function createPersona(id, data) {
+  return put(`/api/personas/${id}`, data);
+}
+
+export async function updatePersona(id, data) {
+  return put(`/api/personas/${id}`, data);
+}
+
+export async function deletePersona(id) {
+  return del(`/api/personas/${id}`);
 }

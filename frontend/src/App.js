@@ -12,7 +12,8 @@ import NuevaCategoria from './pages/NuevaCategoria';
 import NuevoInvestigador from './pages/NuevoInvestigador';
 import ListaGrupos from './pages/ListaGrupos';
 import ModificarInvestigador from './pages/ModificarInvestigador';
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ function App() {
           </Routes>
         </SidebarWithHeader>
       </Router>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
