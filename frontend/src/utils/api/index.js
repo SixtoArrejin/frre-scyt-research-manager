@@ -1,8 +1,6 @@
-// personasServices.js
-
 export const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
-// services/api.js
+// servicesBase
 
 async function fetchData(url, options) {
   const response = await fetch(`${API_URL}${url}`, options);
@@ -45,6 +43,7 @@ export function del(url) {
   return fetchData(url, options);
 }
 
+// personasServices
 export async function getAllPersonas() {
   return get('/api/personas')
 }
