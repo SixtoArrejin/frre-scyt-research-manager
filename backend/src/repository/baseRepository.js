@@ -27,6 +27,19 @@ export async function create(tableName, data) {
   }
 }
 
+export async function update(tableName, filter, dataToUpdate) {
+  try {
+    const updatedRecord = await prisma[tableName].update({
+      where: filter,
+      data: dataToUpdate,
+    });
+    return updatedRecord;
+  } catch (error) {
+    throw new Error(`Error al actualizar el registro de ${tableName} en la BD: ${error.message}`);
+  }
+}
+
+
 // Obtener un registro por su identificador único
 export async function getById(tableName, id, includeRelations = []) {
   try {

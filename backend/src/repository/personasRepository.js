@@ -1,4 +1,8 @@
-import { getAll, create } from './baseRepository.js';
+import {
+  getAll,
+  create,
+  update,
+} from './baseRepository.js';
 import { prisma } from '../db.js'
 
 export async function getAllPersonas() {

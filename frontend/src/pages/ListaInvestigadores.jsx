@@ -40,7 +40,19 @@ export default function ListaInvestigadores() {
   const { data, isLoading, error } = useQuery('personas', getAllPersonas);
 
   useEffect(() => {
-    setInvestigadores(data?.personas)
+    const personasOrdenadas = data?.personas.sort((a, b) => {
+      const apellidoA = a.apellido.toUpperCase();
+      const apellidoB = b.apellido.toUpperCase();
+    
+      if (apellidoA < apellidoB) {
+        return -1; // Si el apellido de 'a' es menor que el de 'b', lo colocamos antes en el arreglo
+      }
+      if (apellidoA > apellidoB) {
+        return 1; // Si el apellido de 'a' es mayor que el de 'b', lo colocamos después en el arreglo
+      }
+      return 0; // Si los apellidos son iguales, no se realiza ningún cambio en el orden
+    });
+    setInvestigadores(personasOrdenadas)
   }, [data]);
 
   if (isLoading) {

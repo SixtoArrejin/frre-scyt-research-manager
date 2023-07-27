@@ -1,5 +1,4 @@
-import { getAllPersonasService } from '../services/personasService.js';
-import { createPersonaService } from '../services/personasService.js';
+import { getAllPersonasService, createPersonaService, updatePersonaService } from '../services/personasService.js';
 
 export async function getPersonas(req, res) {
   try {
@@ -15,6 +14,18 @@ export async function createPersona(req, res) {
     const personaData = req.body;
     const newPersona = await createPersonaService(personaData);
     return res.status(201).json({ message: 'Persona creada exitosamente', success: true, newPersona });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function updatePersonaController(req, res) {
+  const dni = parseInt(req.params.dni, 10);
+  const personaData = req.body;
+
+  try {
+    const updatedPersona = await updatePersonaService(dni, personaData);
+    return res.status(200).json({ message: 'Persona actualizada exitosamente', success: true, updatedPersona });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
