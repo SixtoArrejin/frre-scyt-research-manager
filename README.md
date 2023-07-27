@@ -9,7 +9,7 @@ NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen v
 1. Clonar el repositorio:
 
 ```
-git clone [https://github.com/SixtoArrejin/Beca-Secretaria-CyT](https://github.com/SixtoArrejin/Beca-Secretaria-CyT)
+git clone https://github.com/SixtoArrejin/Beca-Secretaria-CyT
 ```
 
 ### Iniciar el back end
