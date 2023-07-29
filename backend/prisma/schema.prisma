@@ -120,3 +120,8 @@ model tiene {
   @@id([siglas, idProyecto])
   @@index([idProyecto], map: "idProyecto")
 }
+
+model usuarios {
+  usuario    String  @id @db.VarChar(20)
+  contrasena String? @db.VarChar(10)
+}
