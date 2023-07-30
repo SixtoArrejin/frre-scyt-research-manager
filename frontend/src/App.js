@@ -14,11 +14,13 @@ import ListaGrupos from './pages/ListaGrupos';
 import ModificarInvestigador from './pages/ModificarInvestigador';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import LogIn from './pages/LogIn';
 
 const queryClient = new QueryClient();
 
 const routes = [
   // { path: "/", element: <Navigate to="/home" /> },
+  { path: "/login", element: <LogIn /> },
   { path: "/investigadores", element: <ListaInvestigadores /> },
   { path: "/detalle-investigador", element: <DetalleInvestigador /> },
   { path: "/nueva-categoria", element: <NuevaCategoria /> },
