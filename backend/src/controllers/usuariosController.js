@@ -1,4 +1,4 @@
-import { getAllUsuariosService } from '../services/usuariosService.js';
+import { getAllUsuariosService, createUsuarioService } from '../services/usuariosService.js';
 
 export async function getUsuarios(req, res) {
   try {
@@ -8,3 +8,13 @@ export async function getUsuarios(req, res) {
     return res.status(500).json({ message: error.message, success: false });
   }
 }
+
+export async function createUsuario(req, res) {
+    try {
+      const userData = req.body;
+      const newUser = await createUsuarioService(userData);
+      return res.status(201).json({ message: 'Usuario creado exitosamente', success: true, newUser });
+    } catch (error) {
+      return res.status(500).json({ message: error.message, success: false });
+    }
+  }

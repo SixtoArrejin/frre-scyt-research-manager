@@ -123,5 +123,5 @@ model tiene {
 
 model usuarios {
   usuario    String  @id @db.VarChar(20)
-  contrasena String? @db.VarChar(10)
+  contrasena String? @db.VarChar(255)
 }
