@@ -3,6 +3,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import Grupos from './routes/gruposRoutes.js'
 import Personas from './routes/personasRoutes.js'
+import Usuarios from './routes/usuariosRoutes.js'
 
 //importamos nuestro enrutador
 const app = express()
@@ -13,6 +14,7 @@ app.use(express.json())
 
 app.use('/api/grupos', Grupos)
 app.use('/api/personas', Personas)
+app.use('/api/usuarios', Usuarios)
 
 const PORT = process.env.PORT || 8000;
 
