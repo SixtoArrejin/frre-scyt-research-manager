@@ -11,9 +11,8 @@ import {
   extendTheme,
   Box
 } from "@chakra-ui/react";
-const activeLabelStyles = {
-  transform: "scale(0.85) translateY(-24px)"
-};
+import { UserProvider } from "./context/UserContext"; // Asegúrate de que la ruta sea correcta
+
 export const theme = extendTheme({
   components: {
     Input: {
@@ -66,7 +65,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ChakraProvider theme={theme}>
     <React.StrictMode>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </React.StrictMode>
   </ChakraProvider>
 );
