@@ -99,3 +99,9 @@ CREATE TABLE tiene (
     FOREIGN KEY (idProyecto) REFERENCES proyectos(idProyecto),
     FOREIGN KEY (siglas) REFERENCES grupoInvestigacion(siglas)
 );
+
+CREATE TABLE usuarios (
+    usuario VARCHAR(20),
+    contrasena VARCHAR(255),
+    PRIMARY KEY (usuario)
+);
