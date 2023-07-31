@@ -35,6 +35,8 @@ import {
 import { BiNetworkChart, BiTask } from 'react-icons/bi';
 import Logo from '../img/Logo2.jpg';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 const LinkItems = [
   { name: 'Home', icon: FiHome, route: '/' },
@@ -136,6 +138,7 @@ const NavItem = ({ icon, children, route, ...rest }) => {
 };
 
 const MobileNav = ({ onOpen, ...rest }) => {
+  const { logout, currentUser } = useContext(UserContext);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -190,7 +193,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Usuario</Text>
+                  <Text fontSize="sm">{currentUser}</Text>
                   <Text fontSize="xs" color="gray.600">
                     Admin
                   </Text>
@@ -208,7 +211,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <Link onClick={logout} to={'/login'}><MenuItem>Sign out</MenuItem></Link>
             </MenuList>
           </Menu>
         </Flex>
