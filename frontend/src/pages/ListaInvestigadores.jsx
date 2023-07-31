@@ -26,12 +26,12 @@ import {
 } from "@chakra-ui/react";
 // import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
 import { getAllPersonas } from "../utils/api/personasApi";
 import { useQuery } from 'react-query'
 import TablaInvestigadores from "../components/TablaInvestigadores";
 
-export default function ListaInvestigadores() {
+export default function ListaInvestigadores( {from} ) {
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
 

@@ -5,7 +5,7 @@ import { validateToken } from '../middleware/authMiddleware.js'; // Importa la f
 const router = Router()
 
 router.get('/', getUsuarios)
-router.post('/', validateToken, createUsuario)
+router.post('/', createUsuario)
 router.post('/login', login);
 
 export default router
