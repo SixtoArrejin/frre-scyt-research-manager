@@ -1,35 +1,37 @@
 CREATE DATABASE secCyT;
 USE secCyT;
 
-CREATE TABLE grupoInvestigacion (
-    siglas VARCHAR(15),
+CREATE TABLE gruposInvestigacion (
+    idGrupoInvestigacion INT AUTO_INCREMENT,
+    siglas VARCHAR(15) UNIQUE,
     nombre VARCHAR(40),
     resolucion VARCHAR(10),
     fechaCreacion DATE,
-    PRIMARY KEY (siglas)
+    PRIMARY KEY (idGrupoInvestigacion)
 );
 
-CREATE TABLE persona (
-    dni INT,
+CREATE TABLE personas (
+    idPersona INT AUTO_INCREMENT,
+    dni INT UNIQUE,
     nombre VARCHAR(30),
     apellido VARCHAR(30),
     activo BOOLEAN,
     comision VARCHAR(50),
-    siglas VARCHAR (15) NOT NULL,
-    PRIMARY KEY (dni),
-    FOREIGN KEY (siglas) REFERENCES grupoInvestigacion(siglas)
+    idGrupoInvestigacion INT NOT NULL,
+    PRIMARY KEY (idPersona),
+    FOREIGN KEY (idGrupoInvestigacion) REFERENCES gruposInvestigacion(idGrupoInvestigacion)
 );
 
 CREATE TABLE categorias (
-    idCategoria INT,
+    idCategoria INT AUTO_INCREMENT,
     equiparacion BOOLEAN,
     tipo VARCHAR(20),
     categoria VARCHAR(10),
     fecha DATE,
     normativa VARCHAR(20),
-    dni INT NOT NULL,
+    idPersona INT NOT NULL,
     PRIMARY KEY (idCategoria),
-    FOREIGN KEY (dni) References persona(dni)
+    FOREIGN KEY (idPersona) References personas(idPersona)
 );
 
 CREATE TABLE proyectos(
@@ -42,14 +44,14 @@ CREATE TABLE proyectos(
     regional VARCHAR(100),
     convocatoria INT,
     estado VARCHAR(20),
-    dniDirector INT NOT NULL,
-    dniCodirector INT,
+    idDirector INT NOT NULL,
+    idCodirector INT,
     PRIMARY KEY (idProyecto),
-    FOREIGN KEY (dniDirector) REFERENCES persona(dni),
-    FOREIGN KEY (dniCodirector) REFERENCES persona(dni)
+    FOREIGN KEY (idDirector) REFERENCES personas(idPersona),
+    FOREIGN KEY (idCodirector) REFERENCES personas(idPersona)
 );
 
-CREATE TABLE pid (
+CREATE TABLE pids (
     idProyectoPid INT,
     tipoProyecto VARCHAR(100),
     prorrogado BOOLEAN,
@@ -84,20 +86,20 @@ CREATE TABLE proyectosConFinanciamiento(
 );
 
 CREATE TABLE participa(
-    dni INT,
+    idPersona INT,
     idProyecto INT,
     rol VARCHAR(50) NOT NULL,
-    PRIMARY KEY (dni, idProyecto),
-    FOREIGN KEY (dni) REFERENCES persona(dni),
+    PRIMARY KEY (idPersona, idProyecto),
+    FOREIGN KEY (idPersona) REFERENCES personas(idPersona),
     FOREIGN KEY (idProyecto) REFERENCES proyectos(idProyecto)
 );
 
 CREATE TABLE tiene (
-    siglas VARCHAR(15),
+    idGrupoInvestigacion INT,
     idProyecto INT,
-    PRIMARY KEY (siglas, idProyecto),
+    PRIMARY KEY (idGrupoInvestigacion, idProyecto),
     FOREIGN KEY (idProyecto) REFERENCES proyectos(idProyecto),
-    FOREIGN KEY (siglas) REFERENCES grupoInvestigacion(siglas)
+    FOREIGN KEY (idGrupoInvestigacion) REFERENCES gruposInvestigacion(idGrupoInvestigacion)
 );
 
 CREATE TABLE usuarios (

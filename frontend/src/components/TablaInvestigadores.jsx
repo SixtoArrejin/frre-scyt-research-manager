@@ -5,11 +5,12 @@ import { useState } from "react";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
-export default function TablaInvestigadores({ investigadores, searchNombre, searchGrupo}) {
+export default function TablaInvestigadores({ investigadores, searchNombre, searchGrupo }) {
 
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
   const [filtroActivo, setFiltroActivo] = useState(false);
+  const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
 
   const totalPages = Math.ceil(
     ((filtroActivo ? investigadoresFiltrados : investigadores))?.length /
@@ -32,7 +33,30 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
-  
+
+  const handleInvestigadorSelection = (investigadorId) => {
+    setSelectedInvestigadores((prevSelected) => {
+      if (prevSelected.includes(investigadorId)) {
+        return prevSelected.filter((id) => id !== investigadorId);
+      } else {
+        return [...prevSelected, investigadorId];
+      }
+    });
+  };
+
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      const allInvestigadoresIds = investigadores.map((item) => item.idPersona);
+      setSelectedInvestigadores(allInvestigadoresIds);
+    } else {
+      setSelectedInvestigadores([]);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Investigadores seleccionados:", selectedInvestigadores);
+  }, [selectedInvestigadores]);
+
   useEffect(() => {
     if (searchNombre === "" && searchGrupo === "") {
       setInvestigadoresFiltrados([]);
@@ -42,16 +66,18 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
         (item) =>
           // (item.apellido.toLowerCase().includes(nombre.toLowerCase()) ||
           // item.nombre.toLowerCase().includes(nombre.toLowerCase()))
-          ( (item.apellido.toLowerCase()+' '+item.nombre.toLowerCase() ).includes(searchNombre.toLowerCase())
-          || (item.nombre.toLowerCase()+' '+item.apellido.toLowerCase()).includes(searchNombre.toLowerCase() )) 
+          ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(searchNombre.toLowerCase())
+            || (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(searchNombre.toLowerCase()))
           &&
-          item.siglas.toLowerCase().includes(searchGrupo.toLowerCase())
+          item.gruposinvestigacion.siglas.toLowerCase().includes(searchGrupo?.toLowerCase())
       );
       setInvestigadoresFiltrados(filteredInvestigadores);
       setFiltroActivo(true);
     }
     setCurrentPage(0)
   }, [searchNombre, searchGrupo]);
+
+  const isAllSelected = selectedInvestigadores.length === investigadores.length;
 
   return (
     <Card width='100%'>
@@ -61,7 +87,11 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
             <Thead>
               <Tr>
                 <Th textAlign="center">
-                  <Checkbox border="gray"></Checkbox>
+                  <Checkbox
+                    border="gray"
+                    isChecked={isAllSelected}
+                    onChange={handleSelectAll}
+                  />
                 </Th>
                 <Th textAlign="center">
                   <Text fontSize="md">Apellido y Nombre</Text>
@@ -92,7 +122,11 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
                 .map((item, index) => (
                   <Tr key={index}>
                     <Td textAlign="center">
-                      <Checkbox border="gray"></Checkbox>
+                    <Checkbox
+                        border="gray"
+                        isChecked={selectedInvestigadores.includes(item.idPersona)}
+                        onChange={() => handleInvestigadorSelection(item.idPersona)}
+                      />
                     </Td>
                     <Td textAlign="center">
                       <Text fontSize="md">{item.apellido} {item.nombre}</Text>
@@ -101,7 +135,7 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
                       <Text fontSize="md">{item.activo ? 'Activo' : 'Inactivo'}</Text>
                     </Td>
                     <Td textAlign="center">
-                      <Text fontSize="md">{item.siglas}</Text>
+                      <Text fontSize="md">{item.gruposinvestigacion.siglas}</Text>
                     </Td>
                     <Td textAlign="center">
                       <Text fontSize="md"> CatUTN </Text>

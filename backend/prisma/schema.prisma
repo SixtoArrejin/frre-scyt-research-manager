@@ -8,85 +8,87 @@ datasource db {
 }
 
 model categorias {
-  idCategoria  Int       @id
+  idCategoria  Int       @id @default(autoincrement())
   equiparacion Boolean?
   tipo         String?   @db.VarChar(20)
   categoria    String?   @db.VarChar(10)
   fecha        DateTime? @db.Date
   normativa    String?   @db.VarChar(20)
-  dni          Int
-  persona      persona   @relation(fields: [dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "categorias_ibfk_1")
+  idPersona    Int
+  personas     personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "categorias_ibfk_1")
 
-  @@index([dni], map: "dni")
+  @@index([idPersona], map: "idPersona")
 }
 
-model grupoinvestigacion {
-  siglas        String    @id @db.VarChar(15)
-  nombre        String?   @db.VarChar(40)
-  resolucion    String?   @db.VarChar(10)
-  fechaCreacion DateTime? @db.Date
-  persona       persona[]
-  tiene         tiene[]
+model gruposinvestigacion {
+  idGrupoInvestigacion Int        @id @default(autoincrement())
+  siglas               String?    @unique(map: "siglas") @db.VarChar(15)
+  nombre               String?    @db.VarChar(40)
+  resolucion           String?    @db.VarChar(10)
+  fechaCreacion        DateTime?  @db.Date
+  personas             personas[]
+  tiene                tiene[]
 }
 
 model participa {
-  dni        Int
+  idPersona  Int
   idProyecto Int
   rol        String    @db.VarChar(50)
-  persona    persona   @relation(fields: [dni], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
+  personas   personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
   proyectos  proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
 
-  @@id([dni, idProyecto])
+  @@id([idPersona, idProyecto])
   @@index([idProyecto], map: "idProyecto")
 }
 
-model persona {
-  dni                                        Int                @id
-  nombre                                     String?            @db.VarChar(30)
-  apellido                                   String?            @db.VarChar(30)
+model personas {
+  idPersona                                  Int                 @id @default(autoincrement())
+  dni                                        Int?                @unique(map: "dni")
+  nombre                                     String?             @db.VarChar(30)
+  apellido                                   String?             @db.VarChar(30)
   activo                                     Boolean?
-  comision                                   String?            @db.VarChar(50)
-  siglas                                     String             @db.VarChar(15)
+  comision                                   String?             @db.VarChar(50)
+  idGrupoInvestigacion                       Int
   categorias                                 categorias[]
   participa                                  participa[]
-  grupoinvestigacion                         grupoinvestigacion @relation(fields: [siglas], references: [siglas], onDelete: NoAction, onUpdate: NoAction, map: "persona_ibfk_1")
-  proyectos_proyectos_dniDirectorTopersona   proyectos[]        @relation("proyectos_dniDirectorTopersona")
-  proyectos_proyectos_dniCodirectorTopersona proyectos[]        @relation("proyectos_dniCodirectorTopersona")
+  gruposinvestigacion                        gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
+  proyectos_proyectos_idDirectorTopersonas   proyectos[]         @relation("proyectos_idDirectorTopersonas")
+  proyectos_proyectos_idCodirectorTopersonas proyectos[]         @relation("proyectos_idCodirectorTopersonas")
 
-  @@index([siglas], map: "siglas")
+  @@index([idGrupoInvestigacion], map: "idGrupoInvestigacion")
 }
 
-model pid {
+model pids {
   idProyectoPid Int       @id
   tipoProyecto  String?   @db.VarChar(100)
   prorrogado    Boolean?
   codPid        String?   @db.VarChar(20)
   programa      String?   @db.VarChar(100)
   disposicion   String?   @db.VarChar(10)
-  proyectos     proyectos @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pid_ibfk_1")
+  proyectos     proyectos @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
 }
 
 model proyectos {
-  idProyecto                               Int                @id
-  tipoActividad                            String?            @db.VarChar(50)
-  fechaInicio                              DateTime?          @db.Date
-  fechaFin                                 DateTime?          @db.Date
-  denominacion                             String?            @db.VarChar(250)
-  completo                                 Boolean?
-  regional                                 String?            @db.VarChar(100)
-  convocatoria                             Int?
-  estado                                   String?            @db.VarChar(20)
-  dniDirector                              Int
-  dniCodirector                            Int?
-  participa                                participa[]
-  pid                                      pid?
-  persona_proyectos_dniDirectorTopersona   persona            @relation("proyectos_dniDirectorTopersona", fields: [dniDirector], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
-  persona_proyectos_dniCodirectorTopersona persona?           @relation("proyectos_dniCodirectorTopersona", fields: [dniCodirector], references: [dni], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
-  proyectosexternos                        proyectosexternos?
-  tiene                                    tiene[]
+  idProyecto                                Int                @id
+  tipoActividad                             String?            @db.VarChar(50)
+  fechaInicio                               DateTime?          @db.Date
+  fechaFin                                  DateTime?          @db.Date
+  denominacion                              String?            @db.VarChar(250)
+  completo                                  Boolean?
+  regional                                  String?            @db.VarChar(100)
+  convocatoria                              Int?
+  estado                                    String?            @db.VarChar(20)
+  idDirector                                Int
+  idCodirector                              Int?
+  participa                                 participa[]
+  pids                                      pids?
+  personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
+  proyectosexternos                         proyectosexternos?
+  tiene                                     tiene[]
 
-  @@index([dniCodirector], map: "dniCodirector")
-  @@index([dniDirector], map: "dniDirector")
+  @@index([idCodirector], map: "idCodirector")
+  @@index([idDirector], map: "idDirector")
 }
 
 model proyectosconfinanciamiento {
@@ -112,12 +114,12 @@ model proyectosexternos {
 }
 
 model tiene {
-  siglas             String             @db.VarChar(15)
-  idProyecto         Int
-  proyectos          proyectos          @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "tiene_ibfk_1")
-  grupoinvestigacion grupoinvestigacion @relation(fields: [siglas], references: [siglas], onDelete: NoAction, onUpdate: NoAction, map: "tiene_ibfk_2")
+  idGrupoInvestigacion Int
+  idProyecto           Int
+  proyectos            proyectos           @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "tiene_ibfk_1")
+  gruposinvestigacion  gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "tiene_ibfk_2")
 
-  @@id([siglas, idProyecto])
+  @@id([idGrupoInvestigacion, idProyecto])
   @@index([idProyecto], map: "idProyecto")
 }
 

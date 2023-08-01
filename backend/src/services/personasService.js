@@ -23,10 +23,10 @@ export async function createPersonaService(personaData) {
   }
 }
 
-export async function updatePersonaService(dni, personaData) {
+export async function updatePersonaService(id, personaData) {
   try {
-    const filter = { dni: dni };
-    const updatedPersona = await update('persona', filter, personaData);
+    const filter = { id };
+    const updatedPersona = await update('personas', filter, personaData);
     return updatedPersona;
   } catch (error) {
     throw new Error(error.message);
