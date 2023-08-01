@@ -33,15 +33,26 @@ import { Link, useParams } from 'react-router-dom';
 import proyectosInv from '../utils/data/proyectosInv.json';
 import { getPersonaById } from "../utils/api/personasApi";
 import { useQuery } from "react-query";
+import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleInvestigador() {
 
-  const {idPersona} = useParams()
+  const { idPersona } = useParams()
 
   const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
   const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
+
+  const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
+  const categoriasMIN = data?.persona.categorias.filter(categoria => categoria.tipo === "ministerio");
+  categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+  useEffect(() => {
+    console.log(categoriasUTN)
+    console.log(categoriasMIN)
+  }, [categoriasUTN, categoriasMIN]);
 
   return (
     <Card>
@@ -65,7 +76,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="25vw"
                   >
-                    <Input name="ayn" placeholder="Apellido y Nombre" value={ data ? ayn : ""} disabled/>
+                    <Input name="ayn" placeholder="Apellido y Nombre" value={data ? ayn : ""} disabled />
                     <FormLabel>Apellido y Nombre</FormLabel>
                   </FormControl>
 
@@ -75,7 +86,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="10vw"
                   >
-                    <Input name="dni" placeholder="DNI" value={data?.persona.dni || "" } disabled />
+                    <Input name="dni" placeholder="DNI" value={data?.persona.dni || ""} disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
 
@@ -85,7 +96,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="10vw"
                   >
-                    <Input name="estado" placeholder="Estado" value={ data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ""} disabled />
+                    <Input name="estado" placeholder="Estado" value={data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ""} disabled />
                     <FormLabel>Estado</FormLabel>
                   </FormControl>
                   <FormControl
@@ -135,16 +146,16 @@ export default function DetalleInvestigador() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {categorias.map((item, index) => (
+                        {categoriasMIN?.map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.fecha}</Text>
+                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fecha)}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.categoria}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.resolucion}</Text>
+                              <Text fontSize="md">{item.normativa}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
@@ -183,16 +194,16 @@ export default function DetalleInvestigador() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {categorias.map((item, index) => (
+                        {categoriasUTN?.map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.fecha}</Text>
+                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fecha)}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.categoria}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.resolucion}</Text>
+                              <Text fontSize="md">{item.normativa}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.equiparacion ? 'SI' : 'NO'}</Text>
