@@ -1,7 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Link, Text, Tbody, Td, HStack, IconButton, Input } from "@chakra-ui/react";
+import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, Tbody, Td, HStack, IconButton, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -122,7 +123,7 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
                 .map((item, index) => (
                   <Tr key={index}>
                     <Td textAlign="center">
-                    <Checkbox
+                      <Checkbox
                         border="gray"
                         isChecked={selectedInvestigadores.includes(item.idPersona)}
                         onChange={() => handleInvestigadorSelection(item.idPersona)}
@@ -144,7 +145,7 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
                       <Text fontSize="md"> CatMIN</Text>
                     </Td>
                     <Td textAlign="center">
-                      <Link><PlusSquareIcon onClick={() => alert("Detalle del investigador")} /></Link>
+                      <Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon/></Link>
                     </Td>
                   </Tr>
                 ))}
