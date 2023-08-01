@@ -20,11 +20,11 @@ export async function createPersona(req, res) {
 }
 
 export async function updatePersonaController(req, res) {
-  const dni = parseInt(req.params.dni, 10);
+  const idPersona = parseInt(req.params.idPersona, 10);
   const personaData = req.body;
 
   try {
-    const updatedPersona = await updatePersonaService(dni, personaData);
+    const updatedPersona = await updatePersonaService(idPersona, personaData);
     return res.status(200).json({ message: 'Persona actualizada exitosamente', success: true, updatedPersona });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });

@@ -6,6 +6,6 @@ const router = Router()
 
 router.get('/', getPersonas)
 router.post('/', validateToken, createPersona);
-router.put('/:dni', validateToken, updatePersonaController);
+router.put('/:idPersona', validateToken, updatePersonaController);
 
 export default router

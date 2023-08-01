@@ -23,9 +23,9 @@ export async function createPersonaService(personaData) {
   }
 }
 
-export async function updatePersonaService(id, personaData) {
+export async function updatePersonaService(idPersona, personaData) {
   try {
-    const filter = { id };
+    const filter = { idPersona };
     const updatedPersona = await update('personas', filter, personaData);
     return updatedPersona;
   } catch (error) {

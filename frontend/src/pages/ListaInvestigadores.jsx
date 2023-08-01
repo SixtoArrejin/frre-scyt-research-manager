@@ -35,25 +35,20 @@ export default function ListaInvestigadores( {from} ) {
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
 
-  const [investigadores, setInvestigadores] = useState([]);
-
   const { data, isLoading, error } = useQuery('personas', getAllPersonas);
 
-  useEffect(() => {
-    const personasOrdenadas = data?.personas.sort((a, b) => {
-      const apellidoA = a.apellido.toUpperCase();
-      const apellidoB = b.apellido.toUpperCase();
-    
-      if (apellidoA < apellidoB) {
-        return -1; // Si el apellido de 'a' es menor que el de 'b', lo colocamos antes en el arreglo
-      }
-      if (apellidoA > apellidoB) {
-        return 1; // Si el apellido de 'a' es mayor que el de 'b', lo colocamos después en el arreglo
-      }
-      return 0; // Si los apellidos son iguales, no se realiza ningún cambio en el orden
-    });
-    setInvestigadores(personasOrdenadas)
-  }, [data]);
+  const investigadores = data?.personas.sort((a, b) => {
+    const apellidoA = a.apellido.toUpperCase();
+    const apellidoB = b.apellido.toUpperCase();
+
+    if (apellidoA < apellidoB) {
+      return -1;
+    }
+    if (apellidoA > apellidoB) {
+      return 1;
+    }
+    return 0;
+  });
 
   if (isLoading) {
     return <Text fontSize="md">Cargando...</Text>
@@ -95,11 +90,13 @@ export default function ListaInvestigadores( {from} ) {
 
           <br />
 
-          <TablaInvestigadores
-            investigadores= {investigadores}
-            searchNombre = {nombre}
-            searchGrupo = {grupo}
-          />
+          {investigadores && (
+            <TablaInvestigadores
+              investigadores={investigadores}
+              searchNombre={nombre}
+              searchGrupo={grupo}
+            />
+          )}
 
           <br />
 
