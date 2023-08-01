@@ -44,7 +44,7 @@ npm start
 
 6. Obtener las dependencias:
 
-```
+```javascript
 cd frontend
 npm install
 ```
@@ -67,7 +67,7 @@ http://localhost:8000/api/usuarios
 
 Y en el body se debe incluir el usuario y contraseña en este formato: 
 
-```
+```javascript
 {
   "usuario": "Administrador",
   "contrasena": "administrador"
