@@ -29,12 +29,19 @@ import {
 import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../components/InputLabel";
 import categorias from '../utils/data/ListaCategorias.json'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import proyectosInv from '../utils/data/proyectosInv.json';
+import { getPersonaById } from "../utils/api/personasApi";
+import { useQuery } from "react-query";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleInvestigador() {
+
+  const {idPersona} = useParams()
+
+  const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
+  const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
   return (
     <Card>
@@ -58,7 +65,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="25vw"
                   >
-                    <Input name="ayn" placeholder="Apellido y Nombre" value={'Apellido y Nombre'} disabled/>
+                    <Input name="ayn" placeholder="Apellido y Nombre" value={ data ? ayn : ""} disabled/>
                     <FormLabel>Apellido y Nombre</FormLabel>
                   </FormControl>
 
@@ -68,7 +75,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="10vw"
                   >
-                    <Input name="dni" placeholder="DNI" value={45268597} disabled />
+                    <Input name="dni" placeholder="DNI" value={data?.persona.dni || "" } disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
 
@@ -78,7 +85,7 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="10vw"
                   >
-                    <Input name="estado" placeholder="Estado" value={'Activo'} disabled />
+                    <Input name="estado" placeholder="Estado" value={ data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ""} disabled />
                     <FormLabel>Estado</FormLabel>
                   </FormControl>
                   <FormControl
@@ -87,31 +94,11 @@ export default function DetalleInvestigador() {
                     // onChange={event => setNombreProducto(event.target.value)}
                     width="15vw"
                   >
-                    <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} disabled />
+                    <Input name="grupo" placeholder="Grupo" value={data?.persona.gruposinvestigacion.siglas || ""} disabled />
                     <FormLabel>Grupo</FormLabel>
                   </FormControl>
                 </Box>
                 <br />
-                {/* <Box display='flex' width='80%' alignItems='center' justifyContent='space-around' >
-                  <FormControl
-                    variant="floating"
-                    id="estado"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="20vw"
-                  >
-                    <Input name="estado" placeholder="Estado" value={'Activo'} disabled />
-                    <FormLabel>Estado</FormLabel>
-                  </FormControl>
-                  <FormControl
-                    variant="floating"
-                    id="grupo"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="20vw"
-                  >
-                    <Input name="grupo" placeholder="Grupo" value={'CINAPTIC'} disabled />
-                    <FormLabel>Grupo</FormLabel>
-                  </FormControl>
-                </Box> */}
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
                   <Button colorScheme="blue" variant="outline" onClick={() => alert('Modificar')}>
                     Modificar

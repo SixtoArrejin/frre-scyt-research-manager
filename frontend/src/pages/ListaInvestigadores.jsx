@@ -35,7 +35,7 @@ export default function ListaInvestigadores( {from} ) {
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
 
-  const { data, isLoading, error } = useQuery('personas', getAllPersonas);
+  const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
 
   const investigadores = data?.personas.sort((a, b) => {
     const apellidoA = a.apellido.toUpperCase();
