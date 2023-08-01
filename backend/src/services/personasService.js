@@ -2,6 +2,7 @@
 import {
   getAllPersonas,
   createPersona,
+  getPersonaById,
 } from '../repository/personasRepository.js';
 import { update } from '../repository/baseRepository.js';
 
@@ -9,6 +10,15 @@ export async function getAllPersonasService() {
   try {
     const personas = await getAllPersonas();
     return personas
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getPersonaByIdService(idPersona) {
+  try {
+    const persona = await getPersonaById(idPersona);
+    return persona
   } catch (error) {
     throw new Error(error.message);
   }

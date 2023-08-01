@@ -41,19 +41,20 @@ export async function update(tableName, filter, dataToUpdate) {
 
 
 // Obtener un registro por su identificador único
-export async function getById(tableName, id, includeRelations = []) {
+export async function getById(tableName, idField, idValue, includeRelations = []) {
   try {
+    const whereFilter = { [idField]: idValue };
     const includeObj = {};
     for (const relation of includeRelations) {
       includeObj[relation] = true;
     }
     const data = await prisma[tableName].findUnique({
-      where: { id },
+      where: whereFilter,
       include: includeObj,
     });
     return data;
   } catch (error) {
-    throw new Error(`Error al obtener el registro de ${tableName} con id ${id} en la BD: ${error.message}`);
+    throw new Error(`Error al obtener el registro de ${tableName} con ${idField} ${idValue} en la BD: ${error.message}`);
   }
 }
 

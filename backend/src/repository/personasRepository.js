@@ -2,12 +2,18 @@ import {
   getAll,
   create,
   update,
+  getById
 } from './baseRepository.js';
 import { prisma } from '../db.js'
 
 export async function getAllPersonas() {
   const includeRelations = ['gruposinvestigacion', 'categorias', 'participa']
   return await getAll('personas', includeRelations);
+}
+
+export async function getPersonaById(idPersona) {
+  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa']
+  return await getById('personas', 'idPersona', idPersona, includeRelations);
 }
 
 export async function createPersona(personaData) {

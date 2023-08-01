@@ -1,9 +1,20 @@
-import { getAllPersonasService, createPersonaService, updatePersonaService } from '../services/personasService.js';
+import { getAllPersonasService, createPersonaService, updatePersonaService, getPersonaByIdService } from '../services/personasService.js';
 
 export async function getPersonas(req, res) {
   try {
     const personas = await getAllPersonasService();
     return res.status(200).json({ message: 'Personas encontradas', success: true, personas });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function getPersonasById(req, res) {
+  try {
+    const {idPersona} = req.params;
+    const personaId = parseInt(idPersona);
+    const persona = await getPersonaByIdService(personaId);
+    return res.status(200).json({ message: 'Persona encontrada', success: true, persona });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
