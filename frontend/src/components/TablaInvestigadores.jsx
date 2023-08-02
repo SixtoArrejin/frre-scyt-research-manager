@@ -80,6 +80,25 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
 
   const isAllSelected = selectedInvestigadores.length === investigadores.length;
 
+  function getCategoriaMasActual(categorias, tipo) {
+    // Filtrar solo las categorías del tipo deseado
+    const categoriasUTN = categorias.filter((categoria) => categoria.tipo === tipo);
+
+    // Encontrar la categoría con la fecha más actual
+    const categoriaMasActual = categoriasUTN.reduce((actual, categoria) => {
+      if (!actual) {
+        return categoria;
+      } else {
+        const fechaActual = new Date(actual.fecha);
+        const fechaCategoria = new Date(categoria.fecha);
+        return fechaCategoria > fechaActual ? categoria : actual;
+      }
+    }, null);
+
+    return categoriaMasActual;
+  }
+
+
   return (
     <Card width='100%'>
       <CardBody>
@@ -120,35 +139,39 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
                   currentPage * ITEMS_PER_PAGE,
                   (currentPage + 1) * ITEMS_PER_PAGE
                 )
-                .map((item, index) => (
-                  <Tr key={index}>
-                    <Td textAlign="center">
-                      <Checkbox
-                        border="gray"
-                        isChecked={selectedInvestigadores.includes(item.idPersona)}
-                        onChange={() => handleInvestigadorSelection(item.idPersona)}
-                      />
-                    </Td>
-                    <Td textAlign="center">
-                      <Text fontSize="md">{item.apellido} {item.nombre}</Text>
-                    </Td>
-                    <Td textAlign="center">
-                      <Text fontSize="md">{item.activo ? 'Activo' : 'Inactivo'}</Text>
-                    </Td>
-                    <Td textAlign="center">
-                      <Text fontSize="md">{item.gruposinvestigacion.siglas}</Text>
-                    </Td>
-                    <Td textAlign="center">
-                      <Text fontSize="md"> CatUTN </Text>
-                    </Td>
-                    <Td textAlign="center">
-                      <Text fontSize="md"> CatMIN</Text>
-                    </Td>
-                    <Td textAlign="center">
-                      <Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon/></Link>
-                    </Td>
-                  </Tr>
-                ))}
+                .map((item, index) => {
+                  const categoriaUTN = getCategoriaMasActual(item.categorias, "utn");
+                  const categoriaMIN = getCategoriaMasActual(item.categorias, "ministerio");
+                  return (
+                    < Tr key={index} >
+                      <Td textAlign="center">
+                        <Checkbox
+                          border="gray"
+                          isChecked={selectedInvestigadores.includes(item.idPersona)}
+                          onChange={() => handleInvestigadorSelection(item.idPersona)}
+                        />
+                      </Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md">{item.apellido} {item.nombre}</Text>
+                      </Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md">{item.activo ? 'Activo' : 'Inactivo'}</Text>
+                      </Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md">{item.gruposinvestigacion.siglas}</Text>
+                      </Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md">{categoriaUTN ? categoriaUTN.categoria : "-"}</Text>
+                      </Td>
+                      <Td textAlign="center">
+                        <Text fontSize="md">{categoriaMIN ? categoriaMIN.categoria : "-"}</Text>
+                      </Td>
+                      <Td textAlign="center">
+                        <Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon /></Link>
+                      </Td>
+                    </Tr>
+                  );
+                })}
             </Tbody>
           </Table>
           <HStack spacing={4} mt={4} justify="center">
@@ -187,6 +210,6 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
           </HStack>
         </TableContainer>
       </CardBody>
-    </Card>
+    </Card >
   );
 }
