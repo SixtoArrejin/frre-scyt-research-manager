@@ -70,12 +70,12 @@ export default function DetalleInvestigador() {
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between">
-                  <FormControl variant="floating" id="ayn" width={{ base: '100%', md: '35%' }} mb='5vh'>
+                  <FormControl variant="floating" id="ayn" width={{ base: '100%', md: '30%' }} mb='5vh'>
                     <Input name="ayn" placeholder="Apellido y Nombre" value={data ? ayn : ''} disabled />
                     <FormLabel>Apellido y Nombre</FormLabel>
                   </FormControl>
 
-                  <FormControl variant="floating" id="dni" width={{ base: '100%', md: '25%' }} mb='5vh'>
+                  <FormControl variant="floating" id="dni" width={{ base: '100%', md: '20%' }} mb='5vh'>
                     <Input name="dni" placeholder="DNI" value={data?.persona?.dni || ''} disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
@@ -88,6 +88,16 @@ export default function DetalleInvestigador() {
                       disabled
                     />
                     <FormLabel>Estado</FormLabel>
+                  </FormControl>
+
+                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
+                    <Input
+                      name="estado"
+                      placeholder="Estado"
+                      value={data?.persona?.comision || ''}
+                      disabled
+                    />
+                    <FormLabel>Comisión</FormLabel>
                   </FormControl>
 
                   <FormControl variant="floating" id="grupo" width={{ base: '100%', md: '15%' }} mb='5vh' >
