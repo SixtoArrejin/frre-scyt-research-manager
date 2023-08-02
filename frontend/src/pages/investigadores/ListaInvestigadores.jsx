@@ -34,14 +34,17 @@ import TablaInvestigadores from "../../components/TablaInvestigadores";
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
+  const [filtro, setFiltro] = useState(false);
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
+
 
   useEffect(() => {
     if (nombre === "" && grupo === "") {
       // Si no se está filtrando nada, utiliza los datos originales data?.personas
       setInvestigadores(data?.personas || []);
+      setFiltro(false);
     } else {
       const filteredInvestigadores = data?.personas.filter(
         (item) =>
@@ -50,6 +53,7 @@ export default function ListaInvestigadores() {
           item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
       );
       setInvestigadores(filteredInvestigadores);
+      setFiltro(true);
     }
   }, [nombre, grupo, data]);
 
@@ -61,7 +65,7 @@ export default function ListaInvestigadores() {
     const apellidoA = a.apellido.toLowerCase();
     const apellidoB = b.apellido.toLowerCase();
     return apellidoA.localeCompare(apellidoB);
-  }); 
+  });
 
   return (
     <Card>
@@ -91,9 +95,11 @@ export default function ListaInvestigadores() {
               />
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
-              <Button colorScheme="blue" variant="outline" mr="5">
-                Investigador +
-              </Button>
+              <Link to={'nuevo'}>
+                <Button colorScheme="blue" variant="outline" mr="5">
+                  Investigador +
+                </Button>
+              </Link>
             </Box>
           </Box>
 
@@ -102,6 +108,7 @@ export default function ListaInvestigadores() {
           {investigadores && (
             <TablaInvestigadores
               investigadores={sortedInvestigadores}
+              filtro={filtro}
             />
           )}
 

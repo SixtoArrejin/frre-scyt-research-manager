@@ -41,13 +41,9 @@ import { UserContext } from '../context/UserContext';
 const LinkItems = [
   { name: 'Home', icon: FiHome, route: '/' },
   { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
-  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/investigadores' },
+  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
   { name: 'Proyectos', icon: BiTask, route: '/investigadores' },
   { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
-  { name: 'Nueva categoría', icon: FiSettings, route: '/nueva-categoria' },
-  { name: 'Nuevo Investigador', icon: FiSettings, route: '/nuevo-investigador' },
-  { name: 'Grupos de investigación', icon: FiSettings, route: '/grupos-investigacion' },
-  { name: 'Modificar Investigador', icon: FiSettings, route: '/modificar-investigador' }
 ];
 
 export default function SidebarWithHeader({ children }) {

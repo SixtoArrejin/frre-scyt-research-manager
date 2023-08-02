@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
-export default function TablaInvestigadores({ investigadores }) {
+export default function TablaInvestigadores({ investigadores, filtro = false }) {
 
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
@@ -58,7 +58,7 @@ export default function TablaInvestigadores({ investigadores }) {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [investigadores]);
+  }, [filtro]);
 
   const isAllSelected = selectedInvestigadores.length === investigadores.length;
 

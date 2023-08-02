@@ -111,9 +111,11 @@ export default function DetalleInvestigador() {
                   </FormControl>
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
-                  <Button colorScheme="blue" variant="outline" onClick={() => alert('Modificar')}>
-                    Modificar
-                  </Button>
+                  <Link to={`modificar`}>
+                    <Button colorScheme="blue" variant="outline">
+                      Modificar
+                    </Button>
+                  </Link>
                 </Box>
               </Box>
 
@@ -220,9 +222,11 @@ export default function DetalleInvestigador() {
               </Card>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' >
-                <Button colorScheme="blue" variant="outline" onClick={() => alert('Agregar nueva categoría')}>
+              <Link to={`nueva-categoria`}>
+                <Button colorScheme="blue" variant="outline">
                   Nueva Categoría
                 </Button>
+              </Link>
               </Box>
             </CardBody>
           </Card>
