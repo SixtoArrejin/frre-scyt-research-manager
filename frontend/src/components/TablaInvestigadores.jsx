@@ -6,15 +6,13 @@ import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
-export default function TablaInvestigadores({ investigadores, searchNombre, searchGrupo }) {
+export default function TablaInvestigadores({ investigadores }) {
 
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
-  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
-  const [filtroActivo, setFiltroActivo] = useState(false);
   const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
 
   const totalPages = Math.ceil(
-    ((filtroActivo ? investigadoresFiltrados : investigadores))?.length /
+    investigadores?.length /
     ITEMS_PER_PAGE
   );
 
@@ -59,33 +57,17 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
   }, [selectedInvestigadores]);
 
   useEffect(() => {
-    if (searchNombre === "" && searchGrupo === "") {
-      setInvestigadoresFiltrados([]);
-      setFiltroActivo(false);
-    } else {
-      const filteredInvestigadores = investigadores?.filter(
-        (item) =>
-          // (item.apellido.toLowerCase().includes(nombre.toLowerCase()) ||
-          // item.nombre.toLowerCase().includes(nombre.toLowerCase()))
-          ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(searchNombre.toLowerCase())
-            || (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(searchNombre.toLowerCase()))
-          &&
-          item.gruposinvestigacion.siglas.toLowerCase().includes(searchGrupo?.toLowerCase())
-      );
-      setInvestigadoresFiltrados(filteredInvestigadores);
-      setFiltroActivo(true);
-    }
     setCurrentPage(0)
-  }, [searchNombre, searchGrupo]);
+  }, [investigadores]);
 
   const isAllSelected = selectedInvestigadores.length === investigadores.length;
 
   function getCategoriaMasActual(categorias, tipo) {
     // Filtrar solo las categorías del tipo deseado
-    const categoriasUTN = categorias.filter((categoria) => categoria.tipo === tipo);
+    const categoriasFiltradas = categorias.filter((categoria) => categoria.tipo === tipo);
 
     // Encontrar la categoría con la fecha más actual
-    const categoriaMasActual = categoriasUTN.reduce((actual, categoria) => {
+    const categoriaMasActual = categoriasFiltradas.reduce((actual, categoria) => {
       if (!actual) {
         return categoria;
       } else {
@@ -134,7 +116,7 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
               </Tr>
             </Thead>
             <Tbody>
-              {(filtroActivo ? investigadoresFiltrados : investigadores)
+              {investigadores
                 ?.slice(
                   currentPage * ITEMS_PER_PAGE,
                   (currentPage + 1) * ITEMS_PER_PAGE
@@ -196,10 +178,7 @@ export default function TablaInvestigadores({ investigadores, searchNombre, sear
               isDisabled={
                 currentPage ===
                 Math.ceil(
-                  (filtroActivo
-                    ? investigadoresFiltrados
-                    : investigadores
-                  )?.length / ITEMS_PER_PAGE
+                  (investigadores)?.length / ITEMS_PER_PAGE
                 ) - 1
               }
               icon={<ChevronRightIcon />}

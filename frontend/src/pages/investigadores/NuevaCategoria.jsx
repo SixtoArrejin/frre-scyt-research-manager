@@ -32,8 +32,8 @@ import {
   TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
-import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../components/InputLabel";
+import investigadores from "../../utils/data/investigadores.json";
+import InputLabel from "../../components/InputLabel";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 
 export default function NuevaCategoria() {

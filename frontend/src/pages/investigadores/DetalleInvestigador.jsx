@@ -26,14 +26,14 @@ import {
   FormControl,
   FormLabel
 } from "@chakra-ui/react";
-import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../components/InputLabel";
-import categorias from '../utils/data/ListaCategorias.json'
+import investigadores from "../../utils/data/investigadores.json";
+import InputLabel from "../../components/InputLabel";
+import categorias from '../../utils/data/ListaCategorias.json'
 import { Link, useParams } from 'react-router-dom';
-import proyectosInv from '../utils/data/proyectosInv.json';
-import { getPersonaById } from "../utils/api/personasApi";
+import proyectosInv from '../../utils/data/proyectosInv.json';
+import { getPersonaById } from "../../utils/api/personasApi";
 import { useQuery } from "react-query";
-import { formatoFechaISOaDDMMAAAA } from "../utils/general";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 

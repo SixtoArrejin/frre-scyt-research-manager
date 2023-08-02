@@ -6,12 +6,12 @@ import {
   Navigate,
 } from "react-router-dom";
 import SidebarWithHeader from './components/SidebarWithHeader';
-import DetalleInvestigador from './pages/DetalleInvestigador';
-import ListaInvestigadores from './pages/ListaInvestigadores';
-import NuevaCategoria from './pages/NuevaCategoria';
-import NuevoInvestigador from './pages/NuevoInvestigador';
+import DetalleInvestigador from './pages/investigadores/DetalleInvestigador';
+import ListaInvestigadores from './pages/investigadores/ListaInvestigadores';
+import NuevaCategoria from './pages/investigadores/NuevaCategoria';
+import NuevoInvestigador from './pages/investigadores/NuevoInvestigador';
 import ListaGrupos from './pages/ListaGrupos';
-import ModificarInvestigador from './pages/ModificarInvestigador';
+import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import LogIn from './pages/LogIn';

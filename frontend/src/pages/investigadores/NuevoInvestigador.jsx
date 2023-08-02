@@ -30,11 +30,11 @@ import {
   FormControl,
   FormLabel
 } from "@chakra-ui/react";
-import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../components/InputLabel";
-import categorias from '../utils/data/ListaCategorias.json'
+import investigadores from "../../utils/data/investigadores.json";
+import InputLabel from "../../components/InputLabel";
+import categorias from '../../utils/data/ListaCategorias.json'
 import { Link } from 'react-router-dom';
-import proyectosInv from '../utils/data/proyectosInv.json';
+import proyectosInv from '../../utils/data/proyectosInv.json';
 
 export default function NuevoInvestigador() {
   const [nya, setNya] = useState('');

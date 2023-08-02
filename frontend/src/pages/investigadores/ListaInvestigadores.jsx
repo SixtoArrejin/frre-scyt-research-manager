@@ -25,34 +25,43 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 // import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../components/InputLabel";
+import InputLabel from "../../components/InputLabel";
 import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
-import { getAllPersonas } from "../utils/api/personasApi";
+import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
-import TablaInvestigadores from "../components/TablaInvestigadores";
+import TablaInvestigadores from "../../components/TablaInvestigadores";
 
-export default function ListaInvestigadores( {from} ) {
+export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
   const [grupo, setGrupo] = useState("");
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
+  const [investigadores, setInvestigadores] = useState(data?.personas || []);
 
-  const investigadores = data?.personas.sort((a, b) => {
-    const apellidoA = a.apellido.toUpperCase();
-    const apellidoB = b.apellido.toUpperCase();
-
-    if (apellidoA < apellidoB) {
-      return -1;
+  useEffect(() => {
+    if (nombre === "" && grupo === "") {
+      // Si no se está filtrando nada, utiliza los datos originales data?.personas
+      setInvestigadores(data?.personas || []);
+    } else {
+      const filteredInvestigadores = data?.personas.filter(
+        (item) =>
+          ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(nombre.toLowerCase()) ||
+            (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(nombre.toLowerCase())) &&
+          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
+      );
+      setInvestigadores(filteredInvestigadores);
     }
-    if (apellidoA > apellidoB) {
-      return 1;
-    }
-    return 0;
-  });
+  }, [nombre, grupo, data]);
 
   if (isLoading) {
     return <Text fontSize="md">Cargando...</Text>
   }
+
+  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
+    const apellidoA = a.apellido.toLowerCase();
+    const apellidoB = b.apellido.toLowerCase();
+    return apellidoA.localeCompare(apellidoB);
+  }); 
 
   return (
     <Card>
@@ -92,9 +101,7 @@ export default function ListaInvestigadores( {from} ) {
 
           {investigadores && (
             <TablaInvestigadores
-              investigadores={investigadores}
-              searchNombre={nombre}
-              searchGrupo={grupo}
+              investigadores={sortedInvestigadores}
             />
           )}
 
