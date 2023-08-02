@@ -69,47 +69,37 @@ export default function DetalleInvestigador() {
               <Text fontSize="md">Datos del investigador</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                <Box display='flex' width='90%' alignItems='center' justifyContent='space-between' >
-                  <FormControl
-                    variant="floating"
-                    id="ayn"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="25vw"
-                  >
-                    <Input name="ayn" placeholder="Apellido y Nombre" value={data ? ayn : ""} disabled />
+                <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between">
+                  <FormControl variant="floating" id="ayn" width={{ base: '100%', md: '35%' }} mb='5vh'>
+                    <Input name="ayn" placeholder="Apellido y Nombre" value={data ? ayn : ''} disabled />
                     <FormLabel>Apellido y Nombre</FormLabel>
                   </FormControl>
 
-                  <FormControl
-                    variant="floating"
-                    id="dni"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="10vw"
-                  >
-                    <Input name="dni" placeholder="DNI" value={data?.persona.dni || ""} disabled />
+                  <FormControl variant="floating" id="dni" width={{ base: '100%', md: '25%' }} mb='5vh'>
+                    <Input name="dni" placeholder="DNI" value={data?.persona?.dni || ''} disabled />
                     <FormLabel>DNI</FormLabel>
                   </FormControl>
 
-                  <FormControl
-                    variant="floating"
-                    id="estado"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="10vw"
-                  >
-                    <Input name="estado" placeholder="Estado" value={data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ""} disabled />
+                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
+                    <Input
+                      name="estado"
+                      placeholder="Estado"
+                      value={data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ''}
+                      disabled
+                    />
                     <FormLabel>Estado</FormLabel>
                   </FormControl>
-                  <FormControl
-                    variant="floating"
-                    id="grupo"
-                    // onChange={event => setNombreProducto(event.target.value)}
-                    width="15vw"
-                  >
-                    <Input name="grupo" placeholder="Grupo" value={data?.persona.gruposinvestigacion.siglas || ""} disabled />
+
+                  <FormControl variant="floating" id="grupo" width={{ base: '100%', md: '15%' }} mb='5vh' >
+                    <Input
+                      name="grupo"
+                      placeholder="Grupo"
+                      value={data?.persona?.gruposinvestigacion?.siglas || ''}
+                      disabled
+                    />
                     <FormLabel>Grupo</FormLabel>
                   </FormControl>
                 </Box>
-                <br />
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
                   <Button colorScheme="blue" variant="outline" onClick={() => alert('Modificar')}>
                     Modificar

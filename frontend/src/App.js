@@ -22,13 +22,13 @@ const queryClient = new QueryClient();
 
 const routes = [
   // { path: "/", element: <Navigate to="/home" /> },
-  { path: "/login", element: <LogIn /> },
   { path: "/investigadores", element: <ListaInvestigadores /> },
   { path: "/investigadores/:idPersona", element: <DetalleInvestigador /> },
   { path: "/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/nuevo-investigador", element: <NuevoInvestigador /> },
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
-  { path: "/modificar-investigador", element: <ModificarInvestigador /> }
+  { path: "/modificar-investigador", element: <ModificarInvestigador /> },
+  { path: "*", element: <Navigate to="/investigadores" /> },
 ];
 
 function App() {
