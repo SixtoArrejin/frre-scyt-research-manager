@@ -9,8 +9,8 @@ export async function getPersonaById(idPersona) {
   return get(`/api/personas/${idPersona}`)
 }
 
-export async function createPersona(id, data) {
-  return post(`/api/personas/${id}`, data);
+export async function createPersona(data) {
+  return post(`/api/personas`, data);
 }
 
 export async function updatePersona(id, data) {

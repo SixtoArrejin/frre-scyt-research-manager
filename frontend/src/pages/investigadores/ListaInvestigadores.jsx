@@ -38,7 +38,7 @@ export default function ListaInvestigadores() {
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
-
+ 
 
   useEffect(() => {
     if (nombre === "" && grupo === "") {
@@ -53,7 +53,7 @@ export default function ListaInvestigadores() {
           item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
       );
       setInvestigadores(filteredInvestigadores);
-      setFiltro(true);
+      setFiltro(true)
     }
   }, [nombre, grupo, data]);
 
@@ -108,7 +108,7 @@ export default function ListaInvestigadores() {
           {investigadores && (
             <TablaInvestigadores
               investigadores={sortedInvestigadores}
-              filtro={filtro}
+              fitro={filtro}
             />
           )}
 

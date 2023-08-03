@@ -2,8 +2,15 @@ export const API_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8
 
 // baseServices
 
-async function fetchData(url, options) {
+async function fetchData(url, options = {}) {
+  const token = await localStorage.getItem("token");
+  options.headers = {
+    ...options.headers,
+    Authorization: token ? `Bearer ${token}` : "",
+  };
+
   const response = await fetch(`${API_URL}${url}`, options);
+  
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
