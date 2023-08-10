@@ -2,6 +2,8 @@ USE secCyT;
 
 INSERT INTO `seccyt`.`gruposinvestigacion` (`siglas`, `nombre`, `resolucion`, `fechaCreacion`) VALUES ('ACHETIQ', 'Ejemplo', '12/455', '2023-07-25');
 INSERT INTO `seccyt`.`gruposinvestigacion` (`siglas`, `nombre`, `resolucion`, `fechaCreacion`) VALUES ('CINAPTIC', 'Otro ejemplo', '13/785', '2023-02-21');
+INSERT INTO `seccyt`.`gruposinvestigacion` (`siglas`, `nombre`, `resolucion`, `fechaCreacion`) VALUES ('GIESIN', 'Otro ejemplo', '13/785', '2023-02-21');
+INSERT INTO `seccyt`.`gruposinvestigacion` (`siglas`, `nombre`, `resolucion`, `fechaCreacion`) VALUES ('GISTAQ', 'Otro ejemplo', '13/785', '2023-02-21');
 
 INSERT INTO `seccyt`.`personas` (`dni`, `nombre`, `apellido`, `activo`, `comision`, `idGrupoInvestigacion`) VALUES ('40352261', 'Jorge Agustín', 'Rodriguez', '1', 'B43', '1');
 INSERT INTO `seccyt`.`personas` (`dni`, `nombre`, `apellido`, `activo`, `comision`, `idGrupoInvestigacion`) VALUES ('42563159', 'Sofia', 'Rodriguez', '1', 'JKL', '2');
