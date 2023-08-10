@@ -4,6 +4,6 @@ import { validateToken } from '../middleware/authMiddleware.js'; // Importa la f
 
 const router = Router()
 
-router.post('/', createCategoria);
+router.post('/', validateToken, createCategoria);
 
 export default router

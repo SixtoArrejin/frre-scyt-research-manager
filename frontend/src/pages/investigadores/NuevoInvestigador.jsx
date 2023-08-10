@@ -57,8 +57,8 @@ export default function NuevoInvestigador() {
       mutationFn: (formData) => createPersona(formData),
       onSuccess: () => {
         toast({
-          title: "Establecimiento modificado",
-          description: `Establecimiento modificado exitosamente.`,
+          title: "Nuevo Investigador",
+          description: `Se ha creado el investigador exitosamente`,
           status: "success",
           isClosable: true,
         });
@@ -66,7 +66,7 @@ export default function NuevoInvestigador() {
       },
       onError: () => {
         toast({
-          title: "Error al modificar el establecimiento",
+          title: "Error al crear el investigador",
           description: `Intente de nuevo.`,
           status: "error",
           isClosable: true,

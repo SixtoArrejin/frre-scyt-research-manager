@@ -64,7 +64,7 @@ export default function InputLabel(props) {
     <ChakraProvider theme={theme}>
       <Box>
         <FormControl variant="floating" {...props}>
-          <Input placeholder=" " value={props.value} onChange={props.onChange}/>
+          <Input placeholder=" " value={props.value} onChange={props.onChange} type={props.type}/>
           {/* It is important that the Label comes after the Control due to css selectors */}
           <FormLabel style={{ color: "gray" }}>{props.placeholder}</FormLabel>
           {/* <FormHelperText>Keep it very short and sweet!</FormHelperText>
