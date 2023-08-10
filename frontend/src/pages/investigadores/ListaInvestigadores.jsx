@@ -108,7 +108,7 @@ export default function ListaInvestigadores() {
           {investigadores && (
             <TablaInvestigadores
               investigadores={sortedInvestigadores}
-              fitro={filtro}
+              filtro={filtro}
             />
           )}
 
