@@ -52,28 +52,28 @@ export default function NuevoInvestigador() {
       duration: 4000
     });}
 
-  const { mutate, isLoading } = useMutation(
-    {
-      mutationFn: (formData) => createPersona(formData),
-      onSuccess: () => {
-        toast({
-          title: "Nuevo Investigador",
-          description: `Se ha creado el investigador exitosamente`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(-1);
-      },
-      onError: () => {
-        toast({
-          title: "Error al crear el investigador",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
+    const { mutate, isLoading } = useMutation(
+      {
+        mutationFn: (formData) => createPersona(formData),
+        onSuccess: () => {
+          toast({
+            title: "Nuevo investigador",
+            description: `Se ha creado el nuevo investigador exitosamente`,
+            status: "success",
+            isClosable: true,
+          });
+          navigate(-1);
+        },
+        onError: () => {
+          toast({
+            title: "Error al cargar el investigador",
+            description: `Intente de nuevo.`,
+            status: "error",
+            isClosable: true,
+          });
+        },
+      }
+    );
   
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
