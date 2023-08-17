@@ -102,6 +102,9 @@ export default function NuevaCategoria() {
     mutate(values)
   }
 
+  const catUTN = ["A", "B", "C", "D", "E"];
+  const catMIN = ["I", "II", "III", "IV", "V"]
+
   return (
     <>
       <Card>
@@ -162,41 +165,18 @@ export default function NuevaCategoria() {
                           <Select placeholder="Seleccione categoría" {...register('categoria')} >
                             {valueCategoria == 'utn'
                               ? // Categorias de utn
-                              [
-                                <option key="1" value="A">
-                                  A
-                                </option>,
-                                <option key="2" value="B">
-                                  B
-                                </option>,
-                                <option key="3" value="C">
-                                  C
-                                </option>,
-                                <option key="4" value="D">
-                                  D
-                                </option>,
-                                <option key="5" value="E">
-                                  E
-                                </option>,
-                              ]
+                              catUTN.map((option, index) => (
+                                <option key={index} value={option}>
+                                  {option}
+                                </option>
+                              ))
                               : // Categorias de MIN
-                              [
-                                <option key="1" value="I">
-                                  I
-                                </option>,
-                                <option key="2" value="II">
-                                  II{" "}
-                                </option>,
-                                <option key="3" value="III">
-                                  III
-                                </option>,
-                                <option key="3" value="IV">
-                                  IV
-                                </option>,
-                                <option key="3" value="V">
-                                  V
-                                </option>,
-                              ]}
+                              catMIN.map((option, index) => (
+                                <option key={index} value={option}>
+                                  {option}
+                                </option>
+                              ))
+                              }
                           </Select>
                           <FormLabel>Categoria</FormLabel>
                         </FormControl>
