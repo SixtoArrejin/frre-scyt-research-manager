@@ -7,7 +7,7 @@ import convertToISOString from '../utils/funciones.js'
 export async function createCategoria(req, res) {
   try {
     const categoriaData = req.body;
-    categoriaData.equiparacion = categoriaData.equiparacion === 'true';
+    // categoriaData.equiparacion = categoriaData.equiparacion === 'true';
     categoriaData.fecha = convertToISOString(categoriaData.fecha);
     const newCategoria = await createCategoriaService(categoriaData);
     return res.status(201).json({ message: 'Categoria creada exitosamente', success: true, newCategoria });

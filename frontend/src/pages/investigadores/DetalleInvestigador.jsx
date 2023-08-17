@@ -64,6 +64,8 @@ export default function DetalleInvestigador() {
 
           <br />
           <br />
+
+          
           <Card width='100%'>
             <CardBody>
               <Text fontSize="md">Datos del investigador</Text>
