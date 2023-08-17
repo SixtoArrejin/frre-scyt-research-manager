@@ -38,7 +38,7 @@ import {
 import investigadores from "../../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
 import { Radio, RadioGroup } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { createCategoria } from "../../utils/api/categoriasApi";
 import { useMutation } from "react-query";
@@ -51,6 +51,7 @@ export default function NuevaCategoria() {
   const [filtroActivo, setFiltroActivo] = useState(false);
 
   const toast = useToast()
+  const navigate = useNavigate()
 
   const { idPersona } = useParams()
 
@@ -59,7 +60,7 @@ export default function NuevaCategoria() {
   const { register, handleSubmit, setValue, getValues, watch, formState: { errors } } = useForm({
     defaultValues: {
       tipo: "",
-      equiparacion: "",
+      equiparacion: true,
       categoria: "",
       fecha: "",
       normativa: "",
@@ -96,10 +97,18 @@ export default function NuevaCategoria() {
   const fl = false;
 
   const onSub = (values) => {
-    const gg = getValues('equiparacion')
-    setValue('equiparacion', getValues('equiparacion')==='true');
+    // const gg = getValues('equiparacion')
+    // setValue('equiparacion', getValues('equiparacion')==='true');
     console.log(values);
     mutate(values)
+  }
+
+  const onChangeRadio = (value) => {
+    if (value==="true"){
+      setValue('equiparacion', true)
+    } else {
+      setValue('equiparacion', false)
+    }
   }
 
   const catUTN = ["A", "B", "C", "D", "E"];
@@ -150,10 +159,10 @@ export default function NuevaCategoria() {
 
                       <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                         <Text mb='1vh'>Equiparacion:</Text>
-                        <RadioGroup isDisabled={valueCategoria === "ministerio"} mb='5vh'>
+                        <RadioGroup isDisabled={valueCategoria === "ministerio"} mb='5vh' onChange={ (value) => onChangeRadio(value)}>
                           <Stack direction="row" spacing={10} >
-                            <Radio value="true" {...register('equiparacion', { setValueAs: (value) => value == "true" })}>Si</Radio>
-                            <Radio value="false" {...register('equiparacion', { setValueAs: (value) => value == "true" })}>No</Radio>
+                            <Radio value="true">Si</Radio>
+                            <Radio value="false">No</Radio>
                           </Stack>
                         </RadioGroup>
                       </Box>
@@ -162,7 +171,7 @@ export default function NuevaCategoria() {
 
                       <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                         <FormControl variant="floating" id="categoria" width={{ base: '100%', md: '50%' }} mb='5vh'>
-                          <Select placeholder="Seleccione categoría" {...register('categoria')} >
+                          <Select placeholder="Seleccione categoria" {...register('categoria')} >
                             {valueCategoria == 'utn'
                               ? // Categorias de utn
                               catUTN.map((option, index) => (
@@ -198,7 +207,7 @@ export default function NuevaCategoria() {
                       </Box>
                     </Box>
                     <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
-                      <Button colorScheme="gray" variant="outline" mr='3%'>
+                      <Button colorScheme="gray" variant="outline" mr='3%' onClick={() => navigate(-1)} >
                         Cancelar
                       </Button>
                       <Button type='submit' colorScheme="blue" variant="outline">
