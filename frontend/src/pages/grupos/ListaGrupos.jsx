@@ -32,11 +32,11 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 // import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../components/InputLabel";
+import InputLabel from "../../components/InputLabel";
 import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
-import { getAllGrupos } from "../utils/api/gruposApi";
+import { getAllGrupos } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
-import TablaGrupos from "../components/TablaGrupos";
+import TablaGrupos from "../../components/TablaGrupos";
 
 export default function ListaGrupos() {
   const [siglas, setSiglas] = useState("");

@@ -10,7 +10,7 @@ import DetalleInvestigador from './pages/investigadores/DetalleInvestigador';
 import ListaInvestigadores from './pages/investigadores/ListaInvestigadores';
 import NuevaCategoria from './pages/investigadores/NuevaCategoria';
 import NuevoInvestigador from './pages/investigadores/NuevoInvestigador';
-import ListaGrupos from './pages/ListaGrupos';
+import ListaGrupos from './pages/grupos/ListaGrupos';
 import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
