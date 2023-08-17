@@ -42,9 +42,8 @@ export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams()
 
   const { data, isLoading, error } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
-  const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
-  const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
+/*   const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
   const categoriasMIN = data?.persona.categorias.filter(categoria => categoria.tipo === "ministerio");
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
@@ -52,7 +51,7 @@ export default function DetalleGrupo() {
   useEffect(() => {
     console.log(categoriasUTN)
     console.log(categoriasMIN)
-  }, [categoriasUTN, categoriasMIN]);
+  }, [categoriasUTN, categoriasMIN]); */
 
   return (
     <Card>
@@ -74,41 +73,30 @@ export default function DetalleGrupo() {
                     <Input name="ayn" placeholder="Nombre" value={data?.grupo.nombre} disabled />
                     <FormLabel>Nombre</FormLabel>
                   </FormControl>
-                  <Button onClick={()=>{console.log(idGrupoInvestigacion)}}>Aca</Button>
 
                   <FormControl variant="floating" id="dni" width={{ base: '100%', md: '20%' }} mb='5vh'>
-                    <Input name="dni" placeholder="DNI" value={data?.persona?.dni || ''} disabled />
-                    <FormLabel>DNI</FormLabel>
+                    <Input name="dni" placeholder="Denominacion" value={data?.grupo.nombre} disabled />
+                    <FormLabel>Denominacion</FormLabel>
+                  </FormControl>
+
+                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
+                    <Input
+                      name="estado"
+                      placeholder="Resolucion"
+                      value={data?.grupo.resolucion}
+                      disabled
+                    />
+                    <FormLabel>Resolucion</FormLabel>
                   </FormControl>
 
                   <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
                     <Input
                       name="estado"
                       placeholder="Estado"
-                      value={data ? (data.persona.activo ? 'Activo' : 'Inactivo') : ''}
+                      value={formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) || ''}
                       disabled
                     />
-                    <FormLabel>Estado</FormLabel>
-                  </FormControl>
-
-                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
-                    <Input
-                      name="estado"
-                      placeholder="Estado"
-                      value={data?.persona?.comision || ''}
-                      disabled
-                    />
-                    <FormLabel>Comisión</FormLabel>
-                  </FormControl>
-
-                  <FormControl variant="floating" id="grupo" width={{ base: '100%', md: '15%' }} mb='5vh' >
-                    <Input
-                      name="grupo"
-                      placeholder="Grupo"
-                      value={data?.persona?.gruposinvestigacion?.siglas || ''}
-                      disabled
-                    />
-                    <FormLabel>Grupo</FormLabel>
+                    <FormLabel>Fecha</FormLabel>
                   </FormControl>
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
@@ -122,7 +110,7 @@ export default function DetalleGrupo() {
 
             </CardBody>
           </Card>
-
+{/* 
           <br />
           <Card width='100%'>
             <CardBody>
@@ -311,7 +299,7 @@ export default function DetalleGrupo() {
             <Button colorScheme="blue" variant="outline" onClick={() => alert('Generar un reporte con los detalles del investigador')}>
               Generar Reporte
             </Button>
-          </Box>
+          </Box> */}
         </Box>
       </CardBody>
     </Card>
