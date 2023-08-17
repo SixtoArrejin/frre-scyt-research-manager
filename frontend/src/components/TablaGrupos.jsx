@@ -91,11 +91,7 @@ export default function TablaGrupos({ grupos, filtro = false }) {
                         <Text fontSize="md">{item.fechaCreacion}</Text>
                       </Td>
                       <Td textAlign="center">
-                        <Link>
-                          <PlusSquareIcon
-                            onClick={() => alert("Detalle del grupo")}
-                          />
-                        </Link>
+                        <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}><PlusSquareIcon /></Link>
                       </Td>
                     </Tr>
                   );
