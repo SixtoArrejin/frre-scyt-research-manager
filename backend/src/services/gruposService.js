@@ -1,5 +1,6 @@
 
 import { getAllGrupos, getGrupoById} from '../repository/gruposRepository.js';
+import { update } from '../repository/baseRepository.js';
 
  
 export async function getAllGruposService() {
@@ -15,6 +16,16 @@ export async function getAllGruposService() {
     try {
       const grupo = await getGrupoById(idGrupoInvestigacion);
       return grupo
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  export async function updateGrupoService(idGrupoInvestigacion, grupoData) {
+    try {
+      const filter = { idGrupoInvestigacion };
+      const updatedGrupo = await update('gruposinvestigacion', filter, grupoData);
+      return updatedGrupo;
     } catch (error) {
       throw new Error(error.message);
     }
