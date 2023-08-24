@@ -140,11 +140,11 @@ useEffect(() => {
                   >
                     <Input
                       name="dni"
-                      placeholder="Denominacion"
-                      value={data?.grupo.nombre}
+                      placeholder="Siglas"
+                      value={data?.grupo.siglas}
                       disabled
                     />
-                    <FormLabel>Denominacion</FormLabel>
+                    <FormLabel>Siglas</FormLabel>
                   </FormControl>
 
                   <FormControl
