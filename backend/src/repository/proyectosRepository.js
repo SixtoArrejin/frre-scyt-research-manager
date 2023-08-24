@@ -7,7 +7,7 @@ export async function getAllProyectos() {
 }
 
 export async function getProyectosPids() {
-  const includeRelations = ['proyectos'];
+  const includeRelations = [{proyectos: ['participa']}];
   return await getAll('pids', includeRelations);
 }
 

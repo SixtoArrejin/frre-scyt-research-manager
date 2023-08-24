@@ -12,7 +12,7 @@ import {
   
       if (tipo === 'pid') {
         proyectos = await getProyectosPidsService();
-      } else if (tipo === 'externos') {
+      } else if (tipo === 'externo') {
         proyectos = await getProyectosExternosService();
       } else {
         proyectos = await getAllProyectosService();
