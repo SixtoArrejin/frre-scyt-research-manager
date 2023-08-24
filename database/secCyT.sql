@@ -52,7 +52,7 @@ CREATE TABLE proyectos(
 );
 
 CREATE TABLE pids (
-    idProyectoPid INT,
+    idProyectoPid INT AUTO_INCREMENT,
     tipoProyecto VARCHAR(100),
     prorrogado BOOLEAN,
     codPid VARCHAR(20),
@@ -72,7 +72,7 @@ CREATE TABLE proyectosExternos(
 );
 
 CREATE TABLE proyectosConFinanciamiento(
-    idProyectoFinanciamieno INT,
+    idProyectoFinanciamieno INT AUTO_INCREMENT,
     montoANR FLOAT,
     presentacion DATE,
     canon FLOAT,

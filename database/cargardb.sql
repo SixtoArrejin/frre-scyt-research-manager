@@ -18,3 +18,19 @@ INSERT INTO `seccyt`.`categorias` (`tipo`, `categoria`, `fecha`, `normativa`, `i
 INSERT INTO `seccyt`.`categorias` (`equiparacion`, `tipo`, `categoria`, `fecha`, `normativa`, `idPersona`) VALUES ('1', 'utn', 'C', '2021-02-04', '568/41', '1');
 INSERT INTO `seccyt`.`categorias` (`equiparacion`, `tipo`, `categoria`, `fecha`, `normativa`, `idPersona`) VALUES ('0', 'utn', 'D', '2022-05-03', '512/41', '1');
 INSERT INTO `seccyt`.`categorias` (`tipo`, `categoria`, `fecha`, `normativa`, `idPersona`) VALUES ('ministerio', 'IV', '2020-05-24', '321/01', '1');
+
+INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
+INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
+INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
+INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
+INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
+
+INSERT INTO `seccyt`.`pids` (`tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('abc', '1', 'abc123', 'abc', '120/78');
+INSERT INTO `seccyt`.`pids` (`tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('abc', '1', 'abc123', 'abc', '120/78');
+INSERT INTO `seccyt`.`pids` (`tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('abc', '1', 'abc123', 'abc', '120/78');
+INSERT INTO `seccyt`.`pids` (`tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('abc', '1', 'abc123', 'abc', '120/78');
+
+INSERT INTO `seccyt`.`proyectosexternos` (`empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('empresa', '2023-01-01', '12as');
+INSERT INTO `seccyt`.`proyectosexternos` (`empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('empresa', '2023-01-01', '12as');
+INSERT INTO `seccyt`.`proyectosexternos` (`empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('empresa', '2023-01-01', '12as');
+INSERT INTO `seccyt`.`proyectosexternos` (`empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('empresa', '2023-01-01', '12as');
