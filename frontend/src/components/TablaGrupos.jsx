@@ -22,6 +22,7 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -88,10 +89,16 @@ export default function TablaGrupos({ grupos, filtro = false }) {
                         <Text fontSize="md">{item.resolucion}</Text>
                       </Td>
                       <Td textAlign="center">
-                        <Text fontSize="md">{item.fechaCreacion}</Text>
+                        <Text fontSize="md">
+                          {formatoFechaISOaDDMMAAAA(item.fechaCreacion)}
+                        </Text>
                       </Td>
                       <Td textAlign="center">
-                        <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}><PlusSquareIcon /></Link>
+                        <Link
+                          to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}
+                        >
+                          <PlusSquareIcon />
+                        </Link>
                       </Td>
                     </Tr>
                   );
@@ -118,8 +125,7 @@ export default function TablaGrupos({ grupos, filtro = false }) {
 
             <IconButton
               isDisabled={
-                currentPage ===
-                Math.ceil(grupos?.length / ITEMS_PER_PAGE) - 1
+                currentPage === Math.ceil(grupos?.length / ITEMS_PER_PAGE) - 1
               }
               icon={<ChevronRightIcon />}
               onClick={() => {
