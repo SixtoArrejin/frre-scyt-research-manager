@@ -12,7 +12,15 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, DeleteIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import {
+  Search2Icon,
+  AddIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  DeleteIcon,
+  PlusSquareIcon,
+} from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -24,26 +32,48 @@ import {
   TableCaption,
   TableContainer,
   FormControl,
-  FormLabel
+  FormLabel,
 } from "@chakra-ui/react";
 import investigadores from "../../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
-import categorias from '../../utils/data/ListaCategorias.json'
-import { Link, useParams } from 'react-router-dom';
-import proyectosInv from '../../utils/data/proyectosInv.json';
+import categorias from "../../utils/data/ListaCategorias.json";
+import { Link, useParams } from "react-router-dom";
+import proyectosInv from "../../utils/data/proyectosInv.json";
 import { getGrupoById } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
+import TablaInvestigadoresGrupo from "../../components/TablaInvestigadoresGrupo";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleGrupo() {
+  const { idGrupoInvestigacion } = useParams();
 
-  const { idGrupoInvestigacion } = useParams()
+  const { data, isLoading, error } = useQuery(["grupo"], () =>
+  getGrupoById(idGrupoInvestigacion)
+);
 
-  const { data, isLoading, error } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
+const [investigadores, setInvestigadores] = useState([]);
+const [sortedInvestigadores, setSortedInvestigadores] = useState([]);
 
-/*   const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
+// Este efecto se ejecutará cada vez que `data` cambie
+useEffect(() => {
+  if (data && data.grupo && data.grupo.personas) {
+    // Cuando tengas los datos de `grupo`, actualiza `investigadores` y `sortedInvestigadores`
+    setInvestigadores(data.grupo.personas);
+
+    const sorted = [...data.grupo.personas].sort((a, b) => {
+      const apellidoA = a.apellido.toLowerCase();
+      const apellidoB = b.apellido.toLowerCase();
+      return apellidoA.localeCompare(apellidoB);
+    });
+
+    setSortedInvestigadores(sorted);
+  }
+}, [data]);
+
+
+  /*   const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
   const categoriasMIN = data?.persona.categorias.filter(categoria => categoria.tipo === "ministerio");
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
@@ -56,30 +86,72 @@ export default function DetalleGrupo() {
   return (
     <Card>
       <CardBody>
-        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Heading as="h2" size="xl" textAlign="center">
             DETALLES GRUPO
           </Heading>
 
           <br />
           <br />
-          <Card width='100%'>
+          <Card width="100%">
             <CardBody>
               <Text fontSize="md">Datos del grupo</Text>
               <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between">
-                  <FormControl variant="floating" id="ayn" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                    <Input name="ayn" placeholder="Nombre" value={data?.grupo.nombre} disabled />
+              <Box
+                display="flex"
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+              >
+                <Box
+                  display="flex"
+                  flexDirection={{ base: "column", md: "row" }}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <FormControl
+                    variant="floating"
+                    id="ayn"
+                    width={{ base: "100%", md: "30%" }}
+                    mb="5vh"
+                  >
+                    <Input
+                      name="ayn"
+                      placeholder="Nombre"
+                      value={data?.grupo.nombre}
+                      disabled
+                    />
                     <FormLabel>Nombre</FormLabel>
                   </FormControl>
 
-                  <FormControl variant="floating" id="dni" width={{ base: '100%', md: '20%' }} mb='5vh'>
-                    <Input name="dni" placeholder="Denominacion" value={data?.grupo.nombre} disabled />
+                  <FormControl
+                    variant="floating"
+                    id="dni"
+                    width={{ base: "100%", md: "20%" }}
+                    mb="5vh"
+                  >
+                    <Input
+                      name="dni"
+                      placeholder="Denominacion"
+                      value={data?.grupo.nombre}
+                      disabled
+                    />
                     <FormLabel>Denominacion</FormLabel>
                   </FormControl>
 
-                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
+                  <FormControl
+                    variant="floating"
+                    id="estado"
+                    width={{ base: "100%", md: "15%" }}
+                    mb="5vh"
+                  >
                     <Input
                       name="estado"
                       placeholder="Resolucion"
@@ -89,17 +161,30 @@ export default function DetalleGrupo() {
                     <FormLabel>Resolucion</FormLabel>
                   </FormControl>
 
-                  <FormControl variant="floating" id="estado" width={{ base: '100%', md: '15%' }} mb='5vh'>
+                  <FormControl
+                    variant="floating"
+                    id="estado"
+                    width={{ base: "100%", md: "15%" }}
+                    mb="5vh"
+                  >
                     <Input
                       name="estado"
                       placeholder="Estado"
-                      value={formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) || ''}
+                      value={
+                        formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) ||
+                        ""
+                      }
                       disabled
                     />
                     <FormLabel>Fecha</FormLabel>
                   </FormControl>
                 </Box>
-                <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
+                <Box
+                  display="flex"
+                  width="90%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
                   <Link to={`modificar`}>
                     <Button colorScheme="blue" variant="outline">
                       Modificar
@@ -107,125 +192,80 @@ export default function DetalleGrupo() {
                   </Link>
                 </Box>
               </Box>
-
             </CardBody>
           </Card>
-{/* 
+
           <br />
-          <Card width='100%'>
+          <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Categoría Ministerio</Text>
+              <Text fontSize="md">Integrantes</Text>
               <br />
-              <Card width='100%'>
+              <Card width="100%">
                 <CardBody>
-                  <TableContainer>
+                  <TablaInvestigadoresGrupo
+                    investigadores={sortedInvestigadores}
+                    filtro={false}
+                  />
+                  {/* <TableContainer>
                     <Table size="sm" variant="striped" colorScheme="blackAlpha">
                       <Thead>
                         <Tr>
                           <Th textAlign="center">
-                            <Text fontSize="md">Fecha</Text>
+                            <Text fontSize="md">Rol</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Apellido y Nombre</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Estado</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Fecha ingreso</Text>
                           </Th>
                           <Th textAlign="center">
                             <Text fontSize="md">Categoría</Text>
                           </Th>
                           <Th textAlign="center">
-                            <Text fontSize="md">Resolución</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Eliminar</Text>
+                            <Text fontSize="md">Ver mas</Text>
                           </Th>
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {categoriasMIN?.map((item, index) => (
+                        {sortedInvestigadores.map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
-                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fecha)}</Text>
+                              <Text fontSize="md">
+                              </Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.categoria}</Text>
+                              <Text fontSize="md">{item.apellido}, {item.nombre}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.normativa}</Text>
+                              <Text fontSize="md">{}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
+                              <Link>
+                                <DeleteIcon
+                                  onClick={() => alert("Eliminar categoría")}
+                                />
+                              </Link>
                             </Td>
                           </Tr>
                         ))}
                       </Tbody>
                     </Table>
-                  </TableContainer>
+                  </TableContainer> */}
                 </CardBody>
               </Card>
-              <br />
-              <Text fontSize="md">Categoría UTN</Text>
-              <br />
-              <Card width='100%'>
-                <CardBody>
-                  <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Fecha</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Categoría</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Resolución</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Equiparación</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Eliminar</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {categoriasUTN?.map((item, index) => (
-                          <Tr key={index}>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fecha)}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.categoria}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.normativa}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.equiparacion ? 'SI' : 'NO'}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </CardBody>
-              </Card>
-              <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' >
-              <Link to={`nueva-categoria`}>
-                <Button colorScheme="blue" variant="outline">
-                  Nueva Categoría
-                </Button>
-              </Link>
-              </Box>
             </CardBody>
           </Card>
 
           <br />
-          <Card width='100%'>
+          {/*           <Card width="100%">
             <CardBody>
               <Text fontSize="md">Proyectos</Text>
               <br />
-              <Card width='100%'>
+              <Card width="100%">
                 <CardBody>
                   <TableContainer>
                     <Table size="sm" variant="striped" colorScheme="blackAlpha">
@@ -276,13 +316,21 @@ export default function DetalleGrupo() {
                               <Text fontSize="md">{item.estado}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.fecInicioActividad}</Text>
+                              <Text fontSize="md">
+                                {item.fecInicioActividad}
+                              </Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.rol}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><PlusSquareIcon onClick={() => alert('Ver más detalles del proyecto')} /></Link>
+                              <Link>
+                                <PlusSquareIcon
+                                  onClick={() =>
+                                    alert("Ver más detalles del proyecto")
+                                  }
+                                />
+                              </Link>
                             </Td>
                           </Tr>
                         ))}
@@ -293,13 +341,22 @@ export default function DetalleGrupo() {
               </Card>
               <br />
             </CardBody>
-          </Card>
+          </Card> */}
           <br />
-          <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' >
-            <Button colorScheme="blue" variant="outline" onClick={() => alert('Generar un reporte con los detalles del investigador')}>
-              Generar Reporte
+          <Box
+            display="flex"
+            width="100%"
+            alignItems="center"
+            justifyContent="flex-end"
+          >
+            <Button
+              colorScheme="blue"
+              variant="outline"
+              onClick={() => console.log(sortedInvestigadores)}
+            >
+              Prueba aca
             </Button>
-          </Box> */}
+          </Box>
         </Box>
       </CardBody>
     </Card>
