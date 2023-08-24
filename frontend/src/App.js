@@ -10,7 +10,8 @@ import DetalleInvestigador from './pages/investigadores/DetalleInvestigador';
 import ListaInvestigadores from './pages/investigadores/ListaInvestigadores';
 import NuevaCategoria from './pages/investigadores/NuevaCategoria';
 import NuevoInvestigador from './pages/investigadores/NuevoInvestigador';
-import ListaGrupos from './pages/ListaGrupos';
+import ListaGrupos from './pages/grupos/ListaGrupos';
+import DetalleGrupo from './pages/grupos/DetalleGrupo';
 import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -29,6 +30,7 @@ const routes = [
   { path: "/investigadores/:idPersona/modificar", element: <ModificarInvestigador /> },
   { path: "/investigadores/:idPersona/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
+  { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
 
