@@ -35,7 +35,7 @@ CREATE TABLE categorias (
 );
 
 CREATE TABLE proyectos(
-    idProyecto INT,
+    idProyecto INT AUTO_INCREMENT,
     tipoActividad VARCHAR(50),
     fechaInicio DATE,
     fechaFin DATE,
@@ -63,7 +63,7 @@ CREATE TABLE pids (
 );
 
 CREATE TABLE proyectosExternos(
-    idProyectoExterno INT,
+    idProyectoExterno INT AUTO_INCREMENT,
     empresaInstitucion VARCHAR(50),
     anioLinea DATE,
     tipoConvenio VARCHAR(50),
