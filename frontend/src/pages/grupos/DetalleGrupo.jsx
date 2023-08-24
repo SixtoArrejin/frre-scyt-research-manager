@@ -43,6 +43,7 @@ import { getGrupoById } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 import TablaInvestigadoresGrupo from "../../components/TablaInvestigadoresGrupo";
+import TablaProyectosGrupo from "../../components/TablaProyectosGrupo";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -204,144 +205,27 @@ useEffect(() => {
                 <CardBody>
                   <TablaInvestigadoresGrupo
                     investigadores={sortedInvestigadores}
-                    filtro={false}
                   />
-                  {/* <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Rol</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Apellido y Nombre</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Estado</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Fecha ingreso</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Categoría</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Ver mas</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {sortedInvestigadores.map((item, index) => (
-                          <Tr key={index}>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.apellido}, {item.nombre}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Link>
-                                <DeleteIcon
-                                  onClick={() => alert("Eliminar categoría")}
-                                />
-                              </Link>
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer> */}
                 </CardBody>
               </Card>
             </CardBody>
           </Card>
 
           <br />
-          {/*           <Card width="100%">
+          <Card width="100%">
             <CardBody>
               <Text fontSize="md">Proyectos</Text>
               <br />
               <Card width="100%">
                 <CardBody>
-                  <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Fec. Inicio</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Fec. Fin</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Denominación</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Tipo</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Estado</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Ing. al proyecto</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Rol</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Más</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {proyectosInv.map((item, index) => (
-                          <Tr key={index}>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.fechaInicio}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.fechaFin}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.denominacion}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.tipo}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.estado}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                                {item.fecInicioActividad}
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.rol}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Link>
-                                <PlusSquareIcon
-                                  onClick={() =>
-                                    alert("Ver más detalles del proyecto")
-                                  }
-                                />
-                              </Link>
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
+                <TablaProyectosGrupo
+                    investigadores={sortedInvestigadores}
+                  />
                 </CardBody>
               </Card>
               <br />
             </CardBody>
-          </Card> */}
+          </Card>
           <br />
           <Box
             display="flex"

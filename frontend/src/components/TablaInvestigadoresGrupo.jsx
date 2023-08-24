@@ -25,10 +25,7 @@ import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
-export default function TablaInvestigadoresGrupo({
-  investigadores,
-  filtro = false,
-}) {
+export default function TablaInvestigadoresGrupo({ investigadores }) {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
 
@@ -38,10 +35,18 @@ export default function TablaInvestigadoresGrupo({
     setCurrentPage(selectedPage);
   };
 
-
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [filtro]);
+  const handleSelectPage = (event) => {
+    if (parseInt(event.target.value, 10) > totalPages) {
+      handlePageChange(0);
+    } else {
+      if (parseInt(event.target.value, 10) !== "") {
+        const selectedPage = parseInt(event.target.value, 10);
+        setCurrentPage(selectedPage - 1);
+      } else {
+        handlePageChange(0);
+      }
+    }
+  };
 
   return (
     <Card width="100%">
@@ -71,30 +76,70 @@ export default function TablaInvestigadoresGrupo({
               </Tr>
             </Thead>
             <Tbody>
-              {investigadores?.slice(
+              {investigadores
+                ?.slice(
                   currentPage * ITEMS_PER_PAGE,
                   (currentPage + 1) * ITEMS_PER_PAGE
-                ).map((item, index) => (
-                <Tr key={index}>
-                  <Td textAlign="center">
-                    <Text fontSize="md"></Text>
-                  </Td>
-                  <Td textAlign="center">
-                    <Text fontSize="md">
-                      {item.apellido}, {item.nombre}
-                    </Text>
-                  </Td>
-                  <Td textAlign="center">
-                    <Text fontSize="md">{}</Text>
-                  </Td>
-                  <Td textAlign="center">
-                    <Link>
-                    </Link>
-                  </Td>
-                </Tr>
-              ))}
+                )
+                .map((item, index) => (
+                  <Tr key={index}>
+                    <Td textAlign="center">
+                      <Text fontSize="md"></Text>
+                    </Td>
+                    <Td textAlign="center">
+                      <Text fontSize="md">
+                        {item.apellido}, {item.nombre}
+                      </Text>
+                    </Td>
+                    <Td textAlign="center">
+                      <Text fontSize="md">
+                        {item.activo ? "Activo" : "Inactivo"}
+                      </Text>
+                    </Td>
+                    <Td textAlign="center">
+                      <Text fontSize="md">{}</Text>
+                    </Td>
+                    <Td textAlign="center">
+                      <Link></Link>
+                    </Td>
+                    <Td textAlign="center">
+                      <Link to={`/investigadores/${item.idPersona}`}>
+                        <PlusSquareIcon />
+                      </Link>
+                    </Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
+          <HStack spacing={4} mt={4} justify="center">
+            <IconButton
+              isDisabled={currentPage === 0}
+              icon={<ChevronLeftIcon />}
+              onClick={() => {
+                handlePageChange(currentPage - 1);
+              }}
+            />
+
+            <Input
+              type="number"
+              value={currentPage + 1}
+              onChange={handleSelectPage}
+              style={{ width: "50px", textAlign: "center" }}
+            />
+
+            <Text>de {totalPages}</Text>
+
+            <IconButton
+              isDisabled={
+                currentPage ===
+                Math.ceil(investigadores?.length / ITEMS_PER_PAGE) - 1
+              }
+              icon={<ChevronRightIcon />}
+              onClick={() => {
+                handlePageChange(currentPage + 1);
+              }}
+            />
+          </HStack>
         </TableContainer>
       </CardBody>
     </Card>
