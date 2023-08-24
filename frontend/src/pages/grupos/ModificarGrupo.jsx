@@ -47,8 +47,10 @@ import proyectosInv from "../../utils/data/proyectosInv.json";
 import { useForm } from "react-hook-form";
 import { getGrupoById, updateGrupo } from "../../utils/api/gruposApi";
 import { useMutation, useQuery } from "react-query";
-import { getAllGrupos } from "../../utils/api/gruposApi";
-import { formatoFechaISOaAAAAMMDD, formatoFechaISOaDDMMAAAA } from "../../utils/general";
+import {
+  formatoFechaISOaAAAAMMDD,
+  formatoFechaISOaDDMMAAAA,
+} from "../../utils/general";
 
 export default function ModificarGrupo() {
   const navigate = useNavigate();
@@ -66,10 +68,9 @@ export default function ModificarGrupo() {
 
   useEffect(() => {
     setValue("nombre", data?.grupo.nombre);
-    setValue("siglas", data?.grupo.siglas);
-    setValue("denominacion", data?.grupo.denominacion);
     setValue("resolucion", data?.grupo.resolucion);
-    setValue("fechaCreacion", data?.grupo.fechaCreacion);
+    setValue("fechaCreacion", formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion));
+    setValue("siglas", data?.grupo.siglas);
   }, [data]);
 
   const {
@@ -79,16 +80,15 @@ export default function ModificarGrupo() {
     setValue,
   } = useForm({
     defaultValues: {
-      nombre: data?.grupo.nombre,
-      siglas: data?.grupo.siglas,
-      denominacion: data?.grupo.denominacion,
-      resolucion: data?.grupo.resolucion,
-      fechaCreacion: data?.grupo.fechaCreacion,
+      nombre: data?.grupo?.nombre,
+      resolucion: data?.grupo?.resolucion,
+      fechaCreacion: formatoFechaISOaAAAAMMDD(data?.grupo?.fechaCreacion),
+      siglas: data?.grupo?.siglas,
     },
   });
 
-  /*   const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => updatePersona(idPersona, formData),
+  const { mutate, isLoading: isLoadingMutation } = useMutation({
+    mutationFn: (formData) => updateGrupo(idGrupoInvestigacion, formData),
     onSuccess: () => {
       toast({
         title: "Modificar grupo",
@@ -106,18 +106,12 @@ export default function ModificarGrupo() {
         isClosable: true,
       });
     },
-  }); */
-  /* 
+  });
+
   const onSub = (values) => {
     console.log(values);
     mutate(values);
-  }; */
-
-  const [gruposExistentes, setGruposExistentes] = useState([
-    "CINAPTIC",
-    "ACHETIQ",
-    "OTROS",
-  ]);
+  };
 
   return (
     <Card>
@@ -140,7 +134,7 @@ export default function ModificarGrupo() {
             <CardBody>
               <Text fontSize="md">Ingrese los datos del grupo</Text>
               <br />
-              <form /* onSubmit={handleSubmit((values) => onSub(values))} */>
+              <form onSubmit={handleSubmit((values) => onSub(values))}>
                 <Box
                   display="flex"
                   width="100%"
@@ -248,10 +242,14 @@ export default function ModificarGrupo() {
                           name="fecha"
                           type="date"
                           placeholder="Fecha"
-                          {...register("fecha") }
-                          defaultValue={formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion) || ""}
+                          {...register("fechaCreacion")}
+                          defaultValue={
+                            formatoFechaISOaAAAAMMDD(
+                              data?.grupo.fechaCreacion
+                            ) || ""
+                          }
                         />
-                        <FormLabel>Fecha</FormLabel>
+                        <FormLabel>Fecha Creacion</FormLabel>
                       </FormControl>
                     </Box>
                   </Box>
@@ -272,7 +270,6 @@ export default function ModificarGrupo() {
                     <Button type="submit" colorScheme="blue" variant="outline">
                       Guardar
                     </Button>
-                    <Button onClick={()=>{console.log(formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion))}}>Aca proba</Button>
                   </Box>
                 </Box>
               </form>

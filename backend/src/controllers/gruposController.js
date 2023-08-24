@@ -1,4 +1,5 @@
 import { getAllGruposService, getGrupoByIdService, updateGrupoService } from '../services/gruposService.js';
+import convertToISOString from '../utils/funciones.js'
 
 export async function getGrupos(req, res) {
   try {
@@ -23,6 +24,8 @@ export async function getGruposById(req, res) {
 export async function updateGrupoController(req, res) {
   const idGrupo = parseInt(req.params.idGrupoInvestigacion, 10);
   const grupoData = req.body;
+
+  grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion); 
 
   try {
     const updatedGrupo = await updateGrupoService(idGrupo, grupoData);
