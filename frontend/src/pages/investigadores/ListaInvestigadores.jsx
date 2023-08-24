@@ -26,10 +26,11 @@ import {
 } from "@chakra-ui/react";
 // import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
-import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
 import TablaInvestigadores from "../../components/TablaInvestigadores";
+import { useChakraToast } from "../../context/ChakraToastContext";
 
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
@@ -38,30 +39,29 @@ export default function ListaInvestigadores() {
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
- 
 
-  useEffect(() => {
-    if (nombre === "" && grupo === "") {
-      // Si no se está filtrando nada, utiliza los datos originales data?.personas
-      setInvestigadores(data?.personas || []);
-      setFiltro(false);
-    } else {
-      const filteredInvestigadores = data?.personas.filter(
-        (item) =>
-          ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(nombre.toLowerCase()) ||
-            (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(nombre.toLowerCase())) &&
-          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
-      );
-      setInvestigadores(filteredInvestigadores);
-      setFiltro(true)
-    }
-  }, [nombre, grupo, data]);
+  // useEffect(() => {
+  //   if (nombre === "" && grupo === "") {
+  //     // Si no se está filtrando nada, utiliza los datos originales data?.personas
+  //     setInvestigadores(data?.personas || []);
+  //     setFiltro(false);
+  //   } else {
+  //     const filteredInvestigadores = data?.personas.filter(
+  //       (item) =>
+  //         ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(nombre.toLowerCase()) ||
+  //           (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(nombre.toLowerCase())) &&
+  //         item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
+  //     );
+  //     setInvestigadores(filteredInvestigadores);
+  //     setFiltro(true)
+  //   }
+  // }, [nombre, grupo, data]);
 
-  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
-    const apellidoA = a.apellido.toLowerCase();
-    const apellidoB = b.apellido.toLowerCase();
-    return apellidoA.localeCompare(apellidoB);
-  });
+  // const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
+  //   const apellidoA = a.apellido.toLowerCase();
+  //   const apellidoB = b.apellido.toLowerCase();
+  //   return apellidoA.localeCompare(apellidoB);
+  // });
 
   return (
     <Card>
@@ -101,7 +101,7 @@ export default function ListaInvestigadores() {
 
           <br />
 
-          {investigadores && (
+          {/* {investigadores && (
             <TablaInvestigadores
               investigadores={sortedInvestigadores}
               filtro={filtro}
@@ -114,7 +114,7 @@ export default function ListaInvestigadores() {
             <Button colorScheme="blue" variant="outline">
               Imprimir
             </Button>
-          </Box>
+          </Box> */}
         </Box>
       </CardBody>
     </Card>
