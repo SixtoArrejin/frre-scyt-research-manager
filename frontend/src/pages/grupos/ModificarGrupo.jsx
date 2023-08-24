@@ -48,6 +48,7 @@ import { useForm } from "react-hook-form";
 import { getGrupoById, updateGrupo } from "../../utils/api/gruposApi";
 import { useMutation, useQuery } from "react-query";
 import { getAllGrupos } from "../../utils/api/gruposApi";
+import { formatoFechaISOaAAAAMMDD, formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
 export default function ModificarGrupo() {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ export default function ModificarGrupo() {
     },
   });
 
-/*   const { mutate, isLoading: isLoadingMutation } = useMutation({
+  /*   const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updatePersona(idPersona, formData),
     onSuccess: () => {
       toast({
@@ -106,7 +107,7 @@ export default function ModificarGrupo() {
       });
     },
   }); */
-/* 
+  /* 
   const onSub = (values) => {
     console.log(values);
     mutate(values);
@@ -200,7 +201,7 @@ export default function ModificarGrupo() {
                       </FormControl>
                     </Box>
                   </Box>
-                  
+
                   <Box
                     display="flex"
                     flexDirection={{ base: "column", md: "row" }}
@@ -239,19 +240,39 @@ export default function ModificarGrupo() {
                     >
                       <FormControl
                         variant="floating"
-                        id="denominacion"
+                        id="fecha"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
                       >
                         <Input
-                          name="denominacion"
-                          placeholder="Denominación"
-                          {...register("denominacion")}
-                          defaultValue={data?.grupo.denominacion || ""}
+                          name="fecha"
+                          type="date"
+                          placeholder="Fecha"
+                          {...register("fecha") }
+                          defaultValue={formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion) || ""}
                         />
-                        <FormLabel>Denominación</FormLabel>
+                        <FormLabel>Fecha</FormLabel>
                       </FormControl>
                     </Box>
+                  </Box>
+                  <Box
+                    display="flex"
+                    width="90%"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    <Button
+                      colorScheme="gray"
+                      variant="outline"
+                      mr="3%"
+                      onClick={() => navigate(-1)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" colorScheme="blue" variant="outline">
+                      Guardar
+                    </Button>
+                    <Button onClick={()=>{console.log(formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion))}}>Aca proba</Button>
                   </Box>
                 </Box>
               </form>
