@@ -18,6 +18,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import LogIn from './pages/LogIn';
 import { useContext } from "react";
 import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
+import { ChakraToastProvider } from './context/ChakraToastContext';
 
 const queryClient = new QueryClient();
 
@@ -30,32 +31,34 @@ const routes = [
   { path: "/investigadores/:idPersona/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
-  { path: "*", element: <Navigate to="/investigadores" /> },
+  { path: "*", element: <Navigate to="/home" /> },
 ];
 
 function App() {
   const { isLoggedIn } = useContext(UserContext); // Reemplaza "UserContext" con el nombre de tu contexto de usuario
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        {isLoggedIn ? (
-          <SidebarWithHeader>
+    <ChakraToastProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          {isLoggedIn ? (
+            <SidebarWithHeader>
+              <Routes>
+                {routes.map((route, index) => (
+                  <Route key={index} path={route.path} element={route.element} />
+                ))}
+              </Routes>
+            </SidebarWithHeader>
+          ) : (
             <Routes>
-              {routes.map((route, index) => (
-                <Route key={index} path={route.path} element={route.element} />
-              ))}
+              <Route path="/login" element={<LogIn />} />
+              <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
-          </SidebarWithHeader>
-        ) : (
-          <Routes>
-            <Route path="/login" element={<LogIn />} />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        )}
-      </Router>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+          )}
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ChakraToastProvider>
   );
 }
 

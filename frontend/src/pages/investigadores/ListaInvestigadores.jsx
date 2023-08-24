@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 // import investigadores from "../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
-import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
 import TablaInvestigadores from "../../components/TablaInvestigadores";
@@ -38,7 +38,6 @@ export default function ListaInvestigadores() {
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
- 
 
   useEffect(() => {
     if (nombre === "" && grupo === "") {
@@ -56,10 +55,6 @@ export default function ListaInvestigadores() {
       setFiltro(true)
     }
   }, [nombre, grupo, data]);
-
-  if (isLoading) {
-    return <Text fontSize="md">Cargando...</Text>
-  }
 
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
