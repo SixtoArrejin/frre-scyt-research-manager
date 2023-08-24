@@ -1,5 +1,5 @@
 
-import { createCategoria } from '../repository/categoriasRepository.js';
+import { createCategoria, deleteCategoria, getCategoriaById } from '../repository/categoriasRepository.js';
 import { update } from '../repository/baseRepository.js';
 
 export async function createCategoriaService(categoriaData) {
@@ -10,3 +10,20 @@ export async function createCategoriaService(categoriaData) {
         throw new Error(error.message);
     }
 }
+
+export async function deleteCategoriaService(idCategoria) {
+    try {
+      await deleteCategoria(idCategoria);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  export async function getCategoriaByIdService(idCategoria) {
+    try {
+      const categoria = await getCategoriaById(idCategoria);
+      return categoria
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
