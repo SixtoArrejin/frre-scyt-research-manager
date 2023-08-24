@@ -10,7 +10,7 @@ import {
   
       let proyectos;
   
-      if (tipo === 'pids') {
+      if (tipo === 'pid') {
         proyectos = await getProyectosPidsService();
       } else if (tipo === 'externos') {
         proyectos = await getProyectosExternosService();
