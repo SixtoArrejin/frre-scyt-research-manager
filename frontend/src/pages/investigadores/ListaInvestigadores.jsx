@@ -57,10 +57,6 @@ export default function ListaInvestigadores() {
     }
   }, [nombre, grupo, data]);
 
-  if (isLoading) {
-    return <Text fontSize="md">Cargando...</Text>
-  }
-
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
     const apellidoB = b.apellido.toLowerCase();

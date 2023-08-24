@@ -79,7 +79,7 @@ export default function NuevaCategoria() {
           status: "success",
           isClosable: true,
         });
-        // navigate(-1);
+        navigate(-1);
       },
       onError: () => {
         toast({

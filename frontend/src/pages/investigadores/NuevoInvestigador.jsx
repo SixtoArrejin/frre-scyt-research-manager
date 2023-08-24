@@ -62,7 +62,8 @@ export default function NuevoInvestigador() {
             status: "success",
             isClosable: true,
           });
-          navigate(-1);
+          // navigate(`/investigadores/5`);
+          navigate(-1)
         },
         onError: () => {
           toast({
