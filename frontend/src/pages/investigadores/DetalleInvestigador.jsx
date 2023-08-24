@@ -10,6 +10,7 @@ import {
   Button,
   Checkbox,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, DeleteIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -32,22 +33,49 @@ import categorias from '../../utils/data/ListaCategorias.json'
 import { Link, useParams } from 'react-router-dom';
 import proyectosInv from '../../utils/data/proyectosInv.json';
 import { getPersonaById } from "../../utils/api/personasApi";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
+import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleInvestigador() {
 
   const { idPersona } = useParams()
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
   const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
+
+  const toast = useToast();
 
   const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
   const categoriasMIN = data?.persona.categorias.filter(categoria => categoria.tipo === "ministerio");
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+  const { mutate, isLoading: isLoadingMutation } = useMutation(
+    {
+      mutationFn: (idCategoria) => deleteCategoriaById(idCategoria),
+      onSuccess: () => {
+        toast({
+          title: "Eliminar categoria",
+          description: `Se ha eliminado la categoria exitosamente`,
+          status: "info",
+          isClosable: true,
+        });
+        queryClient.refetchQueries(['persona']);
+      },
+      onError: () => {
+        toast({
+          title: "Eliminar categoria",
+          description: `Intente de nuevo.`,
+          status: "error",
+          isClosable: true,
+        });
+      },
+    }
+  );
 
   useEffect(() => {
     console.log(categoriasUTN)
@@ -162,7 +190,7 @@ export default function DetalleInvestigador() {
                               <Text fontSize="md">{item.normativa}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
+                              <Link><DeleteIcon onClick={() => mutate(item.idCategoria)} /></Link>
                             </Td>
                           </Tr>
                         ))}
@@ -213,7 +241,7 @@ export default function DetalleInvestigador() {
                               <Text fontSize="md">{item.equiparacion ? 'SI' : 'NO'}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><DeleteIcon onClick={() => alert('Eliminar categoría')} /></Link>
+                              <Link><DeleteIcon onClick={() => mutate(item.idCategoria)} /></Link>
                             </Td>
                           </Tr>
                         ))}

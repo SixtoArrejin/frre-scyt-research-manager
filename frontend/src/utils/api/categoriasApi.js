@@ -5,6 +5,6 @@ export async function createCategoria(data) {
   return post(`/api/categorias`, data);
 }
 
-export async function deleteCategoria(data) {
-  return del(`/api/categorias/${data.idCategoria}`);
+export async function deleteCategoriaById(idCategoria) {
+  return del(`/api/categorias/${idCategoria}`);
 }
