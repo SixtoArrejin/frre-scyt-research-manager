@@ -14,6 +14,7 @@ import ListaGrupos from './pages/grupos/ListaGrupos';
 import DetalleGrupo from './pages/grupos/DetalleGrupo';
 import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
 import ModificarGrupo from './pages/grupos/ModificarGrupo';
+import NuevoGrupo from './pages/grupos/NuevoGrupo';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import LogIn from './pages/LogIn';
@@ -31,6 +32,7 @@ const routes = [
   { path: "/investigadores/:idPersona/modificar", element: <ModificarInvestigador /> },
   { path: "/investigadores/:idPersona/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
+  { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo/> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "*", element: <Navigate to="/home" /> },
