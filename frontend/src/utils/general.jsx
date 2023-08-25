@@ -5,3 +5,11 @@ export function formatoFechaISOaDDMMAAAA(fechaISO) {
   const año = fechaObjeto.getFullYear();
   return `${dia}/${mes}/${año}`;
 }
+
+export function formatoFechaISOaAAAAMMDD(fechaISO) {
+  const fechaObjeto = new Date(fechaISO);
+  const dia = String(fechaObjeto.getDate()).padStart(2, "0");
+  const mes = String(fechaObjeto.getMonth() + 1).padStart(2, "0");
+  const año = fechaObjeto.getFullYear();
+  return `${año}-${mes}-${dia}`;
+}
