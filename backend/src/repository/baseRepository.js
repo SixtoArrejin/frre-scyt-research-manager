@@ -19,7 +19,7 @@ export async function getAll(tableName, includeRelations = []) {
                 nestedIncludeObj[nestedRelation] = true;
               }
             }
-            
+          
             // Agregar otros atributos directamente al objeto anidado
             for (const attribute in relation[relationName]) {
               if (attribute !== relationName) {

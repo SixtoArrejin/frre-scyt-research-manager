@@ -40,8 +40,7 @@ import TablaGrupos from "../../components/TablaGrupos";
 import { getProyectos } from "../../utils/api/proyectosApi";
 import TablaProyectosPid from "../../components/TablaProyectosPid";
 
-export default function ProyectosPid() {
-  const [codPID, setCodPID] = useState("");
+export default function ProyectosExternosF() {
   const [denominacion, setDenominacion] = useState("");
   const [filtro, setFiltro] = useState(false);
 
@@ -49,20 +48,19 @@ export default function ProyectosPid() {
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
 
   useEffect(() => {
-    if (codPID === "" && denominacion === "") {
+    if (denominacion === "") {
       // Si no se está filtrando nada, utiliza los datos originales data?.personas
       setProyectos(data?.proyectos || []);
       setFiltro(false);
     } else {
       const filteredProyectos = data?.proyectos.filter(
         (item) =>
-          (item.codPid.toLowerCase().includes(codPID.toLowerCase())) &&
           item.proyectos.denominacion.toLowerCase().includes(denominacion.toLowerCase())
       );
       setProyectos(filteredProyectos);
       setFiltro(true)
     }
-  }, [codPID, denominacion, data]);
+  }, [denominacion, data]);
 
   if (isLoading) {
     return <Text fontSize="md">Cargando...</Text>;
@@ -85,7 +83,7 @@ export default function ProyectosPid() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            Proyectos PID
+            Proyectos Externos con Financiamiento
           </Heading>
 
           <br />
@@ -97,12 +95,6 @@ export default function ProyectosPid() {
               width="45%"
               marginLeft="2%"
             >
-              <InputLabel
-                placeholder="Código PID"
-                width="15vw"
-                onChange={(event) => setCodPID(event.target.value)}
-                value={codPID}
-              />
               <InputLabel
                 placeholder="Denominación"
                 width="15vw"

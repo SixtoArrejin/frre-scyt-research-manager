@@ -22,9 +22,9 @@ import {
     }
   }
   
-  export async function getProyectosExternosService() {
+  export async function getProyectosExternosService(subtipo) {
     try {
-      const proyectosExternos = await getProyectosExternos();
+      const proyectosExternos = await getProyectosExternos(subtipo);
       return proyectosExternos;
     } catch (error) {
       throw new Error(error.message);

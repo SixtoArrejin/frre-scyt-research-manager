@@ -20,6 +20,7 @@ import { useContext } from "react";
 import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
 import { ChakraToastProvider } from './context/ChakraToastContext';
 import ProyectosPid from './pages/proyectos/ProyectosPid';
+import ProyectosExternosF from './pages/proyectos/ProyectosExternosF';
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const routes = [
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/proyectos-pid", element: <ProyectosPid /> },
+  { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
 
