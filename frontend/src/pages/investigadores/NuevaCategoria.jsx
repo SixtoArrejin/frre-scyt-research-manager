@@ -79,7 +79,7 @@ export default function NuevaCategoria() {
           status: "success",
           isClosable: true,
         });
-        navigate(-1);
+        navigate(`/investigadores/${idPersona}`);
       },
       onError: () => {
         toast({
@@ -159,7 +159,7 @@ export default function NuevaCategoria() {
 
                       <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                         <Text mb='1vh'>Equiparacion:</Text>
-                        <RadioGroup isDisabled={valueCategoria === "ministerio"} mb='5vh' onChange={ (value) => onChangeRadio(value)}>
+                        <RadioGroup isDisabled={valueCategoria === "ministerio"} mb='5vh' onChange={ (value) => onChangeRadio(value)} defaultValue='true'>
                           <Stack direction="row" spacing={10} >
                             <Radio value="true">Si</Radio>
                             <Radio value="false">No</Radio>

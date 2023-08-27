@@ -86,31 +86,31 @@ import {
                     (currentPage + 1) * ITEMS_PER_PAGE
                   )
                   .map((item, index) => {
-                    const fechaAnioLinea = new Date(item.proyectosexternos.anioLinea);
+                    const fechaAnioLinea = new Date(item?.proyectosexternos?.anioLinea);
                     return (
                       <Tr key={index}>
                         <Td textAlign="center">
-                          <Text fontSize="md">{fechaAnioLinea.getUTCFullYear()}</Text>
+                          <Text fontSize="md">{fechaAnioLinea?.getUTCFullYear()}</Text>
                         </Td>
                         {/* <Td textAlign="center">fechaObjeto.getUTCFullYear();
                           <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.proyectos.fechaInicio)}</Text>
                         </Td> */}
                         <Td textAlign="center">
-                          <Text fontSize="md">{item.proyectosexternos.proyectos.denominacion}</Text>
+                          <Text fontSize="md">{item.proyectosexternos?.proyectos?.denominacion}</Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectosexternos.empresaInstitucion}
+                            {item.proyectosexternos?.empresaInstitucion}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectosexternos.proyectos.regional}
+                            {item.proyectosexternos?.proyectos?.regional}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectosexternos.proyectos.estado}
+                            {item.proyectosexternos?.proyectos?.estado}
                           </Text>
                         </Td>
                         <Td textAlign="center">

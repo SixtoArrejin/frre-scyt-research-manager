@@ -92,21 +92,21 @@ import {
                           <Text fontSize="md">{item.codPid}</Text>
                         </Td>
                         <Td textAlign="center">
-                          <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.proyectos.fechaInicio)}</Text>
+                          <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item?.proyectos?.fechaInicio)}</Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.denominacion}
+                            {item.proyectos?.denominacion}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.regional}
+                            {item.proyectos?.regional}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.estado}
+                            {item.proyectos?.estado}
                           </Text>
                         </Td>
                         <Td textAlign="center">
