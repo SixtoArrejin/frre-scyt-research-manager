@@ -60,13 +60,13 @@ import {
               <Thead>
                 <Tr>
                   <Th textAlign="center">
-                    <Text fontSize="md">Cod. PID</Text>
-                  </Th>
-                  <Th textAlign="center">
-                    <Text fontSize="md">Fecha Inicio</Text>
+                    <Text fontSize="md">Año de Linea</Text>
                   </Th>
                   <Th textAlign="center">
                     <Text fontSize="md">Denominación</Text>
+                  </Th>
+                  <Th textAlign="center">
+                    <Text fontSize="md">Empresa/Institución</Text>
                   </Th>
                   <Th textAlign="center">
                     <Text fontSize="md">Regional</Text>
@@ -86,32 +86,36 @@ import {
                     (currentPage + 1) * ITEMS_PER_PAGE
                   )
                   .map((item, index) => {
+                    const fechaAnioLinea = new Date(item.proyectosexternos.anioLinea);
                     return (
                       <Tr key={index}>
                         <Td textAlign="center">
-                          <Text fontSize="md">{item.codPid}</Text>
+                          <Text fontSize="md">{fechaAnioLinea.getUTCFullYear()}</Text>
                         </Td>
-                        <Td textAlign="center">
+                        {/* <Td textAlign="center">fechaObjeto.getUTCFullYear();
                           <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.proyectos.fechaInicio)}</Text>
+                        </Td> */}
+                        <Td textAlign="center">
+                          <Text fontSize="md">{item.proyectosexternos.proyectos.denominacion}</Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.denominacion}
+                            {item.proyectosexternos.empresaInstitucion}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.regional}
+                            {item.proyectosexternos.proyectos.regional}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           <Text fontSize="md">
-                            {item.proyectos.estado}
+                            {item.proyectosexternos.proyectos.estado}
                           </Text>
                         </Td>
                         <Td textAlign="center">
                           {/* <Link to={`/proyectos-pid/${item.idProyectoPid}`} > */}
-                            <PlusSquareIcon _hover={{ cursor: "pointer" }} onClick={() => alert(`Detalle del proyecto ${item.proyectos.denominacion}`)}/>
+                            <PlusSquareIcon _hover={{ cursor: "pointer" }} onClick={() => alert(`Detalle del proyecto ${item.proyectosexternos.proyectos.denominacion}`)}/>
                           {/* </Link> */}
                         </Td>
                       </Tr>

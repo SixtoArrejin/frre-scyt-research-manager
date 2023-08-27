@@ -39,12 +39,13 @@ import { useQuery } from "react-query";
 import TablaGrupos from "../../components/TablaGrupos";
 import { getProyectos } from "../../utils/api/proyectosApi";
 import TablaProyectosPid from "../../components/TablaProyectosPid";
+import TablaProyectosExtF from "../../components/TablaProyectosExtF";
 
 export default function ProyectosExternosF() {
   const [denominacion, setDenominacion] = useState("");
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery("proyectos", () => getProyectos("pid"));
+  const { data, isLoading, error } = useQuery("proyectos", () => getProyectos("externo", "financiamiento"));
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
 
   useEffect(() => {
@@ -55,22 +56,12 @@ export default function ProyectosExternosF() {
     } else {
       const filteredProyectos = data?.proyectos.filter(
         (item) =>
-          item.proyectos.denominacion.toLowerCase().includes(denominacion.toLowerCase())
+          item.proyectosexternos.proyectos.denominacion.toLowerCase().includes(denominacion.toLowerCase())
       );
       setProyectos(filteredProyectos);
       setFiltro(true)
     }
   }, [denominacion, data]);
-
-  if (isLoading) {
-    return <Text fontSize="md">Cargando...</Text>;
-  }
-
-  //   const sortedGrupos = [...grupos]?.sort((a, b) => {
-  //     const siglasA = a.siglas.toLowerCase();
-  //     const siglasB = b.siglas.toLowerCase();
-  //     return siglasA.localeCompare(siglasB);
-  //   });
 
   return (
     <Card>
@@ -113,7 +104,8 @@ export default function ProyectosExternosF() {
 
           <br />
           
-          <TablaProyectosPid proyectos={proyectos} filtro={filtro} />
+          <TablaProyectosExtF proyectos={proyectos} filtro={filtro} />
+          {/* <TablaProyectosPid proyectos={proyectos} filtro={filtro} /> */}
 
           {/* {grupos && <TablaGrupos grupos={sortedGrupos} filtro={filtro} />} */}
 
