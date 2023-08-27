@@ -6,19 +6,25 @@ import {
   
   export async function getProyectos(req, res) {
     try {
-      const { tipo } = req.query;
-  
+      const { tipo, subtipo } = req.query;
+      console.log(tipo, subtipo);
       let proyectos;
   
-      if (tipo === 'pids') {
+      if (tipo === 'pid') {
         proyectos = await getProyectosPidsService();
-      } else if (tipo === 'externos') {
-        proyectos = await getProyectosExternosService();
+      } else if (tipo === 'externo') {
+        if (subtipo === 'financiamiento') {
+          proyectos = await getProyectosExternosService(subtipo);
+        } else if (subtipo === 'sinfinanciamiento') {
+          proyectos = await getProyectosExternosService(subtipo);
+        } else {
+          proyectos = await getProyectosExternosService();
+        }
       } else {
         proyectos = await getAllProyectosService();
       }
   
-      res.status(200).json({ message: 'Proyectos encontrados', success: true, proyectos });
+      res.status(200).json({ message: `Proyectos encontrados. ${tipo ? `Tipo: ${tipo} ${subtipo ? `- Subtipo: ${subtipo}` : ""} ` : "" }`, success: true, proyectos });
     } catch (error) {
       res.status(500).json({ message: error.message, success: false });
     }

@@ -7,11 +7,16 @@ export async function getAllProyectos() {
 }
 
 export async function getProyectosPids() {
-  const includeRelations = ['proyectos'];
+  const includeRelations = ["proyectos"];
   return await getAll('pids', includeRelations);
 }
 
-export async function getProyectosExternos() {
+export async function getProyectosExternos(subtipo = null) {
+  if (subtipo === 'financiamiento') {
+    const includeRelations = [{proyectosexternos: ["proyectos"]}];
+    return await getAll('proyectosconfinanciamiento', includeRelations);
+  };
+  //falta el caso en que el subtipo='sinFinanciamiento' pero aún no implementamos esa tabla
   const includeRelations = ['proyectos', 'proyectosconfinanciamiento'];
   return await getAll('proyectosexternos', includeRelations);
 }
