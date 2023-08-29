@@ -22,6 +22,7 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -97,7 +98,7 @@ export default function TablaInvestigadoresGrupo({ investigadores }) {
                       </Text>
                     </Td>
                     <Td textAlign="center">
-                      <Text fontSize="md">{}</Text>
+                      <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaIngreso)}</Text>
                     </Td>
                     <Td textAlign="center">
                       <Link></Link>
