@@ -29,4 +29,26 @@ import {
       res.status(500).json({ message: error.message, success: false });
     }
   }
+
+  export async function getProyectosDeGrupo(req, res) {
+    try {
+      const { idGrupoInvestigacion } = req.query;
+      console.log(idGrupoInvestigacion);
+  
+      if (!idGrupoInvestigacion) {
+        return res.status(400).json({ message: 'Se requiere el parámetro idGrupoInvestigacion.', success: false });
+      }
+  
+      // Obtener todos los proyectos y luego filtrar por idGrupoInvestigacion
+      const proyectos = await getAllProyectosService();
+      const proyectosFiltrados = proyectos.filter(proyecto => proyecto.tiene.some(item => item.idGrupoInvestigacion == idGrupoInvestigacion));
+  
+      res.status(200).json({ message: `Proyectos encontrados para el idGrupoInvestigacion ${idGrupoInvestigacion}.`, success: true, proyectos: proyectosFiltrados });
+    } catch (error) {
+      res.status(500).json({ message: error.message, success: false });
+    }
+  }
+  
+
+  
   
