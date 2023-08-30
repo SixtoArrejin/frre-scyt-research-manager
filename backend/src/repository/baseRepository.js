@@ -11,7 +11,7 @@ export async function getAll(tableName, includeRelations = []) {
         } else if (typeof relation === "object") {
           const relationName = Object.keys(relation)[0]; // Nombre de la relación
           const nestedIncludes = relation[relationName]; // Relaciones anidadas
-          
+
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
             const nestedIncludeObj = {};
             for (const nestedRelation of nestedIncludes) {
@@ -19,20 +19,20 @@ export async function getAll(tableName, includeRelations = []) {
                 nestedIncludeObj[nestedRelation] = true;
               }
             }
-          
+
             // Agregar otros atributos directamente al objeto anidado
             for (const attribute in relation[relationName]) {
               if (attribute !== relationName) {
                 nestedIncludeObj[attribute] = relation[relationName][attribute];
               }
             }
-            
+
             includeObj[relationName] = { include: nestedIncludeObj };
           }
         }
       }
     }
-    
+
 
     const data = await prisma[tableName].findMany({
       include: includeObj,
@@ -72,9 +72,37 @@ export async function getById(tableName, idField, idValue, includeRelations = []
   try {
     const whereFilter = { [idField]: idValue };
     const includeObj = {};
-    for (const relation of includeRelations) {
-      includeObj[relation] = true;
+    if (includeRelations.length > 0) {
+      for (const relation of includeRelations) {
+        if (typeof relation === "string") {
+          includeObj[relation] = true;
+        } else if (typeof relation === "object") {
+          const relationName = Object.keys(relation)[0]; // Nombre de la relación
+          const nestedIncludes = relation[relationName]; // Relaciones anidadas
+
+          if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
+            const nestedIncludeObj = {};
+            for (const nestedRelation of nestedIncludes) {
+              if (typeof nestedRelation === "string") {
+                nestedIncludeObj[nestedRelation] = true;
+              }
+            }
+
+            // Agregar otros atributos directamente al objeto anidado
+            for (const attribute in relation[relationName]) {
+              if (attribute !== relationName) {
+                nestedIncludeObj[attribute] = relation[relationName][attribute];
+              }
+            }
+
+            includeObj[relationName] = { include: nestedIncludeObj };
+          }
+        }
+      }
     }
+    // for (const relation of includeRelations) {
+    //   includeObj[relation] = true;
+    // }
     const data = await prisma[tableName].findUnique({
       where: whereFilter,
       include: includeObj,
