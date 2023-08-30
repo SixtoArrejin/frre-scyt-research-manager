@@ -46,6 +46,7 @@ model personas {
   dni                                        Int?                @unique(map: "dni")
   nombre                                     String?             @db.VarChar(30)
   apellido                                   String?             @db.VarChar(30)
+  fechaIngreso                               DateTime?           @db.Date
   activo                                     Boolean?
   comision                                   String?             @db.VarChar(50)
   idGrupoInvestigacion                       Int
@@ -59,7 +60,7 @@ model personas {
 }
 
 model pids {
-  idProyectoPid Int       @id
+  idProyectoPid Int       @id @default(autoincrement())
   tipoProyecto  String?   @db.VarChar(100)
   prorrogado    Boolean?
   codPid        String?   @db.VarChar(20)
@@ -92,7 +93,7 @@ model proyectos {
 }
 
 model proyectosconfinanciamiento {
-  idProyectoFinanciamieno   Int               @id
+  idProyectoFinanciamieno   Int               @id @default(autoincrement())
   montoANR                  Float?            @db.Float
   presentacion              DateTime?         @db.Date
   canon                     Float?            @db.Float

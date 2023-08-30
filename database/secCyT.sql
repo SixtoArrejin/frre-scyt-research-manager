@@ -15,6 +15,7 @@ CREATE TABLE personas (
     dni INT UNIQUE,
     nombre VARCHAR(30),
     apellido VARCHAR(30),
+    fechaIngreso DATE,
     activo BOOLEAN,
     comision VARCHAR(50),
     idGrupoInvestigacion INT NOT NULL,

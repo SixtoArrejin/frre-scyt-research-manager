@@ -1,4 +1,5 @@
 import { getAllPersonasService, createPersonaService, updatePersonaService, getPersonaByIdService } from '../services/personasService.js';
+import convertToISOString from '../utils/funciones.js';
 
 export async function getPersonas(req, res) {
   try {
@@ -22,10 +23,18 @@ export async function getPersonasById(req, res) {
 
 export async function createPersona(req, res) {
   try {
-    const personaData = req.body;
+    const personaData = { fechaIngreso: new Date(), ...req.body};
+
+    // const fechaActual = new Date();
+    // personaData.fechaIngreso = "2023-08-30T00:00:00.000Z"
+    // console.log(convertToISOString(fechaActual));
+    console.log(personaData);
+    // personaData.fechaIngreso = convertToISOString(fechaActual);
+
     const newPersona = await createPersonaService(personaData);
     return res.status(201).json({ message: 'Persona creada exitosamente', success: true, newPersona });
   } catch (error) {
+    console.log(error.message)
     return res.status(500).json({ message: error.message, success: false });
   }
 }
