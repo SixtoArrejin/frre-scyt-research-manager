@@ -60,7 +60,7 @@ model personas {
 }
 
 model pids {
-  idProyectoPid Int       @id @default(autoincrement())
+  idProyectoPid Int       @id
   tipoProyecto  String?   @db.VarChar(100)
   prorrogado    Boolean?
   codPid        String?   @db.VarChar(20)
@@ -93,7 +93,7 @@ model proyectos {
 }
 
 model proyectosconfinanciamiento {
-  idProyectoFinanciamieno   Int               @id @default(autoincrement())
+  idProyectoFinanciamieno   Int               @id
   montoANR                  Float?            @db.Float
   presentacion              DateTime?         @db.Date
   canon                     Float?            @db.Float
@@ -106,7 +106,7 @@ model proyectosconfinanciamiento {
 }
 
 model proyectosexternos {
-  idProyectoExterno          Int                         @id @default(autoincrement())
+  idProyectoExterno          Int                         @id
   empresaInstitucion         String?                     @db.VarChar(50)
   anioLinea                  DateTime?                   @db.Date
   tipoConvenio               String?                     @db.VarChar(50)
