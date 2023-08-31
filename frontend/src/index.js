@@ -53,6 +53,12 @@ export const theme = extendTheme({
               transformOrigin: "left top",
               fontWeight: "normal", // Establece el peso de la fuente como normal
               color: "gray"
+            },
+            input: {
+              _disabled: {
+                color: "black", // Cambia el color del input cuando está deshabilitado
+                opacity: "0.75"
+              }
             }
           }
         }
