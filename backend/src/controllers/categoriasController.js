@@ -10,6 +10,7 @@ export async function createCategoria(req, res) {
     const categoriaData = req.body;
     // categoriaData.equiparacion = categoriaData.equiparacion === 'true';
     categoriaData.fecha = convertToISOString(categoriaData.fecha);
+    console.log(typeof(categoriaData.fecha))
     const newCategoria = await createCategoriaService(categoriaData);
     return res.status(201).json({ message: 'Categoria creada exitosamente', success: true, newCategoria });
   } catch (error) {

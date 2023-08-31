@@ -3,6 +3,7 @@ import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, T
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { getCategoriaMasActual } from "../utils/general";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
@@ -61,25 +62,6 @@ export default function TablaInvestigadores({ investigadores, filtro = false }) 
   }, [filtro]);
 
   const isAllSelected = selectedInvestigadores.length === investigadores.length;
-
-  function getCategoriaMasActual(categorias, tipo) {
-    // Filtrar solo las categorías del tipo deseado
-    const categoriasFiltradas = categorias.filter((categoria) => categoria.tipo === tipo);
-
-    // Encontrar la categoría con la fecha más actual
-    const categoriaMasActual = categoriasFiltradas.reduce((actual, categoria) => {
-      if (!actual) {
-        return categoria;
-      } else {
-        const fechaActual = new Date(actual.fecha);
-        const fechaCategoria = new Date(categoria.fecha);
-        return fechaCategoria > fechaActual ? categoria : actual;
-      }
-    }, null);
-
-    return categoriaMasActual;
-  }
-
 
   return (
     <Card width='100%'>

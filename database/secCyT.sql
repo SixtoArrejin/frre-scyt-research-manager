@@ -15,6 +15,7 @@ CREATE TABLE personas (
     dni INT UNIQUE,
     nombre VARCHAR(30),
     apellido VARCHAR(30),
+    fechaIngreso DATE,
     activo BOOLEAN,
     comision VARCHAR(50),
     idGrupoInvestigacion INT NOT NULL,
@@ -52,7 +53,7 @@ CREATE TABLE proyectos(
 );
 
 CREATE TABLE pids (
-    idProyectoPid INT AUTO_INCREMENT,
+    idProyectoPid INT,
     tipoProyecto VARCHAR(100),
     prorrogado BOOLEAN,
     codPid VARCHAR(20),
@@ -63,7 +64,7 @@ CREATE TABLE pids (
 );
 
 CREATE TABLE proyectosExternos(
-    idProyectoExterno INT AUTO_INCREMENT,
+    idProyectoExterno INT,
     empresaInstitucion VARCHAR(50),
     anioLinea DATE,
     tipoConvenio VARCHAR(50),
@@ -72,7 +73,7 @@ CREATE TABLE proyectosExternos(
 );
 
 CREATE TABLE proyectosConFinanciamiento(
-    idProyectoFinanciamieno INT AUTO_INCREMENT,
+    idProyectoFinanciamieno INT,
     montoANR FLOAT,
     presentacion DATE,
     canon FLOAT,

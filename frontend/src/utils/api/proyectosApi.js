@@ -4,3 +4,7 @@ import { get, post, put, del } from "./baseApi";
 export async function getProyectos(tipo, subtipo) {
   return get(`/api/proyectos${ tipo ? ("?tipo="+tipo+( subtipo ? ("&subtipo="+subtipo) : "" )) : "" }`)
 }
+
+export async function getProyectosByIdGrupo(idGrupo) {
+  return get(`/api/proyectos/grupo/${idGrupo}`)
+}

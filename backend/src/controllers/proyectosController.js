@@ -29,4 +29,36 @@ import {
       res.status(500).json({ message: error.message, success: false });
     }
   }
+
+  export async function getProyectosDeGrupo(req, res) {
+    try {
+      const { idGrupo } = req.params;
+      console.log(idGrupo);
+  
+      // Obtener todos los proyectos y luego filtrar por idGrupo
+      const proyectos = await getAllProyectosService();
+      const proyectosFiltrados = proyectos.filter(proyecto => proyecto.tiene.some(item => item.idGrupoInvestigacion == idGrupo));
+  
+      res.status(200).json({ message: `Proyectos encontrados para el idGrupoInvestigacion ${idGrupo}.`, success: true, proyectos: proyectosFiltrados });
+    } catch (error) {
+      res.status(500).json({ message: error.message, success: false });
+    }
+  }
+  
+  export async function getProyectosDePersona(req, res) {
+    try {
+      const { personaId } = req.params;
+      console.log(personaId);
+  
+      // Obtener todos los proyectos y luego filtrar por idGrupo
+      const proyectos = await getAllProyectosService();
+      const proyectosFiltrados = proyectos.filter(proyecto => proyecto.participa.some(item => item.idPersona == personaId));
+  
+      res.status(200).json({ message: `Proyectos encontrados para la personaId ${personaId}.`, success: true, proyectos: proyectosFiltrados });
+    } catch (error) {
+      res.status(500).json({ message: error.message, success: false });
+    }
+  }
+
+  
   

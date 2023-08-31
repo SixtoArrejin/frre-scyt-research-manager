@@ -46,6 +46,7 @@ model personas {
   dni                                        Int?                @unique(map: "dni")
   nombre                                     String?             @db.VarChar(30)
   apellido                                   String?             @db.VarChar(30)
+  fechaIngreso                               DateTime?           @db.Date
   activo                                     Boolean?
   comision                                   String?             @db.VarChar(50)
   idGrupoInvestigacion                       Int
@@ -105,7 +106,7 @@ model proyectosconfinanciamiento {
 }
 
 model proyectosexternos {
-  idProyectoExterno          Int                         @id @default(autoincrement())
+  idProyectoExterno          Int                         @id
   empresaInstitucion         String?                     @db.VarChar(50)
   anioLinea                  DateTime?                   @db.Date
   tipoConvenio               String?                     @db.VarChar(50)
