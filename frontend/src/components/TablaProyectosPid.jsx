@@ -110,9 +110,9 @@ import {
                           </Text>
                         </Td>
                         <Td textAlign="center">
-                          {/* <Link to={`/proyectos-pid/${item.idProyectoPid}`} > */}
-                            <PlusSquareIcon _hover={{ cursor: "pointer" }} onClick={() => alert(`Detalle del proyecto ${item.proyectos.denominacion}`)}/>
-                          {/* </Link> */}
+                          <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
+                            <PlusSquareIcon />
+                          </Link>
                         </Td>
                       </Tr>
                     );
