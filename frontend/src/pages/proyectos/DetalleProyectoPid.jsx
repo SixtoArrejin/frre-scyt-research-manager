@@ -100,7 +100,7 @@ export default function DetalleProyectoPid() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="apellido" placeholder="Apellido" />
+                      <Input name="apellido" placeholder="Código PID" />
                       <FormLabel>Código PID</FormLabel>
                     </FormControl>
                   </Box>
@@ -184,6 +184,75 @@ export default function DetalleProyectoPid() {
                 </Box>
               </Box>
 
+            </CardBody>
+          </Card>
+
+          <br />
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize="md">Integrantes del proyecto</Text>
+              <br />
+              <Card width='100%'>
+                <CardBody>
+                  <TableContainer>
+                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
+                      <Thead>
+                        <Tr>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Rol</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Apellido y Nombre</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Estado</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Fecha Ingreso</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Cat. UTN</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Cat. MIN.</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Más</Text>
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {proyectosInv.map((item, index) => (
+                          <Tr key={index}>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.fechaInicio}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.fechaFin}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.denominacion}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.tipo}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.tipo}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">{item.estado}</Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Link><PlusSquareIcon onClick={() => alert('Ver más detalles del proyecto')} /></Link>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </CardBody>
+              </Card>
+              <br />
             </CardBody>
           </Card>
 
