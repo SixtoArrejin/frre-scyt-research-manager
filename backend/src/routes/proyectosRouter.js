@@ -4,6 +4,6 @@ import { getProyectos, getProyectosDeGrupo } from '../controllers/proyectosContr
 const router = Router();
 
 router.get('/', getProyectos);
-router.get('/grupos/', getProyectosDeGrupo);
+router.get('/grupo/:idGrupo', getProyectosDeGrupo);
 
 export default router;

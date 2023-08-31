@@ -57,6 +57,8 @@ export default function DetalleGrupo() {
 const [investigadores, setInvestigadores] = useState([]);
 const [sortedInvestigadores, setSortedInvestigadores] = useState([]);
 
+const [proyectos, setProyectos] = useState([])
+
 // Este efecto se ejecutará cada vez que `data` cambie
 useEffect(() => {
   if (data && data.grupo && data.grupo.personas) {
