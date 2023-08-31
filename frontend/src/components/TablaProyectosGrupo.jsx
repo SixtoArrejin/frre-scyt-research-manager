@@ -22,14 +22,15 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
 
-export default function TablaProyectosGrupo({ investigadores }) {
+export default function TablaProyectosGrupo({ proyectos }) {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
   const [selectedInvestigadores, setSelectedInvestigadores] = useState([]);
 
-  const totalPages = Math.ceil(investigadores?.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(proyectos?.length / ITEMS_PER_PAGE);
 
   const handlePageChange = (selectedPage) => {
     setCurrentPage(selectedPage);
@@ -57,7 +58,7 @@ export default function TablaProyectosGrupo({ investigadores }) {
               <Text fontSize="md">Fecha Inicio</Text>
             </Th>
             <Th textAlign="center">
-              <Text fontSize="md">Tipo</Text>
+              <Text fontSize="md">Tipo Act.</Text>
             </Th>
             <Th textAlign="center">
               <Text fontSize="md">Director</Text>
@@ -66,7 +67,7 @@ export default function TablaProyectosGrupo({ investigadores }) {
               <Text fontSize="md">Codirector</Text>
             </Th>
             <Th textAlign="center">
-              <Text fontSize="md">Denominación</Text>
+              <Text fontSize="md">Denom.</Text>
             </Th>
             <Th textAlign="center">
               <Text fontSize="md">Estado</Text>
@@ -77,7 +78,7 @@ export default function TablaProyectosGrupo({ investigadores }) {
           </Tr>
         </Thead>
         <Tbody>
-          {investigadores
+          {proyectos
             ?.slice(
               currentPage * ITEMS_PER_PAGE,
               (currentPage + 1) * ITEMS_PER_PAGE
@@ -85,23 +86,26 @@ export default function TablaProyectosGrupo({ investigadores }) {
             .map((item, index) => (
               <Tr key={index}>
                 <Td textAlign="center">
-                  <Text fontSize="md"></Text>
+                  <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</Text>
                 </Td>
                 <Td textAlign="center">
                   <Text fontSize="md">
-                    {item.apellido}, {item.nombre}
+                    {item.tipoActividad}
                   </Text>
                 </Td>
                 <Td textAlign="center">
                   <Text fontSize="md">
-                    {item.activo ? "Activo" : "Inactivo"}
+                  {item.personas_proyectos_idDirectorTopersonas?.apellido} {item.personas_proyectos_idDirectorTopersonas?.nombre}
                   </Text>
                 </Td>
                 <Td textAlign="center">
-                  <Text fontSize="md">{ }</Text>
+                  <Text fontSize="md">{item.personas_proyectos_idCodirectorTopersonas?.apellido} {item.personas_proyectos_idCodirectorTopersonas?.nombre}</Text>
                 </Td>
                 <Td textAlign="center">
-                  <Link></Link>
+                  <Text fontSize="md">{item.denominacion}</Text>
+                </Td>
+                <Td textAlign="center">
+                <Text fontSize="md">{item.estado}</Text>
                 </Td>
                 <Td textAlign="center">
                   <Link to={`/investigadores/${item.idPersona}`}>
@@ -133,7 +137,7 @@ export default function TablaProyectosGrupo({ investigadores }) {
         <IconButton
           isDisabled={
             currentPage ===
-            Math.ceil(investigadores?.length / ITEMS_PER_PAGE) - 1
+            Math.ceil(proyectos?.length / ITEMS_PER_PAGE) - 1
           }
           icon={<ChevronRightIcon />}
           onClick={() => {
