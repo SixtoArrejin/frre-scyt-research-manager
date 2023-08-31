@@ -17,7 +17,6 @@ CREATE TABLE personas (
     apellido VARCHAR(30),
     fechaIngreso DATE,
     activo BOOLEAN,
-    comision VARCHAR(50),
     idGrupoInvestigacion INT NOT NULL,
     PRIMARY KEY (idPersona),
     FOREIGN KEY (idGrupoInvestigacion) REFERENCES gruposInvestigacion(idGrupoInvestigacion)
@@ -31,6 +30,7 @@ CREATE TABLE categorias (
     fecha DATE,
     normativa VARCHAR(20),
     idPersona INT NOT NULL,
+    comision VARCHAR(50),
     PRIMARY KEY (idCategoria),
     FOREIGN KEY (idPersona) References personas(idPersona)
 );
