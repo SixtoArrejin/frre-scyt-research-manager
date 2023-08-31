@@ -7,7 +7,7 @@ export async function getAllGrupos() {
 }
 
 export async function getGrupoById(idGrupoInvestigacion) {
-  const includeRelations = [{ personas: ["categorias"]}, "tiene"];
+  const includeRelations = [{ personas: ["categorias"]}, { tiene: ["proyectos"]}];
   return await getById(
     "gruposinvestigacion",
     "idGrupoInvestigacion",
