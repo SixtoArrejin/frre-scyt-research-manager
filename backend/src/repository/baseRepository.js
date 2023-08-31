@@ -4,33 +4,25 @@ export async function getAll(tableName, includeRelations = []) {
   try {
     // Construimos el objeto include dinámicamente para las relaciones especificadas
     const includeObj = {};
-    if (includeRelations.length > 0) {
-      for (const relation of includeRelations) {
-        if (typeof relation === "string") {
-          includeObj[relation] = true;
-        } else if (typeof relation === "object") {
-          const relationName = Object.keys(relation)[0]; // Nombre de la relación
-          const nestedIncludes = relation[relationName]; // Relaciones anidadas
-
+    function processInclude(include, targetObj) {
+      if (typeof include === "string") {
+        targetObj[include] = true;
+      } else if (typeof include === "object") {
+        for (const relationName in include) {
+          const nestedIncludes = include[relationName];
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
             const nestedIncludeObj = {};
-            for (const nestedRelation of nestedIncludes) {
-              if (typeof nestedRelation === "string") {
-                nestedIncludeObj[nestedRelation] = true;
-              }
+            for (const nestedInclude of nestedIncludes) {
+              processInclude(nestedInclude, nestedIncludeObj);
             }
-
-            // Agregar otros atributos directamente al objeto anidado
-            for (const attribute in relation[relationName]) {
-              if (attribute !== relationName) {
-                nestedIncludeObj[attribute] = relation[relationName][attribute];
-              }
-            }
-
-            includeObj[relationName] = { include: nestedIncludeObj };
+            targetObj[relationName] = { include: nestedIncludeObj };
           }
         }
       }
+    }
+
+    for (const relation of includeRelations) {
+      processInclude(relation, includeObj);
     }
 
 
@@ -72,37 +64,26 @@ export async function getById(tableName, idField, idValue, includeRelations = []
   try {
     const whereFilter = { [idField]: idValue };
     const includeObj = {};
-    if (includeRelations.length > 0) {
-      for (const relation of includeRelations) {
-        if (typeof relation === "string") {
-          includeObj[relation] = true;
-        } else if (typeof relation === "object") {
-          const relationName = Object.keys(relation)[0]; // Nombre de la relación
-          const nestedIncludes = relation[relationName]; // Relaciones anidadas
-
+    function processInclude(include, targetObj) {
+      if (typeof include === "string") {
+        targetObj[include] = true;
+      } else if (typeof include === "object") {
+        for (const relationName in include) {
+          const nestedIncludes = include[relationName];
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
             const nestedIncludeObj = {};
-            for (const nestedRelation of nestedIncludes) {
-              if (typeof nestedRelation === "string") {
-                nestedIncludeObj[nestedRelation] = true;
-              }
+            for (const nestedInclude of nestedIncludes) {
+              processInclude(nestedInclude, nestedIncludeObj);
             }
-
-            // Agregar otros atributos directamente al objeto anidado
-            for (const attribute in relation[relationName]) {
-              if (attribute !== relationName) {
-                nestedIncludeObj[attribute] = relation[relationName][attribute];
-              }
-            }
-
-            includeObj[relationName] = { include: nestedIncludeObj };
+            targetObj[relationName] = { include: nestedIncludeObj };
           }
         }
       }
     }
-    // for (const relation of includeRelations) {
-    //   includeObj[relation] = true;
-    // }
+
+    for (const relation of includeRelations) {
+      processInclude(relation, includeObj);
+    }
     const data = await prisma[tableName].findUnique({
       where: whereFilter,
       include: includeObj,

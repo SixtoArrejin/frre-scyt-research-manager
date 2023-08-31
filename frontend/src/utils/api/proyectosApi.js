@@ -11,4 +11,7 @@ export async function getProyectosByIdGrupo(idGrupo) {
 
 export async function getProyectosByPersonaId(personaId) {
   return get(`/api/proyectos/persona/${personaId}`)
+  
+export async function getProyectoById(idProyecto) {
+  return get(`/api/proyectos/${idProyecto}`)
 }
