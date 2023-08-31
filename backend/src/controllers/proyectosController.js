@@ -53,12 +53,32 @@ import {
       // Obtener todos los proyectos y luego filtrar por idGrupo
       const proyectos = await getAllProyectosService();
       const proyectosFiltrados = proyectos.filter(proyecto => proyecto.participa.some(item => item.idPersona == personaId));
+      
+      // Mapear los proyectos para mostrar solo el rol correspondiente al ID del proyecto actual
+      const proyectosConRoles = proyectosFiltrados.map(proyecto => {
+        const participacion = proyecto.participa.find(item => item.idPersona == personaId);
+        return {
+          idProyecto: proyecto.idProyecto,
+          tipoActividad: proyecto.tipoActividad,
+          idProyecto: proyecto.idProyecto,
+          tipoActividad: proyecto.tipoActividad,
+          fechaInicio: proyecto.fechaInicio,
+          fechaFin: proyecto.fechaFin,
+          denominacion: proyecto.denominacion,
+          completo: proyecto.completo,
+          regional: proyecto.regional,
+          convocatoria: proyecto.convocatoria,
+          estado: proyecto.estado,
+          rol: participacion.rol,
+        };
+      });
   
-      res.status(200).json({ message: `Proyectos encontrados para la personaId ${personaId}.`, success: true, proyectos: proyectosFiltrados });
+      res.status(200).json({ message: `Proyectos encontrados para la personaId ${personaId}.`, success: true, proyectos: proyectosConRoles });
     } catch (error) {
       res.status(500).json({ message: error.message, success: false });
     }
   }
+  
 
   
   

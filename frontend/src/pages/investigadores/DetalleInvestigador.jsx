@@ -36,6 +36,7 @@ import { getPersonaById } from "../../utils/api/personasApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
+import { getProyectosByPersonaId } from "../../utils/api/proyectosApi";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -45,6 +46,7 @@ export default function DetalleInvestigador() {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
+  const { data: dataProyectos} = useQuery(['proyectos'], () => getProyectosByPersonaId(idPersona));
   const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
   const toast = useToast();
@@ -282,7 +284,7 @@ export default function DetalleInvestigador() {
                             <Text fontSize="md">Denominación</Text>
                           </Th>
                           <Th textAlign="center">
-                            <Text fontSize="md">Tipo</Text>
+                            <Text fontSize="md">Tipo Act.</Text>
                           </Th>
                           <Th textAlign="center">
                             <Text fontSize="md">Estado</Text>
@@ -299,19 +301,19 @@ export default function DetalleInvestigador() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {proyectosInv.map((item, index) => (
+                        {dataProyectos?.proyectos.map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.fechaInicio}</Text>
+                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.fechaFin}</Text>
+                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaFin)}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.denominacion}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.tipo}</Text>
+                              <Text fontSize="md">{item.tipoActividad}</Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">{item.estado}</Text>
@@ -323,9 +325,11 @@ export default function DetalleInvestigador() {
                               <Text fontSize="md">{item.rol}</Text>
                             </Td>
                             <Td textAlign="center">
-                              <Link><PlusSquareIcon onClick={() => alert('Ver más detalles del proyecto')} /></Link>
+                              <Link><PlusSquareIcon onClick={() => {console.log(item.participa)}} /></Link>
                             </Td>
+                            <button onClick={() => {console.log(item.participa.rol)}}></button>
                           </Tr>
+                          
                         ))}
                       </Tbody>
                     </Table>
