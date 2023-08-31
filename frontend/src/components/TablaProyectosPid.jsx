@@ -24,7 +24,7 @@ import {
   import { Link } from "react-router-dom";
   import { formatoFechaISOaDDMMAAAA } from "../utils/general";
   
-  const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
+  const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
   
   export default function TablaProyectosPid({ proyectos, filtro = false }) {
     const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual

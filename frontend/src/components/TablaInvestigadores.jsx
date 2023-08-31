@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getCategoriaMasActual } from "../utils/general";
 
-const ITEMS_PER_PAGE = 4; // Define el número de elementos por página
+const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function TablaInvestigadores({ investigadores, filtro = false }) {
 
