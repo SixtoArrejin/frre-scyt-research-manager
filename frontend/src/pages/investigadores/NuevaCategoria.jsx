@@ -50,14 +50,21 @@ export default function NuevaCategoria() {
   const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
   const [filtroActivo, setFiltroActivo] = useState(false);
 
-  const toast = useToast()
-  const navigate = useNavigate()
+  const toast = useToast();
+  const navigate = useNavigate();
 
-  const { idPersona } = useParams()
+  const { idPersona } = useParams();
 
   const [valueCategoria, setValueCategoria] = useState("ministerio");
 
-  const { register, handleSubmit, setValue, getValues, watch, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       tipo: "",
       equiparacion: true,
@@ -65,32 +72,30 @@ export default function NuevaCategoria() {
       fecha: "",
       normativa: "",
       idPersona: parseInt(idPersona),
+      comision: "",
     },
-  }
-  );
+  });
 
-  const { mutate, isLoading } = useMutation(
-    {
-      mutationFn: (formData) => createCategoria(formData),
-      onSuccess: () => {
-        toast({
-          title: "Nueva categoria",
-          description: `Categoria creada exitosamente.`,
-          status: "success",
-          isClosable: true,
-        });
-        navigate(`/investigadores/${idPersona}`);
-      },
-      onError: () => {
-        toast({
-          title: "Error al crear la categoria",
-          description: `Intente de nuevo.`,
-          status: "error",
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (formData) => createCategoria(formData),
+    onSuccess: () => {
+      toast({
+        title: "Nueva categoria",
+        description: `Categoria creada exitosamente.`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(`/investigadores/${idPersona}`);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear la categoria",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
 
   const tr = true;
 
@@ -100,19 +105,19 @@ export default function NuevaCategoria() {
     // const gg = getValues('equiparacion')
     // setValue('equiparacion', getValues('equiparacion')==='true');
     console.log(values);
-    mutate(values)
-  }
+    mutate(values);
+  };
 
   const onChangeRadio = (value) => {
-    if (value==="true"){
-      setValue('equiparacion', true)
+    if (value === "true") {
+      setValue("equiparacion", true);
     } else {
-      setValue('equiparacion', false)
+      setValue("equiparacion", false);
     }
-  }
+  };
 
   const catUTN = ["A", "B", "C", "D", "E"];
-  const catMIN = ["I", "II", "III", "IV", "V"]
+  const catMIN = ["I", "II", "III", "IV", "V"];
 
   return (
     <>
@@ -135,82 +140,209 @@ export default function NuevaCategoria() {
               <CardBody>
                 <Text fontSize="md">Datos de categoria</Text>
                 <br />
-                <form onSubmit={handleSubmit((values) => onSub(values))} >
-                  <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                    <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                      <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                <form onSubmit={handleSubmit((values) => onSub(values))}>
+                  <Box
+                    display="flex"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                  >
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
                         {/* <FormControl variant="floating" id="apellido" width={{ base: '100%', md: '50%' }} mb='5vh'>
                           <Input name="apellido" placeholder="Apellido" {...register('apellido')} />
                           <FormLabel>Apellido</FormLabel>
                         </FormControl> */}
-                        <Text mb='1vh'>Tipo de categoria: </Text>
+                        <Text mb="1vh">Tipo de categoria: </Text>
                         <RadioGroup
                           onChange={setValueCategoria}
                           value={valueCategoria}
-                          mb='5vh'
+                          mb="5vh"
                         >
-                          <Stack direction="row" spacing={10} {...register('tipo')}>
-                            <Radio value="ministerio" {...register('tipo')}>Ministerio</Radio>
-                            <Radio value="utn" {...register('tipo')}>UTN</Radio>
+                          <Stack
+                            direction="row"
+                            spacing={10}
+                            {...register("tipo")}
+                          >
+                            <Radio value="ministerio" {...register("tipo")}>
+                              Ministerio
+                            </Radio>
+                            <Radio value="utn" {...register("tipo")}>
+                              UTN
+                            </Radio>
                           </Stack>
                         </RadioGroup>
                       </Box>
 
-                      <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                        <Text mb='1vh'>Equiparacion:</Text>
-                        <RadioGroup isDisabled={valueCategoria === "ministerio"} mb='5vh' onChange={ (value) => onChangeRadio(value)} defaultValue='true'>
-                          <Stack direction="row" spacing={10} >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Text mb="1vh">Equiparacion:</Text>
+                        <RadioGroup
+                          isDisabled={valueCategoria === "ministerio"}
+                          mb="5vh"
+                          onChange={(value) => onChangeRadio(value)}
+                          defaultValue="true"
+                        >
+                          <Stack direction="row" spacing={10}>
                             <Radio value="true">Si</Radio>
                             <Radio value="false">No</Radio>
                           </Stack>
                         </RadioGroup>
                       </Box>
                     </Box>
-                    <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                      <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                        <FormControl variant="floating" id="categoria" width={{ base: '100%', md: '50%' }} mb='5vh'>
-                          <Select placeholder="Seleccione categoria" {...register('categoria')} >
-                            {valueCategoria == 'utn'
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="categoria"
+                          width={{ base: "100%", md: "50%" }}
+                          mb="5vh"
+                        >
+                          <Select
+                            placeholder="Seleccione categoria"
+                            {...register("categoria")}
+                          >
+                            {valueCategoria == "utn"
                               ? // Categorias de utn
-                              catUTN.map((option, index) => (
-                                <option key={index} value={option}>
-                                  {option}
-                                </option>
-                              ))
+                                catUTN.map((option, index) => (
+                                  <option key={index} value={option}>
+                                    {option}
+                                  </option>
+                                ))
                               : // Categorias de MIN
-                              catMIN.map((option, index) => (
-                                <option key={index} value={option}>
-                                  {option}
-                                </option>
-                              ))
-                              }
+                                catMIN.map((option, index) => (
+                                  <option key={index} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
                           </Select>
                           <FormLabel>Categoria</FormLabel>
                         </FormControl>
                       </Box>
 
-                      <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                        <FormControl variant="floating" id="normativa" width={{ base: '100%', md: '50%' }} mb='5vh'>
-                          <Input name="normativa" placeholder="Normativa" {...register('normativa')} />
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="normativa"
+                          width={{ base: "100%", md: "50%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="normativa"
+                            placeholder="Normativa"
+                            {...register("normativa")}
+                          />
                           <FormLabel>Normativa</FormLabel>
                         </FormControl>
                       </Box>
                     </Box>
-                    <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-                      <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                        <FormControl variant="floating" id="fecha" width={{ base: '100%', md: '50%' }} mb='5vh'>
-                          <Input name="fecha" type="date" placeholder="Fecha" {...register('fecha')} />
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="comision"
+                          width={{ base: "100%", md: "50%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="comision"
+                            placeholder="Comisión"
+                            {...register("comision")}
+                          />
+                          <FormLabel>Comisión</FormLabel>
+                        </FormControl>
+                      </Box>
+
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        width="50%"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="fecha"
+                          width={{ base: "100%", md: "50%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="fecha"
+                            type="date"
+                            placeholder="Fecha"
+                            {...register("fecha")}
+                          />
                           <FormLabel>Fecha</FormLabel>
                         </FormControl>
                       </Box>
                     </Box>
-                    <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end' >
-                      <Button colorScheme="gray" variant="outline" mr='3%' onClick={() => navigate(-1)} >
+                    <Box
+                      display="flex"
+                      width="90%"
+                      alignItems="center"
+                      justifyContent="flex-end"
+                    >
+                      <Button
+                        colorScheme="gray"
+                        variant="outline"
+                        mr="3%"
+                        onClick={() => navigate(-1)}
+                      >
                         Cancelar
                       </Button>
-                      <Button type='submit' colorScheme="blue" variant="outline">
+                      <Button
+                        type="submit"
+                        colorScheme="blue"
+                        variant="outline"
+                      >
                         Guardar
                       </Button>
                     </Box>
@@ -221,7 +353,6 @@ export default function NuevaCategoria() {
           </Box>
         </CardBody>
       </Card>
-
     </>
   );
 }
