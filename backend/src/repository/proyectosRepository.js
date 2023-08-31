@@ -21,3 +21,7 @@ export async function getProyectosExternos(subtipo = null) {
   return await getAll('proyectosexternos', includeRelations);
 }
 
+export async function getProyectoById(idProyecto){
+  const includeRelations = [ 'pids', 'proyectosexternos', {participa: [{personas: ['categorias']}]}, {tiene: ['gruposinvestigacion']}];
+  return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
+}

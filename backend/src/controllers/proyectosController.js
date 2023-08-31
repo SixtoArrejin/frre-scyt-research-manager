@@ -1,7 +1,8 @@
 import {
   getAllProyectosService,
   getProyectosPidsService,
-  getProyectosExternosService
+  getProyectosExternosService,
+  getProyectoByIdService,
 } from '../services/proyectosService.js';
 
 export async function getProyectos(req, res) {
@@ -66,10 +67,10 @@ export async function getProyectoPorId(req, res) {
     console.log(idProyecto);
 
     // Obtener todos los proyectos y luego filtrar por idGrupo
-    const proyectos = await getAllProyectosService();
-    const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
+    const proyecto = await getProyectoByIdService(Number(idProyecto));
+    // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
 
-    res.status(200).json({ message: `Proyecto encontrado para el proyecto con ID ${idProyecto}.`, success: true, proyecto: proyectosFiltrados });
+    res.status(200).json({ message: `Proyecto encontrado para el proyecto con ID ${idProyecto}.`, success: true, proyecto: proyecto });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }

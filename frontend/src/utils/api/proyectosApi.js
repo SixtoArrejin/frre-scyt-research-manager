@@ -8,3 +8,7 @@ export async function getProyectos(tipo, subtipo) {
 export async function getProyectosByIdGrupo(idGrupo) {
   return get(`/api/proyectos/grupo/${idGrupo}`)
 }
+
+export async function getProyectoById(idProyecto) {
+  return get(`/api/proyectos/${idProyecto}`)
+}
