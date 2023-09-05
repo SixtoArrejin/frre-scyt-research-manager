@@ -30,6 +30,78 @@ import { Link } from "react-router-dom";
 import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
 import TablaInvestigadores from "../../components/TablaInvestigadores";
+import Tabla from "../../components/Tabla";
+
+const columnas = [
+  'Col1', 'Col2', 'Col3', 'Col4'
+];
+const datos = [
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4:'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
+  ]
 
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
@@ -115,6 +187,11 @@ export default function ListaInvestigadores() {
             </Button>
           </Box>
         </Box>
+        <Tabla 
+          columnas={columnas}
+          datos={datos}
+          // filtro={filtro}
+        />
       </CardBody>
     </Card>
   );
