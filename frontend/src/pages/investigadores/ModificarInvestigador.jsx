@@ -48,17 +48,42 @@ import { useForm } from "react-hook-form";
 import { getPersonaById, updatePersona } from "../../utils/api/personasApi";
 import { useMutation, useQuery } from "react-query";
 import { getAllGrupos } from "../../utils/api/gruposApi";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
+/* nombre: investigador?.persona?.nombre,
+      apellido: investigador?.persona?.apellido,
+      dni: investigador?.persona?.dni,
+      idGrupoInvestigacion: investigador?.persona?.idGrupoInvestigacion,
+      activo: investigador?.persona?.activo,*/
+const schema = yup.object({
+  nombre: yup.string().required("El nombre es requerido"),
+  apellido: yup.string().required("El apellido es requerido"),
+  dni: yup
+    .mixed()
+    .required("El DNI es requerido")
+    .test(
+      "NaN",
+      "El DNI es requerido",
+      (val) => !isNaN(val)
+    )
+    .test(
+      "lenDNI",
+      "El DNI debe tener 8 dígitos",
+      (val) => val.toString().length == 8
+    ),
+  idGrupoInvestigacion: yup.mixed().required("Indique a que grupo pertenece").test(
+    "idNaN",
+    "Indique a que grupo pertenece",
+    (val) => !isNaN(val)
+  ),
+  activo: yup.boolean().required("La comisión es requerida")
+});
 
 export default function ModificarInvestigador() {
-  const [nya, setNya] = useState("Un investigador");
-  const [dni, setDni] = useState("44652641");
-  const [estado, setEstado] = useState(false);
-  const [grupo, setGrupo] = useState("CINAPTIC");
 
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [activoInicial, setActivoInicial] = useState("false");
   const [radio, setRadio] = useState("false");
 
   const { idPersona } = useParams();
@@ -100,6 +125,7 @@ export default function ModificarInvestigador() {
       idGrupoInvestigacion: investigador?.persona?.idGrupoInvestigacion,
       activo: investigador?.persona?.activo,
     },
+    resolver: yupResolver(schema)
   });
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
@@ -200,6 +226,7 @@ export default function ModificarInvestigador() {
                           defaultValue={investigador?.persona?.apellido || ""}
                         />
                         <FormLabel>Apellido</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.apellido?.message}</Text>
                       </FormControl>
                     </Box>
 
@@ -223,6 +250,7 @@ export default function ModificarInvestigador() {
                           defaultValue={investigador?.persona?.nombre || ""}
                         />
                         <FormLabel>Nombre</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.nombre?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -254,6 +282,7 @@ export default function ModificarInvestigador() {
                           defaultValue={investigador?.persona?.dni || ""}
                         />
                         <FormLabel>DNI</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.dni?.message}</Text>
                       </FormControl>
                     </Box>
                     <Box
@@ -289,6 +318,7 @@ export default function ModificarInvestigador() {
                           ))}
                         </Select>
                         <FormLabel>Grupo</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.idGrupoInvestigacion?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -317,6 +347,7 @@ export default function ModificarInvestigador() {
                           </Radio>
                           <Radio value="false">Inactivo</Radio>
                         </Stack>
+                        <Text fontSize="sm" color='red'>{errors.activo?.message}</Text>
                       </RadioGroup>
                     </Box>
                   </Box>
