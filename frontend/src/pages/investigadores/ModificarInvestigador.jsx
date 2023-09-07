@@ -50,11 +50,7 @@ import { useMutation, useQuery } from "react-query";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-/* nombre: investigador?.persona?.nombre,
-      apellido: investigador?.persona?.apellido,
-      dni: investigador?.persona?.dni,
-      idGrupoInvestigacion: investigador?.persona?.idGrupoInvestigacion,
-      activo: investigador?.persona?.activo,*/
+
 const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
   apellido: yup.string().required("El apellido es requerido"),

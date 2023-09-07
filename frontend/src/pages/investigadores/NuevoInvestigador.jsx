@@ -44,12 +44,17 @@ const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
   apellido: yup.string().required("El apellido es requerido"),
   dni: yup
-    .number()
+    .mixed()
     .required("El DNI es requerido")
     .test(
-      "len",
+      "NaN",
+      "El DNI es requerido",
+      (val) => !isNaN(val)
+    )
+    .test(
+      "lenDNI",
       "El DNI debe tener 8 dígitos",
-      (val) => val.toString().length = 8 
+      (val) => val.toString().length == 8
     ),
   idGrupoInvestigacion: yup.number().required("Indique a que grupo pertenece"),
 });
