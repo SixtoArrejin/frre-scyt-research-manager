@@ -74,16 +74,6 @@ export default function NuevoInvestigador() {
     error,
   } = useQuery("grupos", () => getAllGrupos());
 
-  const onClick = async () => {
-    toast({
-      title: "Nuevo Investigador",
-      description: `Se ha creado el investigador exitosamente`,
-      status: "success",
-      isClosable: true,
-      duration: 4000,
-    });
-  };
-
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createPersona(formData),
     onSuccess: () => {
@@ -282,7 +272,7 @@ export default function NuevoInvestigador() {
                     <Button
                       colorScheme="gray"
                       variant="outline"
-                      onClick={onClick}
+                      onClick={() => navigate(-1)}
                       mr="3%"
                     >
                       Cancelar
