@@ -688,7 +688,7 @@ export default function NuevoPid() {
                                   </Select>
                                 </Td>
                                 <Td textAlign="center">
-                                  <DeleteIcon
+                                  <DeleteIcon cursor={"pointer"}
                                     onClick={() =>
                                       eliminarInvestigador(item.idPersona)
                                     }
