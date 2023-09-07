@@ -37,6 +37,22 @@ import { useQuery, useMutation } from "react-query";
 import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useForm } from "react-hook-form";
 import { createPersona } from "../../utils/api/personasApi";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object({
+  nombre: yup.string().required("El nombre es requerido"),
+  apellido: yup.string().required("El apellido es requerido"),
+  dni: yup
+    .number()
+    .required("El DNI es requerido")
+    .test(
+      "len",
+      "El DNI debe tener 8 dígitos",
+      (val) => val.toString().length = 8 
+    ),
+  idGrupoInvestigacion: yup.number().required("Indique a que grupo pertenece"),
+});
 
 export default function NuevoInvestigador() {
   const toast = useToast();
@@ -102,6 +118,7 @@ export default function NuevoInvestigador() {
       idGrupoInvestigacion: null,
       activo: true,
     },
+    resolver: yupResolver(schema)
   });
 
   const onSubmit = (dataForm, event) => {
@@ -164,6 +181,7 @@ export default function NuevoInvestigador() {
                           {...register("apellido")}
                         />
                         <FormLabel>Apellido</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.apellido?.message}</Text>
                       </FormControl>
                     </Box>
 
@@ -186,6 +204,7 @@ export default function NuevoInvestigador() {
                           {...register("nombre")}
                         />
                         <FormLabel>Nombre</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.nombre?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -216,6 +235,7 @@ export default function NuevoInvestigador() {
                           {...register("dni", { valueAsNumber: true })}
                         />
                         <FormLabel>DNI</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.dni?.message}</Text>
                       </FormControl>
                     </Box>
 
@@ -248,6 +268,7 @@ export default function NuevoInvestigador() {
                           ))}
                         </Select>
                         <FormLabel>Grupo</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.idGrupoInvestigacion?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>
