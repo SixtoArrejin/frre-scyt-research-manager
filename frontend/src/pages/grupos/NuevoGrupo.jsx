@@ -53,10 +53,7 @@ import {
 } from "../../utils/general";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-/*       nombre: "",
-      resolucion: "",
-      fechaCreacion: "",
-      siglas: "",*/
+
 const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
   resolucion: yup
