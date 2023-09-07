@@ -24,6 +24,7 @@ import { ChakraToastProvider } from './context/ChakraToastContext';
 import ProyectosPid from './pages/proyectos/ProyectosPid';
 import ProyectosExternosF from './pages/proyectos/ProyectosExternosF';
 import DetalleProyectoPid from './pages/proyectos/DetalleProyectoPid';
+import NuevoPid from './pages/proyectos/NuevoPid';
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const routes = [
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "/proyectos-pid", element: <ProyectosPid /> },
   { path: "/proyectos-pid/:idPid", element: <DetalleProyectoPid /> },
+  { path: "/proyectos-pid/nuevo", element: <NuevoPid /> },
   { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];

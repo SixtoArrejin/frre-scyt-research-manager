@@ -111,11 +111,11 @@ export default function ProyectosPid() {
               />
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
-              {/* <Link to={"nuevo"}> */}
-                <Button colorScheme="blue" variant="outline" mr="5" onClick={() => alert("Crear un nuevo Proyecto PID")}>
+              <Link to={"nuevo"}>
+                <Button colorScheme="blue" variant="outline" mr="5">
                   Proyecto PID +
                 </Button>
-              {/* </Link> */}
+              </Link>
             </Box>
           </Box>
 
