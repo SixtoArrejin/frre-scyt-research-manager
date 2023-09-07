@@ -73,18 +73,18 @@ export default function ListaGrupos() {
     }
   };
 
-  const [filtro1, setFiltro1] = useState(false);
-
   const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(
     dataPersonas?.personas || []
   );
 
+  const roles = ["Investigador", "Becario"];
+
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
 
   const totalPages = Math.ceil(
-    investigadoresSeleccionados?.length / ITEMS_PER_PAGE
+    investigadoresSeleccionados.length || 1 / ITEMS_PER_PAGE
   );
 
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
@@ -217,6 +217,7 @@ export default function ListaGrupos() {
             >
               <Select
                 placeholder="Integrantes"
+                isSearchable={true}
                 onChange={(e) => {
                   setSelectedOptions(e.target.value);
                 }}
@@ -264,6 +265,9 @@ export default function ListaGrupos() {
                         <Text fontSize="md">Grupo</Text>
                       </Th>
                       <Th textAlign="center">
+                        <Text fontSize="md">Rol</Text>
+                      </Th>
+                      <Th textAlign="center">
                         <Text fontSize="md">Eliminar</Text>
                       </Th>
                     </Tr>
@@ -283,7 +287,23 @@ export default function ListaGrupos() {
                               </Text>
                             </Td>
                             <Td textAlign="center">
-                              <Text fontSize="md">{item.gruposinvestigacion.siglas}</Text>
+                              <Text fontSize="md">
+                                {item.gruposinvestigacion.siglas}
+                              </Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Select
+                                placeholder="Rol"
+                                onChange={(e) => {
+                                  setSelectedOptions(e.target.value);
+                                }}
+                              >
+                                {roles.map((role, index) => (
+                                  <option key={index} value={role}>
+                                    {role}
+                                  </option>
+                                ))}
+                              </Select>
                             </Td>
                             <Td textAlign="center">
                               <DeleteIcon
