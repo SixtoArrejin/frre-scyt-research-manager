@@ -10,6 +10,9 @@ import {
   Button,
   Checkbox,
   IconButton,
+  FormControl,
+  FormLabel,
+  Select,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -31,17 +34,18 @@ import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
 import TablaInvestigadores from "../../components/TablaInvestigadores";
 import Tabla from "../../components/Tabla";
+import { getAllGrupos } from "../../utils/api/gruposApi";
 
 const columnas = [
   'Col1', 'Col2', 'Col3', 'Col4'
 ];
 const datos = [
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  ]
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+]
 
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
@@ -49,6 +53,7 @@ export default function ListaInvestigadores() {
   const [filtro, setFiltro] = useState(false);
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
+  const { data: dataGrupos } = useQuery(["grupoFiltro"], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
 
   useEffect(() => {
@@ -93,13 +98,26 @@ export default function ListaInvestigadores() {
                 onChange={(event) => setNombre(event.target.value)}
                 value={nombre}
               />
-              <InputLabel
-                placeholder="Grupo"
-                id="AyN"
+              <FormControl
+                variant="floating"
+                id="grupo"
                 width="15vw"
-                onChange={(event) => setGrupo(event.target.value)}
-                value={grupo}
-              />
+              >
+                <Select
+                  placeholder="Grupo..."
+                  onChange={(event) => setGrupo(event.target.value)}
+                >
+                  {dataGrupos?.grupos.map((grupo, key) => (
+                    <option
+                      key={key}
+                      value={grupo.siglas}
+                    >
+                      {grupo.siglas}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Grupo</FormLabel>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
               <Link to={'nuevo'}>
@@ -127,7 +145,7 @@ export default function ListaInvestigadores() {
             </Button>
           </Box>
         </Box>
-        <Tabla 
+        <Tabla
           columnas={columnas}
           datos={datos}
           filtro={filtro}
