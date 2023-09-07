@@ -26,8 +26,14 @@ import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
-export default function Tabla({ columnas, datos, filtro = false }) {
+export default function Tabla({ columnas = [], datos = [], filtro = false, checkbox = true }) {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
+
+  const [selectedData, setSelectedData] = useState([]);
+
+  useEffect(() => {
+    console.log(selectedData)
+  }, [selectedData])
 
   const totalPages = Math.ceil(datos?.length / ITEMS_PER_PAGE);
 
@@ -52,6 +58,31 @@ export default function Tabla({ columnas, datos, filtro = false }) {
     setCurrentPage(0);
   }, [filtro]);
 
+  const handleDataSelection = (fila) => {
+    setSelectedData((prevSelected) => {
+      const isFilaSelected = prevSelected.some((selectedFila) => selectedFila === fila);
+
+      if (isFilaSelected) {
+        // Si la fila ya estaba seleccionada, se eliminamos del estado
+        return prevSelected.filter((selectedFila) => selectedFila !== fila);
+      } else {
+        // Si la fila no estaba seleccionada, la agregamos al estado
+        return [...prevSelected, fila];
+      }
+    });
+  };
+
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      setSelectedData(datos);
+    } else {
+      setSelectedData([]);
+    }
+  };
+
+  const isAllSelected = selectedData.length === datos.length;
+
+
   return (
     <Card width="100%">
       <CardBody>
@@ -59,6 +90,15 @@ export default function Tabla({ columnas, datos, filtro = false }) {
           <Table size="sm" variant="striped" colorScheme="blackAlpha">
             <Thead>
               <Tr>
+                {checkbox && (
+                  <Th textAlign='center'>
+                    <Checkbox
+                    border="gray"
+                    isChecked={isAllSelected}
+                    onChange={handleSelectAll}
+                  />
+                  </Th>
+                )}
                 {columnas.map((column) => (
                   <Th key={column} textAlign="center">
                     <Text fontSize="md">{column}</Text>
@@ -75,6 +115,15 @@ export default function Tabla({ columnas, datos, filtro = false }) {
                 .map((fila, filaIndex) => {
                   return (
                     <Tr key={filaIndex}>
+                      {checkbox && (
+                        <Td textAlign='center'>
+                          <Checkbox
+                            border="gray"
+                            isChecked={selectedData.includes(fila)}
+                            onChange={() => handleDataSelection(fila)}
+                          />
+                        </Td>
+                      )}
                       {columnas.map((columna, colIndex) => (
                         <Td key={colIndex} textAlign="center">
                           <Text fontSize="md">{fila[columna]}</Text>
