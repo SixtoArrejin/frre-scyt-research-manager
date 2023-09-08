@@ -133,7 +133,7 @@ export default function NuevoPid() {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update} = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: "pruebas", // Nombre del campo de formulario que es un arreglo
   });
@@ -199,7 +199,13 @@ export default function NuevoPid() {
     const objetoBuscado = sortedInvestigadores.find(
       (item) => item.idPersona == selectedOptions
     );
-    console.log(objetoBuscado);
+
+    const objetoAgregar = {
+      idPersona: objetoBuscado.idPersona,
+      rol: "",
+    };
+
+    append(objetoAgregar);
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
     const objetoYaAgregado = investigadoresSeleccionados.find(
@@ -214,15 +220,18 @@ export default function NuevoPid() {
     }
   };
 
-  const eliminarInvestigador = (idAEliminar) => {
+  const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosInvestigadores = investigadoresSeleccionados.filter(
       (item) => item.idPersona !== idAEliminar
     );
 
+    remove(index)
+
     // Actualizar investigadoresSeleccionados con el nuevo arreglo
     setInvestigadoresSeleccionados(nuevosInvestigadores);
   };
+
 
   return (
     <Card>
@@ -634,103 +643,120 @@ export default function NuevoPid() {
                 </Box>
               </Box>
               <br />
-              <Card width="100%">
-                <CardBody>
-                  <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Apellido y Nombre</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Grupo</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Rol</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Eliminar</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {investigadoresSeleccionados
-                          ?.slice(
-                            currentPage * ITEMS_PER_PAGE,
-                            (currentPage + 1) * ITEMS_PER_PAGE
-                          )
-                          .map((item, index) => {
-                            return (
-                              <Tr key={index}>
-                                <Td textAlign="center">
-                                  <Text fontSize="md">
-                                    {item.apellido + ", " + item.nombre}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <Text fontSize="md">
-                                    {item.gruposinvestigacion.siglas}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <Select
-                                    placeholder="Rol"
-                                    onChange={(e) => {
-                                      setSelectedOptions(e.target.value);
-                                    }}
-                                  >
-                                    {roles.map((role, index) => (
-                                      <option key={index} value={role}>
-                                        {role}
-                                      </option>
-                                    ))}
-                                  </Select>
-                                </Td>
-                                <Td textAlign="center">
-                                  <DeleteIcon cursor={"pointer"}
-                                    onClick={() =>
-                                      eliminarInvestigador(item.idPersona)
-                                    }
-                                  />
-                                </Td>
-                              </Tr>
-                            );
-                          })}
-                      </Tbody>
-                    </Table>
-                    <HStack spacing={4} mt={4} justify="center">
-                      <IconButton
-                        isDisabled={currentPage === 0}
-                        icon={<ChevronLeftIcon />}
-                        onClick={() => {
-                          handlePageChange(currentPage - 1);
-                        }}
-                      />
+              <form onSubmit={handleSubmit((values) => console.log(values))}>
+                <Card width="100%">
+                  <CardBody>
+                    <TableContainer>
+                      <Table
+                        size="sm"
+                        variant="striped"
+                        colorScheme="blackAlpha"
+                      >
+                        <Thead>
+                          <Tr>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Apellido y Nombre</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Grupo</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Rol</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Eliminar</Text>
+                            </Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {investigadoresSeleccionados
+                            ?.slice(
+                              currentPage * ITEMS_PER_PAGE,
+                              (currentPage + 1) * ITEMS_PER_PAGE
+                            )
+                            .map((item, index) => {
+                              return (
+                                <Tr key={index}>
+                                  <Td textAlign="center">
+                                    <Text
+                                      fontSize="md"
+                                      {...register(
+                                        `pruebas[${index}].idPersona`,
+                                        { value: item.idPersona }
+                                      )}
+                                    >
+                                      {item.apellido + ", " + item.nombre}
+                                    </Text>
+                                  </Td>
+                                  <Td textAlign="center">
+                                    <Text fontSize="md">
+                                      {item.gruposinvestigacion.siglas}
+                                    </Text>
+                                  </Td>
+                                  <Td textAlign="center">
+                                    <Select
+                                      placeholder="Rol"
+                                      onChange={(e) => {
+                                        update(index, {rol:e.target.value})
+                                      }}
+                                    >
+                                      {roles.map((role, roleIndex) => (
+                                        <option key={roleIndex} value={role}>
+                                          {role}
+                                        </option>
+                                      ))}
+                                    </Select>
+                                  </Td>
+                                  <Td textAlign="center">
+                                    <DeleteIcon
+                                      cursor={"pointer"}
+                                      onClick={() =>
+                                       { eliminarInvestigador(item.idPersona, index)}
+                                      }
+                                    />
+                                  </Td>
+                                </Tr>
+                              );
+                            })}
+                        </Tbody>
+                      </Table>
+                      <HStack spacing={4} mt={4} justify="center">
+                        <IconButton
+                          isDisabled={currentPage === 0}
+                          icon={<ChevronLeftIcon />}
+                          onClick={() => {
+                            handlePageChange(currentPage - 1);
+                          }}
+                        />
 
-                      <Input
-                        type="number"
-                        value={currentPage + 1}
-                        onChange={handleSelectPage}
-                        style={{ width: "50px", textAlign: "center" }}
-                      />
+                        <Input
+                          type="number"
+                          value={currentPage + 1}
+                          onChange={handleSelectPage}
+                          style={{ width: "50px", textAlign: "center" }}
+                        />
 
-                      <Text>de {totalPages}</Text>
+                        <Text>de {totalPages}</Text>
 
-                      <IconButton
-                        isDisabled={
-                          currentPage ===
-                          Math.ceil(investigadores?.length / ITEMS_PER_PAGE) - 1
-                        }
-                        icon={<ChevronRightIcon />}
-                        onClick={() => {
-                          handlePageChange(currentPage + 1);
-                        }}
-                      />
-                    </HStack>
-                  </TableContainer>
-                </CardBody>
-              </Card>
+                        <IconButton
+                          isDisabled={
+                            currentPage ===
+                            Math.ceil(investigadores?.length / ITEMS_PER_PAGE) -
+                              1
+                          }
+                          icon={<ChevronRightIcon />}
+                          onClick={() => {
+                            handlePageChange(currentPage + 1);
+                          }}
+                        />
+                      </HStack>
+                    </TableContainer>
+                  </CardBody>
+                </Card>
+                <Button type="submit" colorScheme="blue" variant="outline">
+                  Guardar
+                </Button>
+              </form>
               <br />
             </Box>
           </CardBody>
