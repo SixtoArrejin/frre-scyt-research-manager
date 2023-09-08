@@ -37,10 +37,10 @@ import Tabla from "../../components/Tabla";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 
 const columnas = [
-  'Col1', 'Col2', 'Col3', 'Col4'
+  'Col1', 'Col2', 'Col3', 'Col4', 'Col5'
 ];
 const datos = [
-  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
+  { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4', },
   { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
   { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
   { Col1: 'dato1', Col2: 'dato2', Col3: 'dato3', Col4: 'dato4' },
@@ -84,7 +84,7 @@ export default function ListaInvestigadores() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
           <Heading as="h2" size="xl" textAlign="center">
-            INVESTIGADORES
+            Iinvestigadores
           </Heading>
 
           <br />
@@ -149,6 +149,7 @@ export default function ListaInvestigadores() {
           columnas={columnas}
           datos={datos}
           filtro={filtro}
+          checkbox={true}
         />
       </CardBody>
     </Card>

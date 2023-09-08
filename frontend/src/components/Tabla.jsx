@@ -26,7 +26,7 @@ import { formatoFechaISOaDDMMAAAA } from "../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
-export default function Tabla({ columnas = [], datos = [], filtro = false, checkbox = true }) {
+export default function Tabla({ columnas = [], datos = [], filtro = false, checkbox = false }) {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
   const [selectedData, setSelectedData] = useState([]);
