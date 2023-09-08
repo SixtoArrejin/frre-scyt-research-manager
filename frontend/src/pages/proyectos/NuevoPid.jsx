@@ -205,14 +205,13 @@ export default function NuevoPid() {
       rol: "",
     };
 
-    append(objetoAgregar);
-
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
     const objetoYaAgregado = investigadoresSeleccionados.find(
       (item) => item.idPersona == selectedOptions
     );
 
     if (!objetoYaAgregado) {
+      append(objetoAgregar);
       setInvestigadoresSeleccionados([
         ...investigadoresSeleccionados,
         objetoBuscado,
@@ -589,7 +588,7 @@ export default function NuevoPid() {
         <Card width="100%">
           <CardBody>
             <Text fontSize="md">
-              Ingrese los datos del proyecto de investigación y desarrollo
+              Agregar los investigadores al proyecto
             </Text>
             <br />
             <Box
