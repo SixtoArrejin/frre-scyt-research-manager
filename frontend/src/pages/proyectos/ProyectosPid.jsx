@@ -37,7 +37,8 @@ import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
 import { getProyectos } from "../../utils/api/proyectosApi";
-import TablaProyectosPid from "../../components/TablaProyectosPid";
+import Tabla from "../../components/Tabla";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
 export default function ProyectosPid() {
   const [codPID, setCodPID] = useState("");
@@ -111,18 +112,30 @@ export default function ProyectosPid() {
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
               {/* <Link to={"nuevo"}> */}
-                <Button colorScheme="blue" variant="outline" mr="5" onClick={() => alert("Crear un nuevo Proyecto PID")}>
-                  Proyecto PID +
-                </Button>
+              <Button colorScheme="blue" variant="outline" mr="5" onClick={() => alert("Crear un nuevo Proyecto PID")}>
+                Proyecto PID +
+              </Button>
               {/* </Link> */}
             </Box>
           </Box>
 
           <br />
-          
-          <TablaProyectosPid proyectos={proyectos} filtro={filtro} />
-
-          <br />
+          <Tabla
+            columnas={['Cod. PID', 'Fecha Inicio', 'Denominación', 'Regional', 'Estado', 'Ver Más']}
+            datos={proyectos?.map((item, index) => {
+              return [
+                item.codPid,
+                formatoFechaISOaDDMMAAAA(item?.proyectos?.fechaInicio),
+                item.proyectos?.denominacion,
+                item.proyectos?.regional,
+                item.proyectos?.estado,
+                <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
+                  <PlusSquareIcon />
+                </Link>
+              ]
+            })}
+            filtro={filtro}
+          />
 
         </Box>
       </CardBody>

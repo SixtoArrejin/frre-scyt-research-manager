@@ -42,7 +42,6 @@ import proyectosInv from "../../utils/data/proyectosInv.json";
 import { getGrupoById } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
 import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from "../../utils/general";
-import TablaProyectosGrupo from "../../components/TablaProyectosGrupo";
 import { getProyectosByIdGrupo } from "../../utils/api/proyectosApi";
 import Tabla from "../../components/Tabla";
 
@@ -234,31 +233,24 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize="md">Proyectos</Text>
               <br />
-              <Card width="100%">
-                <CardBody>
-                  <TablaProyectosGrupo
-                    proyectos={proyectos}
-                  />
-                </CardBody>
-              </Card>
-              <br />
+              <Tabla
+                columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
+                datos={proyectos?.map((item, index) => {
+                  return [
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                    item.tipoActividad,
+                    item.personas_proyectos_idDirectorTopersonas?.apellido + " " + item.personas_proyectos_idDirectorTopersonas?.nombre,
+                    item.personas_proyectos_idCodirectorTopersonas?.apellido + " " + item.personas_proyectos_idCodirectorTopersonas?.nombre,
+                    item.denominacion,
+                    item.estado,
+                    <Link to={`/investigadores/${item.idPersona}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  ]
+                })}
+              />
             </CardBody>
           </Card>
-          <br />
-          <Box
-            display="flex"
-            width="100%"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <Button
-              colorScheme="blue"
-              variant="outline"
-              onClick={() => console.log(sortedInvestigadores)}
-            >
-              Prueba aca
-            </Button>
-          </Box>
         </Box>
       </CardBody>
     </Card>
