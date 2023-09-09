@@ -126,7 +126,7 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
                       )}
                       {columnas.map((columna, colIndex) => (
                         <Td key={colIndex} textAlign="center">
-                          <Text fontSize="md">{fila[columna]}</Text>
+                          <Text fontSize="md">{fila[colIndex]}</Text>
                         </Td>
                       ))}
                     </Tr>
