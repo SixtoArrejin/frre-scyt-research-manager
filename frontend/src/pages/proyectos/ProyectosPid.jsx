@@ -36,7 +36,6 @@ import InputLabel from "../../components/InputLabel";
 import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
-import TablaGrupos from "../../components/TablaGrupos";
 import { getProyectos } from "../../utils/api/proyectosApi";
 import TablaProyectosPid from "../../components/TablaProyectosPid";
 
@@ -122,8 +121,6 @@ export default function ProyectosPid() {
           <br />
           
           <TablaProyectosPid proyectos={proyectos} filtro={filtro} />
-
-          {/* {grupos && <TablaGrupos grupos={sortedGrupos} filtro={filtro} />} */}
 
           <br />
 

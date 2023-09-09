@@ -36,9 +36,10 @@ import InputLabel from "../../components/InputLabel";
 import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
-import TablaGrupos from "../../components/TablaGrupos";
+import Tabla from "../../components/Tabla";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
-export default function ListaGrupos() {
+export default function ListaGrupos() { 
   const [siglas, setSiglas] = useState("");
   const [filtro, setFiltro] = useState(false);
 
@@ -111,7 +112,24 @@ export default function ListaGrupos() {
 
           <br />
 
-          {grupos && <TablaGrupos grupos={sortedGrupos} filtro={filtro} />}
+          {grupos &&
+            <Tabla
+              columnas={['Grupo', 'Resolución', 'Fecha Creación', 'Ver Más']}
+              datos={sortedGrupos?.map((item, index) => {
+                return [
+                  item.siglas,
+                  item.resolucion,
+                  formatoFechaISOaDDMMAAAA(item.fechaCreacion),
+                  (<Link
+                    to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}
+                  >
+                    <PlusSquareIcon />
+                  </Link>)
+                ]
+              })}
+              filtro={filtro}
+            />
+          }
 
           <br />
 

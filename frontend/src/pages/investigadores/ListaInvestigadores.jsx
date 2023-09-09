@@ -39,20 +39,6 @@ import { getCategoriaMasActual } from "../../utils/general";
 const columnas = [
   'Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'
 ];
-const datos = [
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-  ['dato1', 'dato2', 'dato3', 'dato4',],
-]
 
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
