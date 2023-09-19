@@ -28,18 +28,11 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
   DeleteIcon,
-  PlusSquareIcon,
 } from "@chakra-ui/icons";
 import investigadores from "../../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
@@ -50,12 +43,7 @@ import { useQuery, useMutation } from "react-query";
 import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
-import {
-  formatoFechaISOaAAAAMMDD,
-  formatoFechaISOaDDMMAAAA,
-} from "../../utils/general";
-
-const ITEMS_PER_PAGE = 2; // Define el número de elementos por página
+import { createProyectoPID } from "../../utils/api/proyectosApi";
 
 export default function NuevoPid() {
   const toast = useToast();
@@ -67,28 +55,20 @@ export default function NuevoPid() {
     error,
   } = useQuery("grupos", () => getAllGrupos());
 
+  const grupos = data?.grupos;
+
   const [grupoAdd, setGrupoAdd] = useState()
 
   const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
     getAllPersonas()
   );
 
-  const onClick = async () => {
-    toast({
-      title: "Nuevo Investigador",
-      description: `Se ha creado el investigador exitosamente`,
-      status: "success",
-      isClosable: true,
-      duration: 4000,
-    });
-  };
-
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createPersona(formData),
+    mutationFn: (formData) => createProyectoPID(formData),
     onSuccess: () => {
       toast({
-        title: "Nuevo investigador",
-        description: `Se ha creado el nuevo investigador exitosamente`,
+        title: "Nuevo Proyecto",
+        description: `Se ha creado el nuevo proyecto exitosamente`,
         status: "success",
         isClosable: true,
       });
@@ -97,7 +77,7 @@ export default function NuevoPid() {
     },
     onError: () => {
       toast({
-        title: "Error al cargar el investigador",
+        title: "Error al crear el proyecto",
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,
@@ -138,7 +118,7 @@ export default function NuevoPid() {
 
   const { fields, append, remove, update } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "pruebas", // Nombre del campo de formulario que es un arreglo
+    name: "investigadores", // Nombre del campo de formulario que es un arreglo
   });
 
   const { fields: fieldsGrupos, append: appendG, remove: removeG, update: updateG } = useFieldArray({
@@ -147,7 +127,6 @@ export default function NuevoPid() {
   });
 
   const agregarGrupoForm = () => {
-
     appendG(grupoAdd)
   }
 
@@ -169,24 +148,8 @@ export default function NuevoPid() {
 
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
+  const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
-
-  const handlePageChange = (selectedPage) => {
-    setCurrentPage(selectedPage);
-  };
-
-  const handleSelectPage = (event) => {
-    if (parseInt(event.target.value, 10) > totalPages) {
-      handlePageChange(0);
-    } else {
-      if (parseInt(event.target.value, 10) !== "") {
-        const selectedPage = parseInt(event.target.value, 10);
-        setCurrentPage(selectedPage - 1);
-      } else {
-        handlePageChange(0);
-      }
-    }
-  };
 
   const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
   const [investigadores, setInvestigadores] = useState(
@@ -195,12 +158,10 @@ export default function NuevoPid() {
 
   const roles = ["Investigador", "Becario"];
 
+  const [gruposSeleccionados, setGruposSeleccionados] =
+    useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
-
-  const totalPages = Math.ceil(
-    investigadoresSeleccionados.length || 1 / ITEMS_PER_PAGE
-  );
 
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
@@ -234,6 +195,31 @@ export default function NuevoPid() {
     }
   };
 
+  const agregarGrupo = () => {
+    // console.log(sortedInvestigadores);
+    console.log(selectedOptionsGrupos);
+    const objetoBuscado = grupos.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    const objetoAgregar = {
+      idGrupoInvestigacion: objetoBuscado.idGrupoInvestigacion,
+    };
+
+    // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
+    const objetoYaAgregado = gruposSeleccionados.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    if (!objetoYaAgregado) {
+      appendG(objetoAgregar);
+      setGruposSeleccionados([
+        ...gruposSeleccionados,
+        objetoBuscado,
+      ]);
+    }
+  };
+
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosInvestigadores = investigadoresSeleccionados.filter(
@@ -246,31 +232,47 @@ export default function NuevoPid() {
     setInvestigadoresSeleccionados(nuevosInvestigadores);
   };
 
+  const eliminarGrupo = (idAEliminar, index) => {
+    // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
+    const nuevosGrupos = gruposSeleccionados.filter(
+      (item) => item.idGrupoInvestigacion !== idAEliminar
+    );
+
+    removeG(index)
+
+    // Actualizar investigadoresSeleccionados con el nuevo arreglo
+    setGruposSeleccionados(nuevosGrupos);
+  };
+
+  const onSub = (values) => {
+    console.log(values);
+    mutate(values);
+  };
 
   return (
     <Card>
       <CardBody>
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Heading as="h2" size="xl" textAlign="center">
-            Nuevo PID
-          </Heading>
+        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Heading as="h2" size="xl" textAlign="center">
+              Nuevo PID
+            </Heading>
 
-          <br />
-          <br />
-          <Card width="100%">
-            <CardBody>
-              <Text fontSize="md">
-                Ingrese los datos del proyecto de investigación y desarrollo
-              </Text>
-              <br />
-              {/* <form onSubmit={handleSubmit((values) => mutate(values))}> */}
-              <form onSubmit={handleSubmit((values) => console.log(values))}>
+            <br />
+            <br />
+            <Card width="100%">
+              <CardBody>
+                <Text fontSize="md">
+                  Ingrese los datos del proyecto de investigación y desarrollo
+                </Text>
+                <br />
+                {/* <form onSubmit={handleSubmit((values) => mutate(values))}> */}
                 <Box
                   display="flex"
                   width="100%"
@@ -556,14 +558,14 @@ export default function NuevoPid() {
                   </Box>
                 </Box>
 
-                <Box>
-                  {" "}
-                  {/* EJEMPLO DE USO DEL ARRAY EN FORMULARIOS */}
-                  {fields.map((field, index) => (
+                {/* <Box> */}
+                {" "}
+                {/* EJEMPLO DE USO DEL ARRAY EN FORMULARIOS */}
+                {/* {fields.map((field, index) => (
                     <div key={field.id}>
                       <input
-                        {...register(`pruebas[${index}].prueba`)}
-                        defaultValue={field.prueba}
+                        {...register(`investigadores[${index}].investigador`)}
+                        defaultValue={field.investigador}
                       />
                       <button type="button" onClick={() => remove(index)}>
                         Eliminar
@@ -573,9 +575,9 @@ export default function NuevoPid() {
                   <button type="button" onClick={() => append({})}>
                     Agregar Elemento
                   </button>
-                </Box>
+                </Box> */}
 
-                <Box
+                {/* <Box
                   display="flex"
                   width="90%"
                   alignItems="center"
@@ -584,7 +586,7 @@ export default function NuevoPid() {
                   <Button
                     colorScheme="gray"
                     variant="outline"
-                    onClick={onClick}
+                    // onClick={onClick}
                     mr="3%"
                   >
                     Cancelar
@@ -592,72 +594,188 @@ export default function NuevoPid() {
                   <Button type="submit" colorScheme="blue" variant="outline">
                     Guardar
                   </Button>
+                </Box> */}
+              </CardBody>
+            </Card>
+          </Box>
+
+          {/* ACA SE AGREGA LA TABLA DE GRUPOS */}
+          <br />
+          <br />
+          <Card width="100%">
+            <CardBody>
+              <Text fontSize="md">
+                Agregar los grupos asociados al proyecto
+              </Text>
+              <br />
+              <Box
+                display="flex"
+                flexDirection="column"
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <br />
+                <Box display="flex" width="100%">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="45%"
+                    marginLeft="2%"
+                  >
+                    <Select
+                      placeholder="Grupos..."
+                      isSearchable={true}
+                      onChange={(e) => {
+                        setSelectedOptionsGrupos(e.target.value);
+                      }}
+                    >
+                      {grupos?.map((item, index) => (
+                        <option key={item.idGrupoInvestigacion} value={item.idGrupoInvestigacion}>
+                          {item.siglas}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={agregarGrupo}
+                    >
+                      Agregar
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={() => {
+                        console.log(gruposSeleccionados);
+                      }}
+                    >
+                      Prueba
+                    </Button>
+                  </Box>
                 </Box>
-              </form>
+                <br />
+                <Card width="100%">
+                  <CardBody>
+                    <TableContainer>
+                      <Table
+                        size="sm"
+                        variant="striped"
+                        colorScheme="blackAlpha"
+                      >
+                        <Thead>
+                          <Tr>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Grupo</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Eliminar</Text>
+                            </Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {gruposSeleccionados?.map((item, index) => {
+                            return (
+                              <Tr key={index}>
+                                <Td textAlign="center">
+                                  <Text
+                                    fontSize="md"
+                                    {...register(
+                                      `grupos[${index}].idGrupoInvestigacion`,
+                                      { value: item.idGrupoInvestigacion }
+                                    )}
+                                  >
+                                    {item.siglas}
+                                  </Text>
+                                </Td>
+                                {/* <Td textAlign="center">
+                                    <Text fontSize="md">
+                                      {item.gruposinvestigacion.siglas}
+                                    </Text>
+                                  </Td> */}
+                                <Td textAlign="center">
+                                  <DeleteIcon
+                                    cursor={"pointer"}
+                                    onClick={() => { eliminarGrupo(item.idGrupoInvestigacion, index) }
+                                    }
+                                  />
+                                </Td>
+                              </Tr>
+                            );
+                          })}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </CardBody>
+                </Card>
+              </Box>
             </CardBody>
           </Card>
-        </Box>
-        {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
-        <br />
-        <br />
-        <Card width="100%">
-          <CardBody>
-            <Text fontSize="md">
-              Agregar los investigadores al proyecto
-            </Text>
-            <br />
-            <Box
-              display="flex"
-              flexDirection="column"
-              width="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
+
+          {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
+          <br />
+          <Card width="100%">
+            <CardBody>
+              <Text fontSize="md">
+                Agregar los investigadores al proyecto
+              </Text>
               <br />
-              <Box display="flex" width="100%">
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  width="45%"
-                  marginLeft="2%"
-                >
-                  <Select
-                    placeholder="Integrantes"
-                    isSearchable={true}
-                    onChange={(e) => {
-                      setSelectedOptions(e.target.value);
-                    }}
+              <Box
+                display="flex"
+                flexDirection="column"
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <br />
+                <Box display="flex" width="100%">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="45%"
+                    marginLeft="2%"
                   >
-                    {sortedInvestigadores.map((item, index) => (
-                      <option key={item.idPersona} value={item.idPersona}>
-                        {item.apellido + ", " + item.nombre}
-                      </option>
-                    ))}
-                  </Select>
+                    <Select
+                      placeholder="Integrantes"
+                      isSearchable={true}
+                      onChange={(e) => {
+                        setSelectedOptions(e.target.value);
+                      }}
+                    >
+                      {sortedInvestigadores.map((item, index) => (
+                        <option key={item.idPersona} value={item.idPersona}>
+                          {item.apellido + ", " + item.nombre}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={agregarInvestigador}
+                    >
+                      Agregar
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={() => {
+                        console.log(investigadoresSeleccionados);
+                      }}
+                    >
+                      Prueba
+                    </Button>
+                  </Box>
                 </Box>
-                <Box display="flex" justifyContent="flex-end" width="55%">
-                  <Button
-                    colorScheme="blue"
-                    variant="outline"
-                    mr="5"
-                    onClick={agregarInvestigador}
-                  >
-                    Agregar
-                  </Button>
-                  <Button
-                    colorScheme="blue"
-                    variant="outline"
-                    mr="5"
-                    onClick={() => {
-                      console.log(investigadoresSeleccionados);
-                    }}
-                  >
-                    Prueba
-                  </Button>
-                </Box>
-              </Box>
-              <br />
-              <form onSubmit={handleSubmit((values) => console.log(values))}>
+                <br />
+
                 <Card width="100%">
                   <CardBody>
                     <TableContainer>
@@ -683,221 +801,43 @@ export default function NuevoPid() {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {investigadoresSeleccionados
-                            ?.slice(
-                              currentPage * ITEMS_PER_PAGE,
-                              (currentPage + 1) * ITEMS_PER_PAGE
-                            )
-                            .map((item, index) => {
-                              return (
-                                <Tr key={index}>
-                                  <Td textAlign="center">
-                                    <Text
-                                      fontSize="md"
-                                      {...register(
-                                        `pruebas[${index}].idPersona`,
-                                        { value: item.idPersona }
-                                      )}
-                                    >
-                                      {item.apellido + ", " + item.nombre}
-                                    </Text>
-                                  </Td>
-                                  <Td textAlign="center">
-                                    <Text fontSize="md">
-                                      {item.gruposinvestigacion.siglas}
-                                    </Text>
-                                  </Td>
-                                  <Td textAlign="center">
-                                    <Select
-                                      placeholder="Rol"
-                                      onChange={(e) => {
-                                        update(index, { rol: e.target.value })
-                                      }}
-                                    >
-                                      {roles.map((role, roleIndex) => (
-                                        <option key={roleIndex} value={role}>
-                                          {role}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Td>
-                                  <Td textAlign="center">
-                                    <DeleteIcon
-                                      cursor={"pointer"}
-                                      onClick={() => { eliminarInvestigador(item.idPersona, index) }
-                                      }
-                                    />
-                                  </Td>
-                                </Tr>
-                              );
-                            })}
-                        </Tbody>
-                      </Table>
-                      <HStack spacing={4} mt={4} justify="center">
-                        <IconButton
-                          isDisabled={currentPage === 0}
-                          icon={<ChevronLeftIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage - 1);
-                          }}
-                        />
-
-                        <Input
-                          type="number"
-                          value={currentPage + 1}
-                          onChange={handleSelectPage}
-                          style={{ width: "50px", textAlign: "center" }}
-                        />
-
-                        <Text>de {totalPages}</Text>
-
-                        <IconButton
-                          isDisabled={
-                            currentPage ===
-                            Math.ceil(investigadores?.length / ITEMS_PER_PAGE) -
-                            1
-                          }
-                          icon={<ChevronRightIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage + 1);
-                          }}
-                        />
-                      </HStack>
-                    </TableContainer>
-                  </CardBody>
-                </Card>
-                <Button type="submit" colorScheme="blue" variant="outline">
-                  Guardar
-                </Button>
-              </form>
-              <br />
-            </Box>
-          </CardBody>
-        </Card>
-
-        {/* Grupos al form*/}
-        <br />
-        <Card width="100%">
-          <CardBody>
-            <Text fontSize="md">
-              Agregar los grupos involucrados
-            </Text>
-            <br />
-            <Box
-              display="flex"
-              flexDirection="column"
-              width="100%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <br />
-              <Box display="flex" width="100%">
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  width="45%"
-                  marginLeft="2%"
-                >
-                  <Select
-                    placeholder="Integrantes"
-                    isSearchable={true}
-                    onChange={(e) => {
-                      setGrupoAdd(e.target.value);
-                      console.log(e.target.value)
-                    }}
-                  >
-                    {data?.grupos.map((item, index) => (
-                      <option key={item.idGrupoInvestigacion} value={item.siglas}>
-                        {item.siglas}
-                      </option>
-                    ))}
-                  </Select>
-                </Box>
-                <Box display="flex" justifyContent="flex-end" width="55%">
-                  <Button
-                    colorScheme="blue"
-                    variant="outline"
-                    mr="5"
-                    onClick={() => agregarGrupoForm()}
-                  >
-                    Agregar
-                  </Button>
-                  <Button
-                    colorScheme="blue"
-                    variant="outline"
-                    mr="5"
-                    onClick={() => {
-                      console.log(investigadoresSeleccionados);
-                    }}
-                  >
-                    Prueba
-                  </Button>
-                </Box>
-              </Box>
-              <br />
-              <form onSubmit={handleSubmit((values) => console.log(values))}>
-                <Card width="100%">
-                  <CardBody>
-                    <TableContainer>
-                      <Table
-                        size="sm"
-                        variant="striped"
-                        colorScheme="blackAlpha"
-                      >
-                        <Thead>
-                          <Tr>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Grupo</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Eliminar</Text>
-                            </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {fieldsGrupos?.map((item, index) => {
-                            // console.log(item)
+                          {investigadoresSeleccionados?.map((item, index) => {
                             return (
                               <Tr key={index}>
-                                {/* <Td textAlign="center">
-                                    <Text
-                                      fontSize="md"
-                                      {...register(
-                                        `grupos[${index}].idGrupoInvestigacion`,
-                                        { value: item.idGrupoInvestigacion }
-                                      )}
-                                    >
-                                      {item.siglas}
-                                    </Text>
-                                  </Td> */}
                                 <Td textAlign="center">
-                                  <Text fontSize="md">
-                                    {Object.keys(item).reduce((acc, key) => {
-                                      if (key !== 'id') {
-                                        return acc + item[key];
-                                      }
-                                      return acc;
-                                    }, '')}
+                                  <Text
+                                    fontSize="md"
+                                    {...register(
+                                      `investigadores[${index}].idPersona`,
+                                      { value: item.idPersona }
+                                    )}
+                                  >
+                                    {item.apellido + ", " + item.nombre}
                                   </Text>
                                 </Td>
-                                {/* <Td textAlign="center">
-                                    <Select
-                                      placeholder="Rol"
-                                      onChange={(e) => {
-                                        update(index, {rol:e.target.value})
-                                      }}
-                                    >
-                                      {roles.map((role, roleIndex) => (
-                                        <option key={roleIndex} value={role}>
-                                          {role}
-                                        </option>
-                                      ))}
-                                    </Select>
-                                  </Td> */}
+                                <Td textAlign="center">
+                                  <Text fontSize="md">
+                                    {item.gruposinvestigacion.siglas}
+                                  </Text>
+                                </Td>
+                                <Td textAlign="center">
+                                  <Select
+                                    placeholder="Rol"
+                                    onChange={(e) => {
+                                      update(index, { rol: e.target.value })
+                                    }}
+                                  >
+                                    {roles.map((role, roleIndex) => (
+                                      <option key={roleIndex} value={role}>
+                                        {role}
+                                      </option>
+                                    ))}
+                                  </Select>
+                                </Td>
                                 <Td textAlign="center">
                                   <DeleteIcon
                                     cursor={"pointer"}
-                                    onClick={() => { removeG(index) }
+                                    onClick={() => { eliminarInvestigador(item.idPersona, index) }
                                     }
                                   />
                                 </Td>
@@ -906,48 +846,35 @@ export default function NuevoPid() {
                           })}
                         </Tbody>
                       </Table>
-                      <HStack spacing={4} mt={4} justify="center">
-                        <IconButton
-                          isDisabled={currentPage === 0}
-                          icon={<ChevronLeftIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage - 1);
-                          }}
-                        />
-
-                        <Input
-                          type="number"
-                          value={currentPage + 1}
-                          onChange={handleSelectPage}
-                          style={{ width: "50px", textAlign: "center" }}
-                        />
-
-                        <Text>de {totalPages}</Text>
-
-                        <IconButton
-                          isDisabled={
-                            currentPage ===
-                            Math.ceil(investigadores?.length / ITEMS_PER_PAGE) -
-                            1
-                          }
-                          icon={<ChevronRightIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage + 1);
-                          }}
-                        />
-                      </HStack>
                     </TableContainer>
                   </CardBody>
                 </Card>
-                <Button type="submit" colorScheme="blue" variant="outline">
+
+
+              </Box>
+              <br />
+              <Box
+                display="flex"
+                width="100%"
+                alignItems="center"
+                // justifyContent="flex-end"
+                justifyContent="center"
+              >
+                <Button
+                  colorScheme="gray"
+                  variant="outline"
+                  onClick={() => navigate(-1)}
+                  mr="5%"
+                >
+                  Cancelar
+                </Button>
+                <Button type="submit" colorScheme="blue" variant="outline" ml="5%">
                   Guardar
                 </Button>
-              </form>
-              <br />
-            </Box>
-          </CardBody>
-        </Card>
-
+              </Box>
+            </CardBody>
+          </Card>
+        </form>
       </CardBody>
     </Card>
   );

@@ -20,3 +20,7 @@ export async function getProyectosByPersonaId(personaId) {
 export async function getProyectoById(idProyecto) {
   return get(`/api/proyectos/${idProyecto}`);
 }
+
+export async function createProyectoPID(data) {
+  return post(`/api/proyectos/pid`, data);
+}
