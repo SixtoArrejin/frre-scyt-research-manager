@@ -657,7 +657,7 @@ export default function NuevoPid() {
                 </Box>
               </Box>
               <br />
-              <form onSubmit={handleSubmit((values) => console.log(values))}>
+              <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => console.log(values))}>
                 <Card width="100%">
                   <CardBody>
                     <TableContainer>
@@ -683,12 +683,7 @@ export default function NuevoPid() {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {investigadoresSeleccionados
-                            ?.slice(
-                              currentPage * ITEMS_PER_PAGE,
-                              (currentPage + 1) * ITEMS_PER_PAGE
-                            )
-                            .map((item, index) => {
+                          {investigadoresSeleccionados?.map((item, index) => {
                               return (
                                 <Tr key={index}>
                                   <Td textAlign="center">
@@ -733,36 +728,6 @@ export default function NuevoPid() {
                             })}
                         </Tbody>
                       </Table>
-                      <HStack spacing={4} mt={4} justify="center">
-                        <IconButton
-                          isDisabled={currentPage === 0}
-                          icon={<ChevronLeftIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage - 1);
-                          }}
-                        />
-
-                        <Input
-                          type="number"
-                          value={currentPage + 1}
-                          onChange={handleSelectPage}
-                          style={{ width: "50px", textAlign: "center" }}
-                        />
-
-                        <Text>de {totalPages}</Text>
-
-                        <IconButton
-                          isDisabled={
-                            currentPage ===
-                            Math.ceil(investigadores?.length / ITEMS_PER_PAGE) -
-                            1
-                          }
-                          icon={<ChevronRightIcon />}
-                          onClick={() => {
-                            handlePageChange(currentPage + 1);
-                          }}
-                        />
-                      </HStack>
                     </TableContainer>
                   </CardBody>
                 </Card>
@@ -770,7 +735,6 @@ export default function NuevoPid() {
                   Guardar
                 </Button>
               </form>
-              <br />
             </Box>
           </CardBody>
         </Card>
