@@ -126,3 +126,24 @@ export async function getProyectoPorId(req, res) {
     res.status(500).json({ message: error.message, success: false });
   }
 }
+
+export async function crearProyectosPID(req, res) {
+  try {
+    const pid = req.body;
+    console.log(pid);
+
+    // Obtener todos los proyectos y luego filtrar por idGrupo
+    // const proyecto = await getProyectoByIdService(Number(idProyecto));
+    // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
+
+    res
+      .status(200)
+      .json({
+        message: `Proyecto creado.`,
+        success: true,
+        proyecto: pid,
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
