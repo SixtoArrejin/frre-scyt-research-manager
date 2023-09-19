@@ -39,6 +39,7 @@ import { useForm } from "react-hook-form";
 import { createPersona } from "../../utils/api/personasApi";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
+import CustomModal from "../../components/CustomModal";
 
 const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
@@ -60,6 +61,17 @@ const schema = yup.object({
 });
 
 export default function NuevoInvestigador() {
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -282,9 +294,17 @@ export default function NuevoInvestigador() {
                     >
                       Cancelar
                     </Button>
-                    <Button type="submit" colorScheme="blue" variant="outline">
+                    <Button onClick={openModal} colorScheme="blue" variant="outline">
                       Guardar
                     </Button>
+                    <CustomModal
+                      isOpen={isOpen}
+                      onClose={closeModal}
+                      guardar={true}
+                      title="Guardar nuevo investigador"
+                      content="Se guardara el nuevo investigador"
+                      onSave={handleSubmit((values) => mutate(values))}
+                    />
                   </Box>
                 </Box>
               </form>
