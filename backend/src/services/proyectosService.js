@@ -4,7 +4,8 @@ import {
   getProyectosExternos,
   getProyectoById,
   createProyecto,
-  createProyectoPID
+  createProyectoPID,
+  createTiene,
 } from '../repository/proyectosRepository.js';
 
 export async function getAllProyectosService() {
@@ -56,6 +57,15 @@ export async function createPIDService(proyectoPIDData) {
   try {
     const newProyectoPID = await createProyectoPID(proyectoPIDData);
     return newProyectoPID;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createTieneService(dataTiene) {
+  try {
+    const newTiene = await createTiene(dataTiene);
+    return newTiene;
   } catch (error) {
     throw new Error(error.message);
   }

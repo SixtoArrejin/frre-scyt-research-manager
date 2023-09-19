@@ -4,7 +4,8 @@ import {
   getProyectosExternosService,
   getProyectoByIdService,
   createProyectoService,
-  createPIDService
+  createPIDService,
+  createTieneService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -31,9 +32,8 @@ export async function getProyectos(req, res) {
     res
       .status(200)
       .json({
-        message: `Proyectos encontrados. ${
-          tipo ? `Tipo: ${tipo} ${subtipo ? `- Subtipo: ${subtipo}` : ""} ` : ""
-        }`,
+        message: `Proyectos encontrados. ${tipo ? `Tipo: ${tipo} ${subtipo ? `- Subtipo: ${subtipo}` : ""} ` : ""
+          }`,
         success: true,
         proyectos,
       });
@@ -132,7 +132,7 @@ export async function getProyectoPorId(req, res) {
 
 export async function crearProyectosPID(req, res) {
   try {
-    const { proyecto, pid, grupos, investigadores} = req.body;
+    const { proyecto, pid, grupos, investigadores } = req.body;
     proyecto.fechaInicio = convertToISOString(proyecto.fechaInicio);
     proyecto.fechaFin = convertToISOString(proyecto.fechaFin);
 
@@ -146,16 +146,45 @@ export async function crearProyectosPID(req, res) {
     // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
     const project = {}
     const newProyecto = await createProyectoService(proyecto);
+    project.proyecto = newProyecto;
     console.log("newProyecto: ", newProyecto);
 
     if (newProyecto) {
-      const pidData = {idProyectoPid: newProyecto.idProyecto, ...pid};
-      console.log("pidData: ", pidData);
+      const pidData = { idProyectoPid: newProyecto.idProyecto, ...pid };
       const newPID = await createPIDService(pidData);
-      project.proyecto = newProyecto;
       project.pid = newPID;
-    }
 
+      project.grupos = []
+      if (newPID) {
+        // grupos?.map((grupo, index) => {
+        //   const newGroup = await createTieneService({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
+        //   // console.log({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
+        //   project.grupos = [...project.grupos, newGroup]
+        // })
+        for (const grupo of grupos || []) {
+          const newGroup = await createTieneService({
+            idGrupoInvestigacion: grupo.idGrupoInvestigacion,
+            idProyecto: newProyecto.idProyecto,
+          });
+          project.grupos.push(newGroup);
+        }
+      }
+
+      if (newPID) {
+        // grupos?.map((grupo, index) => {
+        //   const newGroup = await createTieneService({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
+        //   // console.log({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
+        //   project.grupos = [...project.grupos, newGroup]
+        // })
+        for (const grupo of grupos || []) {
+          const newGroup = await createTieneService({
+            idGrupoInvestigacion: grupo.idGrupoInvestigacion,
+            idProyecto: newProyecto.idProyecto,
+          });
+          project.grupos.push(newGroup);
+        }
+      }
+    }
     res
       .status(200)
       .json({

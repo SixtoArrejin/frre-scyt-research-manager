@@ -43,3 +43,12 @@ export async function createProyectoPID(proyectoPIDData) {
     throw new Error(error.message);
   }
 }
+
+export async function createTiene(tieneData) {
+  try {
+    const newTine = await create('tiene', tieneData);
+    return newTine;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
