@@ -25,3 +25,12 @@ export async function getProyectoById(idProyecto){
   const includeRelations = [ 'pids', 'proyectosexternos', {participa: [{personas: ['categorias']}]}, {tiene: ['gruposinvestigacion']}];
   return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
 }
+
+export async function createProyecto(proyectoData) {
+  try {
+    const newProyecto = await create('proyectos', proyectoData);
+    return newProyecto;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

@@ -2,7 +2,8 @@ import {
   getAllProyectos,
   getProyectosPids,
   getProyectosExternos,
-  getProyectoById
+  getProyectoById,
+  createProyecto
 } from '../repository/proyectosRepository.js';
 
 export async function getAllProyectosService() {
@@ -36,6 +37,15 @@ export async function getProyectoByIdService(idProyecto) {
   try {
     const proyecto = await getProyectoById(idProyecto);
     return proyecto;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createProyectoService(proyectoData) {
+  try {
+    const newProyecto = await createProyecto(proyectoData);
+    return newProyecto;
   } catch (error) {
     throw new Error(error.message);
   }

@@ -3,7 +3,9 @@ import {
   getProyectosPidsService,
   getProyectosExternosService,
   getProyectoByIdService,
+  createProyectoService
 } from "../services/proyectosService.js";
+import convertToISOString from "../utils/funciones.js";
 
 export async function getProyectos(req, res) {
   try {
@@ -129,19 +131,26 @@ export async function getProyectoPorId(req, res) {
 
 export async function crearProyectosPID(req, res) {
   try {
-    const pid = req.body;
-    console.log(pid);
+    const { proyecto, pid, grupos, investigadores} = req.body;
+    proyecto.fechaInicio = convertToISOString(proyecto.fechaInicio);
+    proyecto.fechaFin = convertToISOString(proyecto.fechaFin);
+
+    console.log("Pid: ", pid);
+    console.log("Proyecto: ", proyecto);
+    console.log("Grupos: ", grupos);
+    console.log("Investigadores: ", investigadores);
 
     // Obtener todos los proyectos y luego filtrar por idGrupo
     // const proyecto = await getProyectoByIdService(Number(idProyecto));
     // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
+    const newProyecto = await createProyectoService(proyecto);
 
     res
       .status(200)
       .json({
         message: `Proyecto creado.`,
         success: true,
-        proyecto: pid,
+        proyecto: newProyecto,
       });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
