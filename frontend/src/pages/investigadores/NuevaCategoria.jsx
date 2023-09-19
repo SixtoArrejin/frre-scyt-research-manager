@@ -43,32 +43,39 @@ import { useForm } from "react-hook-form";
 import { createCategoria } from "../../utils/api/categoriasApi";
 import { useMutation } from "react-query";
 import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+import CustomModal from "../../components/CustomModal";
 
 const schema = yup.object({
   tipo: yup
-      .string()
-      .required("El tipo es requerido")
-      .test(
-        'tipoCat',
-        "La categoria debe ser Ministerio o UTN",
-        (val) => val.toLowerCase() === 'ministerio' || val.toLowerCase() === 'utn'
-      ),
+    .string()
+    .required("El tipo es requerido")
+    .test(
+      "tipoCat",
+      "La categoria debe ser Ministerio o UTN",
+      (val) => val.toLowerCase() === "ministerio" || val.toLowerCase() === "utn"
+    ),
   equiparacion: yup.boolean().required("La equiparación es requerida"),
-  categoria: yup
-      .string()
-      .required("La categoria es requerida"),
+  categoria: yup.string().required("La categoria es requerida"),
   normativa: yup
-      .string()
-      .required("La normativa es requerida")
-      .matches(/^\d+\/\d+$/, "El formato de la normativa debe ser '###/###'"),
-  comision: yup
-      .string()
-      .required("La comisión es requerida"),
+    .string()
+    .required("La normativa es requerida")
+    .matches(/^\d+\/\d+$/, "El formato de la normativa debe ser '###/###'"),
+  comision: yup.string().required("La comisión es requerida"),
   fecha: yup.string().required("La fecha es requerida"),
 });
 
 export default function NuevaCategoria() {
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -94,7 +101,7 @@ export default function NuevaCategoria() {
       idPersona: parseInt(idPersona),
       comision: "",
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
   const { mutate, isLoading } = useMutation({
@@ -205,7 +212,9 @@ export default function NuevaCategoria() {
                               UTN
                             </Radio>
                           </Stack>
-                          <Text fontSize="sm" color='red'>{errors.tipo?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.tipo?.message}
+                          </Text>
                         </RadioGroup>
                       </Box>
 
@@ -227,9 +236,10 @@ export default function NuevaCategoria() {
                             <Radio value="true">Si</Radio>
                             <Radio value="false">No</Radio>
                           </Stack>
-                          <Text fontSize="sm" color='red'>{errors.equiparacion?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.equiparacion?.message}
+                          </Text>
                         </RadioGroup>
-
                       </Box>
                     </Box>
                     <Box
@@ -258,20 +268,22 @@ export default function NuevaCategoria() {
                           >
                             {valueCategoria == "utn"
                               ? // Categorias de utn
-                              catUTN.map((option, index) => (
-                                <option key={index} value={option}>
-                                  {option}
-                                </option>
-                              ))
+                                catUTN.map((option, index) => (
+                                  <option key={index} value={option}>
+                                    {option}
+                                  </option>
+                                ))
                               : // Categorias de MIN
-                              catMIN.map((option, index) => (
-                                <option key={index} value={option}>
-                                  {option}
-                                </option>
-                              ))}
+                                catMIN.map((option, index) => (
+                                  <option key={index} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
                           </Select>
                           <FormLabel>Categoria</FormLabel>
-                          <Text fontSize="sm" color='red'>{errors.categoria?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.categoria?.message}
+                          </Text>
                         </FormControl>
                       </Box>
 
@@ -294,7 +306,9 @@ export default function NuevaCategoria() {
                             {...register("normativa")}
                           />
                           <FormLabel>Normativa</FormLabel>
-                          <Text fontSize="sm" color='red'>{errors.normativa?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.normativa?.message}
+                          </Text>
                         </FormControl>
                       </Box>
                     </Box>
@@ -324,7 +338,9 @@ export default function NuevaCategoria() {
                             {...register("comision")}
                           />
                           <FormLabel>Comisión</FormLabel>
-                          <Text fontSize="sm" color='red'>{errors.comision?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.comision?.message}
+                          </Text>
                         </FormControl>
                       </Box>
 
@@ -348,7 +364,9 @@ export default function NuevaCategoria() {
                             {...register("fecha")}
                           />
                           <FormLabel>Fecha</FormLabel>
-                          <Text fontSize="sm" color='red'>{errors.fecha?.message}</Text>
+                          <Text fontSize="sm" color="red">
+                            {errors.fecha?.message}
+                          </Text>
                         </FormControl>
                       </Box>
                     </Box>
@@ -367,12 +385,20 @@ export default function NuevaCategoria() {
                         Cancelar
                       </Button>
                       <Button
-                        type="submit"
+                        onClick={openModal}
                         colorScheme="blue"
                         variant="outline"
                       >
                         Guardar
                       </Button>
+                      <CustomModal
+                        isOpen={isOpen}
+                        onClose={closeModal}
+                        guardar={true}
+                        title="Guardar nueva categoria"
+                        content="Se guardara la nueva categoria"
+                        onSave={handleSubmit((values) => mutate(values))}
+                      />
                     </Box>
                   </Box>
                 </form>

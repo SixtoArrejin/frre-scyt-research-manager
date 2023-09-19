@@ -45,10 +45,22 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectosByPersonaId } from "../../utils/api/proyectosApi";
+import CustomModal from "../../components/CustomModal";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleInvestigador() {
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   const { idPersona } = useParams();
   const queryClient = useQueryClient();
 
@@ -260,8 +272,14 @@ export default function DetalleInvestigador() {
                             </Td>
                             <Td textAlign="center">
                               <Link>
-                                <DeleteIcon
-                                  onClick={() => mutate(item.idCategoria)}
+                                <DeleteIcon onClick={openModal} />
+                                <CustomModal
+                                  isOpen={isOpen}
+                                  onClose={closeModal}
+                                  eliminar={true}
+                                  title="Eliminar categoria"
+                                  content="Se eliminara la categoria Ministerio"
+                                  onSave={() => mutate(item.idCategoria)}
                                 />
                               </Link>
                             </Td>
@@ -325,8 +343,14 @@ export default function DetalleInvestigador() {
                             </Td>
                             <Td textAlign="center">
                               <Link>
-                                <DeleteIcon
-                                  onClick={() => mutate(item.idCategoria)}
+                              <DeleteIcon onClick={openModal} />
+                                <CustomModal
+                                  isOpen={isOpen}
+                                  onClose={closeModal}
+                                  eliminar={true}
+                                  title="Eliminar categoria"
+                                  content="Se eliminara la categoria UTN"
+                                  onSave={() => mutate(item.idCategoria)}
                                 />
                               </Link>
                             </Td>

@@ -52,7 +52,8 @@ import {
   formatoFechaISOaDDMMAAAA,
 } from "../../utils/general";
 import * as yup from "yup";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+import CustomModal from "../../components/CustomModal";
 
 const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
@@ -61,10 +62,21 @@ const schema = yup.object({
     .required("La resolución es requerida")
     .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
   fechaCreacion: yup.string().required("La fecha es requerida"),
-  siglas: yup.string().required("Las siglas son requeridas")
+  siglas: yup.string().required("Las siglas son requeridas"),
 });
 
 export default function ModificarGrupo() {
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -81,7 +93,10 @@ export default function ModificarGrupo() {
   useEffect(() => {
     setValue("nombre", data?.grupo.nombre);
     setValue("resolucion", data?.grupo.resolucion);
-    setValue("fechaCreacion", formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion));
+    setValue(
+      "fechaCreacion",
+      formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion)
+    );
     setValue("siglas", data?.grupo.siglas);
   }, [data]);
 
@@ -97,7 +112,7 @@ export default function ModificarGrupo() {
       fechaCreacion: formatoFechaISOaAAAAMMDD(data?.grupo?.fechaCreacion),
       siglas: data?.grupo?.siglas,
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
@@ -182,7 +197,9 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.nombre || ""}
                         />
                         <FormLabel>Nombre</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.nombre?.message}</Text>
+                        <Text fontSize="sm" color="red">
+                          {errors.nombre?.message}
+                        </Text>
                       </FormControl>
                     </Box>
 
@@ -206,7 +223,9 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.siglas || ""}
                         />
                         <FormLabel>Siglas</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.siglas?.message}</Text>
+                        <Text fontSize="sm" color="red">
+                          {errors.siglas?.message}
+                        </Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -238,7 +257,9 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.resolucion || ""}
                         />
                         <FormLabel>Resolucion</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.resolucion?.message}</Text>
+                        <Text fontSize="sm" color="red">
+                          {errors.resolucion?.message}
+                        </Text>
                       </FormControl>
                     </Box>
                     <Box
@@ -266,7 +287,9 @@ export default function ModificarGrupo() {
                           }
                         />
                         <FormLabel>Fecha Creacion</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.fechaCreacion?.message}</Text>
+                        <Text fontSize="sm" color="red">
+                          {errors.fechaCreacion?.message}
+                        </Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -284,9 +307,21 @@ export default function ModificarGrupo() {
                     >
                       Cancelar
                     </Button>
-                    <Button type="submit" colorScheme="blue" variant="outline">
+                    <Button
+                      onClick={openModal}
+                      colorScheme="blue"
+                      variant="outline"
+                    >
                       Guardar
                     </Button>
+                    <CustomModal
+                      isOpen={isOpen}
+                      onClose={closeModal}
+                      guardar={true}
+                      title="Guardar datos"
+                      content="Se guardara los nuevos datos del grupo"
+                      onSave={handleSubmit((values) => mutate(values))}
+                    />
                   </Box>
                 </Box>
               </form>
