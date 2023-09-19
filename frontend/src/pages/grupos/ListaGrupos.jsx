@@ -19,6 +19,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
   PlusSquareIcon,
+  DeleteIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -39,12 +40,18 @@ import { useQuery } from "react-query";
 import Tabla from "../../components/Tabla";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
-export default function ListaGrupos() { 
+import { getAllPersonas } from "../../utils/api/personasApi";
+
+import { Select } from "@chakra-ui/react";
+
+export default function ListaGrupos() {
   const [siglas, setSiglas] = useState("");
   const [filtro, setFiltro] = useState(false);
 
   const { data, isLoading, error } = useQuery("grupos", () => getAllGrupos());
   const [grupos, setGrupos] = useState(data?.grupos || []);
+
+  //Esto ya pertenece a lo de grupos
 
   useEffect(() => {
     if (siglas === "") {
@@ -132,7 +139,6 @@ export default function ListaGrupos() {
           }
 
           <br />
-
         </Box>
       </CardBody>
     </Card>
