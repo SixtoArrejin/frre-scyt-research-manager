@@ -36,10 +36,9 @@ import InputLabel from "../../components/InputLabel";
 import { Link, useHistory, useLocation, useNavigate } from "react-router-dom";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
-import TablaGrupos from "../../components/TablaGrupos";
 import { getProyectos } from "../../utils/api/proyectosApi";
-import TablaProyectosPid from "../../components/TablaProyectosPid";
-import TablaProyectosExtF from "../../components/TablaProyectosExtF";
+import Tabla from "../../components/Tabla";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
 export default function ProyectosExternosF() {
   const [denominacion, setDenominacion] = useState("");
@@ -101,15 +100,24 @@ export default function ProyectosExternosF() {
               </Link>
             </Box> */}
           </Box>
-
           <br />
-          
-          <TablaProyectosExtF proyectos={proyectos} filtro={filtro} />
-          {/* <TablaProyectosPid proyectos={proyectos} filtro={filtro} /> */}
-
-          {/* {grupos && <TablaGrupos grupos={sortedGrupos} filtro={filtro} />} */}
-
-          <br />
+          <Tabla
+            columnas={['Año de Linea', 'Denominación', 'Empresa/Institución', 'Regional', 'Estado', 'Ver Más']}
+            datos={proyectos?.map((item, index) => {
+              const fechaAnioLinea = new Date(item?.proyectosexternos?.anioLinea);
+              return [
+                fechaAnioLinea?.getUTCFullYear(),
+                item.proyectosexternos?.proyectos?.denominacion,
+                item.proyectosexternos?.empresaInstitucion,
+                item.proyectosexternos?.proyectos?.regional,
+                item.proyectosexternos?.proyectos?.estado,
+                /* <Link to={`/proyectos-pid/${item.idProyectoPid}`} > */
+                <PlusSquareIcon _hover={{ cursor: "pointer" }} onClick={() => alert(`Detalle del proyecto ${item.proyectosexternos.proyectos.denominacion}`)} />
+                /* </Link> */
+              ]
+            })}
+            filtro={filtro}
+          />
 
         </Box>
       </CardBody>

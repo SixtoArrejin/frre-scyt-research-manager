@@ -41,10 +41,9 @@ import { Link, useParams } from "react-router-dom";
 import proyectosInv from "../../utils/data/proyectosInv.json";
 import { getGrupoById } from "../../utils/api/gruposApi";
 import { useQuery } from "react-query";
-import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
-import TablaInvestigadoresGrupo from "../../components/TablaInvestigadoresGrupo";
-import TablaProyectosGrupo from "../../components/TablaProyectosGrupo";
+import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from "../../utils/general";
 import { getProyectosByIdGrupo } from "../../utils/api/proyectosApi";
+import Tabla from "../../components/Tabla";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -55,7 +54,7 @@ export default function DetalleGrupo() {
     getGrupoById(idGrupoInvestigacion)
   );
 
-  const { data: dataProyectos} = useQuery(["proyectosGrupo"], () => getProyectosByIdGrupo(idGrupoInvestigacion))
+  const { data: dataProyectos } = useQuery(["proyectosGrupo"], () => getProyectosByIdGrupo(idGrupoInvestigacion))
 
   const [investigadores, setInvestigadores] = useState([]);
   const [sortedInvestigadores, setSortedInvestigadores] = useState([]);
@@ -210,13 +209,22 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize="md">Integrantes</Text>
               <br />
-              <Card width="100%">
-                <CardBody>
-                  <TablaInvestigadoresGrupo
-                    investigadores={sortedInvestigadores}
-                  />
-                </CardBody>
-              </Card>
+              <Tabla
+                columnas={['DNI', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Categoría', 'Ver Más']}
+                datos={sortedInvestigadores?.map((item, index) => {
+                  const categoriaMIN = getCategoriaMasActual(item.categorias, "ministerio");
+                  return [
+                    item.dni,
+                    item.apellido + " " + item.nombre,
+                    item.activo ? "Activo" : "Inactivo",
+                    formatoFechaISOaDDMMAAAA(item.fechaIngreso),
+                    categoriaMIN?.categoria ? categoriaMIN?.categoria : "-",
+                    <Link to={`/investigadores/${item.idPersona}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  ]
+                })}
+              />
             </CardBody>
           </Card>
 
@@ -225,31 +233,24 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize="md">Proyectos</Text>
               <br />
-              <Card width="100%">
-                <CardBody>
-                  <TablaProyectosGrupo
-                    proyectos={proyectos}
-                  />
-                </CardBody>
-              </Card>
-              <br />
+              <Tabla
+                columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
+                datos={proyectos?.map((item, index) => {
+                  return [
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                    item.tipoActividad,
+                    item.personas_proyectos_idDirectorTopersonas?.apellido + " " + item.personas_proyectos_idDirectorTopersonas?.nombre,
+                    item.personas_proyectos_idCodirectorTopersonas?.apellido + " " + item.personas_proyectos_idCodirectorTopersonas?.nombre,
+                    item.denominacion,
+                    item.estado,
+                    <Link to={`/investigadores/${item.idPersona}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  ]
+                })}
+              />
             </CardBody>
           </Card>
-          <br />
-          <Box
-            display="flex"
-            width="100%"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <Button
-              colorScheme="blue"
-              variant="outline"
-              onClick={() => console.log(sortedInvestigadores)}
-            >
-              Prueba aca
-            </Button>
-          </Box>
         </Box>
       </CardBody>
     </Card>

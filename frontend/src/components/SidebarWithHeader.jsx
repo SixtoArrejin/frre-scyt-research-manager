@@ -93,7 +93,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} route={link.route}>
+        <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
           {link.name}
         </NavItem>
       ))}
@@ -101,7 +101,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, children, route, ...rest }) => {
+const NavItem = ({ icon, children, route, onClose, ...rest }) => {
   return (
     <Link to={route} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
@@ -115,6 +115,7 @@ const NavItem = ({ icon, children, route, ...rest }) => {
           bg: 'cyan.400',
           color: 'white',
         }}
+        onClick={onClose}
         {...rest}
       >
         {icon && (

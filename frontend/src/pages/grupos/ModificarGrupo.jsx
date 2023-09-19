@@ -51,6 +51,18 @@ import {
   formatoFechaISOaAAAAMMDD,
   formatoFechaISOaDDMMAAAA,
 } from "../../utils/general";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object({
+  nombre: yup.string().required("El nombre es requerido"),
+  resolucion: yup
+    .string()
+    .required("La resolución es requerida")
+    .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
+  fechaCreacion: yup.string().required("La fecha es requerida"),
+  siglas: yup.string().required("Las siglas son requeridas")
+});
 
 export default function ModificarGrupo() {
   const navigate = useNavigate();
@@ -85,6 +97,7 @@ export default function ModificarGrupo() {
       fechaCreacion: formatoFechaISOaAAAAMMDD(data?.grupo?.fechaCreacion),
       siglas: data?.grupo?.siglas,
     },
+    resolver: yupResolver(schema)
   });
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
@@ -169,6 +182,7 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.nombre || ""}
                         />
                         <FormLabel>Nombre</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.nombre?.message}</Text>
                       </FormControl>
                     </Box>
 
@@ -192,6 +206,7 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.siglas || ""}
                         />
                         <FormLabel>Siglas</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.siglas?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>
@@ -223,6 +238,7 @@ export default function ModificarGrupo() {
                           defaultValue={data?.grupo.resolucion || ""}
                         />
                         <FormLabel>Resolucion</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.resolucion?.message}</Text>
                       </FormControl>
                     </Box>
                     <Box
@@ -250,6 +266,7 @@ export default function ModificarGrupo() {
                           }
                         />
                         <FormLabel>Fecha Creacion</FormLabel>
+                        <Text fontSize="sm" color='red'>{errors.fechaCreacion?.message}</Text>
                       </FormControl>
                     </Box>
                   </Box>

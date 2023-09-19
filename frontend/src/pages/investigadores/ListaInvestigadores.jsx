@@ -10,6 +10,9 @@ import {
   Button,
   Checkbox,
   IconButton,
+  FormControl,
+  FormLabel,
+  Select,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
@@ -29,19 +32,13 @@ import InputLabel from "../../components/InputLabel";
 import { Link } from "react-router-dom";
 import { getAllPersonas } from "../../utils/api/personasApi";
 import { useQuery } from 'react-query'
-import TablaInvestigadores from "../../components/TablaInvestigadores";
 import Tabla from "../../components/Tabla";
+import { getAllGrupos } from "../../utils/api/gruposApi";
+import { getCategoriaMasActual } from "../../utils/general";
 
 const columnas = [
-  'Col1', 'Col2', 'Col3', 'Col4'
+  'Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'
 ];
-const datos = [
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  {Col1:'dato1', Col2:'dato2', Col3:'dato3', Col4: 'dato4'},
-  ]
 
 export default function ListaInvestigadores() {
   const [nombre, setNombre] = useState("");
@@ -49,7 +46,28 @@ export default function ListaInvestigadores() {
   const [filtro, setFiltro] = useState(false);
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
+  const { data: dataGrupos } = useQuery(["grupoFiltro"], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
+
+
+  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
+    const apellidoA = a.apellido.toLowerCase();
+    const apellidoB = b.apellido.toLowerCase();
+    return apellidoA.localeCompare(apellidoB);
+  });
+
+  const filas = sortedInvestigadores?.map((item, index) => {
+    const categoriaUTN = getCategoriaMasActual(item.categorias, "utn");
+    const categoriaMIN = getCategoriaMasActual(item.categorias, "ministerio");
+    return [
+      item.apellido + " " + item.nombre,
+      item.activo ? 'Activo' : 'Inactivo',
+      item.gruposinvestigacion.siglas,
+      (categoriaUTN ? categoriaUTN.categoria : "-"),
+      (categoriaMIN ? categoriaMIN.categoria : "-"),
+      (<Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon /></Link>)
+    ]
+  })
 
   useEffect(() => {
     if (nombre === "" && grupo === "") {
@@ -68,18 +86,13 @@ export default function ListaInvestigadores() {
     }
   }, [nombre, grupo, data]);
 
-  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
-    const apellidoA = a.apellido.toLowerCase();
-    const apellidoB = b.apellido.toLowerCase();
-    return apellidoA.localeCompare(apellidoB);
-  });
 
   return (
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
           <Heading as="h2" size="xl" textAlign="center">
-            INVESTIGADORES
+            Iinvestigadores
           </Heading>
 
           <br />
@@ -93,13 +106,26 @@ export default function ListaInvestigadores() {
                 onChange={(event) => setNombre(event.target.value)}
                 value={nombre}
               />
-              <InputLabel
-                placeholder="Grupo"
-                id="AyN"
+              <FormControl
+                variant="floating"
+                id="grupo"
                 width="15vw"
-                onChange={(event) => setGrupo(event.target.value)}
-                value={grupo}
-              />
+              >
+                <Select
+                  placeholder="Grupo..."
+                  onChange={(event) => setGrupo(event.target.value)}
+                >
+                  {dataGrupos?.grupos.map((grupo, key) => (
+                    <option
+                      key={key}
+                      value={grupo.siglas}
+                    >
+                      {grupo.siglas}
+                    </option>
+                  ))}
+                </Select>
+                <FormLabel>Grupo</FormLabel>
+              </FormControl>
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
               <Link to={'nuevo'}>
@@ -113,9 +139,11 @@ export default function ListaInvestigadores() {
           <br />
 
           {investigadores && (
-            <TablaInvestigadores
-              investigadores={sortedInvestigadores}
+            <Tabla
+              columnas={columnas}
+              datos={filas}
               filtro={filtro}
+              checkbox={true}
             />
           )}
 
@@ -127,11 +155,6 @@ export default function ListaInvestigadores() {
             </Button>
           </Box>
         </Box>
-        <Tabla 
-          columnas={columnas}
-          datos={datos}
-          filtro={filtro}
-        />
       </CardBody>
     </Card>
   );
