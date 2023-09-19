@@ -43,6 +43,7 @@ import { useQuery, useMutation } from "react-query";
 import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
+import { createProyectoPID } from "../../utils/api/proyectosApi";
 
 export default function NuevoPid() {
   const toast = useToast();
@@ -63,11 +64,11 @@ export default function NuevoPid() {
   );
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createPersona(formData),
+    mutationFn: (formData) => createProyectoPID(formData),
     onSuccess: () => {
       toast({
-        title: "Nuevo investigador",
-        description: `Se ha creado el nuevo investigador exitosamente`,
+        title: "Nuevo Proyecto",
+        description: `Se ha creado el nuevo proyecto exitosamente`,
         status: "success",
         isClosable: true,
       });
@@ -76,7 +77,7 @@ export default function NuevoPid() {
     },
     onError: () => {
       toast({
-        title: "Error al cargar el investigador",
+        title: "Error al crear el proyecto",
         description: `Intente de nuevo.`,
         status: "error",
         isClosable: true,
@@ -243,10 +244,15 @@ export default function NuevoPid() {
     setGruposSeleccionados(nuevosGrupos);
   };
 
+  const onSub = (values) => {
+    console.log(values);
+    mutate(values);
+  };
+
   return (
     <Card>
       <CardBody>
-        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => console.log(values))}>
+        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
           <Box
             display="flex"
             flexDirection="column"
