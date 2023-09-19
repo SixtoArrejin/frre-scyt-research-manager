@@ -17,12 +17,13 @@ export default function CustomModal({
   title,
   content,
   onSave,
+  eliminar = false,
 }) {
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay
-        bg="blackAlpha.300"
-        backdropFilter="blur(10px) hue-rotate(90deg)"
+        bg="blackAlpha.400"
+        backdropFilter="blur(5px) hue-rotate(90deg)"
       />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
@@ -34,7 +35,7 @@ export default function CustomModal({
           <Button onClick={onClose}>Cerrar</Button>
           {guardar && (
             <Button
-            ml={2}
+              ml={2}
               onClick={() => {
                 onSave();
                 onClose();
@@ -42,6 +43,18 @@ export default function CustomModal({
               colorScheme="blue"
             >
               Guardar
+            </Button>
+          )}
+          {eliminar && (
+            <Button
+              ml={2}
+              onClick={() => {
+                onSave();
+                onClose();
+              }}
+              colorScheme="red"
+            >
+              Eliminar
             </Button>
           )}
         </ModalFooter>
