@@ -23,7 +23,7 @@ export default function CustomModal({
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay
         bg="blackAlpha.400"
-        backdropFilter="blur(5px) hue-rotate(90deg)"
+        backdropFilter="blur(2px) hue-rotate(90deg)"
       />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
