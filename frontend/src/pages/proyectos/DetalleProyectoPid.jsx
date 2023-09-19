@@ -135,7 +135,7 @@ export default function DetalleProyectoPid() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="actividad" placeholder="Actividad" isDisabled value={data?.proyecto?.pids?.tipoActividad}/>
+                      <Input name="actividad" placeholder="Actividad" isDisabled value={data?.proyecto?.tipoActividad}/>
                       <FormLabel>Tipo Actividad</FormLabel>
                     </FormControl>
 

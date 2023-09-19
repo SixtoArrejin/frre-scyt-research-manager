@@ -34,3 +34,12 @@ export async function createProyecto(proyectoData) {
     throw new Error(error.message);
   }
 }
+
+export async function createProyectoPID(proyectoPIDData) {
+  try {
+    const newProyectoPID = await create('pids', proyectoPIDData);
+    return newProyectoPID;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
