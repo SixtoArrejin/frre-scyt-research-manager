@@ -65,11 +65,6 @@ const schema = yup.object({
   siglas: yup.string().required("Las siglas son requeridas"),
 });
 
-const onSub = (values) => {
-  console.log(values);
-};
-
-
 export default function NuevoGrupo() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
@@ -301,7 +296,7 @@ export default function NuevoGrupo() {
                       guardar={true}
                       title="Guardar nuevo grupo"
                       content="Se guardara el nuevo grupo"
-                      onSave={handleSubmit((values) => onSub(values))}
+                      onSave={handleSubmit((values) => mutate(values))}
                     />
                   </Box>
                 </Box>
