@@ -88,7 +88,7 @@ export default function ListaGrupos() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            GRUPOS
+            Grupos de Investigación
           </Heading>
 
           <br />
