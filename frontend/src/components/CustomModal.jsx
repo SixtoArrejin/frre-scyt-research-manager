@@ -34,6 +34,7 @@ export default function CustomModal({
           <Button onClick={onClose}>Cerrar</Button>
           {guardar && (
             <Button
+            ml={2}
               onClick={() => {
                 onSave();
                 onClose();
