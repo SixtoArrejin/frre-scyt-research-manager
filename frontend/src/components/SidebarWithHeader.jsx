@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 import {
   IconButton,
   Avatar,
@@ -20,7 +20,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import {
   FiHome,
   FiTrendingUp,
@@ -31,27 +31,38 @@ import {
   FiBell,
   FiChevronDown,
   FiUsers,
-} from 'react-icons/fi';
-import { BiNetworkChart, BiTask } from 'react-icons/bi';
-import Logo from '../img/Logo2.jpg';
-import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+} from "react-icons/fi";
+import { BiNetworkChart, BiTask } from "react-icons/bi";
+import Logo from "../img/Logo2.jpg";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 const LinkItems = [
-  { name: 'Home', icon: FiHome, route: '/' },
-  { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
-  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
-  { name: 'Proyectos PID', icon: BiTask, route: '/proyectos-pid' },
-  { name: 'Proyectos Externos con Financiamiento', icon: BiTask, route: '/proyectos-externos-financiamiento' },
-  { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
+  { name: "Home", icon: FiHome, route: "/" },
+  { name: "Investigadores", icon: FiUsers, route: "/investigadores" },
+  {
+    name: "Grupos Investigación",
+    icon: BiNetworkChart,
+    route: "/grupos-investigacion",
+  },
+  { name: "Proyectos PID", icon: BiTask, route: "/proyectos-pid" },
+  {
+    name: "Proyectos Externos con Financiamiento",
+    icon: BiTask,
+    route: "/proyectos-externos-financiamiento",
+  },
+  /*   { name: 'Configuración', icon: FiSettings, route: '/investigadores' }, */
 ];
 
 export default function SidebarWithHeader({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+      <SidebarContent
+        onClose={() => onClose}
+        display={{ base: "none", md: "block" }}
+      />
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -78,22 +89,26 @@ const SidebarContent = ({ onClose, ...rest }) => {
   return (
     <Box
       transition="3s ease"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue("white", "gray.900")}
       borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
+      borderRightColor={useColorModeValue("gray.200", "gray.700")}
+      w={{ base: "full", md: 60 }}
       pos="fixed"
       h="full"
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        
-        <img src={Logo} alt="Logo"  />
-        
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
+        <img src={Logo} alt="Logo" />
+
+        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
+        <NavItem
+          key={link.name}
+          icon={link.icon}
+          route={link.route}
+          onClose={onClose}
+        >
           {link.name}
         </NavItem>
       ))}
@@ -103,7 +118,11 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
 const NavItem = ({ icon, children, route, onClose, ...rest }) => {
   return (
-    <Link to={route} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link
+      to={route}
+      style={{ textDecoration: "none" }}
+      _focus={{ boxShadow: "none" }}
+    >
       <Flex
         align="center"
         p="4"
@@ -112,8 +131,8 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: 'cyan.400',
-          color: 'white',
+          bg: "cyan.400",
+          color: "white",
         }}
         onClick={onClose}
         {...rest}
@@ -123,7 +142,7 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
             mr="4"
             fontSize="16"
             _groupHover={{
-              color: 'white',
+              color: "white",
             }}
             as={icon}
           />
@@ -142,50 +161,37 @@ const MobileNav = ({ onOpen, ...rest }) => {
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-      justifyContent={{ base: 'space-between', md: 'flex-end' }}
+      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+      justifyContent={{ base: "space-between", md: "flex-end" }}
       {...rest}
     >
       <IconButton
-        display={{ base: 'flex', md: 'none' }}
+        display={{ base: "flex", md: "none" }}
         onClick={onOpen}
         variant="outline"
         aria-label="open menu"
         icon={<FiMenu />}
       />
 
-      <Text
-        display={{ base: 'flex', md: 'none' }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold"
-      >
-        Logo
-      </Text>
-
-      <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
-        <Flex alignItems={'center'}>
+      <HStack spacing={{ base: "0", md: "6" }}>
+        <Flex alignItems={"center"}>
           <Menu>
             <MenuButton
               py={2}
               transition="all 0.3s"
-              _focus={{ boxShadow: 'none' }}
+              _focus={{ boxShadow: "none" }}
             >
               <HStack>
                 <Avatar
-                  size={'sm'}
-                  src={'https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png'}
+                  size={"sm"}
+                  src={
+                    "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png"
+                  }
                 />
                 <VStack
-                  display={{ base: 'none', md: 'flex' }}
+                  display={{ base: "none", md: "flex" }}
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2"
@@ -195,20 +201,20 @@ const MobileNav = ({ onOpen, ...rest }) => {
                     Admin
                   </Text>
                 </VStack>
-                <Box display={{ base: 'none', md: 'flex' }}>
+                <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
                 </Box>
               </HStack>
             </MenuButton>
             <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              bg={useColorModeValue("white", "gray.900")}
+              borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
+              <MenuItem>Configuración</MenuItem>
               <MenuDivider />
-              <Link onClick={logout} to={'/login'}><MenuItem>Sign out</MenuItem></Link>
+              <Link onClick={logout} to={"/login"}>
+                <MenuItem>Sign out</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>
