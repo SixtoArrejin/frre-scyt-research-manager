@@ -67,6 +67,8 @@ export default function NuevoPid() {
     error,
   } = useQuery("grupos", () => getAllGrupos());
 
+  const grupos = data?.grupos;
+
   const [grupoAdd, setGrupoAdd] = useState()
 
   const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
@@ -138,7 +140,7 @@ export default function NuevoPid() {
 
   const { fields, append, remove, update } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "pruebas", // Nombre del campo de formulario que es un arreglo
+    name: "investigadores", // Nombre del campo de formulario que es un arreglo
   });
 
   const { fields: fieldsGrupos, append: appendG, remove: removeG, update: updateG } = useFieldArray({
@@ -147,7 +149,6 @@ export default function NuevoPid() {
   });
 
   const agregarGrupoForm = () => {
-
     appendG(grupoAdd)
   }
 
@@ -169,6 +170,7 @@ export default function NuevoPid() {
 
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
+  const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
   const handlePageChange = (selectedPage) => {
@@ -195,6 +197,8 @@ export default function NuevoPid() {
 
   const roles = ["Investigador", "Becario"];
 
+  const [gruposSeleccionados, setGruposSeleccionados] =
+    useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
 
@@ -234,6 +238,31 @@ export default function NuevoPid() {
     }
   };
 
+  const agregarGrupo = () => {
+    // console.log(sortedInvestigadores);
+    console.log(selectedOptionsGrupos);
+    const objetoBuscado = grupos.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    const objetoAgregar = {
+      idGrupoInvestigacion: objetoBuscado.idGrupoInvestigacion,
+    };
+
+    // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
+    const objetoYaAgregado = gruposSeleccionados.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    if (!objetoYaAgregado) {
+      appendG(objetoAgregar);
+      setGruposSeleccionados([
+        ...gruposSeleccionados,
+        objetoBuscado,
+      ]);
+    }
+  };
+
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosInvestigadores = investigadoresSeleccionados.filter(
@@ -246,6 +275,17 @@ export default function NuevoPid() {
     setInvestigadoresSeleccionados(nuevosInvestigadores);
   };
 
+  const eliminarGrupo = (idAEliminar, index) => {
+    // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
+    const nuevosGrupos = gruposSeleccionados.filter(
+      (item) => item.idGrupoInvestigacion !== idAEliminar
+    );
+
+    removeG(index)
+
+    // Actualizar investigadoresSeleccionados con el nuevo arreglo
+    setGruposSeleccionados(nuevosGrupos);
+  };
 
   return (
     <Card>
@@ -556,14 +596,14 @@ export default function NuevoPid() {
                   </Box>
                 </Box>
 
-                <Box>
+                {/* <Box> */}
                   {" "}
                   {/* EJEMPLO DE USO DEL ARRAY EN FORMULARIOS */}
-                  {fields.map((field, index) => (
+                  {/* {fields.map((field, index) => (
                     <div key={field.id}>
                       <input
-                        {...register(`pruebas[${index}].prueba`)}
-                        defaultValue={field.prueba}
+                        {...register(`investigadores[${index}].investigador`)}
+                        defaultValue={field.investigador}
                       />
                       <button type="button" onClick={() => remove(index)}>
                         Eliminar
@@ -573,7 +613,7 @@ export default function NuevoPid() {
                   <button type="button" onClick={() => append({})}>
                     Agregar Elemento
                   </button>
-                </Box>
+                </Box> */}
 
                 <Box
                   display="flex"
@@ -597,6 +637,129 @@ export default function NuevoPid() {
             </CardBody>
           </Card>
         </Box>
+        
+        {/* ACA SE AGREGA LA TABLA DE GRUPOS */}
+        <br />
+        <br />
+        <Card width="100%">
+          <CardBody>
+            <Text fontSize="md">
+              Agregar los grupos asociados al proyecto
+            </Text>
+            <br />
+            <Box
+              display="flex"
+              flexDirection="column"
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <br />
+              <Box display="flex" width="100%">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  width="45%"
+                  marginLeft="2%"
+                >
+                  <Select
+                    placeholder="Grupos..."
+                    isSearchable={true}
+                    onChange={(e) => {
+                      setSelectedOptionsGrupos(e.target.value);
+                    }}
+                  >
+                    {grupos?.map((item, index) => (
+                      <option key={item.idGrupoInvestigacion} value={item.idGrupoInvestigacion}>
+                        {item.siglas}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
+                <Box display="flex" justifyContent="flex-end" width="55%">
+                  <Button
+                    colorScheme="blue"
+                    variant="outline"
+                    mr="5"
+                    onClick={agregarGrupo}
+                  >
+                    Agregar
+                  </Button>
+                  <Button
+                    colorScheme="blue"
+                    variant="outline"
+                    mr="5"
+                    onClick={() => {
+                      console.log(gruposSeleccionados);
+                    }}
+                  >
+                    Prueba
+                  </Button>
+                </Box>
+              </Box>
+              <br />
+              <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => console.log(values))}>
+                <Card width="100%">
+                  <CardBody>
+                    <TableContainer>
+                      <Table
+                        size="sm"
+                        variant="striped"
+                        colorScheme="blackAlpha"
+                      >
+                        <Thead>
+                          <Tr>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Grupo</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Eliminar</Text>
+                            </Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {gruposSeleccionados?.map((item, index) => {
+                              return (
+                                <Tr key={index}>
+                                  <Td textAlign="center">
+                                    <Text
+                                      fontSize="md"
+                                      {...register(
+                                        `grupos[${index}].idGrupoInvestigacion`,
+                                        { value: item.idGrupoInvestigacion }
+                                      )}
+                                    >
+                                      {item.siglas}
+                                    </Text>
+                                  </Td>
+                                  {/* <Td textAlign="center">
+                                    <Text fontSize="md">
+                                      {item.gruposinvestigacion.siglas}
+                                    </Text>
+                                  </Td> */}
+                                  <Td textAlign="center">
+                                    <DeleteIcon
+                                      cursor={"pointer"}
+                                      onClick={() => { eliminarGrupo(item.idGrupoInvestigacion, index) }
+                                      }
+                                    />
+                                  </Td>
+                                </Tr>
+                              );
+                            })}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </CardBody>
+                </Card>
+                <Button type="submit" colorScheme="blue" variant="outline">
+                  Guardar
+                </Button>
+              </form>
+            </Box>
+          </CardBody>
+        </Card>
+
         {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
         <br />
         <br />
@@ -690,7 +853,7 @@ export default function NuevoPid() {
                                     <Text
                                       fontSize="md"
                                       {...register(
-                                        `pruebas[${index}].idPersona`,
+                                        `investigadores[${index}].idPersona`,
                                         { value: item.idPersona }
                                       )}
                                     >
