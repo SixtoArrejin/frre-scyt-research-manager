@@ -5,7 +5,8 @@ import {
   getProyectoByIdService,
   createProyectoService,
   createPIDService,
-  createTieneService
+  createTieneService,
+  createParticipaService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -170,18 +171,17 @@ export async function crearProyectosPID(req, res) {
         }
       }
 
+      project.investigadores = [];
       if (newPID) {
-        // grupos?.map((grupo, index) => {
-        //   const newGroup = await createTieneService({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
-        //   // console.log({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
-        //   project.grupos = [...project.grupos, newGroup]
-        // })
-        for (const grupo of grupos || []) {
-          const newGroup = await createTieneService({
-            idGrupoInvestigacion: grupo.idGrupoInvestigacion,
+        const fechaInicioActividad = new Date(); //Implementar en la base de datos!!
+        for (const investigador of investigadores || []) {
+          const newInvestigador = await createParticipaService({
             idProyecto: newProyecto.idProyecto,
+            idPersona: investigador.idPersona,
+            rol: investigador.rol,
+            // fechaInicioActividad: fechaInicioActividad
           });
-          project.grupos.push(newGroup);
+          project.investigadores.push(newInvestigador);
         }
       }
     }

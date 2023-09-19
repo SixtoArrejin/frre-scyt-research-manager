@@ -52,3 +52,12 @@ export async function createTiene(tieneData) {
     throw new Error(error.message);
   }
 }
+
+export async function createParticipa(dataParticipa) {
+  try {
+    const newParticipacion = await create('participa', dataParticipa);
+    return newParticipacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
