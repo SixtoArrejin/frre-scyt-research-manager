@@ -44,7 +44,7 @@ const LinkItems = [
   { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
   { name: 'Proyectos PID', icon: BiTask, route: '/proyectos-pid' },
   { name: 'Proyectos Externos con Financiamiento', icon: BiTask, route: '/proyectos-externos-financiamiento' },
-  { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
+  // { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
 ];
 
 export default function SidebarWithHeader({ children }) {
@@ -204,11 +204,11 @@ const MobileNav = ({ onOpen, ...rest }) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Profile</MenuItem>
+              {/* <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <Link onClick={logout} to={'/login'}><MenuItem>Sign out</MenuItem></Link>
+              <MenuDivider /> */}
+              <Link onClick={logout} to={'/login'}><MenuItem>Salir</MenuItem></Link>
             </MenuList>
           </Menu>
         </Flex>
