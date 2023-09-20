@@ -275,8 +275,6 @@ export default function NuevoPid() {
             <Heading as="h2" size="xl" textAlign="center">
               Nuevo PID
             </Heading>
-
-            <br />
             <br />
             <Card width="100%">
               <CardBody>

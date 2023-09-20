@@ -58,7 +58,7 @@ export default function DetalleProyectoPid() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(["proyecto"], () => getProyectoById(Number(idPid)))
+  const { data, isLoading, error } = useQuery(["proyecto", idPid], () => getProyectoById(Number(idPid)))
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa)
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene)
   const [proyectoPID, setProyectoPID] = useState(data?.proyecto)
@@ -79,8 +79,6 @@ export default function DetalleProyectoPid() {
           </Heading>
 
           <br />
-          <br />
-
 
           <Card width='100%'>
             <CardBody>
@@ -93,6 +91,19 @@ export default function DetalleProyectoPid() {
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
                       <Input name="apellido" placeholder="Código PID" isDisabled value={data?.proyecto?.pids?.codPid} />
                       <FormLabel>Código PID</FormLabel>
+                    </FormControl>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "65%" }}
+                      mb="5vh"
+                    >
+                      <Input
+                        name="regional"
+                        placeholder="Regional"
+                        isDisabled
+                        defaultValue={data?.proyecto?.regional}
+                      />
+                      <FormLabel>Regional</FormLabel>
                     </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">

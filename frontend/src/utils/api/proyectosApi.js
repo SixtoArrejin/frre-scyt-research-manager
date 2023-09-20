@@ -24,3 +24,7 @@ export async function getProyectoById(idProyecto) {
 export async function createProyectoPID(data) {
   return post(`/api/proyectos/pid`, data);
 }
+
+export async function updatePID(id, data) {
+  return put(`/api/proyectos/pid/${id}`, data);
+}
