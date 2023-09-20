@@ -41,9 +41,7 @@ import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 
-const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
-
-export default function DetalleProyectoPid() {
+export default function ModificarPIDs() {
 
   const navigate = useNavigate();
 

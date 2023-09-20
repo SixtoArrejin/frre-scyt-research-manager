@@ -118,7 +118,10 @@ export async function getProyectoPorId(req, res) {
     // Obtener todos los proyectos y luego filtrar por idGrupo
     const proyecto = await getProyectoByIdService(Number(idProyecto));
     // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
-
+    proyecto.director = proyecto.personas_proyectos_idDirectorTopersonas;
+    delete proyecto.personas_proyectos_idDirectorTopersonas;
+    proyecto.codirector = proyecto.personas_proyectos_idCodirectorTopersonas;
+    delete proyecto.personas_proyectos_idCodirectorTopersonas;
     res
       .status(200)
       .json({

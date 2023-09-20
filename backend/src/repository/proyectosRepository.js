@@ -22,7 +22,7 @@ export async function getProyectosExternos(subtipo = null) {
 }
 
 export async function getProyectoById(idProyecto){
-  const includeRelations = [ 'pids', 'proyectosexternos', {participa: [{personas: ['categorias']}]}, {tiene: ['gruposinvestigacion']}];
+  const includeRelations = [ 'pids', 'proyectosexternos', 'personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', {participa: [{personas: ['categorias']}]}, {tiene: ['gruposinvestigacion']}];
   return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
 }
 
