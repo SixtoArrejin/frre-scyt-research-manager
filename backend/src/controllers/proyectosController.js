@@ -140,14 +140,6 @@ export async function crearProyectosPID(req, res) {
     proyecto.fechaInicio = convertToISOString(proyecto.fechaInicio);
     proyecto.fechaFin = convertToISOString(proyecto.fechaFin);
 
-    console.log("Pid: ", pid);
-    console.log("Proyecto: ", proyecto);
-    console.log("Grupos: ", grupos);
-    console.log("Investigadores: ", investigadores);
-
-    // Obtener todos los proyectos y luego filtrar por idGrupo
-    // const proyecto = await getProyectoByIdService(Number(idProyecto));
-    // const proyectosFiltrados = proyectos.find(proyecto => proyecto.idProyecto === Number(idProyecto));
     const project = {}
     const newProyecto = await createProyectoService(proyecto);
     project.proyecto = newProyecto;
@@ -160,11 +152,6 @@ export async function crearProyectosPID(req, res) {
 
       project.grupos = []
       if (newPID) {
-        // grupos?.map((grupo, index) => {
-        //   const newGroup = await createTieneService({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
-        //   // console.log({idGrupoInvestigacion: grupo.idGrupoInvestigacion, idProyecto: newProyecto.idProyecto})
-        //   project.grupos = [...project.grupos, newGroup]
-        // })
         for (const grupo of grupos || []) {
           const newGroup = await createTieneService({
             idGrupoInvestigacion: grupo.idGrupoInvestigacion,
