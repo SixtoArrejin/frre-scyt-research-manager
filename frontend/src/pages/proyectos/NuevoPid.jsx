@@ -44,8 +44,20 @@ import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
 import { createProyectoPID } from "../../utils/api/proyectosApi";
+import CustomModal from "../../components/CustomModal";
 
 export default function NuevoPid() {
+    /* Usestate para el modal */
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openModal = () => {
+      setIsOpen(true);
+    };
+  
+    const closeModal = () => {
+      setIsOpen(false);
+    };
+
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -868,9 +880,17 @@ export default function NuevoPid() {
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" colorScheme="blue" variant="outline" ml="5%">
+                <Button onClick={openModal} colorScheme="blue" variant="outline" ml="5%">
                   Guardar
                 </Button>
+                <CustomModal
+                      isOpen={isOpen}
+                      onClose={closeModal}
+                      guardar={true}
+                      title="Guardar nuevo PID"
+                      content="Se guardara el nuevo PID"
+                      onSave={handleSubmit((values) => mutate(values))}
+                    />
               </Box>
             </CardBody>
           </Card>
