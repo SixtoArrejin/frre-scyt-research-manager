@@ -46,6 +46,90 @@ import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
 import { createProyectoPID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 
+const regionales = [
+  "Facultad Regional Avellaneda",
+  "Facultad Regional Bahía Blanca",
+  "Facultad Regional Buenos Aires",
+  "Facultad Regional Chubut",
+  "Facultad Regional Conceptción del Uruguay",
+  "Facultad Regional Concordia",
+  "Facultad Regional Córdoba",
+  "Facultad Regional Delta",
+  "Facultad Regional General Pacheco",
+  "Facultad Regional Haedo",
+  "Facultad Regional La Plata",
+  "Facultad Regional La Rioja",
+  "Facultad Regional Mar del Plata",
+  "Facultad Regional Mendoza",
+  "Facultad Regional Neuquen",
+  "Facultad Regional Paraná",
+  "Facultad Regional Rafaela",
+  "Facultad Regional Reconquista",
+  "Facultad Regional Resistencia",
+  "Facultad Regional Rosario",
+  "Facultad Regional San Francisco",
+  "Facultad Regional San Nicolás",
+  "Facultad Regional San Rafael",
+  "Facultad Regional Santa Cruz",
+  "Facultad Regional Santa Fe",
+  "Facultad Regional Tierra del Fuego",
+  "Facultad Regional Trenque Lauquen",
+  "Facultad Regional Tucumán",
+  "Facultad Regional Venado Tuerto",
+  "Facultad Regional Villa María",
+  "Rectorado",
+  "Instituto Nacional Superior de Profesorado Técnico",
+  "Centro Tecnológico De Desarrollo Regional Los Reyunos"
+]
+
+const tipoActividad = ["Desarrollo Experimental", "Investigación Aplicada", "Investigación Básica"]
+
+const tipoProyecto = [
+  "UTN (PID UTN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "UTN (PID UTN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTER-FACULTAD (PID IF) SIN INCORPORACION EN  PROGRAMA INCENTIVOS",
+  "INTER-FACULTAD (PID IF) CON INCORPORACION EN  PROGRAMA INCENTIVOS",
+  "INTER-INSTITUCIONAL (PIC IN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTER-INSTITUCIONAL (PID IN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "FACULTAD (PID FA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "FACULTAD (PID FA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTEGRADOR ASOCIADO (PID IA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTEGRADOR ASOCIADO (PID IA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTEGRADOR PRINCIPAL (PID IP) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "INTEGRADOR PRINCIPAL (PID IP) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "OTROS (PID OT) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+  "OTROS (PID OT) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+  "TUTORADO CON INCENTIVO",
+  "TUTORADO SIN INCENTIVO",
+  "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO A",
+  "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO B",
+  "PID INICIACION A INVESTIGACION PRIMER PROYECTO",
+  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO A",
+  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO B",
+  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS",
+  "PID EQUIPOS CONSOLIDADOS SIN INCENTIVOS",
+  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO A",
+  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO B",
+  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS",
+  "PID EQUIPOS EN CONSOLIDACIÓN SIN INCENTIVOS",
+  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO A",
+  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO B",
+  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD SIN INCENTIVOS"
+]
+
+const estadoProyecto = [
+  "EN TRÁMITE",
+  "HOMOLOGADO",
+  "REFORMULAR POR EVALUACIÓN EXTERNA",
+  "REFORMULAR POR CONSEJO DE PROGRAMAS",
+  "DENEGADO POR EVALUACIÓN EXTERNA",
+  "DENEGADO POR CONSEJO DE PROGRAMAS",
+  "CANCELADO",
+]
+
+
+const roles = ["Investigador", "Becario", "Asesor Cientifico", "Técnico de Apoyo", "CoDirector"];
+
 export default function NuevoPid() {
     /* Usestate para el modal */
     const [isOpen, setIsOpen] = useState(false);
@@ -88,13 +172,13 @@ export default function NuevoPid() {
         status: "success",
         isClosable: true,
       });
-      // navigate(`/investigadores/5`);
       navigate(-1);
     },
-    onError: () => {
+    onError: (error) => {
+      const errorMessage = error?.message
       toast({
         title: "Error al crear el proyecto",
-        description: `Intente de nuevo.`,
+        description: `${errorMessage || 'Intente nuevamente'}`,
         status: "error",
         isClosable: true,
       });
@@ -116,7 +200,7 @@ export default function NuevoPid() {
         fechaFin: "",
         denominacion: "",
         completo: false,
-        regional: "",
+        regional: "Facultad Regional Resistencia",
         convocatoria: "",
         estado: "",
         idDirector: undefined,
@@ -158,8 +242,6 @@ export default function NuevoPid() {
   // const [investigadores, setInvestigadores] = useState(
   //   dataPersonas?.personas || []
   // );
-
-  const roles = ["Investigador", "Becario"];
 
   const [gruposSeleccionados, setGruposSeleccionados] =
     useState([]);
@@ -273,7 +355,6 @@ export default function NuevoPid() {
                   Ingrese los datos del proyecto de investigación y desarrollo
                 </Text>
                 <br />
-                {/* <form onSubmit={handleSubmit((values) => mutate(values))}> */}
                 <Box
                   display="flex"
                   width="100%"
@@ -307,17 +388,23 @@ export default function NuevoPid() {
                         />
                         <FormLabel>Código PID</FormLabel>
                       </FormControl>
-
                       <FormControl
                         variant="floating"
                         width={{ base: "100%", md: "65%" }}
                         mb="5vh"
                       >
-                        <Input
-                          name="regional"
-                          placeholder="Regional"
+                        <Select
+                          placeholder="Regional..."
                           {...register("proyecto.regional")}
-                        />
+                        >
+                          {regionales.map(
+                            (regional, key) => (
+                              <option key={key} value={regional}>
+                                {regional}
+                              </option>
+                            )
+                          )}
+                        </Select>
                         <FormLabel>Regional</FormLabel>
                       </FormControl>
                     </Box>
@@ -375,8 +462,6 @@ export default function NuevoPid() {
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
                       >
-                        {/* <Input name="codirector" placeholder="Codirector" {...register('proyecto.idCodirector')} /> */}
-
                         <Select
                           placeholder="Codirector..."
                           {...register("proyecto.idCodirector", {
@@ -465,17 +550,24 @@ export default function NuevoPid() {
                         />
                         <FormLabel>Programa</FormLabel>
                       </FormControl>
-
                       <FormControl
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
                       >
-                        <Input
-                          placeholder="Tipo de proyecto"
+                        <Select
+                          placeholder="Tipo de proyecto..."
                           {...register("pid.tipoProyecto")}
-                        />
-                        <FormLabel>Tipo de proyecto</FormLabel>
+                        >
+                          {tipoProyecto.map(
+                            (tipo, key) => (
+                              <option key={key} value={tipo}>
+                                {tipo}
+                              </option>
+                            )
+                          )}
+                        </Select>
+                        <FormLabel>Tipo de proyecsto</FormLabel>
                       </FormControl>
                     </Box>
                     <Box
@@ -490,15 +582,22 @@ export default function NuevoPid() {
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
                       >
-                        <Input
-                          name="actividad"
-                          placeholder="Actividad"
+                        <Select
+                          placeholder="Tipo de actividad..."
                           {...register("proyecto.tipoActividad")}
-                        />
-                        <FormLabel>Tipo Actividad</FormLabel>
+                        >
+                          {tipoActividad.map(
+                            (actividad, key) => (
+                              <option key={key} value={actividad}>
+                                {actividad}
+                              </option>
+                            )
+                          )}
+                        </Select>
+                        <FormLabel>Tipo de actividad</FormLabel>
                       </FormControl>
 
-                      <FormControl
+                      {/* <FormControl
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
@@ -508,6 +607,25 @@ export default function NuevoPid() {
                           placeholder="Estado"
                           {...register("proyecto.estado")}
                         />
+                        <FormLabel>Estado</FormLabel>
+                      </FormControl> */}
+                      <FormControl
+                        variant="floating"
+                        width={{ base: "100%", md: "30%" }}
+                        mb="5vh"
+                      >
+                        <Select
+                          placeholder="Estado..."
+                          {...register("proyecto.estado")}
+                        >
+                          {estadoProyecto.map(
+                            (estado, key) => (
+                              <option key={key} value={estado}>
+                                {estado}
+                              </option>
+                            )
+                          )}
+                        </Select>
                         <FormLabel>Estado</FormLabel>
                       </FormControl>
 
@@ -604,16 +722,6 @@ export default function NuevoPid() {
                       onClick={agregarGrupo}
                     >
                       Agregar
-                    </Button>
-                    <Button
-                      colorScheme="blue"
-                      variant="outline"
-                      mr="5"
-                      onClick={() => {
-                        console.log(gruposSeleccionados);
-                      }}
-                    >
-                      Prueba
                     </Button>
                   </Box>
                 </Box>
@@ -720,16 +828,6 @@ export default function NuevoPid() {
                       onClick={agregarInvestigador}
                     >
                       Agregar
-                    </Button>
-                    <Button
-                      colorScheme="blue"
-                      variant="outline"
-                      mr="5"
-                      onClick={() => {
-                        console.log(investigadoresSeleccionados);
-                      }}
-                    >
-                      Prueba
                     </Button>
                   </Box>
                 </Box>

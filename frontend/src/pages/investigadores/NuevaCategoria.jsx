@@ -1,44 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   Text,
   Heading,
   Box,
   Button,
-  Checkbox,
-  IconButton,
   Stack,
   Select,
   FormLabel,
   FormControl,
   useToast,
+  Input,
+  Radio,
+  RadioGroup
 } from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-} from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import { Radio, RadioGroup } from "@chakra-ui/react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { createCategoria } from "../../utils/api/categoriasApi";
 import { useMutation } from "react-query";
@@ -66,7 +43,6 @@ const schema = yup.object({
 });
 
 export default function NuevaCategoria() {
-  /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -88,8 +64,6 @@ export default function NuevaCategoria() {
     register,
     handleSubmit,
     setValue,
-    getValues,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -104,7 +78,7 @@ export default function NuevaCategoria() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (formData) => createCategoria(formData),
     onSuccess: () => {
       toast({
@@ -125,10 +99,6 @@ export default function NuevaCategoria() {
     },
   });
 
-  const tr = true;
-
-  const fl = false;
-
   const onSub = (values) => {
     // const gg = getValues('equiparacion')
     // setValue('equiparacion', getValues('equiparacion')==='true');
@@ -144,7 +114,7 @@ export default function NuevaCategoria() {
     }
   };
 
-  const catUTN = ["A", "B", "C", "D", "E"];
+  const catUTN = ["A", "B", "C", "D", "E", "F", "G"];
   const catMIN = ["I", "II", "III", "IV", "V"];
 
   return (
@@ -190,10 +160,6 @@ export default function NuevaCategoria() {
                         alignItems="center"
                         justifyContent="center"
                       >
-                        {/* <FormControl variant="floating" id="apellido" width={{ base: '100%', md: '50%' }} mb='5vh'>
-                          <Input name="apellido" placeholder="Apellido" {...register('apellido')} />
-                          <FormLabel>Apellido</FormLabel>
-                        </FormControl> */}
                         <Text mb="1vh">Tipo de categoria: </Text>
                         <RadioGroup
                           onChange={setValueCategoria}
@@ -230,7 +196,7 @@ export default function NuevaCategoria() {
                           isDisabled={valueCategoria === "ministerio"}
                           mb="5vh"
                           onChange={(value) => onChangeRadio(value)}
-                          defaultValue="true"
+                          defaultValue="false"
                         >
                           <Stack direction="row" spacing={10}>
                             <Radio value="true">Si</Radio>
