@@ -119,6 +119,17 @@ export async function deleteById(tableName, id) {
   }
 }
 
+export async function deleteByFilter(tableName, filter) {
+  try {
+    const deletedRecords = await prisma[tableName].deleteMany({
+      where: filter,
+    });
+    return deletedRecords;
+  } catch (error) {
+    throw new Error(`Error al eliminar registros de ${tableName} con filtro ${JSON.stringify(filter)} en la BD: ${error.message}`);
+  }
+}
+
 
 
 //-------------------------------------
