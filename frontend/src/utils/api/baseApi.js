@@ -12,7 +12,8 @@ async function fetchData(url, options = {}) {
   const response = await fetch(`${API_URL}${url}`, options);
   
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Network response was not ok');
   }
   return response.json();
 }

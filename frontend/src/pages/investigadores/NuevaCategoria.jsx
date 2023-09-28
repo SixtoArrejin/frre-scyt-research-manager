@@ -43,7 +43,6 @@ const schema = yup.object({
 });
 
 export default function NuevaCategoria() {
-  /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -65,8 +64,6 @@ export default function NuevaCategoria() {
     register,
     handleSubmit,
     setValue,
-    getValues,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -81,7 +78,7 @@ export default function NuevaCategoria() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (formData) => createCategoria(formData),
     onSuccess: () => {
       toast({
