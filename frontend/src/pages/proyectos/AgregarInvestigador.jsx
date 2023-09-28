@@ -66,8 +66,12 @@ export default function AgregarInvestigador() {
     getProyectoById(Number(idPid))
   );
   const [investigadores1, setInvestigadores1] = useState(
-    dataParticipa?.proyecto.participa
+    []
   );
+
+  useEffect(() => {
+    setInvestigadores1(dataParticipa?.proyecto.participa)
+  }, [dataParticipa])
 
   const {
     data,
@@ -220,8 +224,8 @@ export default function AgregarInvestigador() {
   }, [ejemplo]);
 
   useEffect(() => {
-    console.log(fields.length)
-    if ((investigadores1 !== null)) {
+    console.log(investigadores1?.length);
+    if (investigadores1?.length > 0) {
       // Llama a la función para obtener los investigadores seleccionados
       const investigadoresSeleccionados = obtenerInvestigadoresSeleccionados();
       console.log("investigadoresSeleccionados:", investigadoresSeleccionados); // Agrega esta línea
@@ -233,10 +237,12 @@ export default function AgregarInvestigador() {
         rol: investigadores1[index].rol, // Puedes establecer un valor predeterminado aquí si es necesario
       }));
 
+      console.log(nuevosDatos);
+
       // Llama a append una sola vez con el nuevo array de datos
       append(nuevosDatos);
     }
-  }, [investigadores]);
+  }, [investigadores1]);
 
   return (
     <Card>
