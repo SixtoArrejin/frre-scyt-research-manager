@@ -127,6 +127,9 @@ const estadoProyecto = [
   "CANCELADO",
 ]
 
+
+const roles = ["Investigador", "Becario", "Asesor Cientifico", "Técnico de Apoyo", "CoDirector"];
+
 export default function NuevoPid() {
     /* Usestate para el modal */
     const [isOpen, setIsOpen] = useState(false);
@@ -239,8 +242,6 @@ export default function NuevoPid() {
   // const [investigadores, setInvestigadores] = useState(
   //   dataPersonas?.personas || []
   // );
-
-  const roles = ["Investigador", "Becario", "Asesor Cientifico", "Técnico de Apoyo"];
 
   const [gruposSeleccionados, setGruposSeleccionados] =
     useState([]);
