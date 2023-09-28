@@ -93,11 +93,10 @@ export async function updatePidService(idPid, pidData) {
       if (proyectoSearch.pids) { //Si existe el proyecto y es PID
         if (pidData && pidData.proyecto) {
           if (pidData.proyecto.fechaInicio) {
-            console.log(pidData.proyecto.fechaInicio)
             pidData.proyecto.fechaInicio = convertToISOString(pidData.proyecto.fechaInicio)
           };
-          if (pidData.proyecto.fechaInicio) {
-            pidData.proyecto.fechaInicio = convertToISOString(pidData.proyecto.fechaFin)
+          if (pidData.proyecto.fechaFin) {
+            pidData.proyecto.fechaFin = convertToISOString(pidData.proyecto.fechaFin)
           };
           projectUpdate.proyecto = await update('proyectos', filter, pidData.proyecto);
         }

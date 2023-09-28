@@ -309,7 +309,7 @@ export default function ModificarPIDs() {
                         <RadioGroup
                           onChange={onChangeRadioProrroga}
                           mb="5vh"
-                          defaultValue={data?.proyecto?.pids?.prorroga ? 'true' : 'false'}
+                          defaultValue={data?.proyecto?.pids?.prorrogado ? 'true' : 'false'}
                         >
                           <Stack direction="row" spacing={10}>
                             <Radio value="true">Si</Radio>

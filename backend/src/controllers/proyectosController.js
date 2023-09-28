@@ -191,7 +191,7 @@ export async function crearProyectosPID(req, res) {
 export async function updatePIDController(req, res) {
   const idPid = parseInt(req.params.idPid, 10);
   const dataPid = req.body;
-
+  console.log(dataPid);
   try {
     const updatedPid = await updatePidService(idPid, dataPid);
     return res.status(200).json({ message: 'Proyecto actualizado exitosamente', success: true, updatedPid });
