@@ -362,8 +362,8 @@ export default function ModificarPIDs() {
                       guardar={true}
                       title="Se modificaran los datos del proyecto."
                       content="¿Seguro que desea modificar la información del proyecto?"
-                      onSave={(handleSubmit((values) => console.log(values)))}
-                    // onSave={handleSubmit((values) => mutate(values))}
+                      // onSave={(handleSubmit((values) => console.log(values)))}
+                      onSave={handleSubmit((values) => { console.log(values); mutate(values) })}
                     />
                   </Box>
                 </Box>

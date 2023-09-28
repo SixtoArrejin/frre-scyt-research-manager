@@ -1,6 +1,7 @@
 
 import { getAllGrupos, getGrupoById, createGrupo} from '../repository/gruposRepository.js';
 import { update } from '../repository/baseRepository.js';
+import convertToISOString from '../utils/funciones.js';
 
  
 export async function getAllGruposService() {
@@ -33,6 +34,9 @@ export async function getAllGruposService() {
 
   export async function createGrupoService(grupoData) {
     try {
+      console.log(grupoData.fechaCreacion)
+      grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion);
+      console.log(grupoData.fechaCreacion)
       const newGrupo = await createGrupo(grupoData);
       return newGrupo;
     } catch (error) {

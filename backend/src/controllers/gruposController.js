@@ -38,7 +38,7 @@ export async function updateGrupoController(req, res) {
 export async function createGrupo(req, res) {
   try {
     const grupoData = req.body;
-    grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion);
+    // grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion);
     const newGrupo = await createGrupoService(grupoData);
     return res.status(201).json({ message: 'Grupo creado exitosamente', success: true, newGrupo });
   } catch (error) {
