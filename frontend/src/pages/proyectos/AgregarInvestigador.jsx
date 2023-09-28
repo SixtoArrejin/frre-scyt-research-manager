@@ -41,7 +41,7 @@ import { useQuery, useMutation } from "react-query";
 import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
-import { createProyectoPID } from "../../utils/api/proyectosApi";
+import { updatePID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 
@@ -88,7 +88,7 @@ export default function AgregarInvestigador() {
   );
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createProyectoPID(formData),
+    mutationFn: (formData) => updatePID(formData),
     onSuccess: () => {
       toast({
         title: "Nuevo Proyecto",
