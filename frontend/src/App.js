@@ -15,6 +15,7 @@ import DetalleGrupo from './pages/grupos/DetalleGrupo';
 import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
 import ModificarGrupo from './pages/grupos/ModificarGrupo';
 import NuevoGrupo from './pages/grupos/NuevoGrupo';
+import AgregarInvestigador from './pages/proyectos/AgregarInvestigador';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import LogIn from './pages/LogIn';
@@ -44,6 +45,7 @@ const routes = [
   { path: "/proyectos-pid/:idPid", element: <DetalleProyectoPid /> },
   { path: "/proyectos-pid/nuevo", element: <NuevoPid /> },
   { path: "/proyectos-pid/:idPid/modificar", element: <ModificarPIDs /> },
+  { path: "/proyectos-pid/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
   { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
