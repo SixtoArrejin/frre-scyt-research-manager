@@ -61,3 +61,14 @@ export async function createParticipa(dataParticipa) {
     throw new Error(error.message);
   }
 }
+
+export async function deleteParticipa(idProyecto) {
+  try {
+    const deletedProyectos = await prisma.participa.delete({
+      where: { idProyecto },
+    });
+    return deletedProyectos;
+  } catch (error) {
+    throw new Error(`Error al eliminar la categoría de la BD: ${error.message}`);
+  }
+}

@@ -111,11 +111,22 @@ export async function updateById(tableName, id, dataToUpdate) {
 export async function deleteById(tableName, id) {
   try {
     const deletedRecord = await prisma[tableName].delete({
-      where: { id },
+      where: id,
     });
     return deletedRecord;
   } catch (error) {
     throw new Error(`Error al eliminar el registro de ${tableName} con id ${id} en la BD: ${error.message}`);
+  }
+}
+
+export async function deleteByFilter(tableName, filter) {
+  try {
+    const deletedRecords = await prisma[tableName].deleteMany({
+      where: filter,
+    });
+    return deletedRecords;
+  } catch (error) {
+    throw new Error(`Error al eliminar registros de ${tableName} con filtro ${JSON.stringify(filter)} en la BD: ${error.message}`);
   }
 }
 

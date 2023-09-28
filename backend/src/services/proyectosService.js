@@ -1,4 +1,4 @@
-import { update } from '../repository/baseRepository.js';
+import { create, deleteByFilter, deleteById, update } from '../repository/baseRepository.js';
 import {
   getAllProyectos,
   getProyectosPids,
@@ -103,7 +103,31 @@ export async function updatePidService(idPid, pidData) {
         if (pidData && pidData.pid) {
           projectUpdate.pid = await update('pids', { idProyectoPid: idPid }, pidData.pid)
         }
-        console.log(pidData)
+        if (pidData && pidData.investigadores) {
+          console.log("Investigadores: ", pidData.investigadores)
+          let bandera = false;
+        
+          try {
+            await deleteByFilter('participa', filter)
+            bandera = true
+            console.log('delete')
+          } catch {
+            bandera = false
+          }
+          if (bandera) {
+            const investigadoresP = pidData.investigadores.map(investigador => ({
+              ...investigador,
+              idProyecto: idPid,
+            }));
+            try {
+              for (const investigador of investigadoresP) {
+                await create('participa', investigador);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
       }
     } else {
       throw new Error(`El proyecto con id ${idPid} no existe`)
