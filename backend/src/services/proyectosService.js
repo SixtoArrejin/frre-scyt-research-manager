@@ -1,3 +1,4 @@
+import { update } from '../repository/baseRepository.js';
 import {
   getAllProyectos,
   getProyectosPids,
@@ -8,6 +9,7 @@ import {
   createTiene,
   createParticipa,
 } from '../repository/proyectosRepository.js';
+import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectosService() {
   try {
@@ -76,6 +78,42 @@ export async function createParticipaService(dataParticipa) {
   try {
     const newParticipacion = await createParticipa(dataParticipa);
     return newParticipacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updatePidService(idPid, pidData) {
+  try {
+    const filter = { idProyecto: idPid };
+    const projectUpdate = {};
+
+    const proyectoSearch = await getProyectoById(idPid)
+    if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
+      if (proyectoSearch.pids) { //Si existe el proyecto y es PID
+        if (pidData && pidData.proyecto) {
+          if (pidData.proyecto.fechaInicio) {
+            pidData.proyecto.fechaInicio = convertToISOString(pidData.proyecto.fechaInicio)
+          };
+          if (pidData.proyecto.fechaFin) {
+            pidData.proyecto.fechaFin = convertToISOString(pidData.proyecto.fechaFin)
+          };
+          projectUpdate.proyecto = await update('proyectos', filter, pidData.proyecto);
+        }
+        if (pidData && pidData.pid) {
+          projectUpdate.pid = await update('pids', { idProyectoPid: idPid }, pidData.pid)
+        }
+        console.log(pidData)
+      }
+    } else {
+      throw new Error(`El proyecto con id ${idPid} no existe`)
+    }
+
+    // console.log(proyectoSearch);
+
+    // const updatedPid = await update('pids', filter, pidData);
+    // return updatedPid;
+    return projectUpdate
   } catch (error) {
     throw new Error(error.message);
   }

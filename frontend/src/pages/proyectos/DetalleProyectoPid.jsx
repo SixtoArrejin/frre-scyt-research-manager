@@ -32,22 +32,33 @@ import {
 import investigadores from "../../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
 import categorias from '../../utils/data/ListaCategorias.json'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import proyectosInv from '../../utils/data/proyectosInv.json';
 import { getPersonaById } from "../../utils/api/personasApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from "../../utils/general";
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById } from "../../utils/api/proyectosApi";
+import CustomModal from "../../components/CustomModal";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleProyectoPid() {
 
-  const { idPid } = useParams()
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const { data, isLoading, error } = useQuery(["proyecto"], () => getProyectoById(Number(idPid)))
+  const { idPid } = useParams()
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const { data, isLoading, error } = useQuery(["proyecto", idPid], () => getProyectoById(Number(idPid)))
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa)
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene)
   const [proyectoPID, setProyectoPID] = useState(data?.proyecto)
@@ -68,8 +79,6 @@ export default function DetalleProyectoPid() {
           </Heading>
 
           <br />
-          <br />
-
 
           <Card width='100%'>
             <CardBody>
@@ -83,6 +92,19 @@ export default function DetalleProyectoPid() {
                       <Input name="apellido" placeholder="Código PID" isDisabled value={data?.proyecto?.pids?.codPid} />
                       <FormLabel>Código PID</FormLabel>
                     </FormControl>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "65%" }}
+                      mb="5vh"
+                    >
+                      <Input
+                        name="regional"
+                        placeholder="Regional"
+                        isDisabled
+                        defaultValue={data?.proyecto?.regional}
+                      />
+                      <FormLabel>Regional</FormLabel>
+                    </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
@@ -94,12 +116,12 @@ export default function DetalleProyectoPid() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="apellido" placeholder="Apellido" />
+                      <Input name="apellido" placeholder="Apellido" isDisabled value={data?.proyecto?.director.apellido + ", " + data?.proyecto?.director.nombre} />
                       <FormLabel>Director</FormLabel>
                     </FormControl>
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="codirector" placeholder="Codirector" />
+                      <Input name="codirector" placeholder="Codirector" isDisabled value={data?.proyecto?.codirector.apellido + ", " + data?.proyecto?.codirector.nombre} />
                       <FormLabel>Codirector</FormLabel>
                     </FormControl>
                   </Box>
@@ -111,7 +133,7 @@ export default function DetalleProyectoPid() {
                     </FormControl>
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="fechaFin" placeholder="Fecha Fin" isDisabled value={formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)}/>
+                      <Input name="fechaFin" placeholder="Fecha Fin" isDisabled value={formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)} />
                       <FormLabel>Fecha Fin</FormLabel>
                     </FormControl>
 
@@ -123,19 +145,19 @@ export default function DetalleProyectoPid() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="programa" placeholder="Programa" isDisabled value={data?.proyecto?.pids?.programa}/>
+                      <Input name="programa" placeholder="Programa" isDisabled value={data?.proyecto?.pids?.programa} />
                       <FormLabel>Programa</FormLabel>
                     </FormControl>
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="tipoProyecto" placeholder="Tipo de proyecto" isDisabled value={data?.proyecto?.pids?.tipoProyecto}/>
+                      <Input name="tipoProyecto" placeholder="Tipo de proyecto" isDisabled value={data?.proyecto?.pids?.tipoProyecto} />
                       <FormLabel>Tipo de proyecto</FormLabel>
                     </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="actividad" placeholder="Actividad" isDisabled value={data?.proyecto?.tipoActividad}/>
+                      <Input name="actividad" placeholder="Actividad" isDisabled value={data?.proyecto?.tipoActividad} />
                       <FormLabel>Tipo Actividad</FormLabel>
                     </FormControl>
 
@@ -160,6 +182,34 @@ export default function DetalleProyectoPid() {
                       <Input name="disposicion" placeholder="Disposición" isDisabled value={data?.proyecto?.pids?.disposicion} />
                       <FormLabel>Disposición</FormLabel>
                     </FormControl>
+                  </Box>
+                  <Box
+                    display="flex"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    {/* <Button
+                      colorScheme="gray"
+                      variant="outline"
+                      onClick={() => navigate(-1)}
+                      mr="3%"
+                    >
+                      Cancelar
+                    </Button> */}
+                    <Link to={`modificar`}>
+                      <Button colorScheme="blue" variant="outline">
+                        Modificar
+                      </Button>
+                    </Link>
+                    {/* <CustomModal
+                      isOpen={isOpen}
+                      onClose={closeModal}
+                      guardar={true}
+                      title="Guardar nuevo investigador"
+                      content="Se guardara el nuevo investigador"
+                      // onSave={handleSubmit((values) => mutate(values))}
+                    /> */}
                   </Box>
                 </Box>
               </Box>
@@ -203,34 +253,35 @@ export default function DetalleProyectoPid() {
                       </Thead>
                       <Tbody>
                         {integrantes?.map((item, index) => {
-                          const ayn = item?.personas.apellido + " " + item?.personas.nombre 
+                          const ayn = item?.personas.apellido + " " + item?.personas.nombre
                           const catUTN = getCategoriaMasActual(item?.personas.categorias, 'utn')
                           const catMIN = getCategoriaMasActual(item?.personas.categorias, 'ministerio')
                           return (
-                          <Tr key={index}>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.rol}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{ayn}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{item.personas.activo ? "Activo" : "Inactivo"}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.personas.fechaIngreso)}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{catUTN ? catUTN.categoria : "-"}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">{catMIN ? catMIN.categoria : "-"}</Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon /></Link>
-                            </Td>
-                          </Tr>
-                        )})}
+                            <Tr key={index}>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.rol}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{ayn}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.personas.activo ? "Activo" : "Inactivo"}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.personas.fechaIngreso)}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{catUTN ? catUTN.categoria : "-"}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{catMIN ? catMIN.categoria : "-"}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon /></Link>
+                              </Td>
+                            </Tr>
+                          )
+                        })}
                       </Tbody>
                     </Table>
                   </TableContainer>
