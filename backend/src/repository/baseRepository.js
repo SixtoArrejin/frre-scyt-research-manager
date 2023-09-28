@@ -111,7 +111,7 @@ export async function updateById(tableName, id, dataToUpdate) {
 export async function deleteById(tableName, id) {
   try {
     const deletedRecord = await prisma[tableName].delete({
-      where: { id },
+      where: id,
     });
     return deletedRecord;
   } catch (error) {

@@ -88,7 +88,7 @@ export default function AgregarInvestigador() {
   );
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => updatePID(formData),
+    mutationFn: (formData) => updatePID(Number(idPid),formData),
     onSuccess: () => {
       toast({
         title: "Nuevo Proyecto",
@@ -118,9 +118,7 @@ export default function AgregarInvestigador() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      proyecto: {
-        idProyecto: idPid,
-      },
+
     },
   });
 

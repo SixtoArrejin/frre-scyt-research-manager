@@ -1,4 +1,4 @@
-import { update } from '../repository/baseRepository.js';
+import { deleteById, update } from '../repository/baseRepository.js';
 import {
   getAllProyectos,
   getProyectosPids,
@@ -103,7 +103,11 @@ export async function updatePidService(idPid, pidData) {
         if (pidData && pidData.pid) {
           projectUpdate.pid = await update('pids', { idProyectoPid: idPid }, pidData.pid)
         }
-        console.log(pidData)
+        if (pidData && pidData.investigadores) {
+          console.log("Investigadores: ", pidData.investigadores)
+          await deleteById('participa', filter)
+        }
+        // console.log(pidData)
       }
     } else {
       throw new Error(`El proyecto con id ${idPid} no existe`)
