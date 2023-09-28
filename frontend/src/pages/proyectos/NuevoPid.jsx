@@ -69,11 +69,15 @@ export default function NuevoPid() {
 
   const grupos = data?.grupos;
 
-  const [grupoAdd, setGrupoAdd] = useState()
+  const [investigadores, setInvestigadores] = useState([])
 
-  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
+  const { data: dataInvestigadores } = useQuery(["investigadoresNewPID"], () =>
     getAllPersonas()
   );
+
+  useEffect(() => {
+    setInvestigadores(dataInvestigadores?.personas)
+  }, [dataInvestigadores])
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createProyectoPID(formData),
@@ -138,18 +142,6 @@ export default function NuevoPid() {
     name: "grupos", // Nombre del campo de formulario que es un arreglo
   });
 
-  const agregarGrupoForm = () => {
-    appendG(grupoAdd)
-  }
-
-  const gg = getValues('grupos');
-
-  const onSubmit = (dataForm, event) => {
-    console.log(dataForm);
-    event.preventDefault();
-    mutate(dataForm);
-  };
-
   const onChangeRadioProrroga = (value) => {
     if (value === "true") {
       setValue("pid.prorrogado", true);
@@ -161,12 +153,11 @@ export default function NuevoPid() {
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
-  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
-  const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
-  const [investigadores, setInvestigadores] = useState(
-    dataPersonas?.personas || []
-  );
+  // const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
+  // const [investigadores, setInvestigadores] = useState(
+  //   dataPersonas?.personas || []
+  // );
 
   const roles = ["Investigador", "Becario"];
 
@@ -175,7 +166,7 @@ export default function NuevoPid() {
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
 
-  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
+  const sortedInvestigadores = investigadores?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
     const apellidoB = b.apellido.toLowerCase();
     return apellidoA.localeCompare(apellidoB);
@@ -368,7 +359,7 @@ export default function NuevoPid() {
                             valueAsNumber: true,
                           })}
                         >
-                          {dataInvestigadores?.personas.map(
+                          {investigadores?.map(
                             (investigador, key) => (
                               <option key={key} value={investigador.idPersona}>
                                 {investigador.apellido} {investigador.nombre}
@@ -392,7 +383,7 @@ export default function NuevoPid() {
                             valueAsNumber: true,
                           })}
                         >
-                          {dataInvestigadores?.personas.map(
+                          {investigadores?.map(
                             (investigador, key) => (
                               <option key={key} value={investigador.idPersona}>
                                 {investigador.apellido} {investigador.nombre}
@@ -540,10 +531,6 @@ export default function NuevoPid() {
                       alignItems="center"
                       justifyContent="space-between"
                     >
-                      {/* <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                        <Input name="prorroga" placeholder="Prorroga" {...register('pid.prorrogado')} />
-                        <FormLabel>Prorroga</FormLabel>
-                      </FormControl> */}
                       <Box
                         width={{ base: "100%", md: "50%" }}
                         display="flex"
@@ -567,44 +554,6 @@ export default function NuevoPid() {
                     </Box>
                   </Box>
                 </Box>
-
-                {/* <Box> */}
-                {" "}
-                {/* EJEMPLO DE USO DEL ARRAY EN FORMULARIOS */}
-                {/* {fields.map((field, index) => (
-                    <div key={field.id}>
-                      <input
-                        {...register(`investigadores[${index}].investigador`)}
-                        defaultValue={field.investigador}
-                      />
-                      <button type="button" onClick={() => remove(index)}>
-                        Eliminar
-                      </button>
-                    </div>
-                  ))}
-                  <button type="button" onClick={() => append({})}>
-                    Agregar Elemento
-                  </button>
-                </Box> */}
-
-                {/* <Box
-                  display="flex"
-                  width="90%"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                >
-                  <Button
-                    colorScheme="gray"
-                    variant="outline"
-                    // onClick={onClick}
-                    mr="3%"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button type="submit" colorScheme="blue" variant="outline">
-                    Guardar
-                  </Button>
-                </Box> */}
               </CardBody>
             </Card>
           </Box>
@@ -756,7 +705,7 @@ export default function NuevoPid() {
                         setSelectedOptions(e.target.value);
                       }}
                     >
-                      {sortedInvestigadores.map((item, index) => (
+                      {sortedInvestigadores?.map((item, index) => (
                         <option key={item.idPersona} value={item.idPersona}>
                           {item.apellido + ", " + item.nombre}
                         </option>
