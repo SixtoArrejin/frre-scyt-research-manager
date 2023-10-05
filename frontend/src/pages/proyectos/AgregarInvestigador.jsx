@@ -62,7 +62,7 @@ export default function AgregarInvestigador() {
 
   const { idPid } = useParams();
 
-  const { data: dataParticipa } = useQuery(["proyecto"], () =>
+  const { data: dataParticipa } = useQuery(["participa", idPid], () =>
     getProyectoById(Number(idPid))
   );
   const [investigadores1, setInvestigadores1] = useState(
