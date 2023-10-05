@@ -346,14 +346,15 @@ export default function NuevoPid() {
     );
   
     // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
-    const investigadoresRestantes = investigadoresSeleccionados.filter(
-      (investigador) => investigador.idGrupo !== idAEliminar
+    const investigadoresRestantes = investigadoresDelGrupo.filter(
+      (investigador) => investigador.idGrupoInvestigacion !== idAEliminar
     );
   
     removeG(index);
   
     // Actualizar investigadoresSeleccionados y gruposSeleccionados con los nuevos arreglos
     setInvestigadoresDelGrupo(investigadoresRestantes);
+    console.log(investigadoresRestantes)
     setGruposSeleccionados(nuevosGrupos);
   };
   
