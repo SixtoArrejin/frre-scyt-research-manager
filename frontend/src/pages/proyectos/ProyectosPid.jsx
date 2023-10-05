@@ -123,10 +123,11 @@ export default function ProyectosPid() {
           <Tabla
             columnas={['Cod. PID', 'Fecha Inicio', 'Denominación', 'Regional', 'Estado', 'Ver Más']}
             datos={proyectos?.map((item, index) => {
+              const denominacion = item.proyectos?.denominacion === item.proyectos?.denominacion.substring(0, 40) ? item.proyectos?.denominacion : item.proyectos?.denominacion.substring(0, 40)+'...'
               return [
                 item.codPid,
                 formatoFechaISOaDDMMAAAA(item?.proyectos?.fechaInicio),
-                item.proyectos?.denominacion,
+                denominacion,
                 item.proyectos?.regional,
                 item.proyectos?.estado,
                 <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
