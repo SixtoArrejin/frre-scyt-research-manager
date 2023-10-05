@@ -171,6 +171,7 @@ export default function AgregarInvestigador() {
     const objetoAgregar = {
       idPersona: objetoBuscado.idPersona,
       rol: "",
+      fechaInicio: ((new Date()).toISOString()),
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
@@ -232,7 +233,8 @@ export default function AgregarInvestigador() {
       // Crea un nuevo array para los datos que deseas agregar
       const nuevosDatos = investigadoresSeleccionados.map((item, index) => ({
         idPersona: item.idPersona,
-        rol: investigadores1[index].rol, // Puedes establecer un valor predeterminado aquí si es necesario
+        rol: investigadores1[index].rol,
+        fechaInicio: investigadores1[index].fechaInicio, // Puedes establecer un valor predeterminado aquí si es necesario
       }));
 
       console.log(nuevosDatos);
