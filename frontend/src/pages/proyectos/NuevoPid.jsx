@@ -31,9 +31,7 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import {
-  DeleteIcon,
-} from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 import investigadores from "../../utils/data/investigadores.json";
 import InputLabel from "../../components/InputLabel";
 import categorias from "../../utils/data/ListaCategorias.json";
@@ -79,10 +77,14 @@ const regionales = [
   "Facultad Regional Villa María",
   "Rectorado",
   "Instituto Nacional Superior de Profesorado Técnico",
-  "Centro Tecnológico De Desarrollo Regional Los Reyunos"
-]
+  "Centro Tecnológico De Desarrollo Regional Los Reyunos",
+];
 
-const tipoActividad = ["Desarrollo Experimental", "Investigación Aplicada", "Investigación Básica"]
+const tipoActividad = [
+  "Desarrollo Experimental",
+  "Investigación Aplicada",
+  "Investigación Básica",
+];
 
 const tipoProyecto = [
   "UTN (PID UTN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
@@ -114,8 +116,8 @@ const tipoProyecto = [
   "PID EQUIPOS EN CONSOLIDACIÓN SIN INCENTIVOS",
   "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO A",
   "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO B",
-  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD SIN INCENTIVOS"
-]
+  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD SIN INCENTIVOS",
+];
 
 const estadoProyecto = [
   "EN TRÁMITE",
@@ -125,22 +127,27 @@ const estadoProyecto = [
   "DENEGADO POR EVALUACIÓN EXTERNA",
   "DENEGADO POR CONSEJO DE PROGRAMAS",
   "CANCELADO",
-]
+];
 
-
-const roles = ["Investigador", "Becario", "Asesor Cientifico", "Técnico de Apoyo", "CoDirector"];
+const roles = [
+  "Investigador",
+  "Becario",
+  "Asesor Cientifico",
+  "Técnico de Apoyo",
+  "CoDirector",
+];
 
 export default function NuevoPid() {
-    /* Usestate para el modal */
-    const [isOpen, setIsOpen] = useState(false);
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
 
-    const openModal = () => {
-      setIsOpen(true);
-    };
-  
-    const closeModal = () => {
-      setIsOpen(false);
-    };
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -153,15 +160,15 @@ export default function NuevoPid() {
 
   const grupos = data?.grupos;
 
-  const [investigadores, setInvestigadores] = useState([])
+  const [investigadores, setInvestigadores] = useState([]);
 
   const { data: dataInvestigadores } = useQuery(["investigadoresNewPID"], () =>
     getAllPersonas()
   );
 
   useEffect(() => {
-    setInvestigadores(dataInvestigadores?.personas)
-  }, [dataInvestigadores])
+    setInvestigadores(dataInvestigadores?.personas);
+  }, [dataInvestigadores]);
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createProyectoPID(formData),
@@ -175,10 +182,10 @@ export default function NuevoPid() {
       navigate(-1);
     },
     onError: (error) => {
-      const errorMessage = error?.message
+      const errorMessage = error?.message;
       toast({
         title: "Error al crear el proyecto",
-        description: `${errorMessage || 'Intente nuevamente'}`,
+        description: `${errorMessage || "Intente nuevamente"}`,
         status: "error",
         isClosable: true,
       });
@@ -221,7 +228,12 @@ export default function NuevoPid() {
     name: "investigadores", // Nombre del campo de formulario que es un arreglo
   });
 
-  const { fields: fieldsGrupos, append: appendG, remove: removeG, update: updateG } = useFieldArray({
+  const {
+    fields: fieldsGrupos,
+    append: appendG,
+    remove: removeG,
+    update: updateG,
+  } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: "grupos", // Nombre del campo de formulario que es un arreglo
   });
@@ -243,12 +255,12 @@ export default function NuevoPid() {
   //   dataPersonas?.personas || []
   // );
 
-  const [gruposSeleccionados, setGruposSeleccionados] =
-    useState([]);
+  const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
+  const [investigadoresDelGrupo, setInvestigadoresDelGrupo] = useState([]);
 
-  const sortedInvestigadores = investigadores?.sort((a, b) => {
+  const sortedInvestigadores = investigadoresDelGrupo?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
     const apellidoB = b.apellido.toLowerCase();
     return apellidoA.localeCompare(apellidoB);
@@ -298,10 +310,20 @@ export default function NuevoPid() {
 
     if (!objetoYaAgregado) {
       appendG(objetoAgregar);
-      setGruposSeleccionados([
-        ...gruposSeleccionados,
-        objetoBuscado,
+      setGruposSeleccionados([...gruposSeleccionados, objetoBuscado]);
+      const investigadoresGrupo = investigadores.filter(
+        (investigador) =>
+          investigador.idGrupoInvestigacion ===
+          objetoBuscado.idGrupoInvestigacion
+      );
+
+      // Actualizar la lista de investigadores seleccionados
+      setInvestigadoresDelGrupo([
+        ...investigadoresDelGrupo,
+        ...investigadoresGrupo,
       ]);
+
+      console.log(investigadoresDelGrupo);
     }
   };
 
@@ -311,7 +333,7 @@ export default function NuevoPid() {
       (item) => item.idPersona !== idAEliminar
     );
 
-    remove(index)
+    remove(index);
 
     // Actualizar investigadoresSeleccionados con el nuevo arreglo
     setInvestigadoresSeleccionados(nuevosInvestigadores);
@@ -322,12 +344,19 @@ export default function NuevoPid() {
     const nuevosGrupos = gruposSeleccionados.filter(
       (item) => item.idGrupoInvestigacion !== idAEliminar
     );
-
-    removeG(index)
-
-    // Actualizar investigadoresSeleccionados con el nuevo arreglo
+  
+    // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
+    const investigadoresRestantes = investigadoresSeleccionados.filter(
+      (investigador) => investigador.idGrupo !== idAEliminar
+    );
+  
+    removeG(index);
+  
+    // Actualizar investigadoresSeleccionados y gruposSeleccionados con los nuevos arreglos
+    setInvestigadoresDelGrupo(investigadoresRestantes);
     setGruposSeleccionados(nuevosGrupos);
   };
+  
 
   const onSub = (values) => {
     console.log(values);
@@ -337,7 +366,10 @@ export default function NuevoPid() {
   return (
     <Card>
       <CardBody>
-        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
+        <form
+          style={{ width: "100%" }}
+          onSubmit={handleSubmit((values) => onSub(values))}
+        >
           <Box
             display="flex"
             flexDirection="column"
@@ -397,13 +429,11 @@ export default function NuevoPid() {
                           placeholder="Regional..."
                           {...register("proyecto.regional")}
                         >
-                          {regionales.map(
-                            (regional, key) => (
-                              <option key={key} value={regional}>
-                                {regional}
-                              </option>
-                            )
-                          )}
+                          {regionales.map((regional, key) => (
+                            <option key={key} value={regional}>
+                              {regional}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Regional</FormLabel>
                       </FormControl>
@@ -446,13 +476,11 @@ export default function NuevoPid() {
                             valueAsNumber: true,
                           })}
                         >
-                          {investigadores?.map(
-                            (investigador, key) => (
-                              <option key={key} value={investigador.idPersona}>
-                                {investigador.apellido} {investigador.nombre}
-                              </option>
-                            )
-                          )}
+                          {investigadores?.map((investigador, key) => (
+                            <option key={key} value={investigador.idPersona}>
+                              {investigador.apellido} {investigador.nombre}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Director</FormLabel>
                       </FormControl>
@@ -468,13 +496,11 @@ export default function NuevoPid() {
                             valueAsNumber: true,
                           })}
                         >
-                          {investigadores?.map(
-                            (investigador, key) => (
-                              <option key={key} value={investigador.idPersona}>
-                                {investigador.apellido} {investigador.nombre}
-                              </option>
-                            )
-                          )}
+                          {investigadores?.map((investigador, key) => (
+                            <option key={key} value={investigador.idPersona}>
+                              {investigador.apellido} {investigador.nombre}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Codirector</FormLabel>
                       </FormControl>
@@ -559,13 +585,11 @@ export default function NuevoPid() {
                           placeholder="Tipo de proyecto..."
                           {...register("pid.tipoProyecto")}
                         >
-                          {tipoProyecto.map(
-                            (tipo, key) => (
-                              <option key={key} value={tipo}>
-                                {tipo}
-                              </option>
-                            )
-                          )}
+                          {tipoProyecto.map((tipo, key) => (
+                            <option key={key} value={tipo}>
+                              {tipo}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Tipo de proyecsto</FormLabel>
                       </FormControl>
@@ -586,13 +610,11 @@ export default function NuevoPid() {
                           placeholder="Tipo de actividad..."
                           {...register("proyecto.tipoActividad")}
                         >
-                          {tipoActividad.map(
-                            (actividad, key) => (
-                              <option key={key} value={actividad}>
-                                {actividad}
-                              </option>
-                            )
-                          )}
+                          {tipoActividad.map((actividad, key) => (
+                            <option key={key} value={actividad}>
+                              {actividad}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Tipo de actividad</FormLabel>
                       </FormControl>
@@ -618,13 +640,11 @@ export default function NuevoPid() {
                           placeholder="Estado..."
                           {...register("proyecto.estado")}
                         >
-                          {estadoProyecto.map(
-                            (estado, key) => (
-                              <option key={key} value={estado}>
-                                {estado}
-                              </option>
-                            )
-                          )}
+                          {estadoProyecto.map((estado, key) => (
+                            <option key={key} value={estado}>
+                              {estado}
+                            </option>
+                          ))}
                         </Select>
                         <FormLabel>Estado</FormLabel>
                       </FormControl>
@@ -708,7 +728,10 @@ export default function NuevoPid() {
                       }}
                     >
                       {grupos?.map((item, index) => (
-                        <option key={item.idGrupoInvestigacion} value={item.idGrupoInvestigacion}>
+                        <option
+                          key={item.idGrupoInvestigacion}
+                          value={item.idGrupoInvestigacion}
+                        >
                           {item.siglas}
                         </option>
                       ))}
@@ -767,8 +790,12 @@ export default function NuevoPid() {
                                 <Td textAlign="center">
                                   <DeleteIcon
                                     cursor={"pointer"}
-                                    onClick={() => { eliminarGrupo(item.idGrupoInvestigacion, index) }
-                                    }
+                                    onClick={() => {
+                                      eliminarGrupo(
+                                        item.idGrupoInvestigacion,
+                                        index
+                                      );
+                                    }}
                                   />
                                 </Td>
                               </Tr>
@@ -787,9 +814,7 @@ export default function NuevoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">
-                Agregar los investigadores al proyecto
-              </Text>
+              <Text fontSize="md">Agregar los investigadores al proyecto</Text>
               <br />
               <Box
                 display="flex"
@@ -881,7 +906,7 @@ export default function NuevoPid() {
                                   <Select
                                     placeholder="Rol"
                                     onChange={(e) => {
-                                      update(index, { rol: e.target.value })
+                                      update(index, { rol: e.target.value });
                                     }}
                                   >
                                     {roles.map((role, roleIndex) => (
@@ -894,8 +919,12 @@ export default function NuevoPid() {
                                 <Td textAlign="center">
                                   <DeleteIcon
                                     cursor={"pointer"}
-                                    onClick={() => { eliminarInvestigador(item.idPersona, index) }
-                                    }
+                                    onClick={() => {
+                                      eliminarInvestigador(
+                                        item.idPersona,
+                                        index
+                                      );
+                                    }}
                                   />
                                 </Td>
                               </Tr>
@@ -906,8 +935,6 @@ export default function NuevoPid() {
                     </TableContainer>
                   </CardBody>
                 </Card>
-
-
               </Box>
               <br />
               <Box
@@ -925,17 +952,22 @@ export default function NuevoPid() {
                 >
                   Cancelar
                 </Button>
-                <Button onClick={openModal} colorScheme="blue" variant="outline" ml="5%">
+                <Button
+                  onClick={openModal}
+                  colorScheme="blue"
+                  variant="outline"
+                  ml="5%"
+                >
                   Guardar
                 </Button>
                 <CustomModal
-                      isOpen={isOpen}
-                      onClose={closeModal}
-                      guardar={true}
-                      title="Guardar nuevo PID"
-                      content="Se guardara el nuevo PID"
-                      onSave={handleSubmit((values) => mutate(values))}
-                    />
+                  isOpen={isOpen}
+                  onClose={closeModal}
+                  guardar={true}
+                  title="Guardar nuevo PID"
+                  content="Se guardara el nuevo PID"
+                  onSave={handleSubmit((values) => mutate(values))}
+                />
               </Box>
             </CardBody>
           </Card>
