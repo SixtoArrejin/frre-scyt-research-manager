@@ -164,13 +164,12 @@ export async function crearProyectosPID(req, res) {
 
       project.investigadores = [];
       if (newPID) {
-        const fechaInicioActividad = new Date(); //Implementar en la base de datos!!
         for (const investigador of investigadores || []) {
           const newInvestigador = await createParticipaService({
             idProyecto: newProyecto.idProyecto,
             idPersona: investigador.idPersona,
             rol: investigador.rol,
-            // fechaInicioActividad: fechaInicioActividad
+            fechaInicio: new Date()
           });
           project.investigadores.push(newInvestigador);
         }
