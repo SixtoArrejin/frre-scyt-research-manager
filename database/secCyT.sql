@@ -108,3 +108,5 @@ CREATE TABLE usuarios (
     contrasena VARCHAR(255),
     PRIMARY KEY (usuario)
 );
+
+ALTER TABLE seccyt.participa ADD fechaInicio date NULL;
