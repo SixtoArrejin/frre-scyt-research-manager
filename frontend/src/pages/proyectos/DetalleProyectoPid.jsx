@@ -482,9 +482,10 @@ export default function DetalleProyectoPid() {
                               </Td>
                               <Td textAlign="center">
                                 <Text fontSize="md">
-                                  {formatoFechaISOaDDMMAAAA(
-                                    item.personas.fechaIngreso
-                                  )}
+                                {data?.proyecto?.participa[index].fechaInicio ?
+                                  formatoFechaISOaDDMMAAAA(
+                                    data.proyecto.participa[index].fechaInicio
+                                  ) : "-"}
                                 </Text>
                               </Td>
                               <Td textAlign="center">
