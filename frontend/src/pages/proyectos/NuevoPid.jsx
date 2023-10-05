@@ -51,7 +51,7 @@ const regionales = [
   "Facultad Regional Bahía Blanca",
   "Facultad Regional Buenos Aires",
   "Facultad Regional Chubut",
-  "Facultad Regional Conceptción del Uruguay",
+  "Facultad Regional Concepción del Uruguay",
   "Facultad Regional Concordia",
   "Facultad Regional Córdoba",
   "Facultad Regional Delta",
