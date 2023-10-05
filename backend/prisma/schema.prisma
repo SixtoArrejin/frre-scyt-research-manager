@@ -32,11 +32,12 @@ model gruposinvestigacion {
 }
 
 model participa {
-  idPersona  Int
-  idProyecto Int
-  rol        String    @db.VarChar(50)
-  personas   personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
-  proyectos  proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
+  idPersona   Int
+  idProyecto  Int
+  rol         String    @db.VarChar(50)
+  fechaInicio DateTime? @db.Date
+  personas    personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
+  proyectos   proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
 
   @@id([idPersona, idProyecto])
   @@index([idProyecto], map: "idProyecto")
