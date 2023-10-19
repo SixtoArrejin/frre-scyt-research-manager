@@ -482,10 +482,12 @@ export default function DetalleProyectoPid() {
                               </Td>
                               <Td textAlign="center">
                                 <Text fontSize="md">
-                                {data?.proyecto?.participa[index].fechaInicio ?
-                                  formatoFechaISOaDDMMAAAA(
-                                    data.proyecto.participa[index].fechaInicio
-                                  ) : "-"}
+                                  {data?.proyecto?.participa[index].fechaInicio
+                                    ? formatoFechaISOaDDMMAAAA(
+                                        data.proyecto.participa[index]
+                                          .fechaInicio
+                                      )
+                                    : "-"}
                                 </Text>
                               </Td>
                               <Td textAlign="center">
@@ -586,6 +588,18 @@ export default function DetalleProyectoPid() {
                   </TableContainer>
                 </CardBody>
               </Card>
+              <Box
+                display="flex"
+                width="100%"
+                alignItems="center"
+                justifyContent="flex-end"
+              >
+                <Link to={`agregar-grupo`}>
+                  <Button colorScheme="blue" variant="outline">
+                    Agregar Grupo
+                  </Button>
+                </Link>
+              </Box>
               <br />
             </CardBody>
           </Card>

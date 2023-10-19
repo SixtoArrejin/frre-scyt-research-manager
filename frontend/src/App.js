@@ -27,6 +27,7 @@ import ProyectosExternosF from './pages/proyectos/ProyectosExternosF';
 import DetalleProyectoPid from './pages/proyectos/DetalleProyectoPid';
 import NuevoPid from './pages/proyectos/NuevoPid';
 import ModificarPIDs from './pages/proyectos/ModificarPIDs';
+import AgregarGrupo from './pages/proyectos/AgregarGrupo';
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const routes = [
   { path: "/proyectos-pid/nuevo", element: <NuevoPid /> },
   { path: "/proyectos-pid/:idPid/modificar", element: <ModificarPIDs /> },
   { path: "/proyectos-pid/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
+  { path: "/proyectos-pid/:idPid/agregar-grupo", element: <AgregarGrupo/>},
   { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
