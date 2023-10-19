@@ -69,8 +69,24 @@ export default function AgregarInvestigador() {
     []
   );
 
+  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState(
+    []
+  );
+
+  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
+  getAllPersonas()
+);
+
   useEffect(() => {
     setInvestigadores1(dataParticipa?.proyecto.participa)
+
+    const investigadoresGrupo = investigadores.filter(investigador => {
+      return dataParticipa?.proyecto?.tiene.some(item => {
+        return investigador.idGrupoInvestigacion === item.idGrupoInvestigacion;
+      });
+    });
+
+    setInvestigadoresFiltrados(investigadoresGrupo)
   }, [dataParticipa])
 
   const {
@@ -82,10 +98,6 @@ export default function AgregarInvestigador() {
   const grupos = data?.grupos;
 
   const [grupoAdd, setGrupoAdd] = useState();
-
-  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
-    getAllPersonas()
-  );
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => updatePID(Number(idPid),formData),
@@ -155,7 +167,7 @@ export default function AgregarInvestigador() {
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
 
-  const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
+  const sortedInvestigadores = [...investigadoresFiltrados]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
     const apellidoB = b.apellido.toLowerCase();
     return apellidoA.localeCompare(apellidoB);
@@ -311,7 +323,7 @@ export default function AgregarInvestigador() {
                       colorScheme="blue"
                       variant="outline"
                       mr="5"
-                      onClick={handleSubmit((values) => console.log(values))}
+                      onClick={console.log(investigadores)}
                     >
                       Prueba
                     </Button>
