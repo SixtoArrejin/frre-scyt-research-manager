@@ -367,8 +367,15 @@ export default function AgregarInvestigador() {
                                   <Select
                                     placeholder="Rol"
                                     onChange={(e) => {
-                                      update(index, { rol: e.target.value });
+                                      const updatedArray = fields[index]; // Copia el array original
+                                      delete updatedArray.id
+                                      update(index,{
+                                        ...updatedArray, // Copia el objeto existente
+                                        rol: e.target.value, // Actualiza solo la propiedad "rol"
+                                      })
+                                      
                                     }}
+                                    
                                     defaultValue={investigadores1[index]?.rol}
                                   >
                                     {roles.map((role, roleIndex) => (
