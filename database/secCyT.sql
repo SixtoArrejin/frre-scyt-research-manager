@@ -125,3 +125,19 @@ CREATE TABLE regionales (
     nombre VARCHAR(100),
     PRIMARY KEY (nombre)
 );
+
+CREATE TABLE tiposProyectos (
+    tipoProyecto VARCHAR(256),
+    PRIMARY KEY (tipoProyecto)
+);
+
+
+ALTER TABLE proyectos
+ADD CONSTRAINT fk_proyectos_regionales
+FOREIGN KEY (regional)
+REFERENCES regionales(nombre);
+
+ALTER TABLE pids
+ADD CONSTRAINT fk_pids_tiposproyectos
+FOREIGN KEY (tipoProyecto)
+REFERENCES tiposProyectos(tipoProyecto);

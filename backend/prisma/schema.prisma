@@ -84,6 +84,7 @@ model proyectos {
   idCodirector                              Int?
   participa                                 participa[]
   pids                                      pids?
+  regionales                                regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
   personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
   personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
   proyectosexternos                         proyectosexternos?
@@ -91,6 +92,7 @@ model proyectos {
 
   @@index([idCodirector], map: "idCodirector")
   @@index([idDirector], map: "idDirector")
+  @@index([regional], map: "fk_proyectos_regionales")
 }
 
 model proyectosconfinanciamiento {
@@ -131,5 +133,10 @@ model usuarios {
 }
 
 model regionales {
-  nombre String @id @db.VarChar(100)
+  nombre    String      @id @db.VarChar(100)
+  proyectos proyectos[]
+}
+
+model tiposproyectos {
+  tipoProyecto String @id @db.VarChar(256)
 }
