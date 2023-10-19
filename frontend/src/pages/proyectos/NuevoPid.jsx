@@ -43,42 +43,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
 import { createProyectoPID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
-
-const regionales = [
-  "Facultad Regional Avellaneda",
-  "Facultad Regional Bahía Blanca",
-  "Facultad Regional Buenos Aires",
-  "Facultad Regional Chubut",
-  "Facultad Regional Concepción del Uruguay",
-  "Facultad Regional Concordia",
-  "Facultad Regional Córdoba",
-  "Facultad Regional Delta",
-  "Facultad Regional General Pacheco",
-  "Facultad Regional Haedo",
-  "Facultad Regional La Plata",
-  "Facultad Regional La Rioja",
-  "Facultad Regional Mar del Plata",
-  "Facultad Regional Mendoza",
-  "Facultad Regional Neuquen",
-  "Facultad Regional Paraná",
-  "Facultad Regional Rafaela",
-  "Facultad Regional Reconquista",
-  "Facultad Regional Resistencia",
-  "Facultad Regional Rosario",
-  "Facultad Regional San Francisco",
-  "Facultad Regional San Nicolás",
-  "Facultad Regional San Rafael",
-  "Facultad Regional Santa Cruz",
-  "Facultad Regional Santa Fe",
-  "Facultad Regional Tierra del Fuego",
-  "Facultad Regional Trenque Lauquen",
-  "Facultad Regional Tucumán",
-  "Facultad Regional Venado Tuerto",
-  "Facultad Regional Villa María",
-  "Rectorado",
-  "Instituto Nacional Superior de Profesorado Técnico",
-  "Centro Tecnológico De Desarrollo Regional Los Reyunos",
-];
+import { getAllRegionales } from "../../utils/api/regionalesApi";
 
 const tipoActividad = [
   "Desarrollo Experimental",
@@ -157,6 +122,12 @@ export default function NuevoPid() {
     isLoading: isLoadingGetGrupos,
     error,
   } = useQuery("grupos", () => getAllGrupos());
+
+  const {
+    data: dataRegionales,
+    isLoading: isLoadingGetRegionales,
+    error: errorRegionales,
+  } = useQuery(["regionales", ], () => getAllRegionales());
 
   const grupos = data?.grupos;
 
@@ -430,7 +401,7 @@ export default function NuevoPid() {
                           placeholder="Regional..."
                           {...register("proyecto.regional")}
                         >
-                          {regionales.map((regional, key) => (
+                          {( isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
                             <option key={key} value={regional}>
                               {regional}
                             </option>

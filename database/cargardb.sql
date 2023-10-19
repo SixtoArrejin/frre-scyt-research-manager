@@ -39,3 +39,38 @@ INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstituci
 INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('6', 'empresa', '2023-01-01', '12as');
 INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('7', 'empresa', '2023-01-01', '12as');
 INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('8', 'empresa', '2023-01-01', '12as');
+
+INSERT INTO seccyt.regionales (nombre) VALUES
+	 ('Centro Tecnológico De Desarrollo Regional Los Reyunos'),
+	 ('Facultad Regional Avellaneda'),
+	 ('Facultad Regional Bahía Blanca'),
+	 ('Facultad Regional Buenos Aires'),
+	 ('Facultad Regional Chubut'),
+	 ('Facultad Regional Concepción del Uruguay'),
+	 ('Facultad Regional Concordia'),
+	 ('Facultad Regional Córdoba'),
+	 ('Facultad Regional Delta'),
+	 ('Facultad Regional General Pacheco'),
+	 ('Facultad Regional Haedo'),
+	 ('Facultad Regional La Plata'),
+	 ('Facultad Regional La Rioja'),
+	 ('Facultad Regional Mar del Plata'),
+	 ('Facultad Regional Mendoza'),
+	 ('Facultad Regional Neuquen'),
+	 ('Facultad Regional Paraná'),
+	 ('Facultad Regional Rafaela'),
+	 ('Facultad Regional Reconquista'),
+	 ('Facultad Regional Resistencia'),
+	 ('Facultad Regional Rosario'),
+	 ('Facultad Regional San Francisco'),
+	 ('Facultad Regional San Nicolás'),
+	 ('Facultad Regional San Rafael'),
+	 ('Facultad Regional Santa Cruz'),
+	 ('Facultad Regional Santa Fe'),
+	 ('Facultad Regional Tierra del Fuego'),
+	 ('Facultad Regional Trenque Lauquen'),
+	 ('Facultad Regional Tucumán'),
+	 ('Facultad Regional Venado Tuerto'),
+	 ('Facultad Regional Villa María'),
+	 ('Instituto Nacional Superior de Profesorado Técnico'),
+	 ('Rectorado');

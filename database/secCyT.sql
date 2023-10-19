@@ -120,3 +120,8 @@ ALTER TABLE seccyt.proyectos MODIFY COLUMN tipoActividad varchar(256) CHARACTER 
 ALTER TABLE seccyt.proyectos MODIFY COLUMN denominacion varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
 ALTER TABLE seccyt.proyectos MODIFY COLUMN regional varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
 ALTER TABLE seccyt.proyectos MODIFY COLUMN estado varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
+
+CREATE TABLE regionales (
+    nombre VARCHAR(100),
+    PRIMARY KEY (nombre)
+);

@@ -62,24 +62,24 @@ model personas {
 
 model pids {
   idProyectoPid Int       @id
-  tipoProyecto  String?   @db.VarChar(100)
+  tipoProyecto  String?   @db.VarChar(256)
   prorrogado    Boolean?
-  codPid        String?   @db.VarChar(20)
-  programa      String?   @db.VarChar(100)
-  disposicion   String?   @db.VarChar(10)
+  codPid        String?   @db.VarChar(256)
+  programa      String?   @db.VarChar(256)
+  disposicion   String?   @db.VarChar(256)
   proyectos     proyectos @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
 }
 
 model proyectos {
   idProyecto                                Int                @id @default(autoincrement())
-  tipoActividad                             String?            @db.VarChar(50)
+  tipoActividad                             String?            @db.VarChar(256)
   fechaInicio                               DateTime?          @db.Date
   fechaFin                                  DateTime?          @db.Date
-  denominacion                              String?            @db.VarChar(250)
+  denominacion                              String?            @db.VarChar(256)
   completo                                  Boolean?
-  regional                                  String?            @db.VarChar(100)
+  regional                                  String?            @db.VarChar(256)
   convocatoria                              Int?
-  estado                                    String?            @db.VarChar(20)
+  estado                                    String?            @db.VarChar(256)
   idDirector                                Int
   idCodirector                              Int?
   participa                                 participa[]
@@ -128,4 +128,8 @@ model tiene {
 model usuarios {
   usuario    String  @id @db.VarChar(20)
   contrasena String? @db.VarChar(255)
+}
+
+model regionales {
+  nombre String @id @db.VarChar(100)
 }
