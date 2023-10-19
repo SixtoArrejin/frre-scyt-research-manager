@@ -1,0 +1,467 @@
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Text,
+  Heading,
+  Box,
+  Button,
+  Checkbox,
+  IconButton,
+  RadioGroup,
+  Stack,
+  Radio,
+  Select,
+  FormControl,
+  FormLabel,
+  useToast,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
+import { Input, HStack } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import investigadores from "../../utils/data/investigadores.json";
+import InputLabel from "../../components/InputLabel";
+import categorias from "../../utils/data/ListaCategorias.json";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import proyectosInv from "../../utils/data/proyectosInv.json";
+import { useQuery, useMutation } from "react-query";
+import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
+import { useFieldArray, useForm } from "react-hook-form";
+import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
+import { updatePID } from "../../utils/api/proyectosApi";
+import CustomModal from "../../components/CustomModal";
+import { getProyectoById } from "../../utils/api/proyectosApi";
+
+export default function AgregarGrupo() {
+  /* Usestate para el modal */
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const { idPid } = useParams();
+
+  const { data: dataParticipa } = useQuery(["participa", idPid], () =>
+    getProyectoById(Number(idPid))
+  );
+  const [investigadores1, setInvestigadores1] = useState([]);
+
+  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
+
+  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
+    getAllPersonas()
+  );
+  const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
+  const eliminarGrupo = (idAEliminar, index) => {
+    // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
+    const nuevosGrupos = gruposSeleccionados.filter(
+      (item) => item.idGrupoInvestigacion !== idAEliminar
+    );
+
+    setGruposSeleccionados(nuevosGrupos);
+  };
+  const agregarGrupo = () => {
+    // console.log(sortedInvestigadores);
+    console.log(selectedOptionsGrupos);
+    const objetoBuscado = grupos.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    const objetoAgregar = {
+      idGrupoInvestigacion: objetoBuscado.idGrupoInvestigacion,
+    };
+
+    // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
+    const objetoYaAgregado = gruposSeleccionados.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
+
+    if (!objetoYaAgregado) {
+      appendG(objetoAgregar);
+      setGruposSeleccionados([...gruposSeleccionados, objetoBuscado]);
+    }
+  };
+
+  useEffect(() => {
+    setInvestigadores1(dataParticipa?.proyecto.participa);
+
+    const investigadoresGrupo = investigadores.filter((investigador) => {
+      return dataParticipa?.proyecto?.tiene.some((item) => {
+        return investigador.idGrupoInvestigacion === item.idGrupoInvestigacion;
+      });
+    });
+
+    setInvestigadoresFiltrados(investigadoresGrupo);
+  }, [dataParticipa]);
+
+  const {
+    data,
+    isLoading: isLoadingGetGrupos,
+    error,
+  } = useQuery("grupos", () => getAllGrupos());
+
+  const grupos = data?.grupos;
+
+  const [grupoAdd, setGrupoAdd] = useState();
+
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (formData) => updatePID(Number(idPid), formData),
+    onSuccess: () => {
+      toast({
+        title: "Nuevo Proyecto",
+        description: `Se ha creado el nuevo proyecto exitosamente`,
+        status: "success",
+        isClosable: true,
+      });
+      // navigate(`/investigadores/5`);
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al crear el proyecto",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {},
+  });
+
+  const { fields, append, remove, update } = useFieldArray({
+    control, // Debes proporcionar el objeto control de useForm
+    name: "investigadores", // Nombre del campo de formulario que es un arreglo
+  });
+
+  const {
+    fields: fieldsGrupos,
+    append: appendG,
+    remove: removeG,
+    update: updateG,
+  } = useFieldArray({
+    control, // Debes proporcionar el objeto control de useForm
+    name: "grupos", // Nombre del campo de formulario que es un arreglo
+  });
+
+  const onSubmit = (dataForm, event) => {
+    console.log(dataForm);
+    event.preventDefault();
+    mutate(dataForm);
+  };
+
+  const onChangeRadioProrroga = (value) => {
+    if (value === "true") {
+      setValue("pid.prorrogado", true);
+    } else {
+      setValue("pid.prorrogado", false);
+    }
+  };
+
+  //Aca se agrega lo de la tabla de investigadores
+  const [selectedOptions, setSelectedOptions] = useState();
+  const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
+  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
+
+  const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
+  const [investigadores, setInvestigadores] = useState(
+    dataPersonas?.personas || []
+  );
+
+  const roles = ["Investigador", "Becario"];
+  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
+    useState([]);
+
+  const sortedInvestigadores = [...investigadoresFiltrados]?.sort((a, b) => {
+    const apellidoA = a.apellido.toLowerCase();
+    const apellidoB = b.apellido.toLowerCase();
+    return apellidoA.localeCompare(apellidoB);
+  });
+
+  const agregarInvestigador = () => {
+    console.log(sortedInvestigadores);
+    console.log(selectedOptions);
+    const objetoBuscado = sortedInvestigadores.find(
+      (item) => item.idPersona == selectedOptions
+    );
+
+    const objetoAgregar = {
+      idPersona: objetoBuscado.idPersona,
+      rol: "",
+      fechaInicio: new Date().toISOString(),
+    };
+
+    // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
+    const objetoYaAgregado = investigadoresSeleccionados.find(
+      (item) => item.idPersona == selectedOptions
+    );
+
+    if (!objetoYaAgregado) {
+      append(objetoAgregar);
+      setInvestigadoresSeleccionados([
+        ...investigadoresSeleccionados,
+        objetoBuscado,
+      ]);
+    }
+  };
+
+  const eliminarInvestigador = (idAEliminar, index) => {
+    // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
+    const nuevosInvestigadores = investigadoresSeleccionados.filter(
+      (item) => item.idPersona !== idAEliminar
+    );
+
+    remove(index);
+
+    // Actualizar investigadoresSeleccionados con el nuevo arreglo
+    setInvestigadoresSeleccionados(nuevosInvestigadores);
+  };
+
+  const onSub = (values) => {
+    console.log(values);
+    mutate(values);
+  };
+  // Obtén los objetos de investigadores que tienen un idPersona en común entre investigadores y investigadores1
+  const obtenerInvestigadoresSeleccionados = () => {
+    const investigadoresSeleccionados = investigadores.filter(
+      (investigador) => {
+        return investigadores1.some((investigador1) => {
+          return investigador.idPersona === investigador1.idPersona;
+        });
+      }
+    );
+
+    return investigadoresSeleccionados;
+  };
+
+  const [ejemplo, setEjemplo] = useState();
+  useEffect(() => {
+    console.log("pepe");
+  }, [ejemplo]);
+
+  useEffect(() => {
+    console.log(investigadores1?.length);
+    if (investigadores1?.length > 0) {
+      // Llama a la función para obtener los investigadores seleccionados
+      const investigadoresSeleccionados = obtenerInvestigadoresSeleccionados();
+      console.log("investigadoresSeleccionados:", investigadoresSeleccionados); // Agrega esta línea
+      setInvestigadoresSeleccionados(investigadoresSeleccionados);
+
+      // Crea un nuevo array para los datos que deseas agregar
+      const nuevosDatos = investigadoresSeleccionados.map((item, index) => ({
+        idPersona: item.idPersona,
+        rol: investigadores1[index].rol,
+        fechaInicio: investigadores1[index].fechaInicio, // Puedes establecer un valor predeterminado aquí si es necesario
+      }));
+
+      console.log(nuevosDatos);
+
+      // Llama a append una sola vez con el nuevo array de datos
+      append(nuevosDatos);
+    }
+  }, [investigadores1]);
+
+  return (
+    <Card>
+      <CardBody>
+        <form
+          style={{ width: "100%" }}
+          onSubmit={handleSubmit((values) => onSub(values))}
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Heading as="h2" size="xl" textAlign="center">
+              Modificar Grupos
+            </Heading>
+          </Box>
+
+          {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
+          <br />
+
+                <Card width="100%">
+                  <CardBody>
+                    <Text fontSize="md">
+                      Agregar los grupos asociados al proyecto
+                    </Text>
+                    <br />
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <br />
+                      <Box display="flex" width="100%">
+                        <Box
+                          display="flex"
+                          justifyContent="space-between"
+                          width="45%"
+                          marginLeft="2%"
+                        >
+                          <Select
+                            placeholder="Grupos..."
+                            isSearchable={true}
+                            onChange={(e) => {
+                              setSelectedOptionsGrupos(e.target.value);
+                            }}
+                          >
+                            {grupos?.map((item, index) => (
+                              <option
+                                key={item.idGrupoInvestigacion}
+                                value={item.idGrupoInvestigacion}
+                              >
+                                {item.siglas}
+                              </option>
+                            ))}
+                          </Select>
+                        </Box>
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          width="55%"
+                        >
+                          <Button
+                            colorScheme="blue"
+                            variant="outline"
+                            mr="5"
+                            onClick={agregarGrupo}
+                          >
+                            Agregar
+                          </Button>
+                        </Box>
+                      </Box>
+                      <br />
+                      <Card width="100%">
+                        <CardBody>
+                          <TableContainer>
+                            <Table
+                              size="sm"
+                              variant="striped"
+                              colorScheme="blackAlpha"
+                            >
+                              <Thead>
+                                <Tr>
+                                  <Th textAlign="center">
+                                    <Text fontSize="md">Grupo</Text>
+                                  </Th>
+                                  <Th textAlign="center">
+                                    <Text fontSize="md">Eliminar</Text>
+                                  </Th>
+                                </Tr>
+                              </Thead>
+                              <Tbody>
+                                {gruposSeleccionados?.map((item, index) => {
+                                  return (
+                                    <Tr key={index}>
+                                      <Td textAlign="center">
+                                        <Text
+                                          fontSize="md"
+                                          {...register(
+                                            `grupos[${index}].idGrupoInvestigacion`,
+                                            { value: item.idGrupoInvestigacion }
+                                          )}
+                                        >
+                                          {item.siglas}
+                                        </Text>
+                                      </Td>
+                                      {/* <Td textAlign="center">
+                                    <Text fontSize="md">
+                                      {item.gruposinvestigacion.siglas}
+                                    </Text>
+                                  </Td> */}
+                                      <Td textAlign="center">
+                                        <DeleteIcon
+                                          cursor={"pointer"}
+                                          onClick={() => {
+                                            eliminarGrupo(
+                                              item.idGrupoInvestigacion,
+                                              index
+                                            );
+                                          }}
+                                        />
+                                      </Td>
+                                    </Tr>
+                                  );
+                                })}
+                              </Tbody>
+                            </Table>
+                          </TableContainer>
+                        </CardBody>
+                      </Card>
+                    </Box>
+    
+              <br />
+              <Box
+                display="flex"
+                width="100%"
+                alignItems="center"
+                // justifyContent="flex-end"
+                justifyContent="center"
+              >
+                <Button
+                  colorScheme="gray"
+                  variant="outline"
+                  onClick={() => navigate(-1)}
+                  mr="5%"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={openModal}
+                  colorScheme="blue"
+                  variant="outline"
+                  ml="5%"
+                >
+                  Guardar
+                </Button>
+                <CustomModal
+                  isOpen={isOpen}
+                  onClose={closeModal}
+                  guardar={true}
+                  title="Guardar nuevo PID"
+                  content="Se guardara el nuevo PID"
+                  onSave={handleSubmit((values) => mutate(values))}
+                />
+              </Box>
+            </CardBody>
+          </Card>
+        </form>
+      </CardBody>
+    </Card>
+  );
+}
