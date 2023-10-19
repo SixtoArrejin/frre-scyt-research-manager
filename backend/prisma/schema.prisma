@@ -61,13 +61,16 @@ model personas {
 }
 
 model pids {
-  idProyectoPid Int       @id
-  tipoProyecto  String?   @db.VarChar(256)
-  prorrogado    Boolean?
-  codPid        String?   @db.VarChar(256)
-  programa      String?   @db.VarChar(256)
-  disposicion   String?   @db.VarChar(256)
-  proyectos     proyectos @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
+  idProyectoPid  Int             @id
+  tipoProyecto   String?         @db.VarChar(256)
+  prorrogado     Boolean?
+  codPid         String?         @db.VarChar(256)
+  programa       String?         @db.VarChar(256)
+  disposicion    String?         @db.VarChar(256)
+  tiposproyectos tiposproyectos? @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "fk_pids_tiposproyectos")
+  proyectos      proyectos       @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
+
+  @@index([tipoProyecto], map: "fk_pids_tiposproyectos")
 }
 
 model proyectos {
@@ -139,4 +142,5 @@ model regionales {
 
 model tiposproyectos {
   tipoProyecto String @id @db.VarChar(256)
+  pids         pids[]
 }
