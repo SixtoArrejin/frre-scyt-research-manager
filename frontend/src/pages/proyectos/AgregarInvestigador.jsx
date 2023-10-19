@@ -323,7 +323,7 @@ export default function AgregarInvestigador() {
                       colorScheme="blue"
                       variant="outline"
                       mr="5"
-                      onClick={console.log(investigadores)}
+                      onClick={console.log(fields)}
                     >
                       Prueba
                     </Button>

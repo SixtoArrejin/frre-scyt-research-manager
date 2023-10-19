@@ -65,6 +65,7 @@ export default function AgregarGrupo() {
   const { data: dataParticipa } = useQuery(["participa", idPid], () =>
     getProyectoById(Number(idPid))
   );
+  const [grupos1, setGrupos1] = useState([]);
   const [investigadores1, setInvestigadores1] = useState([]);
 
   const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
@@ -78,7 +79,7 @@ export default function AgregarGrupo() {
     const nuevosGrupos = gruposSeleccionados.filter(
       (item) => item.idGrupoInvestigacion !== idAEliminar
     );
-
+    removeG(index);
     setGruposSeleccionados(nuevosGrupos);
   };
   const agregarGrupo = () => {
@@ -104,7 +105,7 @@ export default function AgregarGrupo() {
   };
 
   useEffect(() => {
-    setInvestigadores1(dataParticipa?.proyecto.participa);
+    setGrupos1(dataParticipa?.proyecto.tiene);
 
     const investigadoresGrupo = investigadores.filter((investigador) => {
       return dataParticipa?.proyecto?.tiene.some((item) => {
@@ -120,8 +121,6 @@ export default function AgregarGrupo() {
     isLoading: isLoadingGetGrupos,
     error,
   } = useQuery("grupos", () => getAllGrupos());
-
-  const grupos = data?.grupos;
 
   const [grupoAdd, setGrupoAdd] = useState();
 
@@ -192,10 +191,8 @@ export default function AgregarGrupo() {
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
-  const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
-  const [investigadores, setInvestigadores] = useState(
-    dataPersonas?.personas || []
-  );
+  const { data: dataGrupos } = useQuery("grupos", () => getAllGrupos());
+  const [grupos, setGrupos] = useState(dataGrupos?.grupos || []);
 
   const roles = ["Investigador", "Becario"];
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
@@ -251,16 +248,14 @@ export default function AgregarGrupo() {
     mutate(values);
   };
   // Obtén los objetos de investigadores que tienen un idPersona en común entre investigadores y investigadores1
-  const obtenerInvestigadoresSeleccionados = () => {
-    const investigadoresSeleccionados = investigadores.filter(
-      (investigador) => {
-        return investigadores1.some((investigador1) => {
-          return investigador.idPersona === investigador1.idPersona;
-        });
-      }
-    );
+  const obtenerGruposSeleccionados = () => {
+    const gruposSeleccionados = grupos.filter((grupo) => {
+      return grupos1.some((grupo1) => {
+        return grupo.idGrupoInvestigacion === grupo1.idGrupoInvestigacion;
+      });
+    });
 
-    return investigadoresSeleccionados;
+    return gruposSeleccionados;
   };
 
   const [ejemplo, setEjemplo] = useState();
@@ -270,25 +265,23 @@ export default function AgregarGrupo() {
 
   useEffect(() => {
     console.log(investigadores1?.length);
-    if (investigadores1?.length > 0) {
+    if (grupos1?.length > 0) {
       // Llama a la función para obtener los investigadores seleccionados
-      const investigadoresSeleccionados = obtenerInvestigadoresSeleccionados();
-      console.log("investigadoresSeleccionados:", investigadoresSeleccionados); // Agrega esta línea
-      setInvestigadoresSeleccionados(investigadoresSeleccionados);
+      const gruposSeleccionados = obtenerGruposSeleccionados();
+      console.log("investigadoresSeleccionados:", gruposSeleccionados); // Agrega esta línea
+      setGruposSeleccionados(gruposSeleccionados);
 
       // Crea un nuevo array para los datos que deseas agregar
-      const nuevosDatos = investigadoresSeleccionados.map((item, index) => ({
-        idPersona: item.idPersona,
-        rol: investigadores1[index].rol,
-        fechaInicio: investigadores1[index].fechaInicio, // Puedes establecer un valor predeterminado aquí si es necesario
+      const nuevosDatos = gruposSeleccionados.map((item, index) => ({
+        idGrupoInvestigacion: item.idGrupoInvestigacion,
       }));
 
       console.log(nuevosDatos);
 
       // Llama a append una sola vez con el nuevo array de datos
-      append(nuevosDatos);
+      appendG(nuevosDatos);
     }
-  }, [investigadores1]);
+  }, [grupos1]);
 
   return (
     <Card>
@@ -312,119 +305,115 @@ export default function AgregarGrupo() {
           {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
           <br />
 
+          <Card width="100%">
+            <CardBody>
+              <Text fontSize="md">
+                Agregar los grupos asociados al proyecto
+              </Text>
+              <br />
+              <Box
+                display="flex"
+                flexDirection="column"
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <br />
+                <Box display="flex" width="100%">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="45%"
+                    marginLeft="2%"
+                  >
+                    <Select
+                      placeholder="Grupos..."
+                      isSearchable={true}
+                      onChange={(e) => {
+                        setSelectedOptionsGrupos(e.target.value);
+                      }}
+                    >
+                      {grupos?.map((item, index) => (
+                        <option
+                          key={item.idGrupoInvestigacion}
+                          value={item.idGrupoInvestigacion}
+                        >
+                          {item.siglas}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={agregarGrupo}
+                    >
+                      Agregar
+                    </Button>
+                  </Box>
+                </Box>
+                <br />
                 <Card width="100%">
                   <CardBody>
-                    <Text fontSize="md">
-                      Agregar los grupos asociados al proyecto
-                    </Text>
-                    <br />
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <br />
-                      <Box display="flex" width="100%">
-                        <Box
-                          display="flex"
-                          justifyContent="space-between"
-                          width="45%"
-                          marginLeft="2%"
-                        >
-                          <Select
-                            placeholder="Grupos..."
-                            isSearchable={true}
-                            onChange={(e) => {
-                              setSelectedOptionsGrupos(e.target.value);
-                            }}
-                          >
-                            {grupos?.map((item, index) => (
-                              <option
-                                key={item.idGrupoInvestigacion}
-                                value={item.idGrupoInvestigacion}
-                              >
-                                {item.siglas}
-                              </option>
-                            ))}
-                          </Select>
-                        </Box>
-                        <Box
-                          display="flex"
-                          justifyContent="flex-end"
-                          width="55%"
-                        >
-                          <Button
-                            colorScheme="blue"
-                            variant="outline"
-                            mr="5"
-                            onClick={agregarGrupo}
-                          >
-                            Agregar
-                          </Button>
-                        </Box>
-                      </Box>
-                      <br />
-                      <Card width="100%">
-                        <CardBody>
-                          <TableContainer>
-                            <Table
-                              size="sm"
-                              variant="striped"
-                              colorScheme="blackAlpha"
-                            >
-                              <Thead>
-                                <Tr>
-                                  <Th textAlign="center">
-                                    <Text fontSize="md">Grupo</Text>
-                                  </Th>
-                                  <Th textAlign="center">
-                                    <Text fontSize="md">Eliminar</Text>
-                                  </Th>
-                                </Tr>
-                              </Thead>
-                              <Tbody>
-                                {gruposSeleccionados?.map((item, index) => {
-                                  return (
-                                    <Tr key={index}>
-                                      <Td textAlign="center">
-                                        <Text
-                                          fontSize="md"
-                                          {...register(
-                                            `grupos[${index}].idGrupoInvestigacion`,
-                                            { value: item.idGrupoInvestigacion }
-                                          )}
-                                        >
-                                          {item.siglas}
-                                        </Text>
-                                      </Td>
-                                      {/* <Td textAlign="center">
+                    <TableContainer>
+                      <Table
+                        size="sm"
+                        variant="striped"
+                        colorScheme="blackAlpha"
+                      >
+                        <Thead>
+                          <Tr>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Grupo</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Eliminar</Text>
+                            </Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {gruposSeleccionados?.map((item, index) => {
+                            return (
+                              <Tr key={index}>
+                                <Td textAlign="center">
+                                  <Text
+                                    fontSize="md"
+                                    {...register(
+                                      `grupos[${index}].idGrupoInvestigacion`,
+                                      { value: item.idGrupoInvestigacion }
+                                    )}
+                                  >
+                                    {item.siglas}
+                                  </Text>
+                                </Td>
+                                {/* <Td textAlign="center">
                                     <Text fontSize="md">
                                       {item.gruposinvestigacion.siglas}
                                     </Text>
                                   </Td> */}
-                                      <Td textAlign="center">
-                                        <DeleteIcon
-                                          cursor={"pointer"}
-                                          onClick={() => {
-                                            eliminarGrupo(
-                                              item.idGrupoInvestigacion,
-                                              index
-                                            );
-                                          }}
-                                        />
-                                      </Td>
-                                    </Tr>
-                                  );
-                                })}
-                              </Tbody>
-                            </Table>
-                          </TableContainer>
-                        </CardBody>
-                      </Card>
-                    </Box>
-    
+                                <Td textAlign="center">
+                                  <DeleteIcon
+                                    cursor={"pointer"}
+                                    onClick={() => {
+                                      eliminarGrupo(
+                                        item.idGrupoInvestigacion,
+                                        index
+                                      );
+                                    }}
+                                  />
+                                </Td>
+                              </Tr>
+                            );
+                          })}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </CardBody>
+                </Card>
+              </Box>
+
               <br />
               <Box
                 display="flex"
@@ -433,6 +422,14 @@ export default function AgregarGrupo() {
                 // justifyContent="flex-end"
                 justifyContent="center"
               >
+                <Button
+                  colorScheme="gray"
+                  variant="outline"
+                  onClick={console.log(fieldsGrupos)}
+                  mr="5%"
+                >
+                  Prueba
+                </Button>
                 <Button
                   colorScheme="gray"
                   variant="outline"
