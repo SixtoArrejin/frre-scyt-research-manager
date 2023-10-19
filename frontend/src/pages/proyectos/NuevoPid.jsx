@@ -44,6 +44,7 @@ import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
 import { createProyectoPID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 import { getAllRegionales } from "../../utils/api/regionalesApi";
+import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
 
 const tipoActividad = [
   "Desarrollo Experimental",
@@ -51,38 +52,38 @@ const tipoActividad = [
   "Investigación Básica",
 ];
 
-const tipoProyecto = [
-  "UTN (PID UTN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "UTN (PID UTN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTER-FACULTAD (PID IF) SIN INCORPORACION EN  PROGRAMA INCENTIVOS",
-  "INTER-FACULTAD (PID IF) CON INCORPORACION EN  PROGRAMA INCENTIVOS",
-  "INTER-INSTITUCIONAL (PIC IN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTER-INSTITUCIONAL (PID IN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "FACULTAD (PID FA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "FACULTAD (PID FA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTEGRADOR ASOCIADO (PID IA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTEGRADOR ASOCIADO (PID IA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTEGRADOR PRINCIPAL (PID IP) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "INTEGRADOR PRINCIPAL (PID IP) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "OTROS (PID OT) CON INCORPORACION EN PROGRAMA INCENTIVOS",
-  "OTROS (PID OT) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
-  "TUTORADO CON INCENTIVO",
-  "TUTORADO SIN INCENTIVO",
-  "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO A",
-  "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO B",
-  "PID INICIACION A INVESTIGACION PRIMER PROYECTO",
-  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO A",
-  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO B",
-  "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS",
-  "PID EQUIPOS CONSOLIDADOS SIN INCENTIVOS",
-  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO A",
-  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO B",
-  "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS",
-  "PID EQUIPOS EN CONSOLIDACIÓN SIN INCENTIVOS",
-  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO A",
-  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO B",
-  "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD SIN INCENTIVOS",
-];
+// const tipoProyecto = [
+//   "UTN (PID UTN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "UTN (PID UTN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTER-FACULTAD (PID IF) SIN INCORPORACION EN  PROGRAMA INCENTIVOS",
+//   "INTER-FACULTAD (PID IF) CON INCORPORACION EN  PROGRAMA INCENTIVOS",
+//   "INTER-INSTITUCIONAL (PIC IN) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTER-INSTITUCIONAL (PID IN) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "FACULTAD (PID FA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "FACULTAD (PID FA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTEGRADOR ASOCIADO (PID IA) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTEGRADOR ASOCIADO (PID IA) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTEGRADOR PRINCIPAL (PID IP) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "INTEGRADOR PRINCIPAL (PID IP) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "OTROS (PID OT) CON INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "OTROS (PID OT) SIN INCORPORACION EN PROGRAMA INCENTIVOS",
+//   "TUTORADO CON INCENTIVO",
+//   "TUTORADO SIN INCENTIVO",
+//   "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO A",
+//   "PID INICIACION A INVESTIGACION PRIMER PROYECTO TIPO B",
+//   "PID INICIACION A INVESTIGACION PRIMER PROYECTO",
+//   "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO A",
+//   "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS TIPO B",
+//   "PID EQUIPOS CONSOLIDADOS CON INCENTIVOS",
+//   "PID EQUIPOS CONSOLIDADOS SIN INCENTIVOS",
+//   "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO A",
+//   "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS TIPO B",
+//   "PID EQUIPOS EN CONSOLIDACIÓN CON INCENTIVOS",
+//   "PID EQUIPOS EN CONSOLIDACIÓN SIN INCENTIVOS",
+//   "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO A",
+//   "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD CON INCENTIVOS TIPO B",
+//   "PID TECNOLOGIA EDUCATIVA MULTI-FACULTAD SIN INCENTIVOS",
+// ];
 
 const estadoProyecto = [
   "EN TRÁMITE",
@@ -127,7 +128,13 @@ export default function NuevoPid() {
     data: dataRegionales,
     isLoading: isLoadingGetRegionales,
     error: errorRegionales,
-  } = useQuery(["regionales", ], () => getAllRegionales());
+  } = useQuery(["regionales",], () => getAllRegionales());
+
+  const {
+    data: dataTiposProyectos,
+    isLoading: isLoadingGetTiposProyectos,
+    error: errorTiposProyectos,
+  } = useQuery(["tiposProyectos",], () => getAllTiposProyectos());
 
   const grupos = data?.grupos;
 
@@ -315,20 +322,20 @@ export default function NuevoPid() {
     const nuevosGrupos = gruposSeleccionados.filter(
       (item) => item.idGrupoInvestigacion !== idAEliminar
     );
-  
+
     // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
     const investigadoresRestantes = investigadoresDelGrupo.filter(
       (investigador) => investigador.idGrupoInvestigacion !== idAEliminar
     );
-  
+
     removeG(index);
-  
+
     // Actualizar investigadoresSeleccionados y gruposSeleccionados con los nuevos arreglos
     setInvestigadoresDelGrupo(investigadoresRestantes);
     console.log(investigadoresRestantes)
     setGruposSeleccionados(nuevosGrupos);
   };
-  
+
 
   const onSub = (values) => {
     console.log(values);
@@ -401,7 +408,7 @@ export default function NuevoPid() {
                           placeholder="Regional..."
                           {...register("proyecto.regional")}
                         >
-                          {( isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
+                          {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
                             <option key={key} value={regional}>
                               {regional}
                             </option>
@@ -557,7 +564,7 @@ export default function NuevoPid() {
                           placeholder="Tipo de proyecto..."
                           {...register("pid.tipoProyecto")}
                         >
-                          {tipoProyecto.map((tipo, key) => (
+                          {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
                             <option key={key} value={tipo}>
                               {tipo}
                             </option>

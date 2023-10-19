@@ -61,13 +61,16 @@ model personas {
 }
 
 model pids {
-  idProyectoPid Int       @id
-  tipoProyecto  String?   @db.VarChar(256)
-  prorrogado    Boolean?
-  codPid        String?   @db.VarChar(256)
-  programa      String?   @db.VarChar(256)
-  disposicion   String?   @db.VarChar(256)
-  proyectos     proyectos @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
+  idProyectoPid  Int             @id
+  tipoProyecto   String?         @db.VarChar(256)
+  prorrogado     Boolean?
+  codPid         String?         @db.VarChar(256)
+  programa       String?         @db.VarChar(256)
+  disposicion    String?         @db.VarChar(256)
+  tiposproyectos tiposproyectos? @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "fk_pids_tiposproyectos")
+  proyectos      proyectos       @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
+
+  @@index([tipoProyecto], map: "fk_pids_tiposproyectos")
 }
 
 model proyectos {
@@ -84,6 +87,7 @@ model proyectos {
   idCodirector                              Int?
   participa                                 participa[]
   pids                                      pids?
+  regionales                                regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
   personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
   personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
   proyectosexternos                         proyectosexternos?
@@ -91,6 +95,7 @@ model proyectos {
 
   @@index([idCodirector], map: "idCodirector")
   @@index([idDirector], map: "idDirector")
+  @@index([regional], map: "fk_proyectos_regionales")
 }
 
 model proyectosconfinanciamiento {
@@ -131,5 +136,11 @@ model usuarios {
 }
 
 model regionales {
-  nombre String @id @db.VarChar(100)
+  nombre    String      @id @db.VarChar(100)
+  proyectos proyectos[]
+}
+
+model tiposproyectos {
+  tipoProyecto String @id @db.VarChar(256)
+  pids         pids[]
 }
