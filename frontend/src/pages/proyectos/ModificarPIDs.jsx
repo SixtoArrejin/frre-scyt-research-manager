@@ -45,6 +45,24 @@ import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById, updatePID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 import { useForm } from "react-hook-form";
+import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
+import { getAllRegionales } from "../../utils/api/regionalesApi";
+
+const tipoActividad = [
+  "Desarrollo Experimental",
+  "Investigación Aplicada",
+  "Investigación Básica",
+];
+
+const estadoProyecto = [
+  "EN TRÁMITE",
+  "HOMOLOGADO",
+  "REFORMULAR POR EVALUACIÓN EXTERNA",
+  "REFORMULAR POR CONSEJO DE PROGRAMAS",
+  "DENEGADO POR EVALUACIÓN EXTERNA",
+  "DENEGADO POR CONSEJO DE PROGRAMAS",
+  "CANCELADO",
+];
 
 export default function ModificarPIDs() {
 
@@ -67,9 +85,21 @@ export default function ModificarPIDs() {
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene)
   const [proyectoPID, setProyectoPID] = useState(data?.proyecto)
 
+  const {
+    data: dataRegionales,
+    isLoading: isLoadingGetRegionales,
+    error: errorRegionales,
+  } = useQuery(["regionales",], () => getAllRegionales());
+
   const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
     getAllPersonas()
   );
+
+  const {
+    data: dataTiposProyectos,
+    isLoading: isLoadingGetTiposProyectos,
+    error: errorTiposProyectos,
+  } = useQuery(["tiposProyectos",], () => getAllTiposProyectos());
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa)
@@ -171,12 +201,16 @@ export default function ModificarPIDs() {
                       width={{ base: "100%", md: "65%" }}
                       mb="5vh"
                     >
-                      <Input
-                        name="regional"
-                        placeholder="Regional"
+                      <Select
+                        placeholder="Regional..."
                         {...register("proyecto.regional")}
-                      // defaultValue={data?.proyecto?.regional}
-                      />
+                      >
+                        {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
+                          <option key={key} value={regional}>
+                            {regional}
+                          </option>
+                        ))}
+                      </Select>
                       <FormLabel>Regional</FormLabel>
                     </FormControl>
                   </Box>
@@ -266,20 +300,59 @@ export default function ModificarPIDs() {
                       <FormLabel>Programa</FormLabel>
                     </FormControl>
 
-                    <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="tipoProyecto" placeholder="Tipo de proyecto" defaultValue={data?.proyecto?.pids?.tipoProyecto} />
-                      <FormLabel>Tipo de proyecto</FormLabel>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "47.5%" }}
+                      mb="5vh"
+                    >
+                      <Select
+                        placeholder="Tipo de proyecto..."
+                        {...register("pid.tipoProyecto")}
+                      >
+                        {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
+                          <option key={key} value={tipo}>
+                            {tipo}
+                          </option>
+                        ))}
+                      </Select>
+                      <FormLabel>Tipo de proyecsto</FormLabel>
                     </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="actividad" placeholder="Actividad" {...register("proyecto.tipoActividad")} />
-                      <FormLabel>Tipo Actividad</FormLabel>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "30%" }}
+                      mb="5vh"
+                    >
+                      <Select
+                        placeholder="Tipo de actividad..."
+                        {...register("proyecto.tipoActividad")}
+                      >
+                        {tipoActividad.map((actividad, key) => (
+                          <option key={key} value={actividad}>
+                            {actividad}
+                          </option>
+                        ))}
+                      </Select>
+                      <FormLabel>Tipo de actividad</FormLabel>
                     </FormControl>
 
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="estado" placeholder="Estado" {...register("proyecto.estado")} />
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "30%" }}
+                      mb="5vh"
+                    >
+                      <Select
+                        placeholder="Estado..."
+                        {...register("proyecto.estado")}
+                      >
+                        {estadoProyecto.map((estado, key) => (
+                          <option key={key} value={estado}>
+                            {estado}
+                          </option>
+                        ))}
+                      </Select>
                       <FormLabel>Estado</FormLabel>
                     </FormControl>
 

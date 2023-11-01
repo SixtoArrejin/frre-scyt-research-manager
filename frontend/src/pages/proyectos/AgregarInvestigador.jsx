@@ -45,6 +45,14 @@ import { updatePID } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 
+const roles = [
+  "Investigador",
+  "Becario",
+  "Asesor Cientifico",
+  "Técnico de Apoyo",
+  "CoDirector",
+];
+
 export default function AgregarInvestigador() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
@@ -163,7 +171,6 @@ export default function AgregarInvestigador() {
     dataPersonas?.personas || []
   );
 
-  const roles = ["Investigador", "Becario"];
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
 
