@@ -42,7 +42,7 @@ const routes = [
   { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo/> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
-  { path: "/proyectos-pid", element: <Proyectos /> },
+  { path: "/proyectos", element: <Proyectos /> },
   { path: "/proyectos-pid/:idPid", element: <DetalleProyecto /> },
   { path: "/proyectos-pid/nuevo", element: <Nuevo /> },
   { path: "/proyectos-pid/:idPid/modificar", element: <Modificar /> },
