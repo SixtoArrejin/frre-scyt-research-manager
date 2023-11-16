@@ -45,8 +45,9 @@ export default function ProyectosPid() {
   const [denominacion, setDenominacion] = useState("");
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery("proyectos", () => getProyectos("pid"));
+  const { data, isLoading, error } = useQuery("proyectos", () => getProyectos());
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
+  console.log(proyectos)
 
   useEffect(() => {
     if (codPID === "" && denominacion === "") {
@@ -131,10 +132,10 @@ export default function ProyectosPid() {
 
               return [
                 item.codPid,
-                formatoFechaISOaDDMMAAAA(item?.proyectos?.fechaInicio),
-                denominacion,
-                regional,
-                item.proyectos?.estado.charAt(0).toUpperCase() + item.proyectos?.estado.toLowerCase().substring(1),
+                formatoFechaISOaDDMMAAAA(item?.fechaInicio),
+                item?.denominacion,
+                item?.regional,
+                item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1),
                 <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
                   <PlusSquareIcon />
                 </Link>
