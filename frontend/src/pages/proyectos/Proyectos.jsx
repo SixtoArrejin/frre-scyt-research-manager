@@ -136,7 +136,7 @@ export default function ProyectosPid() {
                 denominacion,
                 regional,
                 item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1),
-                <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
+                <Link to={`/proyectos-pid/${item.idProyecto}`} >
                   <PlusSquareIcon />
                 </Link>
               ]
