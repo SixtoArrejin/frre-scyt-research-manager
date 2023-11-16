@@ -49,7 +49,36 @@ export async function getProyectoByIdService(idProyecto) {
 
 export async function createProyectoService(proyectoData) {
   try {
-    const newProyecto = await createProyecto(proyectoData);
+
+    const { grupos, investigadores, ...dataProyecto } = proyectoData;
+    dataProyecto.fechaInicio = convertToISOString(dataProyecto.fechaInicio);
+    dataProyecto.fechaFin = convertToISOString(dataProyecto.fechaFin);
+
+    const newProyecto = await createProyecto(dataProyecto);
+    newProyecto.grupos = [];
+    newProyecto.integrantes = [];
+
+    if (newProyecto) {
+
+      for (const grupo of grupos || []) {
+        const newGroup = await createTieneService({
+          idGrupoInvestigacion: grupo.idGrupoInvestigacion,
+          idProyecto: newProyecto.idProyecto,
+        });
+        newProyecto.grupos.push(newGroup);
+      }
+
+      for (const investigador of investigadores || []) {
+        const newInvestigador = await createParticipaService({
+          idProyecto: newProyecto.idProyecto,
+          idPersona: investigador.idPersona,
+          rol: investigador.rol,
+          fechaInicio: new Date()
+        });
+        newProyecto.integrantes.push(newInvestigador);
+      }
+    }
+
     return newProyecto;
   } catch (error) {
     throw new Error(error.message);
@@ -106,7 +135,7 @@ export async function updatePidService(idPid, pidData) {
         if (pidData && pidData.investigadores) {
           console.log("Investigadores: ", pidData.investigadores)
           let bandera = false;
-        
+
           try {
             await deleteByFilter('participa', filter)
             bandera = true

@@ -139,52 +139,17 @@ export async function getProyectoPorId(req, res) {
 
 export async function crearProyectos(req, res) {
   try {
-    const { grupos, investigadores, ...dataProyecto } = req.body;
-    console.log(dataProyecto);
+    const dataProyecto = req.body;
+    const newProyecto = await createProyectoService(dataProyecto);
 
-    const newProyecto = await createProyectoService(proyecto);
-    // dataProyecto.fechaInicio = convertToISOString(proyecto.fechaInicio);
-    // dataProyecto.fechaFin = convertToISOString(proyecto.fechaFin);
-
-    // const project = {}
-    // const newProyecto = await createProyectoService(proyecto);
-    // project.proyecto = newProyecto;
-    // console.log("newProyecto: ", newProyecto);
-
-    // if (newProyecto) {
-    //   const pidData = { idProyectoPid: newProyecto.idProyecto, ...pid };
-    //   const newPID = await createPIDService(pidData);
-    //   project.pid = newPID;
-
-    //   project.grupos = []
-    //   if (newPID) {
-    //     for (const grupo of grupos || []) {
-    //       const newGroup = await createTieneService({
-    //         idGrupoInvestigacion: grupo.idGrupoInvestigacion,
-    //         idProyecto: newProyecto.idProyecto,
-    //       });
-    //       project.grupos.push(newGroup);
-    //     }
-    //   }
-
-    //   project.investigadores = [];
-    //   if (newPID) {
-    //     for (const investigador of investigadores || []) {
-    //       const newInvestigador = await createParticipaService({
-    //         idProyecto: newProyecto.idProyecto,
-    //         idPersona: investigador.idPersona,
-    //         rol: investigador.rol,
-    //         fechaInicio: new Date()
-    //       });
-    //       project.investigadores.push(newInvestigador);
-    //     }
-    //   }
-    // }
-    res.status(200).json({
-      message: `Proyecto creado.`,
-      success: true,
-      proyecto: dataProyecto,
-    });
+    res
+      .status(200)
+      .json({
+        message: `Proyecto creado.`,
+        success: true,
+        proyecto: newProyecto,
+      });
+    
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
