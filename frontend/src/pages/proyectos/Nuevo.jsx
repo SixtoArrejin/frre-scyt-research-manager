@@ -179,26 +179,22 @@ export default function NuevoPid() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      proyecto: {
-        tipoActividad: "",
-        fechaInicio: "",
-        fechaFin: "",
-        denominacion: "",
-        completo: false,
-        regional: "Facultad Regional Resistencia",
-        convocatoria: "",
-        estado: "",
-        idDirector: undefined,
-        idCodirector: undefined,
-      },
-      pid: {
-        tipoProyecto: "",
-        prorrogado: false,
-        codPid: "",
-        programa: "",
-        disposicion: "",
-      },
-    },
+      tipoActividad: "",
+      fechaInicio: "",
+      fechaFin: "",
+      denominacion: "",
+      completo: false,
+      regional: "Facultad Regional Resistencia",
+      convocatoria: "",
+      estado: "",
+      idDirector: undefined,
+      idCodirector: undefined,
+      tipoProyecto: "",
+      prorrogado: false,
+      codPid: "",
+      programa: "",
+      disposicion: "",
+    }
   });
 
   const { fields, append, remove, update } = useFieldArray({
@@ -218,9 +214,9 @@ export default function NuevoPid() {
 
   const onChangeRadioProrroga = (value) => {
     if (value === "true") {
-      setValue("pid.prorrogado", true);
+      setValue("prorrogado", true);
     } else {
-      setValue("pid.prorrogado", false);
+      setValue("prorrogado", false);
     }
   };
 
@@ -395,7 +391,7 @@ export default function NuevoPid() {
                         <Input
                           name="apellido"
                           placeholder="Código PID"
-                          {...register("pid.codPid")}
+                          {...register("codPid")}
                         />
                         <FormLabel>Código PID</FormLabel>
                       </FormControl>
@@ -406,7 +402,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Regional..."
-                          {...register("proyecto.regional")}
+                          {...register("regional")}
                         >
                           {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
                             <option key={key} value={regional}>
@@ -414,7 +410,7 @@ export default function NuevoPid() {
                             </option>
                           ))}
                         </Select>
-                        <FormLabel>Regional</FormLabel>
+                        <FormLabel>Regional asociada</FormLabel>
                       </FormControl>
                     </Box>
                     <Box
@@ -432,7 +428,7 @@ export default function NuevoPid() {
                         <Textarea
                           placeholder="Denominación"
                           style={{ resize: "none" }}
-                          {...register("proyecto.denominacion")}
+                          {...register("denominacion")}
                         />
                         <FormLabel>Denominación</FormLabel>
                       </FormControl>
@@ -451,7 +447,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Director..."
-                          {...register("proyecto.idDirector", {
+                          {...register("idDirector", {
                             valueAsNumber: true,
                           })}
                         >
@@ -471,7 +467,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Codirector..."
-                          {...register("proyecto.idCodirector", {
+                          {...register("idCodirector", {
                             valueAsNumber: true,
                           })}
                         >
@@ -501,7 +497,7 @@ export default function NuevoPid() {
                           name="fechaInicio"
                           type="date"
                           placeholder="Fecha Inicio"
-                          {...register("proyecto.fechaInicio")}
+                          {...register("fechaInicio")}
                         />
                         <FormLabel>Fecha Inicio</FormLabel>
                       </FormControl>
@@ -515,7 +511,7 @@ export default function NuevoPid() {
                           name="fechaFin"
                           type="date"
                           placeholder="Fecha Fin"
-                          {...register("proyecto.fechaFin")}
+                          {...register("fechaFin")}
                         />
                         <FormLabel>Fecha Fin</FormLabel>
                       </FormControl>
@@ -529,7 +525,7 @@ export default function NuevoPid() {
                           type="number"
                           name="convocatoria"
                           placeholder="Convocatoria"
-                          {...register("proyecto.convocatoria", {
+                          {...register("convocatoria", {
                             valueAsNumber: true,
                           })}
                         />
@@ -551,7 +547,7 @@ export default function NuevoPid() {
                         <Input
                           name="programa"
                           placeholder="Programa"
-                          {...register("pid.programa")}
+                          {...register("programa")}
                         />
                         <FormLabel>Programa</FormLabel>
                       </FormControl>
@@ -562,7 +558,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Tipo de proyecto..."
-                          {...register("pid.tipoProyecto")}
+                          {...register("tipoProyecto")}
                         >
                           {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
                             <option key={key} value={tipo}>
@@ -587,7 +583,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Tipo de actividad..."
-                          {...register("proyecto.tipoActividad")}
+                          {...register("tipoActividad")}
                         >
                           {tipoActividad.map((actividad, key) => (
                             <option key={key} value={actividad}>
@@ -606,7 +602,7 @@ export default function NuevoPid() {
                         <Input
                           name="estado"
                           placeholder="Estado"
-                          {...register("proyecto.estado")}
+                          {...register("estado")}
                         />
                         <FormLabel>Estado</FormLabel>
                       </FormControl> */}
@@ -617,7 +613,7 @@ export default function NuevoPid() {
                       >
                         <Select
                           placeholder="Estado..."
-                          {...register("proyecto.estado")}
+                          {...register("estado")}
                         >
                           {estadoProyecto.map((estado, key) => (
                             <option key={key} value={estado}>
@@ -636,7 +632,7 @@ export default function NuevoPid() {
                         <Input
                           name="disposicion"
                           placeholder="Disposición"
-                          {...register("pid.disposicion")}
+                          {...register("disposicion")}
                         />
                         <FormLabel>Disposición</FormLabel>
                       </FormControl>
@@ -944,8 +940,9 @@ export default function NuevoPid() {
                   onClose={closeModal}
                   guardar={true}
                   title="Guardar nuevo PID"
-                  content="Se guardara el nuevo PID"
-                  onSave={handleSubmit((values) => mutate(values))}
+                  content="Se guardara el nuevo Proyecto"
+                  // onSave={handleSubmit((values) => mutate(values))}
+                  onSave={handleSubmit((values) => console.log(values))}
                 />
               </Box>
             </CardBody>

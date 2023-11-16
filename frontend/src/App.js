@@ -22,11 +22,11 @@ import LogIn from './pages/LogIn';
 import { useContext } from "react";
 import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
 import { ChakraToastProvider } from './context/ChakraToastContext';
-import ProyectosPid from './pages/proyectos/ProyectosPid';
+import Proyectos from './pages/proyectos/Proyectos';
 import ProyectosExternosF from './pages/proyectos/ProyectosExternosF';
-import DetalleProyectoPid from './pages/proyectos/DetalleProyectoPid';
-import NuevoPid from './pages/proyectos/NuevoPid';
-import ModificarPIDs from './pages/proyectos/ModificarPIDs';
+import DetalleProyecto from './pages/proyectos/DetalleProyecto';
+import Nuevo from './pages/proyectos/Nuevo';
+import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
 
 const queryClient = new QueryClient();
@@ -42,10 +42,10 @@ const routes = [
   { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo/> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
-  { path: "/proyectos-pid", element: <ProyectosPid /> },
-  { path: "/proyectos-pid/:idPid", element: <DetalleProyectoPid /> },
-  { path: "/proyectos-pid/nuevo", element: <NuevoPid /> },
-  { path: "/proyectos-pid/:idPid/modificar", element: <ModificarPIDs /> },
+  { path: "/proyectos-pid", element: <Proyectos /> },
+  { path: "/proyectos-pid/:idPid", element: <DetalleProyecto /> },
+  { path: "/proyectos-pid/nuevo", element: <Nuevo /> },
+  { path: "/proyectos-pid/:idPid/modificar", element: <Modificar /> },
   { path: "/proyectos-pid/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
   { path: "/proyectos-pid/:idPid/agregar-grupo", element: <AgregarGrupo/>},
   { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
