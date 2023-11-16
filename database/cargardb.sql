@@ -30,16 +30,6 @@ INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `d
 INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
 INSERT INTO `seccyt`.`proyectos` (`tipoActividad`, `fechaInicio`, `fechaFin`, `denominacion`, `completo`, `regional`, `convocatoria`, `estado`, `idDirector`, `idCodirector`) VALUES ('abxc', '2020-03-03', '2021-04-05', 'abc', '0', 'abc', '0', '1', '1', '2');
 
-INSERT INTO `seccyt`.`pids` (`idProyectoPid`, `tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('1', 'abc', '1', 'abc123', 'abc', '120/78');
-INSERT INTO `seccyt`.`pids` (`idProyectoPid`, `tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('2', 'abc', '1', 'abc123', 'abc', '120/78');
-INSERT INTO `seccyt`.`pids` (`idProyectoPid`, `tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('3', 'abc', '1', 'abc123', 'abc', '120/78');
-INSERT INTO `seccyt`.`pids` (`idProyectoPid`, `tipoProyecto`, `prorrogado`, `codPid`, `programa`, `disposicion`) VALUES ('4', 'abc', '1', 'abc123', 'abc', '120/78');
-
-INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('5', 'empresa', '2023-01-01', '12as');
-INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('6', 'empresa', '2023-01-01', '12as');
-INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('7', 'empresa', '2023-01-01', '12as');
-INSERT INTO `seccyt`.`proyectosexternos` (`idProyectoExterno`, `empresaInstitucion`, `anioLinea`, `tipoConvenio`) VALUES ('8', 'empresa', '2023-01-01', '12as');
-
 INSERT INTO seccyt.regionales (nombre) VALUES
 	 ('Centro Tecnológico De Desarrollo Regional Los Reyunos'),
 	 ('Facultad Regional Avellaneda'),
