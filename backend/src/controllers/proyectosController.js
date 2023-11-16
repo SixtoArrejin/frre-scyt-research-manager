@@ -7,12 +7,20 @@ import {
   createPIDService,
   createTieneService,
   createParticipaService,
-  updatePidService
+  updatePidService,
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
 export async function getProyectos(req, res) {
   try {
+    const proyectos = await getAllProyectosService();
+    return res
+      .status(200)
+      .json({ message: "Proyectos encontrados", success: true, proyectos });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+  /* try {
     const { tipo, subtipo } = req.query;
     console.log(tipo, subtipo);
     let proyectos;
@@ -41,7 +49,7 @@ export async function getProyectos(req, res) {
       });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
-  }
+  } */
 }
 
 export async function getProyectosDeGrupo(req, res) {
@@ -55,13 +63,11 @@ export async function getProyectosDeGrupo(req, res) {
       proyecto.tiene.some((item) => item.idGrupoInvestigacion == idGrupo)
     );
 
-    res
-      .status(200)
-      .json({
-        message: `Proyectos encontrados para el idGrupoInvestigacion ${idGrupo}.`,
-        success: true,
-        proyectos: proyectosFiltrados,
-      });
+    res.status(200).json({
+      message: `Proyectos encontrados para el idGrupoInvestigacion ${idGrupo}.`,
+      success: true,
+      proyectos: proyectosFiltrados,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
@@ -99,13 +105,11 @@ export async function getProyectosDePersona(req, res) {
       };
     });
 
-    res
-      .status(200)
-      .json({
-        message: `Proyectos encontrados para la personaId ${personaId}.`,
-        success: true,
-        proyectos: proyectosConRoles,
-      });
+    res.status(200).json({
+      message: `Proyectos encontrados para la personaId ${personaId}.`,
+      success: true,
+      proyectos: proyectosConRoles,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
@@ -123,13 +127,11 @@ export async function getProyectoPorId(req, res) {
     delete proyecto.personas_proyectos_idDirectorTopersonas;
     proyecto.codirector = proyecto.personas_proyectos_idCodirectorTopersonas;
     delete proyecto.personas_proyectos_idCodirectorTopersonas;
-    res
-      .status(200)
-      .json({
-        message: `Proyecto encontrado para el proyecto con ID ${idProyecto}.`,
-        success: true,
-        proyecto: proyecto,
-      });
+    res.status(200).json({
+      message: `Proyecto encontrado para el proyecto con ID ${idProyecto}.`,
+      success: true,
+      proyecto: proyecto,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
@@ -138,7 +140,6 @@ export async function getProyectoPorId(req, res) {
 export async function crearProyectos(req, res) {
   try {
     const dataProyecto = req.body;
-
     const newProyecto = await createProyectoService(dataProyecto);
 
     res
@@ -148,6 +149,7 @@ export async function crearProyectos(req, res) {
         success: true,
         proyecto: newProyecto,
       });
+    
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
@@ -159,7 +161,13 @@ export async function updatePIDController(req, res) {
   console.log(dataPid);
   try {
     const updatedPid = await updatePidService(idPid, dataPid);
-    return res.status(200).json({ message: 'Proyecto actualizado exitosamente', success: true, updatedPid });
+    return res
+      .status(200)
+      .json({
+        message: "Proyecto actualizado exitosamente",
+        success: true,
+        updatedPid,
+      });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

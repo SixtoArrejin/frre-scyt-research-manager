@@ -1,11 +1,9 @@
 import { get, post, put, del } from "./baseApi";
 
 // personasServices
-export async function getProyectos(tipo, subtipo) {
+export async function getProyectos() {
   return get(
-    `/api/proyectos${
-      tipo ? "?tipo=" + tipo + (subtipo ? "&subtipo=" + subtipo : "") : ""
-    }`
+    `/api/proyectos`
   );
 }
 
