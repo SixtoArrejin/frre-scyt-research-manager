@@ -60,64 +60,35 @@ model personas {
   @@index([idGrupoInvestigacion], map: "idGrupoInvestigacion")
 }
 
-model pids {
-  idProyectoPid  Int             @id
-  tipoProyecto   String?         @db.VarChar(256)
-  prorrogado     Boolean?
-  codPid         String?         @db.VarChar(256)
-  programa       String?         @db.VarChar(256)
-  disposicion    String?         @db.VarChar(256)
-  tiposproyectos tiposproyectos? @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "fk_pids_tiposproyectos")
-  proyectos      proyectos       @relation(fields: [idProyectoPid], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "pids_ibfk_1")
-
-  @@index([tipoProyecto], map: "fk_pids_tiposproyectos")
-}
-
 model proyectos {
-  idProyecto                                Int                @id @default(autoincrement())
-  tipoActividad                             String?            @db.VarChar(256)
-  fechaInicio                               DateTime?          @db.Date
-  fechaFin                                  DateTime?          @db.Date
-  denominacion                              String?            @db.VarChar(256)
+  idProyecto                                Int             @id @default(autoincrement())
+  tipoActividad                             String?         @db.VarChar(256)
+  fechaInicio                               DateTime?       @db.Date
+  fechaFin                                  DateTime?       @db.Date
+  denominacion                              String?         @db.VarChar(256)
   completo                                  Boolean?
-  regional                                  String?            @db.VarChar(256)
+  regional                                  String?         @db.VarChar(256)
   convocatoria                              Int?
-  estado                                    String?            @db.VarChar(256)
+  estado                                    String?         @db.VarChar(256)
   idDirector                                Int
   idCodirector                              Int?
+  tipoProyecto                              String?         @db.VarChar(256)
+  codPid                                    String?         @db.VarChar(256)
+  programa                                  String?         @db.VarChar(256)
+  disposicion                               String?         @db.VarChar(256)
+  prorrogado                                Boolean?
   participa                                 participa[]
-  pids                                      pids?
-  regionales                                regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
-  personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
-  personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
-  proyectosexternos                         proyectosexternos?
+  regionales                                regionales?     @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
+  personas_proyectos_idDirectorTopersonas   personas        @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  personas_proyectos_idCodirectorTopersonas personas?       @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
+  tiposproyectos                            tiposproyectos? @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
   tiene                                     tiene[]
+  vinculaciones                             vinculaciones[]
 
   @@index([idCodirector], map: "idCodirector")
   @@index([idDirector], map: "idDirector")
   @@index([regional], map: "fk_proyectos_regionales")
-}
-
-model proyectosconfinanciamiento {
-  idProyectoFinanciamieno   Int               @id
-  montoANR                  Float?            @db.Float
-  presentacion              DateTime?         @db.Date
-  canon                     Float?            @db.Float
-  fechaInicioFinanciamiento DateTime?         @db.Date
-  fechaFinFinanciamiento    DateTime?         @db.Date
-  linea                     String?           @db.VarChar(30)
-  adjudicacion              Int?
-  desembolso                Int?
-  proyectosexternos         proyectosexternos @relation(fields: [idProyectoFinanciamieno], references: [idProyectoExterno], onDelete: NoAction, onUpdate: NoAction, map: "proyectosconfinanciamiento_ibfk_1")
-}
-
-model proyectosexternos {
-  idProyectoExterno          Int                         @id
-  empresaInstitucion         String?                     @db.VarChar(50)
-  anioLinea                  DateTime?                   @db.Date
-  tipoConvenio               String?                     @db.VarChar(50)
-  proyectosconfinanciamiento proyectosconfinanciamiento?
-  proyectos                  proyectos                   @relation(fields: [idProyectoExterno], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectosexternos_ibfk_1")
+  @@index([tipoProyecto], map: "tipoProyecto")
 }
 
 model tiene {
@@ -141,6 +112,79 @@ model regionales {
 }
 
 model tiposproyectos {
-  tipoProyecto String @id @db.VarChar(256)
-  pids         pids[]
+  tipoProyecto String      @id @db.VarChar(256)
+  proyectos    proyectos[]
+}
+
+model convenios {
+  idConvenio    Int            @id @default(autoincrement())
+  tipo          String?        @db.VarChar(256)
+  numero        Int?
+  idVinculacion Int?
+  vinculaciones vinculaciones? @relation(fields: [idVinculacion], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "convenios_ibfk_1")
+
+  @@index([idVinculacion], map: "idVinculacion")
+}
+
+model desembolsos {
+  idDesembolso                   Int                            @default(autoincrement())
+  idConFinanciamiento            Int
+  montoDesembolsado              Float?                         @db.Float
+  montoRendido                   Float?                         @db.Float
+  estado                         String?                        @db.VarChar(256)
+  motivoEstado                   String?                        @db.VarChar(256)
+  plazoEtapa                     Int?
+  fechaDesembolso                DateTime?                      @db.Date
+  fechaDeRendicionReal           DateTime?                      @db.Date
+  fechaAprobado                  DateTime?                      @db.Date
+  fechaRendicion                 DateTime?                      @db.Date
+  vinculacionesconfinanciamiento vinculacionesconfinanciamiento @relation(fields: [idConFinanciamiento], references: [idConFinanciamiento], onDelete: NoAction, onUpdate: NoAction, map: "desembolsos_ibfk_1")
+
+  @@id([idDesembolso, idConFinanciamiento])
+  @@index([idConFinanciamiento], map: "idConFinanciamiento")
+}
+
+model lineas {
+  nombreLinea                    String                           @id @db.VarChar(256)
+  vinculacionesconfinanciamiento vinculacionesconfinanciamiento[]
+}
+
+model vinculaciones {
+  idVinculacion                  Int                             @id @default(autoincrement())
+  empresaInstitucion             String?                         @db.VarChar(256)
+  numeroMarco                    Int?
+  idProyecto                     Int?
+  convenios                      convenios[]
+  proyectos                      proyectos?                      @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "vinculaciones_ibfk_1")
+  vinculacionesconfinanciamiento vinculacionesconfinanciamiento?
+  vinculacionessinfinanciamiento vinculacionessinfinanciamiento?
+
+  @@index([idProyecto], map: "idProyecto")
+}
+
+model vinculacionesconfinanciamiento {
+  idConFinanciamiento Int           @id
+  titulo              String?       @db.VarChar(256)
+  estado              String?       @db.VarChar(256)
+  motivoEstado        String?       @db.VarChar(256)
+  monto               Float?        @db.Float
+  plazoEjecucion      Int?
+  nombreBeneficiario  String?       @db.VarChar(256)
+  cantidadDesembolsos Int?
+  fechaPresentacion   DateTime?     @db.Date
+  fechaAdjudicacion   DateTime?     @db.Date
+  nombreLinea         String?       @db.VarChar(256)
+  desembolsos         desembolsos[]
+  vinculaciones       vinculaciones @relation(fields: [idConFinanciamiento], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_1")
+  lineas              lineas?       @relation(fields: [nombreLinea], references: [nombreLinea], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_2")
+
+  @@index([nombreLinea], map: "nombreLinea")
+}
+
+model vinculacionessinfinanciamiento {
+  idSinFinanciamiento Int           @id
+  fechaInicio         DateTime?     @db.Date
+  fechaCierre         DateTime?     @db.Date
+  descripcion         String?       @db.VarChar(256)
+  vinculaciones       vinculaciones @relation(fields: [idSinFinanciamiento], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionessinfinanciamiento_ibfk_1")
 }
