@@ -124,17 +124,17 @@ export default function ProyectosPid() {
           <Tabla
             columnas={['Cod. PID', 'Fecha Inicio', 'Denominación', 'Regional', 'Estado', 'Ver Más']}
             datos={proyectos?.map((item, index) => {
-              const denominacion = item.proyectos?.denominacion === item.proyectos?.denominacion.substring(0, 40) ? item.proyectos?.denominacion : item.proyectos?.denominacion.substring(0, 40) + '...'
-              var regional = item.proyectos?.regional;
-              if (item.proyectos?.regional.startsWith("Facultad Regional")) {
+              const denominacion = item?.denominacion === item?.denominacion.substring(0, 40) ? item?.denominacion : item?.denominacion.substring(0, 40) + '...'
+              var regional = item?.regional;
+              if (item?.regional.startsWith("Facultad Regional")) {
                 var regional = "F.R." + regional.substring("Facultad Regional".length);
               }
 
               return [
                 item.codPid,
                 formatoFechaISOaDDMMAAAA(item?.fechaInicio),
-                item?.denominacion,
-                item?.regional,
+                denominacion,
+                regional,
                 item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1),
                 <Link to={`/proyectos-pid/${item.idProyecto}`} >
                   <PlusSquareIcon />
