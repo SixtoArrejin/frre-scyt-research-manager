@@ -41,7 +41,7 @@ import { useQuery, useMutation } from "react-query";
 import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
 import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
-import { createProyectoPID } from "../../utils/api/proyectosApi";
+import { createProyecto } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 import { getAllRegionales } from "../../utils/api/regionalesApi";
 import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
@@ -149,7 +149,7 @@ export default function NuevoPid() {
   }, [dataInvestigadores]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createProyectoPID(formData),
+    mutationFn: (formData) => createProyecto(formData),
     onSuccess: () => {
       toast({
         title: "Nuevo Proyecto",
@@ -941,8 +941,8 @@ export default function NuevoPid() {
                   guardar={true}
                   title="Guardar nuevo PID"
                   content="Se guardara el nuevo Proyecto"
-                  // onSave={handleSubmit((values) => mutate(values))}
-                  onSave={handleSubmit((values) => console.log(values))}
+                  onSave={handleSubmit((values) => mutate(values))}
+                  // onSave={handleSubmit((values) => console.log(values))}
                 />
               </Box>
             </CardBody>
