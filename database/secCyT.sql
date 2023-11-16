@@ -141,3 +141,101 @@ ALTER TABLE pids
 ADD CONSTRAINT fk_pids_tiposproyectos
 FOREIGN KEY (tipoProyecto)
 REFERENCES tiposProyectos(tipoProyecto);
+
+ALTER TABLE proyectos
+ADD COLUMN tipoProyecto VARCHAR(256),
+ADD FOREIGN KEY (tipoProyecto) REFERENCES tiposProyectos(tipoProyecto);
+
+ALTER TABLE proyectos
+ADD COLUMN codPid varchar(256),
+ADD COLUMN programa varchar(256),
+ADD COLUMN disposicion varchar(256),
+ADD COLUMN prorrogado BOOLEAN
+
+DROP TABLE `seccyt`.`pids`;
+
+CREATE TABLE vinculaciones(
+    idVinculacion INT AUTO_INCREMENT,
+    empresaInstitucion VARCHAR(256),
+    numeroMarco INT,
+    idProyecto INT,
+    PRIMARY KEY (idVinculacion),
+    FOREIGN KEY (idProyecto) REFERENCES proyectos(idProyecto)
+);
+
+CREATE TABLE convenios(
+    idConvenio INT AUTO_INCREMENT,
+    tipo VARCHAR(256),
+    numero INT,
+    idVinculacion INT,
+    PRIMARY KEY (idConvenio),
+    FOREIGN KEY (idVinculacion) REFERENCES vinculaciones(idVinculacion)
+);
+
+CREATE TABLE vinculacionesSinFinanciamiento(
+    idSinFinanciamiento INT,
+    fechaInicio date,
+	fechaCierre date,
+    descripcion VARCHAR(256),
+    PRIMARY KEY (idSinFinanciamiento),
+    FOREIGN KEY (idSinFinanciamiento) REFERENCES vinculaciones(idVinculacion)
+);
+
+CREATE TABLE lineas(
+	nombreLinea VARCHAR(256),
+    PRIMARY KEY (nombreLinea)
+);
+
+CREATE TABLE vinculacionesConFinanciamiento(
+    idConFinanciamiento INT,
+    titulo VARCHAR(256),
+    estado VARCHAR(256),
+    motivoEstado VARCHAR(256),
+    monto float,
+    plazoEjecucion INT,
+    nombreBeneficiario VARCHAR(256),
+    cantidadDesembolsos INT,
+    fechaPresentacion date,
+    fechaAdjudicacion date,
+    nombreLinea VARCHAR(256),
+    PRIMARY KEY (idConFinanciamiento),
+    FOREIGN KEY (idConFinanciamiento) REFERENCES vinculaciones(idVinculacion),
+    FOREIGN KEY (nombreLinea) REFERENCES lineas(nombreLinea)
+);
+
+CREATE TABLE desembolsos(
+    idDesembolso INT AUTO_INCREMENT,
+    idConFinanciamiento INT,
+    montoDesembolsado float,
+    montoRendido float,
+    estado VARCHAR(256),
+    motivoEstado VARCHAR(256),
+    plazoEtapa INT,
+    fechaDesembolso date,
+    fechaDeRendicionReal date,
+    fechaAprobado date,
+    fechaRendicion date,
+    PRIMARY KEY (idDesembolso, idConFinanciamiento),
+    FOREIGN KEY (idConFinanciamiento) REFERENCES vinculacionesConFinanciamiento(idConFinanciamiento)
+);
+
+DELIMITER //
+CREATE TRIGGER calcularFechaRendicion 
+BEFORE INSERT ON desembolsos
+FOR EACH ROW
+BEGIN
+    SET NEW.fechaRendicion = NEW.fechaDesembolso + INTERVAL NEW.plazoEtapa MONTH;
+END;
+//
+
+CREATE TRIGGER actualizarFechaRendicion 
+BEFORE UPDATE ON desembolsos
+FOR EACH ROW
+BEGIN
+    SET NEW.fechaRendicion = NEW.fechaDesembolso + INTERVAL NEW.plazoEtapa MONTH;
+END;
+//
+DELIMITER ;
+
+DROP TABLE `seccyt`.`proyectosconfinanciamiento`;
+DROP TABLE `seccyt`.`proyectosexternos`;
