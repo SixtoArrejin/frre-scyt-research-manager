@@ -43,7 +43,7 @@ const LinkItems = [
   { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
   { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
   { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
-  { name: 'Proyectos Externos con Financiamiento', icon: BiTask, route: '/proyectos-externos-financiamiento' },
+  { name: 'Vinculaciones', icon: BiTask, route: '/vinculaciones' },
   // { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
 ];
 
