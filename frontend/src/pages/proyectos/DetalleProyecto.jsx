@@ -57,7 +57,7 @@ const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 export default function DetalleProyectoPid() {
   const navigate = useNavigate();
 
-  const { idPid } = useParams();
+  const { idProyecto } = useParams();
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -68,17 +68,17 @@ export default function DetalleProyectoPid() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(["proyecto", idPid], () =>
-    getProyectoById(Number(idPid))
+  const { data, isLoading, error } = useQuery(["proyecto", idProyecto], () =>
+    getProyectoById(Number(idProyecto))
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [proyectoPID, setProyectoPID] = useState(data?.proyecto);
+  const [proyecto, setProyecto] = useState(data?.proyecto);
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
-    setProyectoPID(data?.proyecto);
+    setProyecto(data?.proyecto);
   }, [data]);
 
   return (
@@ -92,7 +92,7 @@ export default function DetalleProyectoPid() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            Detalles PID
+            Detalles del proyecto
           </Heading>
 
           <br />
@@ -131,7 +131,7 @@ export default function DetalleProyectoPid() {
                         name="apellido"
                         placeholder="Código PID"
                         isDisabled
-                        value={data?.proyecto?.pids?.codPid}
+                        value={data?.proyecto?.codPid}
                       />
                       <FormLabel>Código PID</FormLabel>
                     </FormControl>
@@ -262,7 +262,7 @@ export default function DetalleProyectoPid() {
                         name="prorroga"
                         placeholder="Prorroga"
                         isDisabled
-                        value={data?.proyecto?.pids?.prorrogado ? "Si" : "No"}
+                        value={data?.proyecto?.prorrogado ? "Si" : "No"}
                       />
                       <FormLabel>Prorroga</FormLabel>
                     </FormControl>
@@ -283,7 +283,7 @@ export default function DetalleProyectoPid() {
                         name="programa"
                         placeholder="Programa"
                         isDisabled
-                        value={data?.proyecto?.pids?.programa}
+                        value={data?.proyecto?.programa}
                       />
                       <FormLabel>Programa</FormLabel>
                     </FormControl>
@@ -297,7 +297,7 @@ export default function DetalleProyectoPid() {
                         name="tipoProyecto"
                         placeholder="Tipo de proyecto"
                         isDisabled
-                        value={data?.proyecto?.pids?.tipoProyecto}
+                        value={data?.proyecto?.tipoProyecto}
                       />
                       <FormLabel>Tipo de proyecto</FormLabel>
                     </FormControl>
@@ -381,7 +381,7 @@ export default function DetalleProyectoPid() {
                         name="disposicion"
                         placeholder="Disposición"
                         isDisabled
-                        value={data?.proyecto?.pids?.disposicion}
+                        value={data?.proyecto?.disposicion}
                       />
                       <FormLabel>Disposición</FormLabel>
                     </FormControl>

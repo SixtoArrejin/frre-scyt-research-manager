@@ -86,7 +86,7 @@ export default function ProyectosPid() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            Proyectos PID
+            Proyectos
           </Heading>
 
           <br />
@@ -136,7 +136,7 @@ export default function ProyectosPid() {
                 item?.denominacion,
                 item?.regional,
                 item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1),
-                <Link to={`/proyectos-pid/${item.idProyectoPid}`} >
+                <Link to={`/proyectos-pid/${item.idProyecto}`} >
                   <PlusSquareIcon />
                 </Link>
               ]
