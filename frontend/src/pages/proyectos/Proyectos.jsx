@@ -58,7 +58,7 @@ export default function ProyectosPid() {
       const filteredProyectos = data?.proyectos.filter(
         (item) =>
           (item.codPid.toLowerCase().includes(codPID.toLowerCase())) &&
-          item.proyectos.denominacion.toLowerCase().includes(denominacion.toLowerCase())
+          item.denominacion.toLowerCase().includes(denominacion.toLowerCase())
       );
       setProyectos(filteredProyectos);
       setFiltro(true)
