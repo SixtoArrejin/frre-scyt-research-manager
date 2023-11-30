@@ -120,17 +120,14 @@ export async function updatePidService(idPid, pidData) {
     const proyectoSearch = await getProyectoById(idPid)
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
       if (proyectoSearch.pids) { //Si existe el proyecto y es PID
-        if (pidData && pidData.proyecto) {
-          if (pidData.proyecto.fechaInicio) {
-            pidData.proyecto.fechaInicio = convertToISOString(pidData.proyecto.fechaInicio)
+        if (pidData) {
+          if (pidData.fechaInicio) {
+            pidData.fechaInicio = convertToISOString(pidData.fechaInicio)
           };
-          if (pidData.proyecto.fechaFin) {
-            pidData.proyecto.fechaFin = convertToISOString(pidData.proyecto.fechaFin)
+          if (pidData.fechaFin) {
+            pidData.fechaFin = convertToISOString(pidData.proyecto.fechaFin)
           };
-          projectUpdate.proyecto = await update('proyectos', filter, pidData.proyecto);
-        }
-        if (pidData && pidData.pid) {
-          projectUpdate.pid = await update('pids', { idProyectoPid: idPid }, pidData.pid)
+          projectUpdate= await update('proyectos', filter, pidData.proyecto);
         }
         if (pidData && pidData.investigadores) {
           console.log("Investigadores: ", pidData.investigadores)

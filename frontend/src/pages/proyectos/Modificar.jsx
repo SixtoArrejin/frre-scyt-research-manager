@@ -137,41 +137,36 @@ export default function ModificarPIDs() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      proyecto: {
-        tipoActividad: data?.proyecto?.tipoActividad,
-        fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
-        fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
-        denominacion: data?.proyecto?.denominacion,
-        completo: data?.proyecto?.completo,
-        regional: data?.proyecto?.regional,
-        convocatoria: data?.proyecto?.convocatoria,
-        estado: data?.proyecto?.estado,
-        idDirector: data?.proyecto?.idDirector,
-        idCodirector: data?.proyecto?.idCodirector,
-      },
-      pid: {
-        tipoProyecto: data?.proyecto?.pids?.tipoProyecto,
-        prorrogado: data?.proyecto?.pids?.prorrogado,
-        codPid: data?.proyecto?.pids?.codPid,
-        programa: data?.proyecto?.pids?.programa,
-        disposicion: data?.proyecto?.pids?.disposicion,
-      },
+      codPid: data?.proyecto.codPid,
+      tipoActividad: data?.proyecto?.tipoActividad,
+      tipoProyecto: data?.proyecto?.tipoProyecto,
+      programa: data?.proyecto?.programa,
+      disposicion: data?.proyecto?.disposicion,
+      fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
+      fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
+      denominacion: data?.proyecto?.denominacion,
+      completo: data?.proyecto?.completo,
+      regional: data?.proyecto?.regional,
+      convocatoria: data?.proyecto?.convocatoria,
+      estado: data?.proyecto?.estado,
+      idDirector: data?.proyecto?.idDirector,
+      idCodirector: data?.proyecto?.idCodirector,
     },
   });
 
   const onChangeRadioProrroga = (value) => {
     if (value === "true") {
-      setValue("pid.prorrogado", true);
+      setValue("prorrogado", true);
     } else {
-      setValue("pid.prorrogado", false);
+      setValue("prorrogado", false);
     }
   };
 
   const onChangeRadioCompleto = (value) => {
     if (value === "true") {
-      setValue("proyecto.completo", true);
+      setValue("completo", true);
     } else {
-      setValue("proyecto.completo", false);
+      setValue("completo", false);
     }
   };
 
@@ -192,7 +187,7 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="apellido" placeholder="Código PID" {...register("pid.codPid")} />
+                      <Input name="apellido" placeholder="Código PID" {...register("codPid")} />
                       <FormLabel>Código PID</FormLabel>
                     </FormControl>
 
@@ -203,7 +198,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Regional..."
-                        {...register("proyecto.regional")}
+                        {...register("regional")}
                       >
                         {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
                           <option key={key} value={regional}>
@@ -211,12 +206,12 @@ export default function ModificarPIDs() {
                           </option>
                         ))}
                       </Select>
-                      <FormLabel>Regional</FormLabel>
+                      <FormLabel>Regional asociada</FormLabel>
                     </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
                     <FormControl variant="floating" width={{ base: '100%', md: '100%' }} mb='5vh'>
-                      <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("proyecto.denominacion")} />
+                      <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("denominacion")} />
                       <FormLabel>Denominación</FormLabel>
                     </FormControl>
                   </Box>
@@ -229,7 +224,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Director..."
-                        {...register("proyecto.idDirector", {
+                        {...register("idDirector", {
                           valueAsNumber: true,
                         })}
                       // defaultValue={data?.proyecto?.idDirector}
@@ -254,7 +249,7 @@ export default function ModificarPIDs() {
 
                       <Select
                         placeholder="Codirector..."
-                        {...register("proyecto.idCodirector", {
+                        {...register("idCodirector", {
                           valueAsNumber: true,
                         })}
                       // defaultValue={data?.proyecto?.idCodirector}
@@ -273,12 +268,12 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" id="fechaInicio" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='date' name="fechaInicio" placeholder="Fecha Inicio" {...register("proyecto.fechaInicio")} />
+                      <Input type='date' name="fechaInicio" placeholder="Fecha Inicio" {...register("fechaInicio")} />
                       <FormLabel>Fecha Inicio</FormLabel>
                     </FormControl>
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='date' name="fechaFin" placeholder="Fecha Fin" {...register("proyecto.fechaInicio")} />
+                      <Input type='date' name="fechaFin" placeholder="Fecha Fin" {...register("fechaInicio")} />
                       <FormLabel>Fecha Fin</FormLabel>
                     </FormControl>
 
@@ -287,7 +282,7 @@ export default function ModificarPIDs() {
                       <FormLabel>Prorroga</FormLabel>
                     </FormControl> */}
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='number' name="convocatoria" placeholder="Convocatoria" {...register("proyecto.convocatoria", {
+                      <Input type='number' name="convocatoria" placeholder="Convocatoria" {...register("convocatoria", {
                         valueAsNumber: true,
                       })} />
                       <FormLabel>Convocatoria</FormLabel>
@@ -296,7 +291,7 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="programa" placeholder="Programa" {...register("pid.programa")} />
+                      <Input name="programa" placeholder="Programa" {...register("programa")} />
                       <FormLabel>Programa</FormLabel>
                     </FormControl>
 
@@ -307,7 +302,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Tipo de proyecto..."
-                        {...register("pid.tipoProyecto")}
+                        {...register("tipoProyecto")}
                       >
                         {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
                           <option key={key} value={tipo}>
@@ -327,7 +322,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Tipo de actividad..."
-                        {...register("proyecto.tipoActividad")}
+                        {...register("tipoActividad")}
                       >
                         {tipoActividad.map((actividad, key) => (
                           <option key={key} value={actividad}>
@@ -345,7 +340,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Estado..."
-                        {...register("proyecto.estado")}
+                        {...register("estado")}
                       >
                         {estadoProyecto.map((estado, key) => (
                           <option key={key} value={estado}>
@@ -361,7 +356,7 @@ export default function ModificarPIDs() {
                       <FormLabel>Completo</FormLabel>
                     </FormControl> */}
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="disposicion" placeholder="Disposición" {...register("pid.disposicion")} />
+                      <Input name="disposicion" placeholder="Disposición" {...register("disposicion")} />
                       <FormLabel>Disposición</FormLabel>
                     </FormControl>
                   </Box>
@@ -382,7 +377,7 @@ export default function ModificarPIDs() {
                         <RadioGroup
                           onChange={onChangeRadioProrroga}
                           mb="5vh"
-                          defaultValue={data?.proyecto?.pids?.prorrogado ? 'true' : 'false'}
+                          defaultValue={data?.proyecto?.prorrogado ? 'true' : 'false'}
                         >
                           <Stack direction="row" spacing={10}>
                             <Radio value="true">Si</Radio>

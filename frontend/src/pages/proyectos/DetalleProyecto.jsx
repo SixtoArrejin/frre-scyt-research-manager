@@ -142,11 +142,11 @@ export default function DetalleProyectoPid() {
                     >
                       <Input
                         name="regional"
-                        placeholder="Regional"
+                        placeholder="Regional asociada"
                         isDisabled
                         defaultValue={data?.proyecto?.regional}
                       />
-                      <FormLabel>Regional</FormLabel>
+                      <FormLabel>Regional asociada</FormLabel>
                     </FormControl>
                   </Box>
                   <Box
