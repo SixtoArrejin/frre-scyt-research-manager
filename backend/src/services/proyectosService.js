@@ -116,19 +116,19 @@ export async function updatePidService(idProyecto, data) {
   try {
     const filter = { idProyecto: idProyecto };
     let projectUpdate = {};
-    console.log(data)
     const proyectoSearch = await getProyectoById(idProyecto)
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
-        if (data) {
-          if (data.fechaInicio) {
-            data.fechaInicio = convertToISOString(data.fechaInicio)
+        if (data.proyecto) {
+          if (data.proyecto.fechaInicio) {
+            data.proyecto.fechaInicio = convertToISOString(data.proyecto.fechaInicio)
           };
-          if (data.fechaFin) {
-            data.fechaFin = convertToISOString(data.fechaFin)
+          if (data.proyecto.fechaFin) {
+            data.proyecto.fechaFin = convertToISOString(data.proyecto.fechaFin)
           };
-          projectUpdate = await update('proyectos', filter, data);
+          projectUpdate.proyecto = await update('proyectos', filter, data.proyecto);
           console.log('Buena: ', projectUpdate)
         }
+        console.log(data)
         if (data && data.investigadores) {
           console.log("Investigadores: ", data.investigadores)
           let bandera = false;

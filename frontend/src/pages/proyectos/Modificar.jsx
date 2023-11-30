@@ -137,20 +137,22 @@ export default function ModificarPIDs() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      codPid: data?.proyecto.codPid,
-      tipoActividad: data?.proyecto?.tipoActividad,
-      tipoProyecto: data?.proyecto?.tipoProyecto,
-      programa: data?.proyecto?.programa,
-      disposicion: data?.proyecto?.disposicion,
-      fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
-      fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
-      denominacion: data?.proyecto?.denominacion,
-      completo: data?.proyecto?.completo,
-      regional: data?.proyecto?.regional,
-      convocatoria: data?.proyecto?.convocatoria,
-      estado: data?.proyecto?.estado,
-      idDirector: data?.proyecto?.idDirector,
-      idCodirector: data?.proyecto?.idCodirector,
+      proyecto: {
+        codPid: data?.proyecto.codPid,
+        tipoActividad: data?.proyecto?.tipoActividad,
+        tipoProyecto: data?.proyecto?.tipoProyecto,
+        programa: data?.proyecto?.programa,
+        disposicion: data?.proyecto?.disposicion,
+        fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
+        fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
+        denominacion: data?.proyecto?.denominacion,
+        completo: data?.proyecto?.completo,
+        regional: data?.proyecto?.regional,
+        convocatoria: data?.proyecto?.convocatoria,
+        estado: data?.proyecto?.estado,
+        idDirector: data?.proyecto?.idDirector,
+        idCodirector: data?.proyecto?.idCodirector
+      }
     },
   });
 
@@ -187,7 +189,7 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="apellido" placeholder="Código PID" {...register("codPid")} />
+                      <Input name="apellido" placeholder="Código PID" {...register("proyecto.codPid")} />
                       <FormLabel>Código PID</FormLabel>
                     </FormControl>
 
@@ -198,7 +200,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Regional..."
-                        {...register("regional")}
+                        {...register("proyecto.regional")}
                       >
                         {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
                           <option key={key} value={regional}>
@@ -211,7 +213,7 @@ export default function ModificarPIDs() {
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
                     <FormControl variant="floating" width={{ base: '100%', md: '100%' }} mb='5vh'>
-                      <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("denominacion")} />
+                      <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("proyecto.denominacion")} />
                       <FormLabel>Denominación</FormLabel>
                     </FormControl>
                   </Box>
@@ -224,7 +226,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Director..."
-                        {...register("idDirector", {
+                        {...register("proyecto.idDirector", {
                           valueAsNumber: true,
                         })}
                       // defaultValue={data?.proyecto?.idDirector}
@@ -249,7 +251,7 @@ export default function ModificarPIDs() {
 
                       <Select
                         placeholder="Codirector..."
-                        {...register("idCodirector", {
+                        {...register("proyecto.idCodirector", {
                           valueAsNumber: true,
                         })}
                       // defaultValue={data?.proyecto?.idCodirector}
@@ -268,12 +270,12 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" id="fechaInicio" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='date' name="fechaInicio" placeholder="Fecha Inicio" {...register("fechaInicio")} />
+                      <Input type='date' name="fechaInicio" placeholder="Fecha Inicio" {...register("proyecto.fechaInicio")} />
                       <FormLabel>Fecha Inicio</FormLabel>
                     </FormControl>
 
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='date' name="fechaFin" placeholder="Fecha Fin" {...register("fechaInicio")} />
+                      <Input type='date' name="fechaFin" placeholder="Fecha Fin" {...register("proyecto.fechaInicio")} />
                       <FormLabel>Fecha Fin</FormLabel>
                     </FormControl>
 
@@ -282,7 +284,7 @@ export default function ModificarPIDs() {
                       <FormLabel>Prorroga</FormLabel>
                     </FormControl> */}
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input type='number' name="convocatoria" placeholder="Convocatoria" {...register("convocatoria", {
+                      <Input type='number' name="convocatoria" placeholder="Convocatoria" {...register("proyecto.convocatoria", {
                         valueAsNumber: true,
                       })} />
                       <FormLabel>Convocatoria</FormLabel>
@@ -291,7 +293,7 @@ export default function ModificarPIDs() {
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
 
                     <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh'>
-                      <Input name="programa" placeholder="Programa" {...register("programa")} />
+                      <Input name="programa" placeholder="Programa" {...register("proyecto.programa")} />
                       <FormLabel>Programa</FormLabel>
                     </FormControl>
 
@@ -302,7 +304,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Tipo de proyecto..."
-                        {...register("tipoProyecto")}
+                        {...register("proyecto.tipoProyecto")}
                       >
                         {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
                           <option key={key} value={tipo}>
@@ -322,7 +324,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Tipo de actividad..."
-                        {...register("tipoActividad")}
+                        {...register("proyecto.tipoActividad")}
                       >
                         {tipoActividad.map((actividad, key) => (
                           <option key={key} value={actividad}>
@@ -340,7 +342,7 @@ export default function ModificarPIDs() {
                     >
                       <Select
                         placeholder="Estado..."
-                        {...register("estado")}
+                        {...register("proyecto.estado")}
                       >
                         {estadoProyecto.map((estado, key) => (
                           <option key={key} value={estado}>
@@ -356,7 +358,7 @@ export default function ModificarPIDs() {
                       <FormLabel>Completo</FormLabel>
                     </FormControl> */}
                     <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="disposicion" placeholder="Disposición" {...register("disposicion")} />
+                      <Input name="disposicion" placeholder="Disposición" {...register("proyecto.disposicion")} />
                       <FormLabel>Disposición</FormLabel>
                     </FormControl>
                   </Box>
