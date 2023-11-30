@@ -112,25 +112,25 @@ export async function createParticipaService(dataParticipa) {
   }
 }
 
-export async function updatePidService(idPid, pidData) {
+export async function updatePidService(idProyecto, data) {
   try {
-    const filter = { idProyecto: idPid };
-    const projectUpdate = {};
-
-    const proyectoSearch = await getProyectoById(idPid)
+    const filter = { idProyecto: idProyecto };
+    let projectUpdate = {};
+    console.log(data)
+    const proyectoSearch = await getProyectoById(idProyecto)
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
-      if (proyectoSearch.pids) { //Si existe el proyecto y es PID
-        if (pidData) {
-          if (pidData.fechaInicio) {
-            pidData.fechaInicio = convertToISOString(pidData.fechaInicio)
+        if (data) {
+          if (data.fechaInicio) {
+            data.fechaInicio = convertToISOString(data.fechaInicio)
           };
-          if (pidData.fechaFin) {
-            pidData.fechaFin = convertToISOString(pidData.proyecto.fechaFin)
+          if (data.fechaFin) {
+            data.fechaFin = convertToISOString(data.fechaFin)
           };
-          projectUpdate= await update('proyectos', filter, pidData.proyecto);
+          projectUpdate = await update('proyectos', filter, data);
+          console.log('Buena: ', projectUpdate)
         }
-        if (pidData && pidData.investigadores) {
-          console.log("Investigadores: ", pidData.investigadores)
+        if (data && data.investigadores) {
+          console.log("Investigadores: ", data.investigadores)
           let bandera = false;
 
           try {
@@ -141,9 +141,9 @@ export async function updatePidService(idPid, pidData) {
             bandera = false
           }
           if (bandera) {
-            const investigadoresP = pidData.investigadores.map(investigador => ({
+            const investigadoresP = data.investigadores.map(investigador => ({
               ...investigador,
-              idProyecto: idPid,
+              idProyecto: idProyecto,
             }));
             try {
               for (const investigador of investigadoresP) {
@@ -154,9 +154,8 @@ export async function updatePidService(idPid, pidData) {
             }
           }
         }
-      }
     } else {
-      throw new Error(`El proyecto con id ${idPid} no existe`)
+      throw new Error(`El proyecto con id ${idProyecto} no existe`)
     }
 
     // console.log(proyectoSearch);
@@ -165,6 +164,7 @@ export async function updatePidService(idPid, pidData) {
     // return updatedPid;
     return projectUpdate
   } catch (error) {
+    console.log('maleta')
     throw new Error(error.message);
   }
 }

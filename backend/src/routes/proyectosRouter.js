@@ -16,6 +16,6 @@ router.get('/persona/:personaId', getProyectosDePersona);
 router.get('/:idProyecto', getProyectoPorId)
 
 router.post('/', crearProyectos);
-router.put('/pid/:idPid', updatePIDController);
+router.put('/pid/:idProyecto', updatePIDController);
 
 export default router;

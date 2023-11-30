@@ -155,17 +155,17 @@ export async function crearProyectos(req, res) {
 }
 
 export async function updatePIDController(req, res) {
-  const idPid = parseInt(req.params.idPid, 10);
-  const dataPid = req.body;
-  console.log(dataPid);
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const dataP = req.body;
+  console.log(dataP);
   try {
-    const updatedPid = await updatePidService(idPid, dataPid);
+    const updatedP = await updatePidService(idProyecto, dataP);
     return res
       .status(200)
       .json({
         message: "Proyecto actualizado exitosamente",
         success: true,
-        updatedPid,
+        updatedP,
       });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
