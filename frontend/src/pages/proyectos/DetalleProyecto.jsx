@@ -513,6 +513,7 @@ export default function DetalleProyectoPid() {
                   </TableContainer>
                 </CardBody>
               </Card>
+              <br/>
               <Box
                 display="flex"
                 width="100%"
@@ -525,7 +526,6 @@ export default function DetalleProyectoPid() {
                   </Button>
                 </Link>
               </Box>
-              <br />
             </CardBody>
           </Card>
 
@@ -588,6 +588,7 @@ export default function DetalleProyectoPid() {
                   </TableContainer>
                 </CardBody>
               </Card>
+              <br/>
               <Box
                 display="flex"
                 width="100%"
@@ -600,10 +601,82 @@ export default function DetalleProyectoPid() {
                   </Button>
                 </Link>
               </Box>
-              <br />
             </CardBody>
           </Card>
+
           <br />
+          <Card width="100%">
+            <CardBody>
+              <Text fontSize="md">Vinculaciones</Text>
+              <br />
+              <Card width="100%">
+                <CardBody>
+                  <TableContainer>
+                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
+                      <Thead>
+                        <Tr>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Empresa/Institución</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Financiamiento</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Marco</Text>
+                          </Th>
+                          <Th textAlign="center">
+                            <Text fontSize="md">Ver más</Text>
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {[{empresaIntitucion: 'xxxx', financiamiento: 'Si', marco: 456}, {empresaIntitucion: 'yyyy', financiamiento: 'No', marco: 789}].map((item, index) => (
+                          <Tr key={index}>
+                            <Td textAlign="center">
+                              <Text fontSize="md">
+                                {item.empresaIntitucion}
+                              </Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">
+                                {item.financiamiento}
+                              </Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">
+                                {item.marco}
+                              </Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Link
+                                to={`vinculacion-detalle`}
+                              >
+                                <PlusSquareIcon />
+                              </Link>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </CardBody>
+              </Card>
+              <br/>
+              <Box
+                display="flex"
+                width="100%"
+                alignItems="center"
+                justifyContent="flex-end"
+              >
+                <Link to={`nueva-vinculacion`}>
+                  <Button colorScheme="blue" variant="outline">
+                    Nueva vinculación
+                  </Button>
+                </Link>
+              </Box>
+            </CardBody>
+          </Card>
+          <br/>
           <Box
             display="flex"
             width="100%"

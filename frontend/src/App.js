@@ -1,4 +1,3 @@
-import { Button, ButtonGroup } from '@chakra-ui/react'
 import {
   BrowserRouter as Router,
   Route,
@@ -23,11 +22,12 @@ import { useContext } from "react";
 import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
 import { ChakraToastProvider } from './context/ChakraToastContext';
 import Proyectos from './pages/proyectos/Proyectos';
-import ProyectosExternosF from './pages/proyectos/ProyectosExternosF';
 import DetalleProyecto from './pages/proyectos/DetalleProyecto';
 import Nuevo from './pages/proyectos/Nuevo';
 import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
+import NuevaVinculacion from './pages/vinculaciones/Nueva';
+import NuevoDesembolso from "./pages/desembolsos/Nuevo";
 
 const queryClient = new QueryClient();
 
@@ -43,12 +43,13 @@ const routes = [
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "/proyectos", element: <Proyectos /> },
-  { path: "/proyectos-pid/:idProyecto", element: <DetalleProyecto /> },
-  { path: "/proyectos-pid/nuevo", element: <Nuevo /> },
-  { path: "/proyectos-pid/:idPid/modificar", element: <Modificar /> },
-  { path: "/proyectos-pid/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
-  { path: "/proyectos-pid/:idPid/agregar-grupo", element: <AgregarGrupo/>},
-  { path: "/proyectos-externos-financiamiento", element: <ProyectosExternosF /> },
+  { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
+  { path: "/proyectos/nuevo", element: <Nuevo /> },
+  { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
+  { path: "/proyectos/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
+  { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo/>},
+  { path: "/proyectos/:idPid/nueva-vinculacion", element: <NuevaVinculacion /> },
+  { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
 
