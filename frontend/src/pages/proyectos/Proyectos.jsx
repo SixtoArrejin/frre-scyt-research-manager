@@ -69,12 +69,6 @@ export default function ProyectosPid() {
     return <Text fontSize="md">Cargando...</Text>;
   }
 
-  //   const sortedGrupos = [...grupos]?.sort((a, b) => {
-  //     const siglasA = a.siglas.toLowerCase();
-  //     const siglasB = b.siglas.toLowerCase();
-  //     return siglasA.localeCompare(siglasB);
-  //   });
-
   return (
     <Card>
       <CardBody>
@@ -136,7 +130,7 @@ export default function ProyectosPid() {
                 denominacion,
                 regional,
                 item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1),
-                <Link to={`/proyectos-pid/${item.idProyecto}`} >
+                <Link to={`/proyectos/${item.idProyecto}`} >
                   <PlusSquareIcon />
                 </Link>
               ]
