@@ -55,7 +55,7 @@ import CustomModal from "../../components/CustomModal";
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleVinculacion() {
-  const Financiamiento = true;
+  const [Financiamiento, setFinanciamiento] = useState(false)
   const navigate = useNavigate();
 
   const { idProyecto } = useParams();
@@ -95,9 +95,10 @@ export default function DetalleVinculacion() {
           <Heading as="h2" size="xl" textAlign="center">
             Detalles de vinculación
           </Heading>
-
           <br />
-
+          <Button colorScheme="blue" variant="outline" onClick={() => setFinanciamiento(!Financiamiento)}>
+            .
+          </Button>
           <Card width="100%">
             <CardBody>
               <Text fontSize="md">Datos de vinculación</Text>
@@ -550,8 +551,8 @@ export default function DetalleVinculacion() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {[{nroDesembolso: 1, fecha: '12/12/2023', monto: 15000, estado: 'En ejecucion'},
-                        {nroDesembolso: 2, fecha: '12/12/2023', monto: 14000, estado: 'En ejecucion'}].map((item, index) => (
+                        {[{ nroDesembolso: 1, fecha: '12/12/2023', monto: 15000, estado: 'En ejecucion' },
+                        { nroDesembolso: 2, fecha: '12/12/2023', monto: 14000, estado: 'En ejecucion' }].map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
                               <Text fontSize="md">
