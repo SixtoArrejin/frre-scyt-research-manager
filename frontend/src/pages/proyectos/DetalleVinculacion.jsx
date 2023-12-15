@@ -55,6 +55,7 @@ import CustomModal from "../../components/CustomModal";
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleVinculacion() {
+  const Financiamiento = false;
   const navigate = useNavigate();
 
   const { idProyecto } = useParams();
@@ -149,194 +150,269 @@ export default function DetalleVinculacion() {
                       <FormLabel>Nro Marco</FormLabel>
                     </FormControl>
                   </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Titulo"
-                        placeholder="Titulo"
-                        isDisabled
-                        value={
-                          data?.proyecto?.director.apellido +
-                          ", " +
-                          data?.proyecto?.director.nombre
-                        }
-                      />
-                      <FormLabel>Titulo</FormLabel>
-                    </FormControl>
+                  {Financiamiento && (
+                    <Box width="100%">
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Titulo"
+                            placeholder="Titulo"
+                            isDisabled
+                            value={
+                              data?.proyecto?.director.apellido +
+                              ", " +
+                              data?.proyecto?.director.nombre
+                            }
+                          />
+                          <FormLabel>Titulo</FormLabel>
+                        </FormControl>
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Nombre del beneficiario"
-                        placeholder="Nombre del beneficiario"
-                        isDisabled
-                        value={
-                          data?.proyecto?.codirector.apellido +
-                          ", " +
-                          data?.proyecto?.codirector.nombre
-                        }
-                      />
-                      <FormLabel>Nombre del beneficiario</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      id="fechaInicio"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Monto"
-                        placeholder="Monto"
-                        isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
-                          data?.proyecto?.fechaInicio
-                        )}
-                      />
-                      <FormLabel>Monto</FormLabel>
-                    </FormControl>
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Nombre del beneficiario"
+                            placeholder="Nombre del beneficiario"
+                            isDisabled
+                            value={
+                              data?.proyecto?.codirector.apellido +
+                              ", " +
+                              data?.proyecto?.codirector.nombre
+                            }
+                          />
+                          <FormLabel>Nombre del beneficiario</FormLabel>
+                        </FormControl>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="fechaInicio"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Monto"
+                            placeholder="Monto"
+                            isDisabled
+                            value={formatoFechaISOaDDMMAAAA(
+                              data?.proyecto?.fechaInicio
+                            )}
+                          />
+                          <FormLabel>Monto</FormLabel>
+                        </FormControl>
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Cantidad de desembolsos"
-                        placeholder="Cantidad de desembolsos"
-                        isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
-                          data?.proyecto?.fechaFin
-                        )}
-                      />
-                      <FormLabel>Cantidad de desembolsos</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Fecha de presentación"
-                        placeholder="Fecha de presentación"
-                        isDisabled
-                        value={data?.proyecto?.programa}
-                      />
-                      <FormLabel>Fecha de presentación</FormLabel>
-                    </FormControl>
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Cantidad de desembolsos"
+                            placeholder="Cantidad de desembolsos"
+                            isDisabled
+                            value={formatoFechaISOaDDMMAAAA(
+                              data?.proyecto?.fechaFin
+                            )}
+                          />
+                          <FormLabel>Cantidad de desembolsos</FormLabel>
+                        </FormControl>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Fecha de presentación"
+                            placeholder="Fecha de presentación"
+                            isDisabled
+                            value={data?.proyecto?.programa}
+                          />
+                          <FormLabel>Fecha de presentación</FormLabel>
+                        </FormControl>
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Fecha de adjudicación"
-                        placeholder="Fecha de adjudicación"
-                        isDisabled
-                        value={data?.proyecto?.tipoProyecto}
-                      />
-                      <FormLabel>Fecha de adjudicación</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Plazo de ejecución"
-                        placeholder="Plazo de ejecución"
-                        isDisabled
-                        value={data?.proyecto?.tipoActividad}
-                      />
-                      <FormLabel>Plazo de ejecución</FormLabel>
-                    </FormControl>
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Fecha de adjudicación"
+                            placeholder="Fecha de adjudicación"
+                            isDisabled
+                            value={data?.proyecto?.tipoProyecto}
+                          />
+                          <FormLabel>Fecha de adjudicación</FormLabel>
+                        </FormControl>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Plazo de ejecución"
+                            placeholder="Plazo de ejecución"
+                            isDisabled
+                            value={data?.proyecto?.tipoActividad}
+                          />
+                          <FormLabel>Plazo de ejecución</FormLabel>
+                        </FormControl>
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Linea"
-                        placeholder="Linea"
-                        isDisabled
-                        value={data?.proyecto?.estado}
-                      />
-                      <FormLabel>Linea</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Estado"
-                        placeholder="Estado"
-                        isDisabled
-                        value={data?.proyecto?.convocatoria}
-                      />
-                      <FormLabel>Estado</FormLabel>
-                    </FormControl>
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Linea"
+                            placeholder="Linea"
+                            isDisabled
+                            value={data?.proyecto?.estado}
+                          />
+                          <FormLabel>Linea</FormLabel>
+                        </FormControl>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Estado"
+                            placeholder="Estado"
+                            isDisabled
+                            value={data?.proyecto?.convocatoria}
+                          />
+                          <FormLabel>Estado</FormLabel>
+                        </FormControl>
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Motivo desistido"
-                        placeholder="Motivo desistido"
-                        isDisabled
-                        value={data?.proyecto?.disposicion}
-                      />
-                      <FormLabel>Motivo desistido</FormLabel>
-                    </FormControl>
-                  </Box>
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Motivo desistido"
+                            placeholder="Motivo desistido"
+                            isDisabled
+                            value={data?.proyecto?.disposicion}
+                          />
+                          <FormLabel>Motivo desistido</FormLabel>
+                        </FormControl>
+                      </Box>{" "}
+                    </Box>
+                  )}
+                  {!Financiamiento && (
+                    <Box width="100%">
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Fecha Inicio"
+                            placeholder="Fecha de inicio"
+                            isDisabled
+                            value={
+                              data?.proyecto?.director.apellido +
+                              ", " +
+                              data?.proyecto?.director.nombre
+                            }
+                          />
+                          <FormLabel>Fecha de inicio</FormLabel>
+                        </FormControl>
+
+                        <FormControl
+                          variant="floating"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Fecha cierre"
+                            placeholder="Fecha de cierre"
+                            isDisabled
+                            value={
+                              data?.proyecto?.codirector.apellido +
+                              ", " +
+                              data?.proyecto?.codirector.nombre
+                            }
+                          />
+                          <FormLabel>Fecha de cierre</FormLabel>
+                        </FormControl>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <FormControl
+                          variant="floating"
+                          id="fechaInicio"
+                          width={{ base: "100%", md: "100%" }}
+                          mb="5vh"
+                        >
+                          <Input
+                            name="Descripción"
+                            placeholder="Descripción"
+                            isDisabled
+                            value={formatoFechaISOaDDMMAAAA(
+                              data?.proyecto?.fechaInicio
+                            )}
+                          />
+                          <FormLabel>Descripción</FormLabel>
+                        </FormControl>
+                      </Box>
+                    </Box>
+                  )}
                   <Box
                     display="flex"
                     width="100%"
@@ -446,7 +522,7 @@ export default function DetalleVinculacion() {
           </Card>
 
           <br />
-          <Card width="100%">
+          {Financiamiento && (<Card width="100%">
             <CardBody>
               <Text fontSize="md">Desembolsos</Text>
               <br />
@@ -538,7 +614,7 @@ export default function DetalleVinculacion() {
 
               <br />
             </CardBody>
-          </Card>
+          </Card>)}
           <br />
           <Box
             display="flex"
