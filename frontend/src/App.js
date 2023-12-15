@@ -26,8 +26,11 @@ import DetalleProyecto from './pages/proyectos/DetalleProyecto';
 import Nuevo from './pages/proyectos/Nuevo';
 import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
+import DetalleVinculacion from './pages/proyectos/DetalleVinculacion';
+import DetalleDesembolso from './pages/proyectos/DetalleDesembolso';
 import NuevaVinculacion from './pages/vinculaciones/Nueva';
 import NuevoDesembolso from "./pages/desembolsos/Nuevo";
+
 
 const queryClient = new QueryClient();
 
@@ -43,6 +46,8 @@ const routes = [
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "/proyectos", element: <Proyectos /> },
+  { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion/>},
+  { path: "/desembolsos/:idDesembolso", element: <DetalleDesembolso/>},
   { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
   { path: "/proyectos/nuevo", element: <Nuevo /> },
   { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
