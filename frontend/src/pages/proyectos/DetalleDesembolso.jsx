@@ -299,12 +299,10 @@ export default function DetalleDesembolso() {
                         Ingresar motivo de fuera de plazo
                       </Button>
                     </Box>
-                    <Box  display="flex" width="30%" justifyContent="flex-end">
-                      <Link to={`modificar`}>
-                        <Button colorScheme="blue" variant="outline">
-                          Modificar
-                        </Button>
-                      </Link>
+                    <Box display="flex" width="30%" justifyContent="flex-end">
+                      <Button colorScheme="blue" variant="outline" onClick={()=>{navigate(-1)}}>
+                        Volver
+                      </Button>
                     </Box>
                   </Box>
                 </Box>
