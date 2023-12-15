@@ -55,7 +55,7 @@ import CustomModal from "../../components/CustomModal";
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleVinculacion() {
-  const Financiamiento = false;
+  const Financiamiento = true;
   const navigate = useNavigate();
 
   const { idProyecto } = useParams();
@@ -550,28 +550,32 @@ export default function DetalleVinculacion() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {grupos?.map((item, index) => (
+                        {[{nroDesembolso: 1, fecha: '12/12/2023', monto: 15000, estado: 'En ejecucion'},
+                        {nroDesembolso: 2, fecha: '12/12/2023', monto: 14000, estado: 'En ejecucion'}].map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {item.gruposinvestigacion?.siglas}
+                                {item.nroDesembolso}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {item.gruposinvestigacion?.resolucion}
+                                {item.fecha}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {formatoFechaISOaDDMMAAAA(
-                                  item.gruposinvestigacion?.fechaCreacion
-                                )}
+                                {item.monto}
+                              </Text>
+                            </Td>
+                            <Td textAlign="center">
+                              <Text fontSize="md">
+                                {item.estado}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Link
-                                to={`/grupos-investigacion/${item.gruposinvestigacion?.idGrupoInvestigacion}`}
+                                to={`desembolsos/1`}
                               >
                                 <PlusSquareIcon />
                               </Link>
@@ -603,11 +607,11 @@ export default function DetalleVinculacion() {
                   />
                   <FormLabel>Saldo ($)</FormLabel>
                 </FormControl>
-                <Link to={`agregar-grupo`}>
+                <Link to={`nuevo-desembolso`}>
                   <Button colorScheme="blue" variant="outline">
                     {" "}
                     {/* Añadido el ancho del botón */}
-                    Agregar Convenio
+                    Agregar Desembolso
                   </Button>
                 </Link>
               </Box>
@@ -615,23 +619,6 @@ export default function DetalleVinculacion() {
               <br />
             </CardBody>
           </Card>)}
-          <br />
-          <Box
-            display="flex"
-            width="100%"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <Button
-              colorScheme="blue"
-              variant="outline"
-              onClick={() =>
-                alert("Generar un reporte con los detalles del investigador")
-              }
-            >
-              Generar Reporte
-            </Button>
-          </Box>
         </Box>
       </CardBody>
     </Card>

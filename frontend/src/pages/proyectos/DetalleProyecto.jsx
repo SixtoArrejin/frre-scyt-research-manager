@@ -649,7 +649,7 @@ export default function DetalleProyectoPid() {
                             </Td>
                             <Td textAlign="center">
                               <Link
-                                to={`vinculacion-detalle`}
+                                to={`vinculacion/1`}
                               >
                                 <PlusSquareIcon />
                               </Link>

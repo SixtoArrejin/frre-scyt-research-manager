@@ -46,8 +46,8 @@ const routes = [
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "/proyectos", element: <Proyectos /> },
-  { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion/>},
-  { path: "/desembolsos/:idDesembolso", element: <DetalleDesembolso/>},
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion", element: <DetalleVinculacion/>},
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolsos/:idDesembolso", element: <DetalleDesembolso/>},
   { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
   { path: "/proyectos/nuevo", element: <Nuevo /> },
   { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
@@ -55,6 +55,7 @@ const routes = [
   { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo/>},
   { path: "/proyectos/:idPid/nueva-vinculacion", element: <NuevaVinculacion /> },
   { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso", element: <NuevoDesembolso /> },
   { path: "*", element: <Navigate to="/home" /> },
 ];
 
