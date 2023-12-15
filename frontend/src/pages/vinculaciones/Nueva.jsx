@@ -1,30 +1,23 @@
 import React, { useState, useEffect } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   Text,
   Heading,
   Box,
   Button,
-  Checkbox,
-  IconButton,
   RadioGroup,
-  Stack,
   Radio,
   Select,
   FormControl,
   FormLabel,
   useToast,
   Textarea,
-  VStack,
 } from "@chakra-ui/react";
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -32,19 +25,11 @@ import {
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
 import { useQuery, useMutation } from "react-query";
-import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
 import { useFieldArray, useForm } from "react-hook-form";
-import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
 import { createProyecto } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
-import { getAllRegionales } from "../../utils/api/regionalesApi";
-import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
 
 export default function NuevaVinculacion() {
   /* Usestate para el modal */
@@ -91,8 +76,6 @@ export default function NuevaVinculacion() {
     register,
     handleSubmit,
     setValue,
-    getValues,
-    formState: { errors },
   } = useForm({
     defaultValues: {
       adjudicacion: null,
@@ -271,18 +254,18 @@ export default function NuevaVinculacion() {
                       mb="5vh"
                     >
                       <Select
-                        placeholder="Integrantes"
                         isSearchable={true}
                         onChange={(e) => {
                           setSelectedConvenio(e.target.value);
                         }}
                       >
-                        {['1ro', '2do', '3ro'].map((item, index) => (
+                        {['Especifico', 'Colaboración', 'Otro...'].map((item, index) => (
                           <option key={index} value={item}>
                             {item}
                           </option>
                         ))}
                       </Select>
+                      <FormLabel>Tipo de convenio</FormLabel>
                     </FormControl>
 
                     <FormControl
