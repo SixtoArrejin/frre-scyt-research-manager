@@ -108,8 +108,25 @@ export default function NuevaVinculacion() {
   };
 
   const agregarConvenio = () => {
-    append({ tipoConvenio: selectedConvenio, nroConvenio })
-  }
+    // Verificar si ya existe un convenio con el mismo tipo y número
+    const convenioExistente = convenios.find(
+      (convenio) =>
+        convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenio
+    );
+  
+    if (convenioExistente) {
+      // Mostrar un mensaje de error o realizar alguna acción apropiada
+      toast({
+        title: "Error",
+        description: "Ya existe un convenio con este tipo y número.",
+        status: "info",
+        isClosable: true,
+      });
+    } else {
+      // Agregar el nuevo convenio al array
+      append({ tipoConvenio: selectedConvenio, nroConvenio });
+    }
+  };
 
   const eliminarConvenio = (index) => {
     remove(index)
