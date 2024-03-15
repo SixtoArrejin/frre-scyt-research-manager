@@ -91,10 +91,6 @@ export default function ModificarPIDs() {
     error: errorRegionales,
   } = useQuery(["regionales",], () => getAllRegionales());
 
-  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
-    getAllPersonas()
-  );
-
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
@@ -150,8 +146,8 @@ export default function ModificarPIDs() {
         regional: data?.proyecto?.regional,
         convocatoria: data?.proyecto?.convocatoria,
         estado: data?.proyecto?.estado,
-        idDirector: data?.proyecto?.idDirector,
-        idCodirector: data?.proyecto?.idCodirector
+        // idDirector: data?.proyecto?.idDirector,
+        // idCodirector: data?.proyecto?.idCodirector
       }
     },
   });
@@ -215,56 +211,6 @@ export default function ModificarPIDs() {
                     <FormControl variant="floating" width={{ base: '100%', md: '100%' }} mb='5vh'>
                       <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("proyecto.denominacion")} />
                       <FormLabel>Denominación</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Select
-                        placeholder="Director..."
-                        {...register("proyecto.idDirector", {
-                          valueAsNumber: true,
-                        })}
-                      // defaultValue={data?.proyecto?.idDirector}
-                      >
-                        {dataInvestigadores?.personas.map(
-                          (investigador, key) => (
-                            <option key={key} value={investigador.idPersona}>
-                              {investigador.apellido}, {investigador.nombre}
-                            </option>
-                          )
-                        )}
-                      </Select>
-                      <FormLabel>Director</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      {/* <Input name="codirector" placeholder="Codirector" {...register('proyecto.idCodirector')} /> */}
-
-                      <Select
-                        placeholder="Codirector..."
-                        {...register("proyecto.idCodirector", {
-                          valueAsNumber: true,
-                        })}
-                      // defaultValue={data?.proyecto?.idCodirector}
-                      >
-                        {dataInvestigadores?.personas.map(
-                          (investigador, key) => (
-                            <option key={key} value={investigador.idPersona}>
-                              {investigador.apellido}, {investigador.nombre}
-                            </option>
-                          )
-                        )}
-                      </Select>
-                      <FormLabel>Codirector</FormLabel>
                     </FormControl>
                   </Box>
                   <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">

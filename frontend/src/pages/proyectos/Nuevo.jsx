@@ -96,11 +96,12 @@ const estadoProyecto = [
 ];
 
 const roles = [
+  "Director",
+  "CoDirector",
   "Investigador",
   "Becario",
   "Asesor Cientifico",
-  "Técnico de Apoyo",
-  "CoDirector",
+  "Técnico de Apoyo"
 ];
 
 export default function NuevoPid() {
@@ -224,11 +225,6 @@ export default function NuevoPid() {
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
 
-  // const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
-  // const [investigadores, setInvestigadores] = useState(
-  //   dataPersonas?.personas || []
-  // );
-
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
     useState([]);
@@ -332,18 +328,12 @@ export default function NuevoPid() {
     setGruposSeleccionados(nuevosGrupos);
   };
 
-
-  const onSub = (values) => {
-    console.log(values);
-    mutate(values);
-  };
-
   return (
     <Card>
       <CardBody>
         <form
           style={{ width: "100%" }}
-          onSubmit={handleSubmit((values) => onSub(values))}
+          // onSubmit={handleSubmit((values) => onSub(values))}
         >
           <Box
             display="flex"
@@ -433,7 +423,7 @@ export default function NuevoPid() {
                         <FormLabel>Denominación</FormLabel>
                       </FormControl>
                     </Box>
-                    <Box
+                    {/* <Box
                       display="flex"
                       flexDirection={{ base: "column", md: "row" }}
                       width="100%"
@@ -479,7 +469,7 @@ export default function NuevoPid() {
                         </Select>
                         <FormLabel>Codirector</FormLabel>
                       </FormControl>
-                    </Box>
+                    </Box> */}
                     <Box
                       display="flex"
                       flexDirection={{ base: "column", md: "row" }}
@@ -882,6 +872,12 @@ export default function NuevoPid() {
                                     placeholder="Rol"
                                     onChange={(e) => {
                                       update(index, { rol: e.target.value });
+                                      if (e.target.value === 'CoDirector'){
+                                        setValue("idCodirector", Number(item.idPersona))
+                                      }
+                                      if (e.target.value === 'Director'){
+                                        setValue("idDirector", Number(item.idPersona))
+                                      }
                                     }}
                                   >
                                     {roles.map((role, roleIndex) => (

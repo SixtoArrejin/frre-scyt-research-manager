@@ -117,8 +117,7 @@ export default function NuevaVinculacion() {
     if (convenioExistente) {
       // Mostrar un mensaje de error o realizar alguna acción apropiada
       toast({
-        title: "Error",
-        description: "Ya existe un convenio con este tipo y número.",
+        title: "Este convenio ya fue agregado",
         status: "info",
         isClosable: true,
       });

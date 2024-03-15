@@ -46,11 +46,12 @@ import CustomModal from "../../components/CustomModal";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 
 const roles = [
+  "Director",
+  "CoDirector",
   "Investigador",
   "Becario",
   "Asesor Cientifico",
-  "Técnico de Apoyo",
-  "CoDirector",
+  "Técnico de Apoyo"
 ];
 
 export default function AgregarInvestigador() {

@@ -187,9 +187,9 @@ export default function DetalleProyectoPid() {
                         placeholder="Apellido"
                         isDisabled
                         value={
-                          data?.proyecto?.director.apellido +
+                          data?.proyecto?.director?.apellido +
                           ", " +
-                          data?.proyecto?.director.nombre
+                          data?.proyecto?.director?.nombre
                         }
                       />
                       <FormLabel>Director</FormLabel>
@@ -205,9 +205,9 @@ export default function DetalleProyectoPid() {
                         placeholder="Codirector"
                         isDisabled
                         value={
-                          data?.proyecto?.codirector.apellido +
+                          data?.proyecto?.codirector?.apellido +
                           ", " +
-                          data?.proyecto?.codirector.nombre
+                          data?.proyecto?.codirector?.nombre
                         }
                       />
                       <FormLabel>Codirector</FormLabel>
