@@ -3,5 +3,5 @@ export const prisma = new PrismaClient()
 
 prisma
   .$connect()
-  .then(() => console.log("Conexión exitosa con la base de datos"))
-  .catch(() => console.log("Conexión fallida con la base de datos"));
+  .then(() => console.log("Conexión exitosa con la base de dato"))
+  .catch((error) => console.log(error));

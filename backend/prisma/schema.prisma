@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -40,7 +40,7 @@ model participa {
   proyectos   proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
 
   @@id([idPersona, idProyecto])
-  @@index([idProyecto], map: "idProyecto")
+  @@index([idProyecto], map: "participa_idProyecto")
 }
 
 model personas {
@@ -57,7 +57,7 @@ model personas {
   proyectos_proyectos_idDirectorTopersonas   proyectos[]         @relation("proyectos_idDirectorTopersonas")
   proyectos_proyectos_idCodirectorTopersonas proyectos[]         @relation("proyectos_idCodirectorTopersonas")
 
-  @@index([idGrupoInvestigacion], map: "idGrupoInvestigacion")
+  @@index([idGrupoInvestigacion], map: "personas_idGrupoInvestigacion")
 }
 
 model proyectos {
@@ -85,10 +85,10 @@ model proyectos {
   tiene                                     tiene[]
   vinculaciones                             vinculaciones[]
 
-  @@index([idCodirector], map: "idCodirector")
-  @@index([idDirector], map: "idDirector")
-  @@index([regional], map: "fk_proyectos_regionales")
-  @@index([tipoProyecto], map: "tipoProyecto")
+  @@index([idCodirector], map: "proyectos_idCodirector")
+  @@index([idDirector], map: "proyectos_idDirector")
+  @@index([regional], map: "proyectos_fk_proyectos_regionales")
+  @@index([tipoProyecto], map: "proyectos_tipoProyecto")
 }
 
 model tiene {
@@ -98,7 +98,7 @@ model tiene {
   gruposinvestigacion  gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "tiene_ibfk_2")
 
   @@id([idGrupoInvestigacion, idProyecto])
-  @@index([idProyecto], map: "idProyecto")
+  @@index([idProyecto], map: "tiene_idProyecto")
 }
 
 model usuarios {
@@ -123,14 +123,14 @@ model convenios {
   idVinculacion Int?
   vinculaciones vinculaciones? @relation(fields: [idVinculacion], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "convenios_ibfk_1")
 
-  @@index([idVinculacion], map: "idVinculacion")
+  @@index([idVinculacion], map: "convenios_idVinculacion")
 }
 
 model desembolsos {
   idDesembolso                   Int                            @default(autoincrement())
   idConFinanciamiento            Int
-  montoDesembolsado              Float?                         @db.Float
-  montoRendido                   Float?                         @db.Float
+  montoDesembolsado              Float?                         @db.Real
+  montoRendido                   Float?                         @db.Real
   estado                         String?                        @db.VarChar(256)
   motivoEstado                   String?                        @db.VarChar(256)
   plazoEtapa                     Int?
@@ -141,7 +141,7 @@ model desembolsos {
   vinculacionesconfinanciamiento vinculacionesconfinanciamiento @relation(fields: [idConFinanciamiento], references: [idConFinanciamiento], onDelete: NoAction, onUpdate: NoAction, map: "desembolsos_ibfk_1")
 
   @@id([idDesembolso, idConFinanciamiento])
-  @@index([idConFinanciamiento], map: "idConFinanciamiento")
+  @@index([idConFinanciamiento], map: "desembolsos_idConFinanciamiento")
 }
 
 model lineas {
@@ -159,7 +159,7 @@ model vinculaciones {
   vinculacionesconfinanciamiento vinculacionesconfinanciamiento?
   vinculacionessinfinanciamiento vinculacionessinfinanciamiento?
 
-  @@index([idProyecto], map: "idProyecto")
+  @@index([idProyecto], map: "vinculaciones_idProyecto")
 }
 
 model vinculacionesconfinanciamiento {
@@ -167,7 +167,7 @@ model vinculacionesconfinanciamiento {
   titulo              String?       @db.VarChar(256)
   estado              String?       @db.VarChar(256)
   motivoEstado        String?       @db.VarChar(256)
-  monto               Float?        @db.Float
+  monto               Float?        @db.Real
   plazoEjecucion      Int?
   nombreBeneficiario  String?       @db.VarChar(256)
   cantidadDesembolsos Int?
@@ -178,7 +178,7 @@ model vinculacionesconfinanciamiento {
   vinculaciones       vinculaciones @relation(fields: [idConFinanciamiento], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_1")
   lineas              lineas?       @relation(fields: [nombreLinea], references: [nombreLinea], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_2")
 
-  @@index([nombreLinea], map: "nombreLinea")
+  @@index([nombreLinea], map: "vinculacionesconfinanciamiento_nombreLinea")
 }
 
 model vinculacionessinfinanciamiento {
