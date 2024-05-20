@@ -34,6 +34,7 @@ import CustomModal from "../../components/CustomModal";
 export default function NuevaVinculacion() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
+  const { idPid } = useParams()
 
   const openModal = () => {
     setIsOpen(true);
@@ -50,11 +51,11 @@ export default function NuevaVinculacion() {
   const [nroConvenio, setNroConvenio] = useState()
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createProyecto(formData),
+    mutationFn: (formData) => createProyecto(formData), //Cambiar por createVinculacion(idPid, formData)
     onSuccess: () => {
       toast({
-        title: "Nuevo Proyecto",
-        description: `Se ha creado el nuevo proyecto exitosamente`,
+        title: "Nueva Vinculación",
+        description: `Se ha creado la nueva vinculación exitosamente`,
         status: "success",
         isClosable: true,
       });
@@ -63,7 +64,7 @@ export default function NuevaVinculacion() {
     onError: (error) => {
       const errorMessage = error?.message;
       toast({
-        title: "Error al crear el proyecto",
+        title: "Error al crear la vinculación",
         description: `${errorMessage || "Intente nuevamente"}`,
         status: "error",
         isClosable: true,
@@ -157,7 +158,7 @@ export default function NuevaVinculacion() {
             <Card width="100%">
               <CardBody>
                 <Text fontSize="md">
-                  Ingrese los datos del proyecto de investigación y desarrollo
+                  Ingrese los datos de la nueva vinculación
                 </Text>
                 <br />
                 <Box
@@ -187,7 +188,6 @@ export default function NuevaVinculacion() {
                         mb="5vh"
                       >
                         <Input
-                          name="apellido"
                           placeholder="Empresa/Institución"
                           {...register("empresaInstitucion")}
                         />
@@ -487,7 +487,7 @@ export default function NuevaVinculacion() {
                       >
                         <Input
                           type="date"
-                          {...register("adjuducacion", { valueAsDate: true })}
+                          {...register("adjudicacion", { valueAsDate: true })}
                         />
                         <FormLabel>Adjudicación</FormLabel>
                       </FormControl>
@@ -507,7 +507,7 @@ export default function NuevaVinculacion() {
                         <Input
                           type="number"
                           placeholder="Plazo de ejecución"
-                          {...register("plazoEjecución", { valueAsNumber: true })}
+                          {...register("plazoEjecucion", { valueAsNumber: true })}
                         />
                         <FormLabel>Plazo de ejecución (meses)</FormLabel>
                       </FormControl>
