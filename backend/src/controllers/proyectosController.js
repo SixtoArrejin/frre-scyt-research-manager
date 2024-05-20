@@ -8,6 +8,9 @@ import {
   createTieneService,
   createParticipaService,
   updatePidService,
+  createVinculacionService,
+  createVinculacionConFinanciamientoService,
+  createVinculacionSinFinanciamientoService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -148,7 +151,7 @@ export async function crearProyectos(req, res) {
         success: true,
         proyecto: newProyecto,
       });
-    
+
   } catch (error) {
     res.status(500).json({ message: error.message, success: false });
   }
@@ -169,5 +172,34 @@ export async function updatePIDController(req, res) {
       });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function crearVinculaciones(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  try {
+    const dataVinculacion = req.body;
+    const newVinculacionG = await createVinculacionService(idProyecto, dataVinculacion);
+    var newVinculacion = {}
+    if (newVinculacionG){
+      const idVinculacion = newVinculacionG.idVinculacion;
+      if (dataVinculacion.financiamiento){
+        newVinculacion = await createVinculacionConFinanciamientoService(idVinculacion, dataVinculacion);
+      } else {
+        newVinculacion = await createVinculacionSinFinanciamientoService(idVinculacion, dataVinculacion);
+      }
+    }
+    console.log(newVinculacionG);
+    console.log(newVinculacion)
+    res
+      .status(200)
+      .json({
+        message: `Vinculación creada.`,
+        success: true,
+        vinculacion: newVinculacion,
+      });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
   }
 }

@@ -28,7 +28,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "react-query";
 import { useFieldArray, useForm } from "react-hook-form";
-import { createProyecto } from "../../utils/api/proyectosApi";
+import { createProyecto, createVinculacion } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 
 export default function NuevaVinculacion() {
@@ -51,7 +51,7 @@ export default function NuevaVinculacion() {
   const [nroConvenio, setNroConvenio] = useState()
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createProyecto(formData), //Cambiar por createVinculacion(idPid, formData)
+    mutationFn: (formData) => createVinculacion(idPid, formData), //Cambiar por createVinculacion(idPid, formData)
     onSuccess: () => {
       toast({
         title: "Nueva Vinculación",
@@ -133,8 +133,8 @@ export default function NuevaVinculacion() {
   }
 
   const onSub = (values) => {
-    console.log(values);
-    // mutate(values);
+    // console.log(values);
+    mutate(values);
   };
 
   return (

@@ -8,6 +8,9 @@ import {
   createProyectoPID,
   createTiene,
   createParticipa,
+  createVinculacion,
+  createVinculacionConFinanciamiento,
+  createVinculacionSinFinanciamiento
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -165,6 +168,33 @@ export async function updatePidService(idProyecto, data) {
     return projectUpdate
   } catch (error) {
     console.log('maleta')
+    throw new Error(error.message);
+  }
+}
+
+export async function createVinculacionService(idProyecto, dataVinculacion){
+  try {
+    const newVinculacion = await createVinculacion(idProyecto, dataVinculacion);
+    return newVinculacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createVinculacionSinFinanciamientoService(idVinculacion, vinculacionData) {
+  try {
+    const newVinculacion = await createVinculacionSinFinanciamiento(idVinculacion, vinculacionData);
+    return newVinculacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createVinculacionConFinanciamientoService(idVinculacion, vinculacionData) {
+  try {
+    const newVinculacion = await createVinculacionConFinanciamiento(idVinculacion, vinculacionData);
+    return newVinculacion;
+  } catch (error) {
     throw new Error(error.message);
   }
 }
