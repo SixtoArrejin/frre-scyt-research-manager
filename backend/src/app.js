@@ -8,13 +8,16 @@ import Categorias from './routes/categoriasRouter.js'
 import Proyectos from './routes/proyectosRouter.js'
 import Regionales from './routes/regionalesRouter.js'
 import TiposProyectos from './routes/tiposProyectosRouter.js'
+import { initDatabase } from './repository/initDB.js'
 
 //importamos nuestro enrutador
-const app = express()
+const app = express();
 
-app.use(cors())
-app.use(morgan("dev"))
-app.use(express.json())
+app.use(cors());
+app.use(morgan("dev"));
+app.use(express.json());
+
+initDatabase();
 
 app.use('/api/usuarios', Usuarios)
 app.use('/api/grupos', Grupos)
