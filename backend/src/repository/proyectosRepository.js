@@ -1,5 +1,6 @@
 import { getAll, create, update, getById } from './baseRepository.js';
 import { prisma } from '../db.js';
+import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectos() {
   const includeRelations = ['participa','personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', 'tiene'];
@@ -70,5 +71,60 @@ export async function deleteParticipa(idProyecto) {
     return deletedProyectos;
   } catch (error) {
     throw new Error(`Error al eliminar la categoría de la BD: ${error.message}`);
+  }
+}
+
+export async function createVinculacion(idProyecto, dataVinculacion) {
+  const vinculacionData = {
+    empresaInstitucion: dataVinculacion.empresaInstitucion,
+    numeroMarco: dataVinculacion.nroMarco,
+    idProyecto: idProyecto
+  }
+  console.log(vinculacionData)
+  try {
+    const newVinculacion = await create('vinculaciones', vinculacionData);
+    return newVinculacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createVinculacionSinFinanciamiento(idVinculacion, dataVinculacion) {
+  const fechaInicioISO = new Date(dataVinculacion.fechaInicio).toISOString(); // Convertir a ISO-8601
+  const fechaCierreISO = new Date(dataVinculacion.fechaCierre).toISOString(); // Convertir a ISO-8601
+  const vinculacionData = {
+    idSinFinanciamiento: idVinculacion,
+    fechaInicio: fechaInicioISO,
+    fechaCierre: fechaCierreISO,
+    descripcion: dataVinculacion.descripcion,
+  }
+  console.log(vinculacionData)
+  try {
+    const newVinculacion = await create('vinculacionessinfinanciamiento', vinculacionData);
+    return newVinculacion;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createVinculacionConFinanciamiento(idVinculacion, dataVinculacion) {
+  const vinculacionData = {
+    idConFinanciamiento: idVinculacion,
+    titulo: dataVinculacion.titulo,
+    estado: "En ejecución",
+    motivoEstado: null,
+    monto: dataVinculacion.monto,
+    plazoEjecucion: dataVinculacion.plazoEjecucion,
+    nombreBeneficiario: dataVinculacion.beneficiario,
+    cantidadDesembolsos: dataVinculacion.desembolsos,
+    fechaPresentacion: new Date(dataVinculacion.presentacion).toISOString(),
+    fechaAdjudicacion: new Date(dataVinculacion.adjudicacion).toISOString(),
+  }
+  console.log(vinculacionData)
+  try {
+    const newVinculacion = await create('vinculacionesconfinanciamiento', vinculacionData);
+    return newVinculacion;
+  } catch (error) {
+    throw new Error(error.message);
   }
 }

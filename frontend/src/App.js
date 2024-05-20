@@ -1,5 +1,6 @@
 import {
   BrowserRouter as Router,
+  HashRouter,
   Route,
   Routes,
   Navigate,
@@ -42,17 +43,17 @@ const routes = [
   { path: "/investigadores/:idPersona/modificar", element: <ModificarInvestigador /> },
   { path: "/investigadores/:idPersona/nueva-categoria", element: <NuevaCategoria /> },
   { path: "/grupos-investigacion", element: <ListaGrupos /> },
-  { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo/> },
+  { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion", element: <DetalleGrupo /> },
   { path: "/grupos-investigacion/:idGrupoInvestigacion/modificar", element: <ModificarGrupo /> },
   { path: "/proyectos", element: <Proyectos /> },
-  { path: "/proyectos/:idPid/vinculacion/:idVinculacion", element: <DetalleVinculacion/>},
-  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolsos/:idDesembolso", element: <DetalleDesembolso/>},
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion", element: <DetalleVinculacion /> },
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolsos/:idDesembolso", element: <DetalleDesembolso /> },
   { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
   { path: "/proyectos/nuevo", element: <Nuevo /> },
   { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
-  { path: "/proyectos/:idPid/agregar-investigador", element: <AgregarInvestigador/>},
-  { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo/>},
+  { path: "/proyectos/:idPid/agregar-investigador", element: <AgregarInvestigador /> },
+  { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo /> },
   { path: "/proyectos/:idPid/nueva-vinculacion", element: <NuevaVinculacion /> },
   { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
   { path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso", element: <NuevoDesembolso /> },
@@ -65,7 +66,8 @@ function App() {
   return (
     <ChakraToastProvider>
       <QueryClientProvider client={queryClient}>
-        <Router>
+        {/* <Router> */}
+        <HashRouter>
           {isLoggedIn ? (
             <SidebarWithHeader>
               <Routes>
@@ -80,7 +82,8 @@ function App() {
               <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
           )}
-        </Router>
+        </HashRouter>
+        {/* </Router> */}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraToastProvider>
