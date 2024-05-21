@@ -363,9 +363,7 @@ export default function DetalleVinculacion() {
                             placeholder="Fecha de inicio"
                             isDisabled
                             value={
-                              data?.proyecto?.director.apellido +
-                              ", " +
-                              data?.proyecto?.director.nombre
+                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)
                             }
                           />
                           <FormLabel>Fecha de inicio</FormLabel>
@@ -381,9 +379,7 @@ export default function DetalleVinculacion() {
                             placeholder="Fecha de cierre"
                             isDisabled
                             value={
-                              data?.proyecto?.codirector.apellido +
-                              ", " +
-                              data?.proyecto?.codirector.nombre
+                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)
                             }
                           />
                           <FormLabel>Fecha de cierre</FormLabel>
@@ -406,9 +402,7 @@ export default function DetalleVinculacion() {
                             name="Descripción"
                             placeholder="Descripción"
                             isDisabled
-                            value={formatoFechaISOaDDMMAAAA(
-                              data?.proyecto?.fechaInicio
-                            )}
+                            value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
                           />
                           <FormLabel>Descripción</FormLabel>
                         </FormControl>
