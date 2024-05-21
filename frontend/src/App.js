@@ -27,7 +27,7 @@ import DetalleProyecto from './pages/proyectos/DetalleProyecto';
 import Nuevo from './pages/proyectos/Nuevo';
 import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
-import DetalleVinculacion from './pages/proyectos/DetalleVinculacion';
+import DetalleVinculacion from './pages/vinculaciones/DetalleVinculacion';
 import DetalleDesembolso from './pages/proyectos/DetalleDesembolso';
 import NuevaVinculacion from './pages/vinculaciones/Nueva';
 import NuevoDesembolso from "./pages/desembolsos/Nuevo";
