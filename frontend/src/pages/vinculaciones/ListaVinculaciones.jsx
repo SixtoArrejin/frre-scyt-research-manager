@@ -72,7 +72,7 @@ export default function ListaInvestigadores() {
       item.numeroMarco,
       // item.financiamiento,
       (item.vinculacionesconfinanciamiento ? "Con financiamiento" : "Sin financiamiento"),
-      <Link to={`/home`}>
+      <Link to={`${item.idVinculacion}`}>
         <PlusSquareIcon />
       </Link>,
     ];
