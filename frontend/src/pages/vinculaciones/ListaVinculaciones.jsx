@@ -42,7 +42,8 @@ import { useQuery } from "react-query";
 import Tabla from "../../components/Tabla";
 import { getAllGrupos } from "../../utils/api/gruposApi";
 import { getCategoriaMasActual } from "../../utils/general";
-import VinculacionesData from "../../utils/data/vinculaciones.json";
+import { getVinculaciones } from "../../utils/api/vinculacionesApi";
+// import VinculacionesData from "../../utils/data/vinculaciones.json";
 
 const financiamientos = ["SF", "CF"];
 const columnas = [
@@ -53,46 +54,50 @@ const columnas = [
 ];
 
 export default function ListaInvestigadores() {
-  const [empresainstitucion, setEmpresaInstitucion] = useState("");
-  const [financiamiento, setFinanciamiento] = useState("");
+  const [empresainstitucionFiltro, setEmpresaInstitucionFiltro] = useState("");
+  const [financiamientoFiltro, setFinanciamientoFiltro] = useState("");
   const [filtro, setFiltro] = useState(false);
 
-/*   const { data, isLoading, error } = useQuery("personas", () =>
-    getAllPersonas()
-  ); */
-  const [vinculaciones, setVinculaciones] = useState(VinculacionesData || []);
+  const { data: dataVinculaciones, isLoading, error } = useQuery("vinculaciones", () =>
+    getVinculaciones()
+  );
+  const [vinculaciones, setVinculaciones] = useState(dataVinculaciones?.vinculaciones);
+  useEffect(() => {
+    setVinculaciones(dataVinculaciones?.vinculaciones)
+  }, [dataVinculaciones])
 
   const filas = vinculaciones?.map((item, index) => {
     return [
-      item.empresainstitucion,
-      item.nromarco,
-      item.financiamiento,
+      item.empresaInstitucion,
+      item.numeroMarco,
+      // item.financiamiento,
+      (item.vinculacionesconfinanciamiento ? "Con financiamiento" : "Sin financiamiento"),
       <Link to={`/home`}>
         <PlusSquareIcon />
       </Link>,
     ];
   });
 
-   useEffect(() => {
-    if (empresainstitucion === "" && financiamiento === "") {
+  useEffect(() => {
+    if (empresainstitucionFiltro === "" && financiamientoFiltro === "") {
       // Si no se está filtrando nada, utiliza los datos originales VinculacionesData
-      setVinculaciones(VinculacionesData || []);
+      setVinculaciones(dataVinculaciones?.vinculaciones || []);
       setFiltro(false);
     } else {
-      const filteredVinculaciones = VinculacionesData.filter(
+      const filteredVinculaciones = dataVinculaciones?.vinculaciones?.filter(
         (item) =>
-          ((
-            item.empresainstitucion.toLowerCase()
-          ).includes(empresainstitucion.toLowerCase()) ||
-            (
-              item.empresainstitucion.toLowerCase()
-            ).includes(empresainstitucion.toLowerCase())) &&
-          item.financiamiento.includes(financiamiento)
+        (
+          item.empresaInstitucion.toLowerCase().includes(empresainstitucionFiltro.toLowerCase()) &&
+          (
+            financiamientoFiltro == (item.vinculacionesconfinanciamiento ? "CF" : "SF") ||
+            (financiamientoFiltro != "CF" && financiamientoFiltro != "SF" )
+          )
+        )
       );
       setVinculaciones(filteredVinculaciones);
       setFiltro(true);
     }
-  }, [empresainstitucion, financiamiento]); 
+  }, [empresainstitucionFiltro, financiamientoFiltro]);
 
   return (
     <Card>
@@ -121,13 +126,13 @@ export default function ListaInvestigadores() {
                 placeholder="Empresa/Institucion"
                 id="EI"
                 width="15vw"
-                onChange={(event) => setEmpresaInstitucion(event.target.value)}
-                value={empresainstitucion}
+                onChange={(event) => setEmpresaInstitucionFiltro(event.target.value)}
+                value={empresainstitucionFiltro}
               />
               <FormControl variant="floating" id="financiamiento" width="15vw">
                 <Select
                   placeholder="Financiamiento"
-                  onChange={(event) => setFinanciamiento(event.target.value)}
+                  onChange={(event) => setFinanciamientoFiltro(event.target.value)}
                 >
                   {financiamientos?.map((financiamiento, key) => (
                     <option key={key} value={financiamiento}>
