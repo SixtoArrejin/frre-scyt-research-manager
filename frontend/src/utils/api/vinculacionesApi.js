@@ -1,0 +1,15 @@
+import { get, post, put, del } from "./baseApi";
+
+export async function getVinculaciones() {
+  return get(
+    `/api/vinculaciones`
+  );
+}
+
+export async function getVinculacionByIdProyecto(idProyecto) {
+  return get(`/api/vinculaciones/proyecto/${idProyecto}`);
+}
+
+export async function getVinculacionById(idVinculacion) {
+  return get(`/api/vinculaciones/${idVinculacion}`);
+}

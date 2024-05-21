@@ -51,6 +51,7 @@ import {
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
+import { getVinculacionByIdProyecto } from "../../utils/api/vinculacionesApi";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -81,6 +82,16 @@ export default function DetalleProyectoPid() {
     setProyecto(data?.proyecto);
   }, [data]);
 
+  const { data: dataVinculaciones, isLoading: isLoadingVinculaciones, error: errorVinculaciones } = useQuery(["vinculaciones", idProyecto], () =>
+    getVinculacionByIdProyecto(Number(idProyecto))
+  )
+  const [vinculaciones, setVinculaciones] = useState(dataVinculaciones?.vinculaciones);
+
+  useEffect(() => {
+    console.log(dataVinculaciones)
+    setVinculaciones(dataVinculaciones?.vinculaciones)
+  }, [dataVinculaciones])
+
   return (
     <Card>
       <CardBody>
@@ -94,7 +105,7 @@ export default function DetalleProyectoPid() {
           <Heading as="h2" size="xl" textAlign="center">
             Detalles del proyecto
           </Heading>
-
+          <button onClick={() => console.log(vinculaciones)}>sd</button>
           <br />
 
           <Card width="100%">
@@ -630,26 +641,26 @@ export default function DetalleProyectoPid() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {[{empresaIntitucion: 'xxxx', financiamiento: 'Si', marco: 456}, {empresaIntitucion: 'yyyy', financiamiento: 'No', marco: 789}].map((item, index) => (
+                        {vinculaciones?.map((item, index) => (
                           <Tr key={index}>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {item.empresaIntitucion}
+                                {item.empresaInstitucion}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {item.financiamiento}
+                                {item.vinculacionesconfinanciamiento ? "Si" : "No"}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Text fontSize="md">
-                                {item.marco}
+                                {item.numeroMarco}
                               </Text>
                             </Td>
                             <Td textAlign="center">
                               <Link
-                                to={`vinculacion/1`}
+                                to={`vinculacion/${item.idVinculacion}`}
                               >
                                 <PlusSquareIcon />
                               </Link>
