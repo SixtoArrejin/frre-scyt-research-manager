@@ -51,11 +51,12 @@ import {
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
+import { getVinculacionById } from "../../utils/api/vinculacionesApi";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 export default function DetalleVinculacion() {
-  const [Financiamiento, setFinanciamiento] = useState(false)
+  const [Financiamiento, setFinanciamiento] = useState();
   const navigate = useNavigate();
 
   const { idProyecto } = useParams();
@@ -69,17 +70,24 @@ export default function DetalleVinculacion() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(["proyecto", idProyecto], () =>
-    getProyectoById(Number(idProyecto))
+  const { idVinculacion } = useParams();
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error } = useQuery(["vinculacion"], () =>
+    getVinculacionById(idVinculacion)
   );
-  const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
-  const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [proyecto, setProyecto] = useState(data?.proyecto);
 
   useEffect(() => {
-    setIntegrantes(data?.proyecto?.participa);
-    setGrupos(data?.proyecto?.tiene);
-    setProyecto(data?.proyecto);
+    if (
+      !data ||
+      !data.vinculacion ||
+      data.vinculacion.vinculacionesconfinanciamiento == null
+    ) {
+      setFinanciamiento(false);
+    }
+    else {
+      setFinanciamiento(true)
+    }
   }, [data]);
 
   return (
@@ -96,9 +104,6 @@ export default function DetalleVinculacion() {
             Detalles de vinculación
           </Heading>
           <br />
-          <Button colorScheme="blue" variant="outline" onClick={() => setFinanciamiento(!Financiamiento)}>
-            .
-          </Button>
           <Card width="100%">
             <CardBody>
               <Text fontSize="md">Datos de vinculación</Text>
@@ -133,7 +138,7 @@ export default function DetalleVinculacion() {
                         name="Empresa/institución"
                         placeholder="Empresa/institución"
                         isDisabled
-                        value={data?.proyecto?.codPid}
+                        value={data?.vinculacion?.empresaInstitucion}
                       />
                       <FormLabel>Empresa/institución</FormLabel>
                     </FormControl>
@@ -146,7 +151,7 @@ export default function DetalleVinculacion() {
                         name="Nro Marco"
                         placeholder="Nro Marco"
                         isDisabled
-                        defaultValue={data?.proyecto?.regional}
+                        defaultValue={data?.vinculacion?.numeroMarco}
                       />
                       <FormLabel>Nro Marco</FormLabel>
                     </FormControl>
@@ -170,9 +175,7 @@ export default function DetalleVinculacion() {
                             placeholder="Titulo"
                             isDisabled
                             value={
-                              data?.proyecto?.director.apellido +
-                              ", " +
-                              data?.proyecto?.director.nombre
+                              data?.vinculacion?.vinculacionesconfinanciamiento?.titulo
                             }
                           />
                           <FormLabel>Titulo</FormLabel>
@@ -188,9 +191,7 @@ export default function DetalleVinculacion() {
                             placeholder="Nombre del beneficiario"
                             isDisabled
                             value={
-                              data?.proyecto?.codirector.apellido +
-                              ", " +
-                              data?.proyecto?.codirector.nombre
+                              data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario
                             }
                           />
                           <FormLabel>Nombre del beneficiario</FormLabel>
@@ -213,8 +214,8 @@ export default function DetalleVinculacion() {
                             name="Monto"
                             placeholder="Monto"
                             isDisabled
-                            value={formatoFechaISOaDDMMAAAA(
-                              data?.proyecto?.fechaInicio
+                            value={(
+                              data?.vinculacion?.vinculacionesconfinanciamiento?.monto
                             )}
                           />
                           <FormLabel>Monto</FormLabel>
@@ -229,8 +230,8 @@ export default function DetalleVinculacion() {
                             name="Cantidad de desembolsos"
                             placeholder="Cantidad de desembolsos"
                             isDisabled
-                            value={formatoFechaISOaDDMMAAAA(
-                              data?.proyecto?.fechaFin
+                            value={(
+                              data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos
                             )}
                           />
                           <FormLabel>Cantidad de desembolsos</FormLabel>
@@ -252,7 +253,7 @@ export default function DetalleVinculacion() {
                             name="Fecha de presentación"
                             placeholder="Fecha de presentación"
                             isDisabled
-                            value={data?.proyecto?.programa}
+                            value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
                           />
                           <FormLabel>Fecha de presentación</FormLabel>
                         </FormControl>
@@ -266,7 +267,7 @@ export default function DetalleVinculacion() {
                             name="Fecha de adjudicación"
                             placeholder="Fecha de adjudicación"
                             isDisabled
-                            value={data?.proyecto?.tipoProyecto}
+                            value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
                           />
                           <FormLabel>Fecha de adjudicación</FormLabel>
                         </FormControl>
@@ -287,7 +288,7 @@ export default function DetalleVinculacion() {
                             name="Plazo de ejecución"
                             placeholder="Plazo de ejecución"
                             isDisabled
-                            value={data?.proyecto?.tipoActividad}
+                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
                           />
                           <FormLabel>Plazo de ejecución</FormLabel>
                         </FormControl>
@@ -301,7 +302,7 @@ export default function DetalleVinculacion() {
                             name="Linea"
                             placeholder="Linea"
                             isDisabled
-                            value={data?.proyecto?.estado}
+                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea}
                           />
                           <FormLabel>Linea</FormLabel>
                         </FormControl>
@@ -322,7 +323,7 @@ export default function DetalleVinculacion() {
                             name="Estado"
                             placeholder="Estado"
                             isDisabled
-                            value={data?.proyecto?.convocatoria}
+                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
                           />
                           <FormLabel>Estado</FormLabel>
                         </FormControl>
@@ -336,7 +337,7 @@ export default function DetalleVinculacion() {
                             name="Motivo desistido"
                             placeholder="Motivo desistido"
                             isDisabled
-                            value={data?.proyecto?.disposicion}
+                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
                           />
                           <FormLabel>Motivo desistido</FormLabel>
                         </FormControl>
@@ -362,9 +363,7 @@ export default function DetalleVinculacion() {
                             placeholder="Fecha de inicio"
                             isDisabled
                             value={
-                              data?.proyecto?.director.apellido +
-                              ", " +
-                              data?.proyecto?.director.nombre
+                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)
                             }
                           />
                           <FormLabel>Fecha de inicio</FormLabel>
@@ -380,9 +379,7 @@ export default function DetalleVinculacion() {
                             placeholder="Fecha de cierre"
                             isDisabled
                             value={
-                              data?.proyecto?.codirector.apellido +
-                              ", " +
-                              data?.proyecto?.codirector.nombre
+                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)
                             }
                           />
                           <FormLabel>Fecha de cierre</FormLabel>
@@ -405,9 +402,7 @@ export default function DetalleVinculacion() {
                             name="Descripción"
                             placeholder="Descripción"
                             isDisabled
-                            value={formatoFechaISOaDDMMAAAA(
-                              data?.proyecto?.fechaInicio
-                            )}
+                            value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
                           />
                           <FormLabel>Descripción</FormLabel>
                         </FormControl>
@@ -470,7 +465,7 @@ export default function DetalleVinculacion() {
                           </Th>
                         </Tr>
                       </Thead>
-                      <Tbody>
+                      {/* <Tbody>
                         {integrantes?.map((item, index) => {
                           const ayn =
                             item?.personas.apellido +
@@ -501,7 +496,7 @@ export default function DetalleVinculacion() {
                             </Tr>
                           );
                         })}
-                      </Tbody>
+                      </Tbody> */}
                     </Table>
                   </TableContainer>
                 </CardBody>
@@ -523,103 +518,111 @@ export default function DetalleVinculacion() {
           </Card>
 
           <br />
-          {Financiamiento && (<Card width="100%">
-            <CardBody>
-              <Text fontSize="md">Desembolsos</Text>
-              <br />
-              <Card width="100%">
-                <CardBody>
-                  <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Nro. Desembolso</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Fecha de desembolso</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Monto desmbolsado ($)</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Estado</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Ver más</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {[{ nroDesembolso: 1, fecha: '12/12/2023', monto: 15000, estado: 'En ejecucion' },
-                        { nroDesembolso: 2, fecha: '12/12/2023', monto: 14000, estado: 'En ejecucion' }].map((item, index) => (
-                          <Tr key={index}>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                                {item.nroDesembolso}
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                                {item.fecha}
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                                {item.monto}
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Text fontSize="md">
-                                {item.estado}
-                              </Text>
-                            </Td>
-                            <Td textAlign="center">
-                              <Link
-                                to={`desembolsos/1`}
-                              >
-                                <PlusSquareIcon />
-                              </Link>
-                            </Td>
+          {Financiamiento && (
+            <Card width="100%">
+              <CardBody>
+                <Text fontSize="md">Desembolsos</Text>
+                <br />
+                <Card width="100%">
+                  <CardBody>
+                    <TableContainer>
+                      <Table
+                        size="sm"
+                        variant="striped"
+                        colorScheme="blackAlpha"
+                      >
+                        <Thead>
+                          <Tr>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Nro. Desembolso</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Fecha de desembolso</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Monto desmbolsado ($)</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Estado</Text>
+                            </Th>
+                            <Th textAlign="center">
+                              <Text fontSize="md">Ver más</Text>
+                            </Th>
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </CardBody>
-              </Card>
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="space-between" // Cambiado de "flex-end" a "space-between"
-              >
-                <FormControl
-                  variant="floating"
-                  width={{ base: "100%", md: "47.5%" }}
-                  mb="5vh"
-                  mt="9" // Asegura que no haya margen superior en FormControl
+                        </Thead>
+                        <Tbody>
+                          {[
+                            {
+                              nroDesembolso: 1,
+                              fecha: "12/12/2023",
+                              monto: 15000,
+                              estado: "En ejecucion",
+                            },
+                            {
+                              nroDesembolso: 2,
+                              fecha: "12/12/2023",
+                              monto: 14000,
+                              estado: "En ejecucion",
+                            },
+                          ].map((item, index) => (
+                            <Tr key={index}>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.nroDesembolso}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.fecha}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.monto}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Text fontSize="md">{item.estado}</Text>
+                              </Td>
+                              <Td textAlign="center">
+                                <Link to={`desembolsos/1`}>
+                                  <PlusSquareIcon />
+                                </Link>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </TableContainer>
+                  </CardBody>
+                </Card>
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="space-between" // Cambiado de "flex-end" a "space-between"
                 >
-                  <Input
-                    name="Saldo"
-                    placeholder="Saldo ($)"
-                    isDisabled
-                    value={100000}
-                  />
-                  <FormLabel>Saldo ($)</FormLabel>
-                </FormControl>
-                <Link to={`nuevo-desembolso`}>
-                  <Button colorScheme="blue" variant="outline">
-                    {" "}
-                    {/* Añadido el ancho del botón */}
-                    Agregar Desembolso
-                  </Button>
-                </Link>
-              </Box>
+                  <FormControl
+                    variant="floating"
+                    width={{ base: "100%", md: "47.5%" }}
+                    mb="5vh"
+                    mt="9" // Asegura que no haya margen superior en FormControl
+                  >
+                    <Input
+                      name="Saldo"
+                      placeholder="Saldo ($)"
+                      isDisabled
+                      value={100000}
+                    />
+                    <FormLabel>Saldo ($)</FormLabel>
+                  </FormControl>
+                  <Link to={`nuevo-desembolso`}>
+                    <Button colorScheme="blue" variant="outline">
+                      {" "}
+                      {/* Añadido el ancho del botón */}
+                      Agregar Desembolso
+                    </Button>
+                  </Link>
+                </Box>
 
-              <br />
-            </CardBody>
-          </Card>)}
+                <br />
+              </CardBody>
+            </Card>
+          )}
         </Box>
       </CardBody>
     </Card>
