@@ -1,4 +1,6 @@
-import { getAllVinculaciones } from '../repository/vinculacionesRepository.js';
+import { getAllVinculaciones,
+    getVinculacionById,
+ } from '../repository/vinculacionesRepository.js';
 
 export async function getAllVinculacionesService() {
     try {
@@ -8,3 +10,12 @@ export async function getAllVinculacionesService() {
         throw new Error(error.message);
     }
 }
+
+export async function getVinculacionByIdService(idVinculacion) {
+    try {
+      const vinculacion = await getVinculacionById(idVinculacion);
+      return vinculacion
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }

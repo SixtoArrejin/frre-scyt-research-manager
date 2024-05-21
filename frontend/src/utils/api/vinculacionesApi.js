@@ -7,5 +7,9 @@ export async function getVinculaciones() {
 }
 
 export async function getVinculacionByIdProyecto(idProyecto) {
-  return get(`/api/vinculaciones/${idProyecto}`);
+  return get(`/api/vinculaciones/proyecto/${idProyecto}`);
+}
+
+export async function getVinculacionById(idVinculacion) {
+  return get(`/api/vinculaciones/${idVinculacion}`);
 }

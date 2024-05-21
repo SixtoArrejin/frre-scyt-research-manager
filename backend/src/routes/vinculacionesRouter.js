@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { getAllVinculaciones,
-    getVinculacionesByProyectoId
+    getVinculacionesByProyectoId,
+    getVinculacionById
 } from '../controllers/vinculacionesController.js';
 
 const router = Router()
 
 router.get('/', getAllVinculaciones)
-router.get('/:idProyecto', getVinculacionesByProyectoId);
+router.get('/:idVinculacion', getVinculacionById);
+router.get('/proyecto/:idProyecto', getVinculacionesByProyectoId);
 
 export default router
