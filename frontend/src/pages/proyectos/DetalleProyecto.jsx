@@ -105,7 +105,6 @@ export default function DetalleProyectoPid() {
           <Heading as="h2" size="xl" textAlign="center">
             Detalles del proyecto
           </Heading>
-          <button onClick={() => console.log(vinculaciones)}>sd</button>
           <br />
 
           <Card width="100%">

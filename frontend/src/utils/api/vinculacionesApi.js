@@ -13,3 +13,7 @@ export async function getVinculacionByIdProyecto(idProyecto) {
 export async function getVinculacionById(idVinculacion) {
   return get(`/api/vinculaciones/${idVinculacion}`);
 }
+
+export async function deleteConvenioById(idConvenio) {
+  return del(`/api/convenios/${idConvenio}`)
+}

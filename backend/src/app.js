@@ -9,6 +9,7 @@ import Proyectos from './routes/proyectosRouter.js'
 import Regionales from './routes/regionalesRouter.js'
 import TiposProyectos from './routes/tiposProyectosRouter.js'
 import Vinculaciones from './routes/vinculacionesRouter.js'
+import Convenios from './routes/conveniosRouter.js'
 import { initDatabase } from './repository/initDB.js'
 
 //importamos nuestro enrutador
@@ -28,6 +29,7 @@ app.use('/api/proyectos', Proyectos)
 app.use('/api/regionales', Regionales)
 app.use('/api/tiposProyectos', TiposProyectos)
 app.use('/api/vinculaciones', Vinculaciones)
+app.use('/api/convenios', Convenios)
 
 const PORT = process.env.PORT || 8000;
 
