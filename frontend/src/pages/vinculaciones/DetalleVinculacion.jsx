@@ -491,6 +491,7 @@ export default function DetalleVinculacion() {
                   </TableContainer>
                 </CardBody>
               </Card>
+              <br/>
               <Box
                 display="flex"
                 width="100%"
