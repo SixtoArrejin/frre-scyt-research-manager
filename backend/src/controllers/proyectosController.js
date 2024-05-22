@@ -1,3 +1,4 @@
+import { createConvenioService } from "../services/conveniosService.js";
 import {
   getAllProyectosService,
   getProyectosPidsService,
@@ -181,12 +182,19 @@ export async function crearVinculaciones(req, res) {
     const dataVinculacion = req.body;
     const newVinculacionG = await createVinculacionService(idProyecto, dataVinculacion);
     var newVinculacion = {}
-    if (newVinculacionG){
+    var convenios = []
+    if (newVinculacionG) {
       const idVinculacion = newVinculacionG.idVinculacion;
-      if (dataVinculacion.financiamiento){
+      if (dataVinculacion.financiamiento) {
         newVinculacion = await createVinculacionConFinanciamientoService(idVinculacion, dataVinculacion);
       } else {
         newVinculacion = await createVinculacionSinFinanciamientoService(idVinculacion, dataVinculacion);
+      }
+      if (dataVinculacion.convenios && dataVinculacion.convenios.length > 0) {
+        for (const convenioData of dataVinculacion.convenios) {
+          const newConvenio = await createConvenioService(idVinculacion, convenioData);
+          convenios.push(newConvenio);
+        }
       }
     }
     console.log(newVinculacionG);

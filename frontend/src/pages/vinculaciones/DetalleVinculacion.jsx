@@ -51,7 +51,7 @@ import {
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
 import { getProyectoById } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
-import { getVinculacionById } from "../../utils/api/vinculacionesApi";
+import { deleteConvenioById, getVinculacionById } from "../../utils/api/vinculacionesApi";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -59,7 +59,6 @@ export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
   const navigate = useNavigate();
 
-  const { idProyecto } = useParams();
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -465,38 +464,29 @@ export default function DetalleVinculacion() {
                           </Th>
                         </Tr>
                       </Thead>
-                      {/* <Tbody>
-                        {integrantes?.map((item, index) => {
-                          const ayn =
-                            item?.personas.apellido +
-                            " " +
-                            item?.personas.nombre;
-                          const catUTN = getCategoriaMasActual(
-                            item?.personas.categorias,
-                            "utn"
-                          );
-                          const catMIN = getCategoriaMasActual(
-                            item?.personas.categorias,
-                            "ministerio"
-                          );
+                      <Tbody>
+                        {data?.vinculacion?.convenios?.map((convenio, index) => {
                           return (
                             <Tr key={index}>
                               <Td textAlign="center">
-                                <Text fontSize="md">{item.rol}</Text>
+                                <Text fontSize="md">{convenio.tipo}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Text fontSize="md">{ayn}</Text>
+                                <Text fontSize="md">{convenio.numero}</Text>
                               </Td>
 
                               <Td textAlign="center">
-                                <Link to={`/investigadores/${item.idPersona}`}>
-                                  <DeleteIcon />
+                                <Link to={``}>
+                                  <DeleteIcon
+                                    //onClick={() => deleteConvenioById(Number(convenio.idConvenio))}
+                                    onClick={() => deleteConvenioById(Number(convenio?.idConvenio))}
+                                    />
                                 </Link>
                               </Td>
                             </Tr>
                           );
                         })}
-                      </Tbody> */}
+                      </Tbody>
                     </Table>
                   </TableContainer>
                 </CardBody>
