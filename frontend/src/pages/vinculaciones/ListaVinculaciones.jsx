@@ -143,13 +143,13 @@ export default function ListaInvestigadores() {
                 <FormLabel>Financiamiento</FormLabel>
               </FormControl>
             </Box>
-            <Box display="flex" justifyContent="flex-end" width="55%">
+           {/*  <Box display="flex" justifyContent="flex-end" width="55%">
               <Link to={"nuevo"}>
                 <Button colorScheme="blue" variant="outline" mr="5">
                   Vinculación +
                 </Button>
               </Link>
-            </Box>
+            </Box> */}
           </Box>
 
           <br />
