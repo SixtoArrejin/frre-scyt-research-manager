@@ -421,7 +421,7 @@ export default function NuevaVinculacion() {
                       >
                         <Input
                           type="text"
-                          placeholder="Jorge Almendra"
+                          placeholder="Nombre del beneficiario"
                           {...register("beneficiario")}
                         />
                         <FormLabel>Nombre del beneficiario</FormLabel>
@@ -441,7 +441,7 @@ export default function NuevaVinculacion() {
                       >
                         <Input
                           type="number"
-                          placeholder="Título"
+                          placeholder="Monto"
                           {...register("monto", { valueAsNumber: true })}
                         />
                         <FormLabel>Monto</FormLabel>
@@ -454,7 +454,7 @@ export default function NuevaVinculacion() {
                       >
                         <Input
                           type="number"
-                          placeholder="Jorge Almendra"
+                          placeholder="Cantidad de desembolsos"
                           {...register("desembolsos", { valueAsNumber: true })}
                         />
                         <FormLabel>Cantidad de desembolsos</FormLabel>
