@@ -66,7 +66,7 @@ export default function LogIn() {
         status: "success",
         isClosable: true,
       });
-      navigate('/investigadores');
+      navigate('/');
     },
     onError: (data) => {
       console.log('Ocurrio un error intente nuevamente', data)
