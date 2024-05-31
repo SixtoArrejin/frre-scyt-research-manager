@@ -220,6 +220,7 @@ export default function ModificarInvestigador() {
                         id="apellido"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="apellido"
@@ -246,6 +247,7 @@ export default function ModificarInvestigador() {
                         id="nombre"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="nombre"
@@ -279,6 +281,7 @@ export default function ModificarInvestigador() {
                         id="dni"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="dni"
@@ -305,6 +308,7 @@ export default function ModificarInvestigador() {
                         id="grupo"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Grupo..."
