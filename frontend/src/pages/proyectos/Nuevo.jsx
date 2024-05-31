@@ -343,7 +343,7 @@ export default function NuevoPid() {
             justifyContent="center"
           >
             <Heading as="h2" size="xl" textAlign="center">
-              Nuevo PID
+              Nuevo Proyecto
             </Heading>
             <br />
             <Card width="100%">
@@ -377,6 +377,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="apellido"
@@ -389,6 +390,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "65%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Regional..."
@@ -414,6 +416,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "100%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Textarea
                           placeholder="Denominación"
@@ -423,53 +426,6 @@ export default function NuevoPid() {
                         <FormLabel>Denominación</FormLabel>
                       </FormControl>
                     </Box>
-                    {/* <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
-                      >
-                        <Select
-                          placeholder="Director..."
-                          {...register("idDirector", {
-                            valueAsNumber: true,
-                          })}
-                        >
-                          {investigadores?.map((investigador, key) => (
-                            <option key={key} value={investigador.idPersona}>
-                              {investigador.apellido} {investigador.nombre}
-                            </option>
-                          ))}
-                        </Select>
-                        <FormLabel>Director</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
-                      >
-                        <Select
-                          placeholder="Codirector..."
-                          {...register("idCodirector", {
-                            valueAsNumber: true,
-                          })}
-                        >
-                          {investigadores?.map((investigador, key) => (
-                            <option key={key} value={investigador.idPersona}>
-                              {investigador.apellido} {investigador.nombre}
-                            </option>
-                          ))}
-                        </Select>
-                        <FormLabel>Codirector</FormLabel>
-                      </FormControl>
-                    </Box> */}
                     <Box
                       display="flex"
                       flexDirection={{ base: "column", md: "row" }}
@@ -482,6 +438,7 @@ export default function NuevoPid() {
                         id="fechaInicio"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="fechaInicio"
@@ -496,6 +453,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="fechaFin"
@@ -510,6 +468,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="number"
@@ -533,6 +492,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="programa"
@@ -545,6 +505,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Tipo de proyecto..."
@@ -570,6 +531,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Tipo de actividad..."
@@ -583,23 +545,11 @@ export default function NuevoPid() {
                         </Select>
                         <FormLabel>Tipo de actividad</FormLabel>
                       </FormControl>
-
-                      {/* <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "30%" }}
-                        mb="5vh"
-                      >
-                        <Input
-                          name="estado"
-                          placeholder="Estado"
-                          {...register("estado")}
-                        />
-                        <FormLabel>Estado</FormLabel>
-                      </FormControl> */}
                       <FormControl
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Estado..."
@@ -618,6 +568,7 @@ export default function NuevoPid() {
                         variant="floating"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="disposicion"
