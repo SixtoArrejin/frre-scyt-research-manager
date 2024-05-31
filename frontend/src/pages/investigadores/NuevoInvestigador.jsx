@@ -145,7 +145,7 @@ export default function NuevoInvestigador() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            NUEVO INVESTIGADOR
+            Nuevo Investigador
           </Heading>
 
           <br />
@@ -181,6 +181,7 @@ export default function NuevoInvestigador() {
                         id="apellido"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="apellido"
@@ -204,6 +205,7 @@ export default function NuevoInvestigador() {
                         id="nombre"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="nombre"
@@ -234,6 +236,7 @@ export default function NuevoInvestigador() {
                         id="dni"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="dni"
@@ -258,6 +261,7 @@ export default function NuevoInvestigador() {
                         id="grupo"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Grupo..."
