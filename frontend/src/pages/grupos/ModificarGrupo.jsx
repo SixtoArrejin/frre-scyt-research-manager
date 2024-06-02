@@ -152,7 +152,7 @@ export default function ModificarGrupo() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            MODIFICAR DATOS DEL GRUPO
+            Modificar Datos del Grupo
           </Heading>
 
           <br />
@@ -189,6 +189,7 @@ export default function ModificarGrupo() {
                         id="nombre"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="nombre"
@@ -215,6 +216,7 @@ export default function ModificarGrupo() {
                         id="siglas"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="siglas"
@@ -249,6 +251,7 @@ export default function ModificarGrupo() {
                         id="resolucion"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="resolucion"
@@ -274,6 +277,7 @@ export default function ModificarGrupo() {
                         id="fecha"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="fecha"

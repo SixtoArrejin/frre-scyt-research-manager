@@ -136,7 +136,7 @@ export default function NuevoGrupo() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            NUEVO GRUPO
+            Nuevo Grupo
           </Heading>
 
           <br />
@@ -173,6 +173,7 @@ export default function NuevoGrupo() {
                         id="nombre"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="nombre"
@@ -198,6 +199,7 @@ export default function NuevoGrupo() {
                         id="siglas"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="siglas"
@@ -231,6 +233,7 @@ export default function NuevoGrupo() {
                         id="resolucion"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="resolucion"
@@ -255,6 +258,7 @@ export default function NuevoGrupo() {
                         id="fecha"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="fecha"

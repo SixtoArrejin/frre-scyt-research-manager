@@ -186,6 +186,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           placeholder="Empresa/Institución"
@@ -225,6 +226,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           name="apellido"
@@ -406,6 +408,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           placeholder="Título"
@@ -418,6 +421,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="text"
@@ -438,6 +442,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="number"
@@ -451,6 +456,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="number"
@@ -472,6 +478,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="date"
@@ -484,6 +491,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="date"
@@ -503,6 +511,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="number"
@@ -516,6 +525,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Select
                           placeholder="Línea..."
@@ -553,6 +563,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="date"
@@ -565,6 +576,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Input
                           type="date"
@@ -584,6 +596,7 @@ export default function NuevaVinculacion() {
                         variant="floating"
                         width={{ base: "100%", md: "100%" }}
                         mb="5vh"
+                        isRequired
                       >
                         <Textarea
                           type="text"

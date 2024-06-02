@@ -11,7 +11,7 @@ import {
   extendTheme,
   Box
 } from "@chakra-ui/react";
-import { UserProvider } from "./context/UserContext"; // Asegúrate de que la ruta sea correcta
+import { UserProvider } from "./context/UserContext";
 
 export const theme = extendTheme({
   components: {
