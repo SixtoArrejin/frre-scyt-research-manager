@@ -69,7 +69,13 @@ export default function LogIn() {
       navigate('/');
     },
     onError: (data) => {
-      console.log('Ocurrio un error intente nuevamente', data)
+      console.log('Ocurrio un error intente nuevamente', data);
+      toast({
+        title: "Inicio de sesión",
+        description: `Usuario o contraseña incorrectos.`,
+        status: "error",
+        isClosable: true,
+      });
     }
   });
 
