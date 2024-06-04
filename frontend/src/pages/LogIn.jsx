@@ -159,7 +159,7 @@ export default function LogIn() {
                 </Button>
               </HStack>
               <Stack spacing="6">
-                <Button type='submit'>Iniciar sesión</Button>
+                <Button type='submit' isLoading={isLoading} >Iniciar sesión</Button>
               </Stack>
             </Stack>
           </Box>
