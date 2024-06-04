@@ -58,7 +58,7 @@ const routes = [
   { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo /> },
   { path: "/proyectos/:idPid/nueva-vinculacion", element: <NuevaVinculacion /> },
   { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
-  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso", element: <NuevoDesembolso /> },
+  { path: "/vinculaciones/:idVinculacion/nuevo-desembolso", element: <NuevoDesembolso /> },
   { path: "/vinculaciones", element: <ListaVinculaciones /> },
   { path: "/vinculaciones/nuevo", element: <NuevaVinculacion /> },
   { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion /> },
