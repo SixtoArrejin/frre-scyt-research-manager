@@ -6,6 +6,11 @@ export async function getAllVinculaciones() {
 }
 
 export async function getVinculacionById(idVinculacion) {
-  const includeRelations = ["proyectos", "vinculacionesconfinanciamiento", "vinculacionessinfinanciamiento", "convenios"]
+  const includeRelations = [
+    "proyectos",
+    {vinculacionesconfinanciamiento: ["desembolsos"]},
+    "vinculacionessinfinanciamiento",
+    "convenios",
+  ]
   return await getById('vinculaciones', 'idVinculacion', idVinculacion, includeRelations);
 }
