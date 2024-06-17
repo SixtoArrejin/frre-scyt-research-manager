@@ -88,7 +88,7 @@ export default function DetalleVinculacion() {
       setFinanciamiento(true)
     }
   }, [data]);
-
+  
   return (
     <Card>
       <CardBody>
@@ -480,7 +480,7 @@ export default function DetalleVinculacion() {
                                   <DeleteIcon
                                     //onClick={() => deleteConvenioById(Number(convenio.idConvenio))}
                                     onClick={() => deleteConvenioById(Number(convenio?.idConvenio))}
-                                    />
+                                  />
                                 </Link>
                               </Td>
                             </Tr>
@@ -491,7 +491,7 @@ export default function DetalleVinculacion() {
                   </TableContainer>
                 </CardBody>
               </Card>
-              <br/>
+              <br />
               <Box
                 display="flex"
                 width="100%"
@@ -545,7 +545,7 @@ export default function DetalleVinculacion() {
                           {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => (
                             <Tr key={index}>
                               <Td textAlign="center">
-                                <Text fontSize="md">{index+1}</Text>
+                                <Text fontSize="md">{index + 1}</Text>
                               </Td>
                               <Td textAlign="center">
                                 <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaDesembolso)}</Text>
@@ -584,17 +584,20 @@ export default function DetalleVinculacion() {
                       name="Saldo"
                       placeholder="Saldo ($)"
                       isDisabled
-                      value={100000}
+                      value={
+                        data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos
+                          ?.reduce((total, desembolso) => total + (desembolso.montoDesembolsado || 0), 0)
+                      }
                     />
                     <FormLabel>Saldo ($)</FormLabel>
                   </FormControl>
-                  <Link to={`nuevo-desembolso`}>
-                    <Button colorScheme="blue" variant="outline">
-                      {" "}
-                      {/* Añadido el ancho del botón */}
-                      Agregar Desembolso
-                    </Button>
-                  </Link>
+                  {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length < data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos &&
+                    <Link to={`nuevo-desembolso`}>
+                      <Button colorScheme="blue" variant="outline">
+                        Agregar Desembolso
+                      </Button>
+                    </Link>
+                  }
                 </Box>
 
                 <br />
