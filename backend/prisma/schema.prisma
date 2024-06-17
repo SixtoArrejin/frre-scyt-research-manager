@@ -140,7 +140,7 @@ model desembolsos {
   fechaRendicion                 DateTime?                      @db.Date
   vinculacionesconfinanciamiento vinculacionesconfinanciamiento @relation(fields: [idConFinanciamiento], references: [idConFinanciamiento], onDelete: NoAction, onUpdate: NoAction, map: "desembolsos_ibfk_1")
 
-  @@id([idDesembolso, idConFinanciamiento])
+  @@id([idDesembolso])
   @@index([idConFinanciamiento], map: "desembolsos_idConFinanciamiento")
 }
 

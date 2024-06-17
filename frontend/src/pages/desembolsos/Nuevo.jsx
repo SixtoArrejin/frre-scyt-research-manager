@@ -50,13 +50,14 @@ import { useMutation, useQuery } from "react-query";
 import CustomModal from "../../components/CustomModal";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createDesembolsoByIdVinculacion } from "../../utils/api/vinculacionesApi";
 
 const schema = yup.object({
   fechaDesembolso: yup.date().required("La fecha es requerida"),
   plazoEtapa: yup
     .number()
     .required("El plazo es requerido"),
-  monto: yup.number().required("El monto es requerido"),
+  montoDesembolsado: yup.number().required("El monto es requerido"),
 });
 
 export default function NuevoDesembolso() {
@@ -73,6 +74,7 @@ export default function NuevoDesembolso() {
 
   const navigate = useNavigate();
   const toast = useToast();
+  const { idVinculacion } = useParams();
 
   const {
     register,
@@ -80,15 +82,16 @@ export default function NuevoDesembolso() {
     formState: { errors },
   } = useForm({
     defaultValues: {
+      idConFinanciamiento: parseInt(idVinculacion),
       fechaDesembolso: (new Date()).toISOString,
       plazoEtapa: null,
-      monto: null
+      montoDesembolsado: null
     },
     resolver: yupResolver(schema),
   });
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => createGrupo(formData),
+    mutationFn: (formData) => createDesembolsoByIdVinculacion(formData),
     onSuccess: () => {
       toast({
         title: "Crear desembolso",
@@ -220,11 +223,11 @@ export default function NuevoDesembolso() {
                         <Input
                           type="number"
                           placeholder="Monto"
-                          {...register("monto")}
+                          {...register("montoDesembolsado")}
                         />
                         <FormLabel>Monto</FormLabel>
                         <Text fontSize="sm" color="red">
-                          {errors.monto?.message}
+                          {errors.montoDesembolsado?.message}
                         </Text>
                       </FormControl>
                     </Box>

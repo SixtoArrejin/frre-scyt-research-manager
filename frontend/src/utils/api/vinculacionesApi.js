@@ -17,3 +17,7 @@ export async function getVinculacionById(idVinculacion) {
 export async function deleteConvenioById(idConvenio) {
   return del(`/api/convenios/${idConvenio}`)
 }
+
+export async function createDesembolsoByIdVinculacion(dataDesembolso) {
+  return post('/api/vinculaciones/desembolsos', dataDesembolso)
+}

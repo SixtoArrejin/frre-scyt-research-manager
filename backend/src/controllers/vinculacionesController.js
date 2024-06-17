@@ -1,6 +1,8 @@
 import {
   getAllVinculacionesService,
   getVinculacionByIdService,
+  createDesembolsoService,
+  getDesembolsoByIdService,
 } from "../services/vinculacionesService.js";
 
 export async function getAllVinculaciones(req, res) {
@@ -41,6 +43,28 @@ export async function getVinculacionById(req, res) {
     } else {
       return res.status(200).json({ message: `No se encuentran vinculaciones con id ${idVinculacion}`, success: true, vinculacion });
     }
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function createDesembolso(req, res) {
+  try {
+    const desembolsoData = req.body;
+    console.log(desembolsoData)
+    const newDesembolso = await createDesembolsoService(desembolsoData);
+    return res.status(201).json({ message: 'Desembolso creado exitosamente', success: true, newDesembolso });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function getDesembolsoById(req, res) {
+  try {
+    const {idDesembolso} = req.params;
+    const desembolsoId = parseInt(idDesembolso);
+    const desembolso = await getDesembolsoByIdService(desembolsoId);
+    return res.status(200).json({ message: 'Desembolso encontrado', success: true, desembolso });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
