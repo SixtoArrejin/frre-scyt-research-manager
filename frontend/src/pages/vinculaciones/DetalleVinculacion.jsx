@@ -542,35 +542,22 @@ export default function DetalleVinculacion() {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {[
-                            {
-                              nroDesembolso: 1,
-                              fecha: "12/12/2023",
-                              monto: 15000,
-                              estado: "En ejecucion",
-                            },
-                            {
-                              nroDesembolso: 2,
-                              fecha: "12/12/2023",
-                              monto: 14000,
-                              estado: "En ejecucion",
-                            },
-                          ].map((item, index) => (
+                          {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => (
                             <Tr key={index}>
                               <Td textAlign="center">
-                                <Text fontSize="md">{item.nroDesembolso}</Text>
+                                <Text fontSize="md">{index+1}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Text fontSize="md">{item.fecha}</Text>
+                                <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaDesembolso)}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Text fontSize="md">{item.monto}</Text>
+                                <Text fontSize="md">{item.montoDesembolsado}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Text fontSize="md">{item.estado}</Text>
+                                <Text fontSize="md">{item.estado || "-"}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Link to={`desembolsos/1`}>
+                                <Link to={`desembolsos/${item.idDesembolso}`}>
                                   <PlusSquareIcon />
                                 </Link>
                               </Td>
