@@ -124,7 +124,7 @@ export default function NuevoDesembolso() {
           justifyContent="center"
         >
           <Heading as="h2" size="xl" textAlign="center">
-            Nuevo desembolso
+            Nuevo Desembolso
           </Heading>
 
           <br />

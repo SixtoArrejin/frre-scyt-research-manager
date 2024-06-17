@@ -51,6 +51,7 @@ const routes = [
   { path: "/proyectos", element: <Proyectos /> },
   { path: "/proyectos/:idPid/vinculacion/:idVinculacion", element: <DetalleVinculacion /> },
   { path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolsos/:idDesembolso", element: <DetalleDesembolso /> },
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso", element: <NuevoDesembolso /> },
   { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
   { path: "/proyectos/nuevo", element: <Nuevo /> },
   { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
