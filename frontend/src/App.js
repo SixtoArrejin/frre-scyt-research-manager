@@ -28,10 +28,10 @@ import Nuevo from './pages/proyectos/Nuevo';
 import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
 import DetalleVinculacion from './pages/vinculaciones/DetalleVinculacion';
-import DetalleDesembolso from './pages/proyectos/DetalleDesembolso';
 import NuevaVinculacion from './pages/vinculaciones/Nueva';
 import NuevoDesembolso from "./pages/desembolsos/Nuevo";
 import ListaVinculaciones from "./pages/vinculaciones/ListaVinculaciones"
+import DetalleDesembolso from "./pages/desembolsos/DetalleDesembolso";
 import Home from "./pages/Home";
 
 
@@ -63,6 +63,7 @@ const routes = [
   { path: "/vinculaciones", element: <ListaVinculaciones /> },
   { path: "/vinculaciones/nuevo", element: <NuevaVinculacion /> },
   { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion /> },
+  { path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso", element: <DetalleDesembolso /> },
   { path: "/", element: <Home /> },
 ];
 
