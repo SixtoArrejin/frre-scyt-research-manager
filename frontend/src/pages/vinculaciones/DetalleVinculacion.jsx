@@ -585,6 +585,7 @@ export default function DetalleVinculacion() {
                       placeholder="Saldo ($)"
                       isDisabled
                       value={
+                        data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
                         data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos
                           ?.reduce((total, desembolso) => total + (desembolso.montoDesembolsado || 0), 0)
                       }
