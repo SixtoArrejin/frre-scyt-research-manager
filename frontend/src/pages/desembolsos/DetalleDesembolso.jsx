@@ -78,6 +78,7 @@ export default function DetalleDesembolso() {
       dataDesembolso?.desembolso?.plazoEtapa
     )
   );
+
   return (
     <Card>
       <CardBody>
@@ -177,7 +178,7 @@ export default function DetalleDesembolso() {
                         name="fecha de aprobado"
                         placeholder="Fecha de aprobado"
                         isDisabled
-                        value={dataDesembolso?.desembolso?.fechaAprobado}
+                        value={formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaAprobado)}
                       />
                       <FormLabel>Fecha de Aprobado</FormLabel>
                     </FormControl>
@@ -211,9 +212,9 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición real"
                         placeholder="Fecha de rendición real"
                         isDisabled
-                        /*                         value={formatoFechaISOaDDMMAAAA(
-                          data?.proyecto?.fechaFin
-                        )} */
+                      /*                         value={formatoFechaISOaDDMMAAAA(
+                        data?.proyecto?.fechaFin
+                      )} */
                       />
                       <FormLabel>Fecha de rendición real</FormLabel>
                     </FormControl>
@@ -226,7 +227,7 @@ export default function DetalleDesembolso() {
                         name="Monto rendido"
                         placeholder="Monto rendido"
                         isDisabled
-                        /* value={data?.proyecto?.programa} */
+                      /* value={data?.proyecto?.programa} */
                       />
                       <FormLabel>Monto rendido</FormLabel>
                     </FormControl>
@@ -247,7 +248,7 @@ export default function DetalleDesembolso() {
                         name="Estado"
                         placeholder="Estado"
                         isDisabled
-                        /* value={data?.proyecto?.tipoProyecto} */
+                      /* value={data?.proyecto?.tipoProyecto} */
                       />
                       <FormLabel>Estado</FormLabel>
                     </FormControl>
@@ -260,7 +261,7 @@ export default function DetalleDesembolso() {
                         name="Motivo de estado"
                         placeholder="Motivo de estado"
                         isDisabled
-                        /* value={data?.proyecto?.tipoActividad} */
+                      /* value={data?.proyecto?.tipoActividad} */
                       />
                       <FormLabel>Motivo de estado</FormLabel>
                     </FormControl>
@@ -319,8 +320,8 @@ export default function DetalleDesembolso() {
                           </ModalFooter>
                         </ModalContent>
                       </Modal>{" "}
-                      {/* No esta andando la comparacion de fechas  */}
-                      {convertirFechaDDMMAAAAaDate(fechaActual) >= convertirFechaDDMMAAAAaDate(fechaRendicion) && (
+                      {/* No esta andando la comparacion de fechas - AHORA SI */}
+                      {(fechaActual > fechaRendicion) && (
                         <Button
                           colorScheme="blue"
                           variant="outline"

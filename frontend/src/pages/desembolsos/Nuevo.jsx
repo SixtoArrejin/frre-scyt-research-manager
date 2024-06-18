@@ -81,7 +81,8 @@ export default function NuevoDesembolso() {
   } = useForm({
     defaultValues: {
       idConFinanciamiento: parseInt(idVinculacion),
-      fechaDesembolso: new Date().toISOString,
+      fechaDesembolso: new Date().toISOString().split("T")[0],
+      fechaAprobado: new Date().toISOString().split("T")[0],
       plazoEtapa: null,
       montoDesembolsado: null,
     },
@@ -238,11 +239,11 @@ export default function NuevoDesembolso() {
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
                       >
-                        <Input type="date" /* {...register("")}  *//>
+                        <Input type="date" {...register("fechaAprobado")}/>
                         <FormLabel>Fecha de aprobado</FormLabel>
-                        {/* <Text fontSize="sm" color="red">
-                          {errors.fechaDesembolso?.message}
-                        </Text> */}
+                        <Text fontSize="sm" color="red">
+                          {errors.fechaAprobado?.message}
+                        </Text>
                       </FormControl>
                     </Box>
                   </Box>
