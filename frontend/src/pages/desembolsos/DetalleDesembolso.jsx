@@ -49,7 +49,7 @@ import {
   getCategoriaMasActual,
 } from "../../utils/general";
 import { deleteCategoriaById } from "../../utils/api/categoriasApi";
-import { getProyectoById } from "../../utils/api/proyectosApi";
+import { getDesembolsoById } from "../../utils/api/proyectosApi";
 import CustomModal from "../../components/CustomModal";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
@@ -57,7 +57,7 @@ const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 export default function DetalleDesembolso() {
   const navigate = useNavigate();
 
-  const { idProyecto } = useParams();
+  const { idDesembolso } = useParams();
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -67,19 +67,6 @@ export default function DetalleDesembolso() {
   const closeModal = () => {
     setIsOpen(false);
   };
-
-  const { data, isLoading, error } = useQuery(["proyecto", idProyecto], () =>
-    getProyectoById(Number(idProyecto))
-  );
-  const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
-  const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [proyecto, setProyecto] = useState(data?.proyecto);
-
-  useEffect(() => {
-    setIntegrantes(data?.proyecto?.participa);
-    setGrupos(data?.proyecto?.tiene);
-    setProyecto(data?.proyecto);
-  }, [data]);
 
   return (
     <Card>
@@ -131,7 +118,7 @@ export default function DetalleDesembolso() {
                         name="Fecha de desembolso"
                         placeholder="Fecha de desembolso"
                         isDisabled
-                        value={data?.proyecto?.codPid}
+                        /* value={data?.proyecto?.codPid} */
                       />
                       <FormLabel>Fecha de desembolso</FormLabel>
                     </FormControl>
@@ -144,7 +131,7 @@ export default function DetalleDesembolso() {
                         name="Monto desembolsado"
                         placeholder="Monto desembolsado ($)"
                         isDisabled
-                        defaultValue={data?.proyecto?.regional}
+                        /* defaultValue={data?.proyecto?.regional} */
                       />
                       <FormLabel>Monto desembolsado ($)</FormLabel>
                     </FormControl>
@@ -165,11 +152,11 @@ export default function DetalleDesembolso() {
                         name="Plazo de etapa"
                         placeholder="Plazo de etapa"
                         isDisabled
-                        value={
+                        /*                         value={
                           data?.proyecto?.director.apellido +
                           ", " +
                           data?.proyecto?.director.nombre
-                        }
+                        } */
                       />
                       <FormLabel>Plazo de etapa</FormLabel>
                     </FormControl>
@@ -183,11 +170,11 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición estimada"
                         placeholder="Fecha de rendición estimada"
                         isDisabled
-                        value={
+                        /*                         value={
                           data?.proyecto?.codirector.apellido +
                           ", " +
                           data?.proyecto?.codirector.nombre
-                        }
+                        } */
                       />
                       <FormLabel>Fecha de rendición estimada</FormLabel>
                     </FormControl>
@@ -201,23 +188,6 @@ export default function DetalleDesembolso() {
                   >
                     <FormControl
                       variant="floating"
-                      id="fechaInicio"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Fecha aprobado"
-                        placeholder="Fecha aprobado"
-                        isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
-                          data?.proyecto?.fechaInicio
-                        )}
-                      />
-                      <FormLabel>Fecha aprobado</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
                       width={{ base: "100%", md: "47.5%" }}
                       mb="5vh"
                     >
@@ -225,20 +195,12 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición real"
                         placeholder="Fecha de rendición real"
                         isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
+                        /*                         value={formatoFechaISOaDDMMAAAA(
                           data?.proyecto?.fechaFin
-                        )}
+                        )} */
                       />
                       <FormLabel>Fecha de rendición real</FormLabel>
                     </FormControl>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
                     <FormControl
                       variant="floating"
                       width={{ base: "100%", md: "47.5%" }}
@@ -248,23 +210,9 @@ export default function DetalleDesembolso() {
                         name="Monto rendido"
                         placeholder="Monto rendido"
                         isDisabled
-                        value={data?.proyecto?.programa}
+                        /* value={data?.proyecto?.programa} */
                       />
                       <FormLabel>Monto rendido</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Estado"
-                        placeholder="Estado"
-                        isDisabled
-                        value={data?.proyecto?.tipoProyecto}
-                      />
-                      <FormLabel>Estado</FormLabel>
                     </FormControl>
                   </Box>
                   <Box
@@ -280,10 +228,23 @@ export default function DetalleDesembolso() {
                       mb="5vh"
                     >
                       <Input
+                        name="Estado"
+                        placeholder="Estado"
+                        isDisabled
+                        /* value={data?.proyecto?.tipoProyecto} */
+                      />
+                      <FormLabel>Estado</FormLabel>
+                    </FormControl>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "47.5%" }}
+                      mb="5vh"
+                    >
+                      <Input
                         name="Motivo de estado"
                         placeholder="Motivo de estado"
                         isDisabled
-                        value={data?.proyecto?.tipoActividad}
+                        /* value={data?.proyecto?.tipoActividad} */
                       />
                       <FormLabel>Motivo de estado</FormLabel>
                     </FormControl>
@@ -300,7 +261,13 @@ export default function DetalleDesembolso() {
                       </Button>
                     </Box>
                     <Box display="flex" width="30%" justifyContent="flex-end">
-                      <Button colorScheme="blue" variant="outline" onClick={()=>{navigate(-1)}}>
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={() => {
+                          navigate(-1);
+                        }}
+                      >
                         Volver
                       </Button>
                     </Box>
