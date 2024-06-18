@@ -16,7 +16,9 @@ export function formatoFechaISOaAAAAMMDD(fechaISO) {
 
 export function getCategoriaMasActual(categorias, tipo) {
   // Filtrar solo las categorías del tipo deseado
-  const categoriasFiltradas = categorias.filter((categoria) => categoria.tipo === tipo);
+  const categoriasFiltradas = categorias.filter(
+    (categoria) => categoria.tipo === tipo
+  );
 
   // Encontrar la categoría con la fecha más actual
   const categoriaMasActual = categoriasFiltradas.reduce((actual, categoria) => {
@@ -30,4 +32,9 @@ export function getCategoriaMasActual(categorias, tipo) {
   }, null);
 
   return categoriaMasActual;
+}
+
+export function convertirFechaDDMMAAAAaDate(fechaStr) {
+  const [dia, mes, año] = fechaStr.split("/").map(Number);
+  return new Date(año, mes - 1, dia);
 }

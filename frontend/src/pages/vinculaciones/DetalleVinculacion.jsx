@@ -557,7 +557,7 @@ export default function DetalleVinculacion() {
                                 <Text fontSize="md">{item.estado || "-"}</Text>
                               </Td>
                               <Td textAlign="center">
-                                <Link to={`desembolsos/${item.idDesembolso}`}>
+                                <Link to={`desembolso/${item.idDesembolso}`}>
                                   <PlusSquareIcon />
                                 </Link>
                               </Td>
