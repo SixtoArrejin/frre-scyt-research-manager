@@ -250,12 +250,11 @@ export default function DetalleDesembolso() {
                       <Button colorScheme="blue" variant="outline">
                         Ingresar fecha de rendición
                       </Button>{" "}
-                      {dataDesembolso?.desembolso?.fechaRendicion === null &&
-                        fechaRendicion <= fechaActual && (
-                          <Button colorScheme="blue" variant="outline">
-                            Ingresar motivo de fuera de plazo
-                          </Button>
-                        )}
+                      {fechaRendicion <= fechaActual && (
+                        <Button colorScheme="blue" variant="outline">
+                          Ingresar motivo de fuera de plazo
+                        </Button>
+                      )}
                     </Box>
                     <Box display="flex" width="30%" justifyContent="flex-end">
                       <Button
