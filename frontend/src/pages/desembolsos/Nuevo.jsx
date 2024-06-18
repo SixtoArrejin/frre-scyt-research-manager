@@ -54,9 +54,7 @@ import { createDesembolsoByIdVinculacion } from "../../utils/api/vinculacionesAp
 
 const schema = yup.object({
   fechaDesembolso: yup.date().required("La fecha es requerida"),
-  plazoEtapa: yup
-    .number()
-    .required("El plazo es requerido"),
+  plazoEtapa: yup.number().required("El plazo es requerido"),
   montoDesembolsado: yup.number().required("El monto es requerido"),
 });
 
@@ -83,9 +81,9 @@ export default function NuevoDesembolso() {
   } = useForm({
     defaultValues: {
       idConFinanciamiento: parseInt(idVinculacion),
-      fechaDesembolso: (new Date()).toISOString,
+      fechaDesembolso: new Date().toISOString,
       plazoEtapa: null,
-      montoDesembolsado: null
+      montoDesembolsado: null,
     },
     resolver: yupResolver(schema),
   });
@@ -164,10 +162,7 @@ export default function NuevoDesembolso() {
                         width={{ base: "100%", md: "50%" }}
                         mb="5vh"
                       >
-                        <Input
-                          type="date"
-                          {...register("fechaDesembolso")}
-                        />
+                        <Input type="date" {...register("fechaDesembolso")} />
                         <FormLabel>Fecha de desembolso</FormLabel>
                         <Text fontSize="sm" color="red">
                           {errors.fechaDesembolso?.message}
@@ -229,6 +224,25 @@ export default function NuevoDesembolso() {
                         <Text fontSize="sm" color="red">
                           {errors.montoDesembolsado?.message}
                         </Text>
+                      </FormControl>
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      width="50%"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <FormControl
+                        variant="floating"
+                        width={{ base: "100%", md: "50%" }}
+                        mb="5vh"
+                      >
+                        <Input type="date" /* {...register("")}  *//>
+                        <FormLabel>Fecha de aprobado</FormLabel>
+                        {/* <Text fontSize="sm" color="red">
+                          {errors.fechaDesembolso?.message}
+                        </Text> */}
                       </FormControl>
                     </Box>
                   </Box>
