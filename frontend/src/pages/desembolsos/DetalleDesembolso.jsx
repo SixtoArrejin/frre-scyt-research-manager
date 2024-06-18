@@ -13,7 +13,16 @@ import {
   useToast,
   Select,
   Textarea,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Stack,
 } from "@chakra-ui/react";
+
 import { Input, HStack } from "@chakra-ui/react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 
@@ -21,7 +30,10 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { getDesembolsoById } from "../../utils/api/vinculacionesApi";
-import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
+import {
+  formatoFechaISOaDDMMAAAA,
+  convertirFechaDDMMAAAAaDate,
+} from "../../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -29,14 +41,24 @@ export default function DetalleDesembolso() {
   const navigate = useNavigate();
 
   const { idDesembolso } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenRendicion, setIsOpenRendicion] = useState(false);
 
-  const openModal = () => {
-    setIsOpen(true);
+  const openModalRendicion = () => {
+    setIsOpenRendicion(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
+  const closeModalRendicion = () => {
+    setIsOpenRendicion(false);
+  };
+
+  const [isOpenFueraPlazo, setIsOpenFueraPlazo] = useState(false);
+
+  const openModalFueraPlazo = () => {
+    setIsOpenFueraPlazo(true);
+  };
+
+  const closeModalFueraPlazo = () => {
+    setIsOpenFueraPlazo(false);
   };
 
   const { data: dataDesembolso } = useQuery(["desembolso"], () =>
@@ -247,14 +269,103 @@ export default function DetalleDesembolso() {
                   <Box display="flex" width="100%" alignItems="center">
                     <Box width="70%">
                       {" "}
-                      <Button colorScheme="blue" variant="outline">
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={openModalRendicion}
+                      >
                         Ingresar fecha de rendición
                       </Button>{" "}
-                      {fechaRendicion <= fechaActual && (
-                        <Button colorScheme="blue" variant="outline">
+                      <Modal
+                        isCentered
+                        isOpen={isOpenRendicion}
+                        onClose={closeModalRendicion}
+                      >
+                        <ModalOverlay
+                          bg="blackAlpha.400"
+                          backdropFilter="blur(2px) hue-rotate(90deg)"
+                        />
+                        <ModalContent>
+                          <ModalHeader>Ingrese los datos</ModalHeader>
+                          <ModalCloseButton onClick={closeModalRendicion} />
+                          <ModalBody>
+                            <Stack spacing={4}>
+                              <Input
+                                name="Fecha Rendicion"
+                                placeholder="Fecha Rendicion"
+                                type="date"
+                              />
+                              <Input
+                                name="Monto rendido"
+                                type="number"
+                                placeholder="Monto rendido"
+                              />
+                            </Stack>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button onClick={closeModalRendicion}>
+                              Cerrar
+                            </Button>
+                            <Button
+                              ml={2}
+                              onClick={() => {
+                                /* onSave(); */
+                                closeModalRendicion();
+                              }}
+                              colorScheme="blue"
+                            >
+                              Guardar
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>{" "}
+                      {/* No esta andando la comparacion de fechas  */}
+                      {convertirFechaDDMMAAAAaDate(fechaActual) >= convertirFechaDDMMAAAAaDate(fechaRendicion) && (
+                        <Button
+                          colorScheme="blue"
+                          variant="outline"
+                          onClick={openModalFueraPlazo}
+                        >
                           Ingresar motivo de fuera de plazo
                         </Button>
                       )}
+                      <Modal
+                        isCentered
+                        isOpen={isOpenFueraPlazo}
+                        onClose={closeModalFueraPlazo}
+                      >
+                        <ModalOverlay
+                          bg="blackAlpha.400"
+                          backdropFilter="blur(2px) hue-rotate(90deg)"
+                        />
+                        <ModalContent>
+                          <ModalHeader>Ingrese los datos</ModalHeader>
+                          <ModalCloseButton onClick={closeModalFueraPlazo} />
+                          <ModalBody>
+                            <Stack spacing={4}>
+                              <Input
+                                name="Motivo de estado"
+                                placeholder="Montivo de estado"
+                              />
+                            </Stack>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button onClick={closeModalFueraPlazo}>
+                              Cerrar
+                            </Button>
+                            <Button
+                              ml={2}
+                              onClick={() => {
+                                /* onSave(); */
+                                closeModalFueraPlazo();
+                              }}
+                              colorScheme="blue"
+                            >
+                              Guardar
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
                     </Box>
                     <Box display="flex" width="30%" justifyContent="flex-end">
                       <Button
