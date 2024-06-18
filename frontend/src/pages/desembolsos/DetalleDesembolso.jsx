@@ -48,6 +48,14 @@ export default function DetalleDesembolso() {
     fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
     return fechaInicio;
   }
+
+  const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
+  const fechaRendicion = formatoFechaISOaDDMMAAAA(
+    sumarMeses(
+      dataDesembolso?.desembolso?.fechaDesembolso,
+      dataDesembolso?.desembolso?.plazoEtapa
+    )
+  );
   return (
     <Card>
       <CardBody>
@@ -160,12 +168,7 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición estimada"
                         placeholder="Fecha de rendición estimada"
                         isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
-                          sumarMeses(
-                            dataDesembolso?.desembolso?.fechaDesembolso,
-                            dataDesembolso?.desembolso?.plazoEtapa
-                          )
-                        )}
+                        value={fechaRendicion}
                       />
                       <FormLabel>Fecha de rendición estimada</FormLabel>
                     </FormControl>
@@ -247,9 +250,12 @@ export default function DetalleDesembolso() {
                       <Button colorScheme="blue" variant="outline">
                         Ingresar fecha de rendición
                       </Button>{" "}
-                      <Button colorScheme="blue" variant="outline">
-                        Ingresar motivo de fuera de plazo
-                      </Button>
+                      {dataDesembolso?.desembolso?.fechaRendicion === null &&
+                        fechaRendicion <= fechaActual && (
+                          <Button colorScheme="blue" variant="outline">
+                            Ingresar motivo de fuera de plazo
+                          </Button>
+                        )}
                     </Box>
                     <Box display="flex" width="30%" justifyContent="flex-end">
                       <Button
