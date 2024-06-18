@@ -15,42 +15,13 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
+import { FormControl, FormLabel } from "@chakra-ui/react";
+
 import { Link, useParams, useNavigate } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { getPersonaById } from "../../utils/api/personasApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  formatoFechaISOaDDMMAAAA,
-  getCategoriaMasActual,
-} from "../../utils/general";
-import { deleteCategoriaById } from "../../utils/api/categoriasApi";
-import { getDesembolsoById } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
+
+import { getDesembolsoById } from "../../utils/api/vinculacionesApi";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
@@ -68,6 +39,15 @@ export default function DetalleDesembolso() {
     setIsOpen(false);
   };
 
+  const { data: dataDesembolso } = useQuery(["desembolso"], () =>
+    getDesembolsoById(idDesembolso)
+  );
+  // Función para sumar meses a una fecha
+  function sumarMeses(fecha, meses) {
+    const fechaInicio = new Date(fecha); // Convertir la fecha ISO en objeto Date
+    fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
+    return fechaInicio;
+  }
   return (
     <Card>
       <CardBody>
@@ -118,7 +98,9 @@ export default function DetalleDesembolso() {
                         name="Fecha de desembolso"
                         placeholder="Fecha de desembolso"
                         isDisabled
-                        /* value={data?.proyecto?.codPid} */
+                        value={formatoFechaISOaDDMMAAAA(
+                          dataDesembolso?.desembolso?.fechaDesembolso
+                        )}
                       />
                       <FormLabel>Fecha de desembolso</FormLabel>
                     </FormControl>
@@ -131,7 +113,7 @@ export default function DetalleDesembolso() {
                         name="Monto desembolsado"
                         placeholder="Monto desembolsado ($)"
                         isDisabled
-                        /* defaultValue={data?.proyecto?.regional} */
+                        value={dataDesembolso?.desembolso?.montoDesembolsado}
                       />
                       <FormLabel>Monto desembolsado ($)</FormLabel>
                     </FormControl>
@@ -145,36 +127,45 @@ export default function DetalleDesembolso() {
                   >
                     <FormControl
                       variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: "100%", md: "28%" }}
                       mb="5vh"
                     >
                       <Input
                         name="Plazo de etapa"
                         placeholder="Plazo de etapa"
                         isDisabled
-                        /*                         value={
-                          data?.proyecto?.director.apellido +
-                          ", " +
-                          data?.proyecto?.director.nombre
-                        } */
+                        value={dataDesembolso?.desembolso?.plazoEtapa}
                       />
                       <FormLabel>Plazo de etapa</FormLabel>
                     </FormControl>
-
                     <FormControl
                       variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: "100%", md: "34%" }}
+                      mb="5vh"
+                    >
+                      <Input
+                        name="fecha de aprobado"
+                        placeholder="Fecha de aprobado"
+                        isDisabled
+                        value={dataDesembolso?.desembolso?.fechaAprobado}
+                      />
+                      <FormLabel>Fecha de Aprobado</FormLabel>
+                    </FormControl>
+                    <FormControl
+                      variant="floating"
+                      width={{ base: "100%", md: "34%" }}
                       mb="5vh"
                     >
                       <Input
                         name="Fecha de rendición estimada"
                         placeholder="Fecha de rendición estimada"
                         isDisabled
-                        /*                         value={
-                          data?.proyecto?.codirector.apellido +
-                          ", " +
-                          data?.proyecto?.codirector.nombre
-                        } */
+                        value={formatoFechaISOaDDMMAAAA(
+                          sumarMeses(
+                            dataDesembolso?.desembolso?.fechaDesembolso,
+                            dataDesembolso?.desembolso?.plazoEtapa
+                          )
+                        )}
                       />
                       <FormLabel>Fecha de rendición estimada</FormLabel>
                     </FormControl>
