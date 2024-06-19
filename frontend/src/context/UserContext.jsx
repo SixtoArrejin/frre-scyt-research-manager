@@ -3,8 +3,8 @@ import React, { createContext, useEffect, useState } from "react";
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState( localStorage.getItem("token") ? true : false );
-  const [currentUser, setCurrentUser] = useState( localStorage.getItem("usuario") ? JSON.parse(localStorage.getItem("usuario")) : undefined );
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token") ? true : false);
+  const [currentUser, setCurrentUser] = useState(localStorage.getItem("usuario") ? JSON.parse(localStorage.getItem("usuario")) : undefined);
 
   // Función para el inicio de sesión
   const login = (token, userData) => {
@@ -22,32 +22,30 @@ const UserProvider = ({ children }) => {
     setCurrentUser(null);
   };
 
-  // useEffect(() => {
-  //   // Cuando el estado de isLoggedIn cambia a true, buscamos el nombre de usuario en el local storage
-  //   if (isLoggedIn) {
-  //     const user = localStorage.getItem("usuario");
-  //     if (user) {
-  //       const auser = JSON.parse(user);
-  //       setCurrentUser(auser);
-  //     }
-  //   } else {
-  //     setCurrentUser(null);
-  //   }
-  // }, [isLoggedIn]);
-
-  useEffect(() => {
-    // Verificar si existe un token en el almacenamiento local
+  // Función para verificar y manejar la expiración del token
+  const checkTokenExpiration = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Si hay un token, el usuario está autenticado
-      setIsLoggedIn(true);
+      // Decodificar el token para obtener la fecha de expiración
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      const expirationTime = exp * 1000; // Fecha de expiración en milisegundos
 
-      // Obtener el objeto de usuario desde el almacenamiento local
-      const user = localStorage.getItem("usuario");
-      if (user) {
-        setCurrentUser(JSON.parse(user));
+      if (Date.now() >= expirationTime) {
+        // El token ha expirado, desloguear al usuario
+        logout();
       }
     }
+  };
+
+  useEffect(() => {
+    // Verificar y manejar la expiración del token cada minuto
+    const interval = setInterval(checkTokenExpiration, 60000); // Verificar cada minuto
+
+    // Verificar expiración al cargar la página
+    checkTokenExpiration();
+
+    // Limpiar intervalo al desmontar el componente
+    return () => clearInterval(interval);
   }, []);
 
   return (
