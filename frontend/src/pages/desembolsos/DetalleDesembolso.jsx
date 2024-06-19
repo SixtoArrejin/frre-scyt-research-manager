@@ -47,6 +47,7 @@ const schema = yup.object({
 export default function DetalleDesembolso() {
   const navigate = useNavigate();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const { idDesembolso } = useParams();
   const [isOpenRendicion, setIsOpenRendicion] = useState(false);
@@ -69,7 +70,7 @@ export default function DetalleDesembolso() {
     setIsOpenFueraPlazo(false);
   };
 
-  const { data: dataDesembolso } = useQuery(["desembolso"], () =>
+  const { data: dataDesembolso } = useQuery(["desembolso", idDesembolso], () =>
     getDesembolsoById(idDesembolso)
   );
   // Función para sumar meses a una fecha
@@ -104,13 +105,13 @@ export default function DetalleDesembolso() {
   const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
+      queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: "Rendición cargada",
         description: `Se ha cargado exitosamente`,
         status: "success",
         isClosable: true,
       });
-      navigate(-1);
     },
     onError: () => {
       toast({
@@ -125,7 +126,7 @@ export default function DetalleDesembolso() {
   const onSubmitRendicion = (values) => {
     console.log(values);
     mutateRendicion(values)
-    // closeModalRendicion();
+    closeModalRendicion();
   };
 
   return (

@@ -72,7 +72,7 @@ export default function DetalleVinculacion() {
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(["vinculacion"], () =>
+  const { data, isLoading, error } = useQuery(["vinculacion", idVinculacion], () =>
     getVinculacionById(idVinculacion)
   );
 
@@ -88,6 +88,12 @@ export default function DetalleVinculacion() {
       setFinanciamiento(true)
     }
   }, [data]);
+
+  const onDeleted = async (idConvenio) => {
+    await deleteConvenioById(Number(idConvenio))
+    queryClient.invalidateQueries(["vinculacion", idVinculacion]);
+    queryClient.refetchQueries(["vinculacion", idVinculacion]);
+  }
   
   return (
     <Card>
@@ -479,7 +485,7 @@ export default function DetalleVinculacion() {
                                 <Link to={``}>
                                   <DeleteIcon
                                     //onClick={() => deleteConvenioById(Number(convenio.idConvenio))}
-                                    onClick={() => deleteConvenioById(Number(convenio?.idConvenio))}
+                                    onClick={() => onDeleted(convenio.idConvenio)}
                                   />
                                 </Link>
                               </Td>
