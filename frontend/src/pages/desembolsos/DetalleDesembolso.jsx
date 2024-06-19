@@ -29,16 +29,24 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { getDesembolsoById } from "../../utils/api/vinculacionesApi";
+import { getDesembolsoById, putDesembolsoById } from "../../utils/api/vinculacionesApi";
 import {
   formatoFechaISOaDDMMAAAA,
   convertirFechaDDMMAAAAaDate,
 } from "../../utils/general";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
+const schema = yup.object({
+  
+});
+
 export default function DetalleDesembolso() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { idDesembolso } = useParams();
   const [isOpenRendicion, setIsOpenRendicion] = useState(false);
@@ -78,6 +86,46 @@ export default function DetalleDesembolso() {
       dataDesembolso?.desembolso?.plazoEtapa
     )
   );
+
+  const {
+    register: registerRendicion,
+    handleSubmit: handleSubmitRendicion,
+    formState: { errors: errorsRendicion },
+  } = useForm({
+    defaultValues: {
+      // idDesembolso: parseInt(idDesembolso),
+      fechaDeRendicionReal: new Date().toISOString().split("T")[0],
+      montoRendido: null,
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
+    mutationFn: (formData) => putDesembolsoById(formData),
+    onSuccess: () => {
+      toast({
+        title: "Rendición cargada",
+        description: `Se ha cargado exitosamente`,
+        status: "success",
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: "Error al registrar la rendición",
+        description: `Intente de nuevo.`,
+        status: "error",
+        isClosable: true,
+      });
+    },
+  });
+
+  const onSubmitRendicion = (values) => {
+    console.log(values);
+    // mutateRendicion(values) ACTIVAR CUANDO ESTE EL BACK
+    closeModalRendicion();
+  };
 
   return (
     <Card>
@@ -248,7 +296,7 @@ export default function DetalleDesembolso() {
                         name="Estado"
                         placeholder="Estado"
                         isDisabled
-                      /* value={data?.proyecto?.tipoProyecto} */
+                        value={dataDesembolso?.desembolso?.estado || "-"}
                       />
                       <FormLabel>Estado</FormLabel>
                     </FormControl>
@@ -295,11 +343,15 @@ export default function DetalleDesembolso() {
                                 name="Fecha Rendicion"
                                 placeholder="Fecha Rendicion"
                                 type="date"
+                                {...registerRendicion("fechaDeRendicionReal")}
                               />
                               <Input
                                 name="Monto rendido"
                                 type="number"
                                 placeholder="Monto rendido"
+                                {...registerRendicion("montoRendido", {
+                                  setValueAs: (v) => Number(v),
+                                })}
                               />
                             </Stack>
                           </ModalBody>
@@ -309,10 +361,7 @@ export default function DetalleDesembolso() {
                             </Button>
                             <Button
                               ml={2}
-                              onClick={() => {
-                                /* onSave(); */
-                                closeModalRendicion();
-                              }}
+                              onClick={handleSubmitRendicion((values) => onSubmitRendicion(values))}
                               colorScheme="blue"
                             >
                               Guardar

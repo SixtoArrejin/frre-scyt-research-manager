@@ -25,3 +25,7 @@ export async function createDesembolsoByIdVinculacion(dataDesembolso) {
 export async function getDesembolsoById(idDesembolso) {
   return get(`/api/vinculaciones/desembolsos/${idDesembolso}`);
 }
+
+export async function putDesembolsoById(idDesembolso, dataDesembolso){
+  return put(`/api/vinculaciones/desembolsos/${idDesembolso}`, dataDesembolso)
+}
