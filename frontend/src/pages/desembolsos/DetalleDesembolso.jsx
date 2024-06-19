@@ -86,7 +86,8 @@ export default function DetalleDesembolso() {
       dataDesembolso?.desembolso?.plazoEtapa
     )
   );
-
+  console.log("actual", fechaActual, convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion))
+  console.log("rendido", fechaRendicion)
   const {
     register: registerRendicion,
     handleSubmit: handleSubmitRendicion,
@@ -260,9 +261,11 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición real"
                         placeholder="Fecha de rendición real"
                         isDisabled
-                        value={formatoFechaISOaDDMMAAAA(
-                          dataDesembolso?.desembolso?.fechaDeRendicionReal
-                        )}
+                        value={
+                          dataDesembolso?.desembolso?.fechaDeRendicionReal ?
+                            formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaDeRendicionReal)
+                            : null
+                        }
                       />
                       <FormLabel>Fecha de rendición real</FormLabel>
                     </FormControl>
@@ -372,7 +375,7 @@ export default function DetalleDesembolso() {
                         </ModalContent>
                       </Modal>{" "}
                       {/* No esta andando la comparacion de fechas - AHORA SI */}
-                      {(fechaActual > fechaRendicion) && (
+                      {(convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)) && (
                         <Button
                           colorScheme="blue"
                           variant="outline"
