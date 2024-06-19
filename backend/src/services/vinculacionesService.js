@@ -1,3 +1,4 @@
+import { update } from '../repository/baseRepository.js';
 import {
   getAllVinculaciones,
   getVinculacionById,
@@ -41,6 +42,16 @@ export async function getDesembolsoByIdService(idDesembolso) {
   try {
     const desembolso = await getDesembolsoById(idDesembolso);
     return desembolso
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updateDesembolsoService(idDesembolso, desembolsoData) {
+  try {
+    const filter = { idDesembolso };
+    const updatedDesembolso = await update('desembolsos', filter, desembolsoData);
+    return updatedDesembolso;
   } catch (error) {
     throw new Error(error.message);
   }

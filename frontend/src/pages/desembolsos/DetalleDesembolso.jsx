@@ -41,7 +41,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
 
 const schema = yup.object({
-  
+
 });
 
 export default function DetalleDesembolso() {
@@ -101,7 +101,7 @@ export default function DetalleDesembolso() {
   });
 
   const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => putDesembolsoById(formData),
+    mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       toast({
         title: "Rendición cargada",
@@ -123,8 +123,8 @@ export default function DetalleDesembolso() {
 
   const onSubmitRendicion = (values) => {
     console.log(values);
-    // mutateRendicion(values) ACTIVAR CUANDO ESTE EL BACK
-    closeModalRendicion();
+    mutateRendicion(values)
+    // closeModalRendicion();
   };
 
   return (
@@ -260,9 +260,9 @@ export default function DetalleDesembolso() {
                         name="Fecha de rendición real"
                         placeholder="Fecha de rendición real"
                         isDisabled
-                      /*                         value={formatoFechaISOaDDMMAAAA(
-                        data?.proyecto?.fechaFin
-                      )} */
+                        value={formatoFechaISOaDDMMAAAA(
+                          dataDesembolso?.desembolso?.fechaDeRendicionReal
+                        )}
                       />
                       <FormLabel>Fecha de rendición real</FormLabel>
                     </FormControl>
@@ -275,7 +275,7 @@ export default function DetalleDesembolso() {
                         name="Monto rendido"
                         placeholder="Monto rendido"
                         isDisabled
-                      /* value={data?.proyecto?.programa} */
+                        value={dataDesembolso?.desembolso?.montoRendido || "-"}
                       />
                       <FormLabel>Monto rendido</FormLabel>
                     </FormControl>
@@ -318,13 +318,15 @@ export default function DetalleDesembolso() {
                   <Box display="flex" width="100%" alignItems="center">
                     <Box width="70%">
                       {" "}
-                      <Button
-                        colorScheme="blue"
-                        variant="outline"
-                        onClick={openModalRendicion}
-                      >
-                        Ingresar fecha de rendición
-                      </Button>{" "}
+                      {!dataDesembolso?.desembolso?.montoRendido &&
+                        <Button
+                          colorScheme="blue"
+                          variant="outline"
+                          onClick={openModalRendicion}
+                        >
+                          Ingresar fecha de rendición
+                        </Button>
+                      }
                       <Modal
                         isCentered
                         isOpen={isOpenRendicion}
