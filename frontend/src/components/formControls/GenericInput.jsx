@@ -7,7 +7,7 @@ const GenericInput = ({
   label,
   placeholder,
   register,
-  errors,
+  errors = {},
   type = 'text',
   width,
   value,
@@ -18,7 +18,7 @@ const GenericInput = ({
       name={name}
       placeholder={placeholder}
       type={type}
-      {...register(name)}
+      {...(register ? register(name) : {})}
       value={value}
       isDisabled={isDisabled}
     />

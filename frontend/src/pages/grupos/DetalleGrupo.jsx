@@ -1,62 +1,21 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
-import { Link, useParams } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { getGrupoById } from "../../utils/api/gruposApi";
-import { useQuery } from "react-query";
-import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from "../../utils/general";
-import { getProyectosByIdGrupo } from "../../utils/api/proyectosApi";
-import Tabla from "../../components/Tabla";
-
-const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
+import React, { useState, useEffect } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button} from '@chakra-ui/react';
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Link, useParams } from 'react-router-dom';
+import { getGrupoById } from '../../utils/api/gruposApi';
+import { useQuery } from 'react-query';
+import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from '../../utils/general';
+import { getProyectosByIdGrupo } from '../../utils/api/proyectosApi';
+import Tabla from '../../components/Tabla';
+import GenericInput from '../../components/formControls/GenericInput';
 
 export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams();
 
-  const { data, isLoading, error } = useQuery(["grupo"], () =>
-    getGrupoById(idGrupoInvestigacion)
-  );
+  const { data } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
 
-  const { data: dataProyectos } = useQuery(["proyectosGrupo"], () => getProyectosByIdGrupo(idGrupoInvestigacion))
+  const { data: dataProyectos } = useQuery(['proyectosGrupo'], () => getProyectosByIdGrupo(idGrupoInvestigacion));
 
-  const [investigadores, setInvestigadores] = useState([]);
   const [sortedInvestigadores, setSortedInvestigadores] = useState([]);
 
   const [proyectos, setProyectos] = useState([]);
@@ -64,8 +23,7 @@ export default function DetalleGrupo() {
   // Este efecto se ejecutará cada vez que `data` cambie
   useEffect(() => {
     if (data && data.grupo && data.grupo.personas) {
-      // Cuando tengas los datos de `grupo`, actualiza `investigadores` y `sortedInvestigadores`
-      setInvestigadores(data.grupo.personas);
+      // Cuando tengas los datos de `grupo`, actualiza `sortedInvestigadores`
 
       const sorted = [...data.grupo.personas].sort((a, b) => {
         const apellidoA = a.apellido.toLowerCase();
@@ -77,125 +35,43 @@ export default function DetalleGrupo() {
     }
 
     if (dataProyectos && dataProyectos.proyectos) {
-      setProyectos(dataProyectos.proyectos)
+      setProyectos(dataProyectos.proyectos);
     }
   }, [data, dataProyectos]);
-
-
-  /*   const categoriasUTN = data?.persona.categorias.filter(categoria => categoria.tipo === "utn");
-  const categoriasMIN = data?.persona.categorias.filter(categoria => categoria.tipo === "ministerio");
-  categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-  categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-  useEffect(() => {
-    console.log(categoriasUTN)
-    console.log(categoriasMIN)
-  }, [categoriasUTN, categoriasMIN]); */
 
   return (
     <Card>
       <CardBody>
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             DETALLES GRUPO
           </Heading>
 
           <br />
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Datos del grupo</Text>
+              <Text fontSize='md'>Datos del grupo</Text>
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-              >
-                <Box
-                  display="flex"
-                  flexDirection={{ base: "column", md: "row" }}
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <FormControl
-                    variant="floating"
-                    id="ayn"
-                    width={{ base: "100%", md: "30%" }}
-                    mb="5vh"
-                  >
-                    <Input
-                      name="ayn"
-                      placeholder="Nombre"
-                      value={data?.grupo.nombre}
-                      disabled
-                    />
-                    <FormLabel>Nombre</FormLabel>
-                  </FormControl>
+              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='center' justifyContent='space-between'>
+                  <GenericInput name='nombre' label='Nombre' width={{ base: '100%', md: '30%' }} value={data?.grupo.nombre} isDisabled />
 
-                  <FormControl
-                    variant="floating"
-                    id="dni"
-                    width={{ base: "100%", md: "20%" }}
-                    mb="5vh"
-                  >
-                    <Input
-                      name="dni"
-                      placeholder="Siglas"
-                      value={data?.grupo.siglas}
-                      disabled
-                    />
-                    <FormLabel>Siglas</FormLabel>
-                  </FormControl>
+                  <GenericInput name='siglas' label='Siglas' width={{ base: '100%', md: '20%' }} value={data?.grupo.siglas} isDisabled />
 
-                  <FormControl
-                    variant="floating"
-                    id="estado"
-                    width={{ base: "100%", md: "15%" }}
-                    mb="5vh"
-                  >
-                    <Input
-                      name="estado"
-                      placeholder="Resolucion"
-                      value={data?.grupo.resolucion}
-                      disabled
-                    />
-                    <FormLabel>Resolucion</FormLabel>
-                  </FormControl>
+                  <GenericInput name='resolucion' label='Resolución' width={{ base: '100%', md: '15%' }} value={data?.grupo.resolucion} isDisabled />
 
-                  <FormControl
-                    variant="floating"
-                    id="estado"
-                    width={{ base: "100%", md: "15%" }}
-                    mb="5vh"
-                  >
-                    <Input
-                      name="estado"
-                      placeholder="Estado"
-                      value={
-                        formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) ||
-                        ""
-                      }
-                      disabled
-                    />
-                    <FormLabel>Fecha</FormLabel>
-                  </FormControl>
+                  <GenericInput
+                    name='fechaCreacion'
+                    label='Fecha'
+                    width={{ base: '100%', md: '15%' }}
+                    value={formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) || ''}
+                    isDisabled
+                  />
                 </Box>
-                <Box
-                  display="flex"
-                  width="90%"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                >
+                <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
                   <Link to={`modificar`}>
-                    <Button colorScheme="blue" variant="outline">
+                    <Button colorScheme='blue' variant='outline'>
                       Modificar
                     </Button>
                   </Link>
@@ -205,33 +81,33 @@ export default function DetalleGrupo() {
           </Card>
 
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Integrantes</Text>
+              <Text fontSize='md'>Integrantes</Text>
               <br />
               <Tabla
                 columnas={['DNI', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Categoría', 'Ver Más']}
-                datos={sortedInvestigadores?.map((item, index) => {
-                  const categoriaMIN = getCategoriaMasActual(item.categorias, "ministerio");
+                datos={sortedInvestigadores?.map((item) => {
+                  const categoriaMIN = getCategoriaMasActual(item.categorias, 'ministerio');
                   return [
                     item.dni,
-                    item.apellido + " " + item.nombre,
-                    item.activo ? "Activo" : "Inactivo",
+                    item.apellido + ' ' + item.nombre,
+                    item.activo ? 'Activo' : 'Inactivo',
                     formatoFechaISOaDDMMAAAA(item.fechaIngreso),
-                    categoriaMIN?.categoria ? categoriaMIN?.categoria : "-",
+                    categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
                     <Link to={`/investigadores/${item.idPersona}`}>
                       <PlusSquareIcon />
-                    </Link>
-                  ]
+                    </Link>,
+                  ];
                 })}
               />
             </CardBody>
           </Card>
 
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Proyectos</Text>
+              <Text fontSize='md'>Proyectos</Text>
               <br />
               <Tabla
                 columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
@@ -239,14 +115,14 @@ export default function DetalleGrupo() {
                   return [
                     formatoFechaISOaDDMMAAAA(item.fechaInicio),
                     item.tipoActividad,
-                    item.personas_proyectos_idDirectorTopersonas?.apellido + " " + item.personas_proyectos_idDirectorTopersonas?.nombre,
-                    item.personas_proyectos_idCodirectorTopersonas?.apellido + " " + item.personas_proyectos_idCodirectorTopersonas?.nombre,
+                    item.personas_proyectos_idDirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idDirectorTopersonas?.nombre,
+                    item.personas_proyectos_idCodirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idCodirectorTopersonas?.nombre,
                     item.denominacion,
                     item.estado,
                     <Link to={`/investigadores/${item.idPersona}`}>
                       <PlusSquareIcon />
-                    </Link>
-                  ]
+                    </Link>,
+                  ];
                 })}
               />
             </CardBody>
