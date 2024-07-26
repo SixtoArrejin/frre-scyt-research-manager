@@ -54,6 +54,7 @@ import {
 } from "../../utils/general";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import GenericInput from "../../components/formControls/GenericInput";
 
 const schema = yup.object({
   nombre: yup.string().required("El nombre es requerido"),
@@ -168,23 +169,15 @@ export default function NuevoGrupo() {
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <FormControl
-                        variant="floating"
+                      <GenericInput
                         id="nombre"
+                        name="nombre"
+                        label="Nombre"
+                        placeholder="Nombre"
+                        register={register}
+                        errors={errors}
                         width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
-                        isRequired
-                      >
-                        <Input
-                          name="nombre"
-                          placeholder="Nombre"
-                          {...register("nombre")}
-                        />
-                        <FormLabel>Nombre</FormLabel>
-                        <Text fontSize="sm" color="red">
-                          {errors.nombre?.message}
-                        </Text>
-                      </FormControl>
+                      />
                     </Box>
 
                     <Box
