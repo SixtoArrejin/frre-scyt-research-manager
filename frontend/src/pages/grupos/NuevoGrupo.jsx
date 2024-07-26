@@ -1,69 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   Text,
   Heading,
   Box,
   Button,
-  Checkbox,
-  IconButton,
-  RadioGroup,
-  Stack,
-  Radio,
-  Select,
   useToast,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { useForm } from "react-hook-form";
-import { createGrupo } from "../../utils/api/gruposApi";
-import { useMutation, useQuery } from "react-query";
-import CustomModal from "../../components/CustomModal";
-import {
-  formatoFechaISOaAAAAMMDD,
-  formatoFechaISOaDDMMAAAA,
-} from "../../utils/general";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import GenericInput from "../../components/formControls/GenericInput";
+} from '@chakra-ui/react';
+
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { createGrupo } from '../../utils/api/gruposApi';
+import { useMutation } from 'react-query';
+import CustomModal from '../../components/CustomModal';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import GenericInput from '../../components/formControls/GenericInput';
 
 const schema = yup.object({
-  nombre: yup.string().required("El nombre es requerido"),
+  nombre: yup.string().required('El nombre es requerido'),
   resolucion: yup
     .string()
-    .required("La resolución es requerida")
+    .required('La resolución es requerida')
     .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
-  fechaCreacion: yup.string().required("La fecha es requerida"),
-  siglas: yup.string().required("Las siglas son requeridas"),
+  fechaCreacion: yup.string().required('La fecha es requerida'),
+  siglas: yup.string().required('Las siglas son requeridas'),
 });
 
 export default function NuevoGrupo() {
@@ -81,21 +43,16 @@ export default function NuevoGrupo() {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const [radio, setRadio] = useState("false");
-
-  const { idGrupoInvestigacion } = useParams();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm({
     defaultValues: {
-      nombre: "",
-      resolucion: "",
-      fechaCreacion: "",
-      siglas: "",
+      nombre: '',
+      resolucion: '',
+      fechaCreacion: '',
+      siglas: '',
     },
     resolver: yupResolver(schema),
   });
@@ -104,18 +61,18 @@ export default function NuevoGrupo() {
     mutationFn: (formData) => createGrupo(formData),
     onSuccess: () => {
       toast({
-        title: "Crear grupo",
+        title: 'Crear grupo',
         description: `Se ha creado exitosamente`,
-        status: "success",
+        status: 'success',
         isClosable: true,
       });
       navigate(-1);
     },
     onError: () => {
       toast({
-        title: "Error al crear el grupo",
+        title: 'Error al crear el grupo',
         description: `Intente de nuevo.`,
-        status: "error",
+        status: 'error',
         isClosable: true,
       });
     },
@@ -129,170 +86,96 @@ export default function NuevoGrupo() {
   return (
     <Card>
       <CardBody>
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             Nuevo Grupo
           </Heading>
 
           <br />
           <br />
 
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Ingrese los datos del grupo</Text>
+              <Text fontSize='md'>Ingrese los datos del grupo</Text>
               <br />
               <form onSubmit={handleSubmit((values) => onSub(values))}>
-                <Box
-                  display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                >
+                <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
+                    display='flex'
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width='100%'
+                    alignItems='center'
+                    justifyContent='space-between'
                   >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
-                        id="nombre"
-                        name="nombre"
-                        label="Nombre"
-                        placeholder="Nombre"
+                        id='nombre'
+                        name='nombre'
+                        label='Nombre'
+                        placeholder='Nombre'
                         register={register}
                         errors={errors}
-                        width={{ base: "100%", md: "50%" }}
+                        width={{ base: '100%', md: '50%' }}
                       />
                     </Box>
 
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="siglas"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
-                        isRequired
-                      >
-                        <Input
-                          name="siglas"
-                          placeholder="Siglas"
-                          {...register("siglas")}
-                        />
-                        <FormLabel>Siglas</FormLabel>
-                        <Text fontSize="sm" color="red">
-                          {errors.siglas?.message}
-                        </Text>
-                      </FormControl>
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        id='siglas'
+                        name='siglas'
+                        label='Siglas'
+                        placeholder='Siglas'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
+                      />
                     </Box>
                   </Box>
 
                   <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
+                    display='flex'
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width='100%'
+                    alignItems='center'
+                    justifyContent='space-between'
                   >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="resolucion"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
-                        isRequired
-                      >
-                        <Input
-                          name="resolucion"
-                          placeholder="Resolucion"
-                          {...register("resolucion")}
-                        />
-                        <FormLabel>Resolucion</FormLabel>
-                        <Text fontSize="sm" color="red">
-                          {errors.resolucion?.message}
-                        </Text>
-                      </FormControl>
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        id='resolucion'
+                        name='resolucion'
+                        label='Resolución'
+                        placeholder='Resolución'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
+                      />
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="fecha"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
-                        isRequired
-                      >
-                        <Input
-                          name="fecha"
-                          type="date"
-                          placeholder="Fecha"
-                          {...register("fechaCreacion")}
-                        />
-                        <FormLabel>Fecha Creacion</FormLabel>
-                        <Text fontSize="sm" color="red">
-                          {errors.fechaCreacion?.message}
-                        </Text>
-                      </FormControl>
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        id='fechaCreacion'
+                        name='fechaCreacion'
+                        label='Fecha Creación'
+                        placeholder='Fecha'
+                        type='date'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
+                      />
                     </Box>
                   </Box>
-                  <Box
-                    display="flex"
-                    width="90%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Button
-                      colorScheme="gray"
-                      variant="outline"
-                      mr="3%"
-                      onClick={() => navigate(-1)}
-                    >
+                  <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
+                    <Button colorScheme='gray' variant='outline' mr='3%' onClick={() => navigate(-1)}>
                       Cancelar
                     </Button>
-                    <Button
-                      onClick={openModal}
-                      colorScheme="blue"
-                      variant="outline"
-                    >
+                    <Button onClick={openModal} colorScheme='blue' variant='outline' isLoading={isLoadingMutation}>
                       Guardar
                     </Button>
                     <CustomModal
                       isOpen={isOpen}
                       onClose={closeModal}
                       guardar={true}
-                      title="Guardar nuevo grupo"
-                      content="Se guardara el nuevo grupo"
+                      title='Guardar nuevo grupo'
+                      content='Se guardara el nuevo grupo'
                       onSave={handleSubmit((values) => mutate(values))}
                     />
                   </Box>
