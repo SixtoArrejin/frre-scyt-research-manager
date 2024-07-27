@@ -92,13 +92,7 @@ export default function NuevoGrupo() {
               <br />
               <form onSubmit={handleSubmit((values) => onSub(values))}>
                 <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                  <Box
-                    display='flex'
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width='100%'
-                    alignItems='center'
-                    justifyContent='space-between'
-                  >
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
                         id='nombre'
@@ -108,6 +102,7 @@ export default function NuevoGrupo() {
                         register={register}
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
+                        isRequired
                       />
                     </Box>
 
@@ -120,17 +115,12 @@ export default function NuevoGrupo() {
                         register={register}
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
+                        isRequired
                       />
                     </Box>
                   </Box>
 
-                  <Box
-                    display='flex'
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width='100%'
-                    alignItems='center'
-                    justifyContent='space-between'
-                  >
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
                         id='resolucion'
@@ -140,6 +130,7 @@ export default function NuevoGrupo() {
                         register={register}
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
+                        isRequired
                       />
                     </Box>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
@@ -152,6 +143,7 @@ export default function NuevoGrupo() {
                         register={register}
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
+                        isRequired
                       />
                     </Box>
                   </Box>
