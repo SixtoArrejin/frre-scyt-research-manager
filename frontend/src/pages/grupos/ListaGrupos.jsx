@@ -52,7 +52,7 @@ export default function ListaGrupos() {
           <Box display='flex' width='100%'>
             <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
               <GenericInput
-                label='Siglas2'
+                label='Siglas'
                 placeholder='Siglas'
                 width='15vw'
                 value={siglas}
