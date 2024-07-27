@@ -13,9 +13,11 @@ const GenericInput = ({
   value,
   isDisabled = false,
   defaultValue,
-  isRequired = false
+  isRequired = false,
+  onChange = {},
+  mb = '5vh'
 }) => (
-  <FormControl variant='floating' id={id} mb='5vh' isRequired={isRequired} width={width}>
+  <FormControl variant='floating' id={id} mb={mb} isRequired={isRequired} width={width}>
     <Input
       name={name}
       placeholder={placeholder}
@@ -24,6 +26,7 @@ const GenericInput = ({
       value={value}
       defaultValue={defaultValue}
       isDisabled={isDisabled}
+      onChange={onChange}
     />
     <FormLabel>{label}</FormLabel>
     <Text fontSize='sm' color='red'>
