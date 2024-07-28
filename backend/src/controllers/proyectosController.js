@@ -106,6 +106,7 @@ export async function getProyectosDePersona(req, res) {
         convocatoria: proyecto.convocatoria,
         estado: proyecto.estado,
         rol: participacion.rol,
+        fechaIngreso: participacion.fechaInicio
       };
     });
 

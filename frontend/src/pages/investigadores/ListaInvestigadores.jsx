@@ -1,54 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  Text,
   Heading,
   Box,
-  Button,
-  Checkbox,
-  IconButton,
-  FormControl,
-  FormLabel,
-  Select,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-} from "@chakra-ui/react";
-// import investigadores from "../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import { Link } from "react-router-dom";
-import { getAllPersonas } from "../../utils/api/personasApi";
-import { useQuery } from 'react-query'
-import Tabla from "../../components/Tabla";
-import { getAllGrupos } from "../../utils/api/gruposApi";
-import { getCategoriaMasActual } from "../../utils/general";
+  Button
+} from '@chakra-ui/react';
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Link } from 'react-router-dom';
+import { getAllPersonas } from '../../utils/api/personasApi';
+import { useQuery } from 'react-query';
+import Tabla from '../../components/Tabla';
+import { getAllGrupos } from '../../utils/api/gruposApi';
+import { getCategoriaMasActual } from '../../utils/general';
+import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
 
-const columnas = [
-  'Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'
-];
+const columnas = ['Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'];
 
 export default function ListaInvestigadores() {
-  const [nombre, setNombre] = useState("");
-  const [grupo, setGrupo] = useState("");
+  const [nombre, setNombre] = useState('');
+  const [grupo, setGrupo] = useState('');
   const [filtro, setFiltro] = useState(false);
 
   const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
-  const { data: dataGrupos } = useQuery(["grupoFiltro"], () => getAllGrupos());
+  const { data: dataGrupos } = useQuery(['grupoFiltro'], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
-
 
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
@@ -56,21 +33,23 @@ export default function ListaInvestigadores() {
     return apellidoA.localeCompare(apellidoB);
   });
 
-  const filas = sortedInvestigadores?.map((item, index) => {
-    const categoriaUTN = getCategoriaMasActual(item.categorias, "utn");
-    const categoriaMIN = getCategoriaMasActual(item.categorias, "ministerio");
+  const filas = sortedInvestigadores?.map((item) => {
+    const categoriaUTN = getCategoriaMasActual(item.categorias, 'utn');
+    const categoriaMIN = getCategoriaMasActual(item.categorias, 'ministerio');
     return [
-      item.apellido + " " + item.nombre,
+      item.apellido + ' ' + item.nombre,
       item.activo ? 'Activo' : 'Inactivo',
       item.gruposinvestigacion.siglas,
-      (categoriaUTN ? categoriaUTN.categoria : "-"),
-      (categoriaMIN ? categoriaMIN.categoria : "-"),
-      (<Link to={`/investigadores/${item.idPersona}`}><PlusSquareIcon /></Link>)
-    ]
-  })
+      categoriaUTN ? categoriaUTN.categoria : '-',
+      categoriaMIN ? categoriaMIN.categoria : '-',
+      <Link to={`/investigadores/${item.idPersona}`}>
+        <PlusSquareIcon />
+      </Link>,
+    ];
+  });
 
   useEffect(() => {
-    if (nombre === "" && grupo === "") {
+    if (nombre === '' && grupo === '') {
       // Si no se está filtrando nada, utiliza los datos originales data?.personas
       setInvestigadores(data?.personas || []);
       setFiltro(false);
@@ -82,54 +61,37 @@ export default function ListaInvestigadores() {
           item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
       );
       setInvestigadores(filteredInvestigadores);
-      setFiltro(true)
+      setFiltro(true);
     }
   }, [nombre, grupo, data]);
-
 
   return (
     <Card>
       <CardBody>
-        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             Investigadores
           </Heading>
 
           <br />
 
-          <Box display="flex" width="100%">
-            <Box display="flex" justifyContent="space-between" width="45%" marginLeft="2%">
-              <InputLabel
-                placeholder="Nombre"
-                id="AyN"
-                width="15vw"
-                onChange={(event) => setNombre(event.target.value)}
-                value={nombre}
+          <Box display='flex' width='100%'>
+            <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+              <GenericInput label='Nombre' placeholder='Nombre' width='15vw' onChange={(event) => setNombre(event.target.value)} value={nombre} />
+              <GenericSelect
+                label='Grupo'
+                placeholder='Grupo...'
+                width={{ base: '100%', md: '50%' }}
+                options={dataGrupos?.grupos?.map((grupo) => ({
+                  value: grupo.siglas,
+                  label: grupo.siglas,
+                }))}
+                onChange={(event) => setGrupo(event.target.value)}
               />
-              <FormControl
-                variant="floating"
-                id="grupo"
-                width="15vw"
-              >
-                <Select
-                  placeholder="Grupo..."
-                  onChange={(event) => setGrupo(event.target.value)}
-                >
-                  {dataGrupos?.grupos.map((grupo, key) => (
-                    <option
-                      key={key}
-                      value={grupo.siglas}
-                    >
-                      {grupo.siglas}
-                    </option>
-                  ))}
-                </Select>
-                <FormLabel>Grupo</FormLabel>
-              </FormControl>
             </Box>
-            <Box display="flex" justifyContent="flex-end" width="55%">
+            <Box display='flex' justifyContent='flex-end' width='55%'>
               <Link to={'nuevo'}>
-                <Button colorScheme="blue" variant="outline" mr="5">
+                <Button colorScheme='blue' variant='outline' mr='5'>
                   Investigador +
                 </Button>
               </Link>
@@ -138,19 +100,12 @@ export default function ListaInvestigadores() {
 
           <br />
 
-          {investigadores && (
-            <Tabla
-              columnas={columnas}
-              datos={filas}
-              filtro={filtro}
-              checkbox={true}
-            />
-          )}
+          {investigadores && <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />}
 
           <br />
 
-          <Box display="flex" justifyContent="flex-end" width="100%">
-            <Button colorScheme="blue" variant="outline">
+          <Box display='flex' justifyContent='flex-end' width='100%'>
+            <Button colorScheme='blue' variant='outline'>
               Imprimir
             </Button>
           </Box>

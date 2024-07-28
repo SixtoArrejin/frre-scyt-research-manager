@@ -11,6 +11,7 @@ export default function GenericInput(props) {
     defaultValue,
     isDisabled,
     onChange,
+    disabled,
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
@@ -24,6 +25,7 @@ export default function GenericInput(props) {
     value,
     defaultValue,
     isDisabled,
+    disabled,
     onChange,
   };
 
