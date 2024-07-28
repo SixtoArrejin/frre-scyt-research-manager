@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormLabel, RadioGroup, Stack, Radio, Text } from '@chakra-ui/react';
+import { FormLabel, RadioGroup, Stack, Radio, Text, Box } from '@chakra-ui/react';
 
 export default function GenericRadio(props) {
   const {
@@ -15,12 +15,12 @@ export default function GenericRadio(props) {
   } = props;
 
   return (
-    <div {...rest}>
+    <Box {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
-      <RadioGroup defaultValue={defaultValue}>
+      <RadioGroup defaultValue={defaultValue} isDisabled={isDisabled}>
         <Stack direction={direction}>
           {options.map((option, index) => (
-            <Radio key={index} value={option.value} isDisabled={isDisabled} {...register(name)}>
+            <Radio key={index} value={option.value} isDisabled={option.isDisabled} {...register(name)}>
               {option.label}
             </Radio>
           ))}
@@ -29,6 +29,6 @@ export default function GenericRadio(props) {
       <Text fontSize='sm' color='red'>
         {name ? (props.errors ? (props.errors[name] ? props.errors[name]?.message : '') : '') : ''}
       </Text>
-    </div>
+    </Box>
   );
 }
