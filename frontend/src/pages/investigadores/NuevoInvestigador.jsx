@@ -1,63 +1,25 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  RadioGroup,
-  Stack,
-  Radio,
-  Select,
-  FormControl,
-  FormLabel,
-  useToast,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { useQuery, useMutation } from "react-query";
-import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
-import { useForm } from "react-hook-form";
-import { createPersona } from "../../utils/api/personasApi";
-import * as yup from "yup";
+import React, { useState } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
+import { getAllGrupos } from '../../utils/api/gruposApi';
+import { useForm } from 'react-hook-form';
+import { createPersona } from '../../utils/api/personasApi';
+import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomModal from "../../components/CustomModal";
+import CustomModal from '../../components/CustomModal';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import GenericInput from '../../components/formControls/GenericInput';
 
 const schema = yup.object({
-  nombre: yup.string().required("El nombre es requerido"),
-  apellido: yup.string().required("El apellido es requerido"),
+  nombre: yup.string().required('El nombre es requerido'),
+  apellido: yup.string().required('El apellido es requerido'),
   dni: yup
     .mixed()
-    .required("El DNI es requerido")
-    .test(
-      "NaN",
-      "El DNI es requerido",
-      (val) => !isNaN(val)
-    )
-    .test(
-      "lenDNI",
-      "El DNI debe tener 8 dígitos",
-      (val) => val.toString().length == 8
-    ),
-  idGrupoInvestigacion: yup.number().required("Indique a que grupo pertenece"),
+    .required('El DNI es requerido')
+    .test('NaN', 'El DNI es requerido', (val) => !isNaN(val))
+    .test('lenDNI', 'El DNI debe tener 8 dígitos', (val) => val.toString().length == 8),
+  idGrupoInvestigacion: yup.number().required('Indique a que grupo pertenece'),
 });
 
 export default function NuevoInvestigador() {
@@ -75,29 +37,15 @@ export default function NuevoInvestigador() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const [nya, setNya] = useState("");
-  const [dni, setDni] = useState("");
-  const [estado, setEstado] = useState("");
-  const [grupo, setGrupo] = useState("");
-
-  const [gruposExistentes, setGruposExistentes] = useState([
-    { label: "CINAPTIasdC" },
-    { label: "ACHasdETIQ" },
-  ]);
-
-  const {
-    data,
-    isLoading: isLoadingGetGrupos,
-    error,
-  } = useQuery("grupos", () => getAllGrupos());
+  const { data, isLoading: isLoadingGetGrupos, error } = useQuery('grupos', () => getAllGrupos());
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createPersona(formData),
     onSuccess: () => {
       toast({
-        title: "Nuevo investigador",
+        title: 'Nuevo investigador',
         description: `Se ha creado el nuevo investigador exitosamente`,
-        status: "success",
+        status: 'success',
         isClosable: true,
       });
       // navigate(`/investigadores/5`);
@@ -105,9 +53,9 @@ export default function NuevoInvestigador() {
     },
     onError: () => {
       toast({
-        title: "Error al cargar el investigador",
+        title: 'Error al cargar el investigador',
         description: `Intente de nuevo.`,
-        status: "error",
+        status: 'error',
         isClosable: true,
       });
     },
@@ -119,13 +67,13 @@ export default function NuevoInvestigador() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      nombre: "",
-      apellido: "",
+      nombre: '',
+      apellido: '',
       dni: null,
       idGrupoInvestigacion: null,
       activo: true,
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = (dataForm, event) => {
@@ -137,176 +85,92 @@ export default function NuevoInvestigador() {
   return (
     <Card>
       <CardBody>
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             Nuevo Investigador
           </Heading>
 
           <br />
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Ingrese los datos del investigador</Text>
+              <Text fontSize='md'>Ingrese los datos del investigador</Text>
               <br />
               <form onSubmit={handleSubmit((values) => mutate(values))}>
-                <Box
-                  display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                >
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="apellido"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        name='apellido'
+                        label='Apellido'
+                        placeholder='Apellido'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
                         isRequired
-                      >
-                        <Input
-                          name="apellido"
-                          placeholder="Apellido"
-                          {...register("apellido")}
-                        />
-                        <FormLabel>Apellido</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.apellido?.message}</Text>
-                      </FormControl>
+                        mb='5vh'
+                      />
                     </Box>
 
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="nombre"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        name='nombre'
+                        label='Nombre'
+                        placeholder='Nombre'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
                         isRequired
-                      >
-                        <Input
-                          name="nombre"
-                          placeholder="Nombre"
-                          {...register("nombre")}
-                        />
-                        <FormLabel>Nombre</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.nombre?.message}</Text>
-                      </FormControl>
+                        mb='5vh'
+                      />
                     </Box>
                   </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="dni"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericInput
+                        type='number'
+                        name='dni'
+                        label='DNIi'
+                        placeholder='DNI'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '50%' }}
                         isRequired
-                      >
-                        <Input
-                          name="dni"
-                          type="number"
-                          placeholder="DNI"
-                          {...register("dni", { valueAsNumber: true })}
-                        />
-                        <FormLabel>DNI</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.dni?.message}</Text>
-                      </FormControl>
+                        mb='5vh'
+                      />
                     </Box>
 
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      width="50%"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <FormControl
-                        variant="floating"
-                        id="grupo"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                      <GenericSelect
+                        name='idGrupoInvestigacion'
+                        label='Grupo'
+                        placeholder='Grupo...'
+                        width={{ base: '100%', md: '50%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Select
-                          placeholder="Grupo..."
-                          {...register("idGrupoInvestigacion", {
-                            valueAsNumber: true,
-                          })}
-                        >
-                          {data?.grupos.map((grupo, key) => (
-                            <option
-                              key={key}
-                              value={grupo.idGrupoInvestigacion}
-                            >
-                              {grupo.siglas}
-                            </option>
-                          ))}
-                        </Select>
-                        <FormLabel>Grupo</FormLabel>
-                        <Text fontSize="sm" color='red'>{errors.idGrupoInvestigacion?.message}</Text>
-                      </FormControl>
+                        register={register}
+                        options={data?.grupos.map((grupo) => ({
+                          value: grupo.idGrupoInvestigacion,
+                          label: grupo.siglas,
+                        }))}
+                        errors={errors}
+                      />
                     </Box>
                   </Box>
 
-                  <Box
-                    display="flex"
-                    width="90%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Button
-                      colorScheme="gray"
-                      variant="outline"
-                      onClick={() => navigate(-1)}
-                      mr="3%"
-                    >
+                  <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
+                    <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='3%'>
                       Cancelar
                     </Button>
-                    <Button onClick={openModal} colorScheme="blue" variant="outline">
+                    <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline'>
                       Guardar
                     </Button>
                     <CustomModal
                       isOpen={isOpen}
                       onClose={closeModal}
                       guardar={true}
-                      title="Guardar nuevo investigador"
-                      content="Se guardara el nuevo investigador"
+                      title='Guardar nuevo investigador'
+                      content='Se guardara el nuevo investigador'
                       onSave={handleSubmit((values) => mutate(values))}
                     />
                   </Box>

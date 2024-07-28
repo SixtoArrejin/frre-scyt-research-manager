@@ -1,25 +1,25 @@
 import React from 'react';
-import { FormControl, FormLabel, Input, Text } from '@chakra-ui/react';
+import { FormControl, FormLabel, Select, Text } from '@chakra-ui/react';
 
-export default function GenericInput(props) {
+export default function GenericSelect(props) {
   const {
     name,
-    placeholder,
     type,
+    placeholder,
     register,
     value,
     defaultValue,
     isDisabled,
     onChange,
+    options = [],
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
   const registerProps = register ? (type === 'number' ? register(name, { valueAsNumber: true }) : register(name)) : {};
 
-  const inputProps = {
+  const selectProps = {
     name,
     placeholder,
-    type,
     ...registerProps,
     value,
     defaultValue,
@@ -28,12 +28,18 @@ export default function GenericInput(props) {
   };
 
   // Filtra las propiedades undefined
-  Object.keys(inputProps).forEach((key) => inputProps[key] === undefined && delete inputProps[key]);
+  Object.keys(selectProps).forEach((key) => selectProps[key] === undefined && delete selectProps[key]);
 
   return (
     <FormControl variant='floating' {...rest}>
-      <Input {...inputProps} />
-      <FormLabel>{props.label ? props.label : ''}</FormLabel>
+      <Select {...selectProps}>
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </Select>
+      <FormLabel>{props.label}</FormLabel>
       <Text fontSize='sm' color='red'>
         {name ? (props.errors ? (props.errors[name] ? props.errors[name]?.message : '') : '') : ''}
       </Text>
