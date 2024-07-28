@@ -57,7 +57,6 @@ export default function ListaGrupos() {
                 width='15vw'
                 value={siglas}
                 onChange={(event) => setSiglas(event.target.value)}
-                mb='0'
               />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>

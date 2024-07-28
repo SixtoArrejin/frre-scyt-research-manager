@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button} from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getGrupoById } from '../../utils/api/gruposApi';
@@ -55,11 +55,18 @@ export default function DetalleGrupo() {
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='center' justifyContent='space-between'>
-                  <GenericInput name='nombre' label='Nombre' width={{ base: '100%', md: '30%' }} value={data?.grupo.nombre} isDisabled />
+                  <GenericInput name='nombre' label='Nombre' width={{ base: '100%', md: '30%' }} value={data?.grupo.nombre} isDisabled mb='5vh' />
 
-                  <GenericInput name='siglas' label='Siglas' width={{ base: '100%', md: '20%' }} value={data?.grupo.siglas} isDisabled />
+                  <GenericInput name='siglas' label='Siglas' width={{ base: '100%', md: '20%' }} value={data?.grupo.siglas} isDisabled mb='5vh' />
 
-                  <GenericInput name='resolucion' label='Resolución' width={{ base: '100%', md: '15%' }} value={data?.grupo.resolucion} isDisabled />
+                  <GenericInput
+                    name='resolucion'
+                    label='Resolución'
+                    width={{ base: '100%', md: '15%' }}
+                    value={data?.grupo.resolucion}
+                    isDisabled
+                    mb='5vh'
+                  />
 
                   <GenericInput
                     name='fechaCreacion'
@@ -67,6 +74,7 @@ export default function DetalleGrupo() {
                     width={{ base: '100%', md: '15%' }}
                     value={formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) || ''}
                     isDisabled
+                    mb='5vh'
                   />
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>

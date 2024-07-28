@@ -95,7 +95,6 @@ export default function NuevoGrupo() {
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
-                        id='nombre'
                         name='nombre'
                         label='Nombre'
                         placeholder='Nombre'
@@ -103,12 +102,12 @@ export default function NuevoGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
 
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
-                        id='siglas'
                         name='siglas'
                         label='Siglas'
                         placeholder='Siglas'
@@ -116,6 +115,7 @@ export default function NuevoGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                   </Box>
@@ -123,7 +123,6 @@ export default function NuevoGrupo() {
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
-                        id='resolucion'
                         name='resolucion'
                         label='Resolución'
                         placeholder='Resolución'
@@ -131,11 +130,11 @@ export default function NuevoGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
-                        id='fechaCreacion'
                         name='fechaCreacion'
                         label='Fecha Creación'
                         placeholder='Fecha'
@@ -144,6 +143,7 @@ export default function NuevoGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                   </Box>

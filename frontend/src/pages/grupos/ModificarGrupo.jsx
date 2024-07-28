@@ -113,6 +113,7 @@ export default function ModificarGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
 
@@ -126,6 +127,7 @@ export default function ModificarGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                   </Box>
@@ -141,6 +143,7 @@ export default function ModificarGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
@@ -154,6 +157,7 @@ export default function ModificarGrupo() {
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
+                        mb='5vh'
                       />
                     </Box>
                   </Box>
