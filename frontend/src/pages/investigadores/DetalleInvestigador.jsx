@@ -181,7 +181,7 @@ export default function DetalleInvestigador() {
               <br />
               <Tabla
                 columnas={['Fec. Inicio', 'Fec. Fin', 'Denominación', 'Tipo Act.', 'Estado', 'Ing. al proyecto', 'Rol', 'Más']}
-                datos={dataProyectos.proyectos.map((item) => [
+                datos={dataProyectos?.proyectos?.map((item) => [
                   formatoFechaISOaDDMMAAAA(item.fechaInicio),
                   formatoFechaISOaDDMMAAAA(item.fechaFin),
                   item.denominacion,
