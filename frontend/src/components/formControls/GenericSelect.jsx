@@ -12,6 +12,7 @@ export default function GenericSelect(props) {
     isDisabled,
     onChange,
     options = [],
+    isSearchable = false,
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
@@ -25,6 +26,7 @@ export default function GenericSelect(props) {
     defaultValue,
     isDisabled,
     onChange,
+    isSearchable,
   };
 
   // Filtra las propiedades undefined

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, FormLabel, Input, Text } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Text, Textarea } from '@chakra-ui/react';
 
 export default function GenericInput(props) {
   const {
@@ -12,6 +12,7 @@ export default function GenericInput(props) {
     isDisabled,
     onChange,
     disabled,
+    textArea = false,
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
@@ -34,7 +35,8 @@ export default function GenericInput(props) {
 
   return (
     <FormControl variant='floating' {...rest}>
-      <Input {...inputProps} />
+      {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps}/> : <Input {...inputProps} />}
+      {/* <Input {...inputProps} /> */}
       <FormLabel>{props.label ? props.label : ''}</FormLabel>
       <Text fontSize='sm' color='red'>
         {name ? (props.errors ? (props.errors[name] ? props.errors[name]?.message : '') : '') : ''}
