@@ -1,40 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  Text,
-  Heading,
-  Box,
-  Button,
-  RadioGroup,
-  Radio,
-  Select,
-  FormControl,
-  FormLabel,
-  useToast,
-  Textarea,
-} from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useQuery, useMutation } from "react-query";
-import { useFieldArray, useForm } from "react-hook-form";
-import { createProyecto, createVinculacion } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
+import React, { useState } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { createVinculacion } from '../../utils/api/proyectosApi';
+import CustomModal from '../../components/CustomModal';
+import GenericInput from '../../components/formControls/GenericInput';
+import GenericRadio from '../../components/formControls/GenericRadio';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import Tabla from '../../components/Tabla';
 
 export default function NuevaVinculacion() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
-  const { idPid } = useParams()
+  const { idPid } = useParams();
 
   const openModal = () => {
     setIsOpen(true);
@@ -47,16 +27,16 @@ export default function NuevaVinculacion() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const [selectedConvenio, setSelectedConvenio] = useState()
-  const [nroConvenio, setNroConvenio] = useState()
+  const [selectedConvenio, setSelectedConvenio] = useState();
+  const [nroConvenio, setNroConvenio] = useState();
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createVinculacion(idPid, formData), //Cambiar por createVinculacion(idPid, formData)
     onSuccess: () => {
       toast({
-        title: "Nueva Vinculación",
+        title: 'Nueva Vinculación',
         description: `Se ha creado la nueva vinculación exitosamente`,
-        status: "success",
+        status: 'success',
         isClosable: true,
       });
       navigate(-1);
@@ -64,62 +44,50 @@ export default function NuevaVinculacion() {
     onError: (error) => {
       const errorMessage = error?.message;
       toast({
-        title: "Error al crear la vinculación",
-        description: `${errorMessage || "Intente nuevamente"}`,
-        status: "error",
+        title: 'Error al crear la vinculación',
+        description: `${errorMessage || 'Intente nuevamente'}`,
+        status: 'error',
         isClosable: true,
       });
     },
   });
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    setValue,
-  } = useForm({
+  const { control, register, handleSubmit, setValue } = useForm({
     defaultValues: {
       adjudicacion: null,
       beneficiario: null,
       desembolsos: null,
       empresaInstitucion: null,
       nroMarco: null,
-      financiamiento: false,
+      financiamiento: 'false',
       linea: null,
       monto: null,
       plazoEjecucion: null,
       presentacion: null,
-    }
+    },
   });
 
-  const { fields: convenios, append, remove, update } = useFieldArray({
+  const {
+    fields: convenios,
+    append,
+    remove,
+    update,
+  } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "convenios", // Nombre del campo de formulario que es un arreglo
+    name: 'convenios', // Nombre del campo de formulario que es un arreglo
   });
 
-  const [financiamiento, setFinanciamiento] = useState(false)
-  const onChangeRadioFinanciamiento = (value) => {
-    if (value === "true") {
-      setFinanciamiento(true)
-      setValue("financiamiento", true);
-    } else {
-      setFinanciamiento(false)
-      setValue("financiamiento", false);
-    }
-  };
+  const tipoFinanciamiento = useWatch({ control, name: 'financiamiento' });
 
   const agregarConvenio = () => {
     // Verificar si ya existe un convenio con el mismo tipo y número
-    const convenioExistente = convenios.find(
-      (convenio) =>
-        convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenio
-    );
-  
+    const convenioExistente = convenios.find((convenio) => convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenio);
+
     if (convenioExistente) {
       // Mostrar un mensaje de error o realizar alguna acción apropiada
       toast({
-        title: "Este convenio ya fue agregado",
-        status: "info",
+        title: 'Este convenio ya fue agregado',
+        status: 'info',
         isClosable: true,
       });
     } else {
@@ -129,115 +97,71 @@ export default function NuevaVinculacion() {
   };
 
   const eliminarConvenio = (index) => {
-    remove(index)
-  }
+    remove(index);
+  };
 
   const onSub = (values) => {
-    // console.log(values);
-    mutate(values);
+    const modifiedValues = {
+      ...values,
+      financiamiento: values.financiamiento == 'true',
+    };
+    // console.log(modifiedValues);
+    mutate(modifiedValues);
   };
 
   return (
     <Card>
       <CardBody>
-        <form
-          style={{ width: "100%" }}
-          onSubmit={handleSubmit((values) => onSub(values))}
-        >
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Heading as="h2" size="xl" textAlign="center">
+        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
+          <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+            <Heading as='h2' size='xl' textAlign='center'>
               Nueva Vinculacion
             </Heading>
             <br />
-            <Card width="100%">
+            <Card width='100%'>
               <CardBody>
-                <Text fontSize="md">
-                  Ingrese los datos de la nueva vinculación
-                </Text>
+                <Text fontSize='md'>Ingrese los datos de la nueva vinculación</Text>
                 <br />
-                <Box
-                  display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                >
-                  <Box
-                    display="flex"
-                    width="70%"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                  <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        name='empresaInstitucion'
+                        label='Empresa/Institución'
+                        placeholder='Empresa/Institución'
+                        register={register}
+                        width={{ base: '100%', md: '50%' }}
                         isRequired
-                      >
-                        <Input
-                          placeholder="Empresa/Institución"
-                          {...register("empresaInstitucion")}
+                        mb='5vh'
+                      />
+                      <Box width={{ base: '100%', md: '45%' }} display='flex' justifyContent='center'>
+                        <GenericRadio
+                          name='financiamiento'
+                          // label='Tipo de categoria:'
+                          direction='row'
+                          options={[
+                            { value: 'true', label: 'Con financiamiento' },
+                            { value: 'false', label: 'Sin financiamiento' },
+                          ]}
+                          register={register}
+                          defaultValue='false'
+                          mb='5vh'
+                          width={'100%'}
                         />
-                        <FormLabel>Empresa/Institución</FormLabel>
-                      </FormControl>
-                      <Box
-                        width={{ base: "100%", md: "45%" }}
-                        display="flex"
-                        justifyContent="center"
-                      >
-                        <Box display={'flex'} >
-                          <RadioGroup
-                            onChange={onChangeRadioFinanciamiento}
-                            // value={valueCategoria}
-                            mb="5vh"
-                            defaultValue="false"
-                            width={'100%'}
-                          >
-                            <HStack>
-                              <Radio value="true" >Con financiamiento</Radio>
-                              <Radio value="false" >Sin financiamiento</Radio>
-                            </HStack>
-                          </RadioGroup>
-                        </Box>
                       </Box>
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "50%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        type='number'
+                        name='nroMarco'
+                        placeholder='Nro Marco'
+                        register={register}
+                        label='Nro Marco'
+                        width={{ base: '100%', md: '50%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          name="apellido"
-                          type="number"
-                          placeholder="Nro Marco"
-                          {...register("nroMarco", { valueAsNumber: true })}
-                        />
-                        <FormLabel>Nro Marco</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
-
                   </Box>
                 </Box>
               </CardBody>
@@ -246,408 +170,222 @@ export default function NuevaVinculacion() {
 
           {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Convenios</Text>
+              <Text fontSize='md'>Convenios</Text>
               <br />
-              <Box
-                display="flex"
-                flexDirection="column"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-              >
+              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                 <br />
-                <Box display="flex" width="100%">
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    justifyContent="space-between"
-                    width="60%"
-                    marginLeft="2%"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "35%" }}
-                      mb="5vh"
-                    >
-                      <Select
-                        isSearchable={true}
-                        onChange={(e) => {
-                          setSelectedConvenio(e.target.value);
-                        }}
-                      >
-                        {['Especifico', 'Colaboración', 'Otro...'].map((item, index) => (
-                          <option key={index} value={item}>
-                            {item}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormLabel>Tipo de convenio</FormLabel>
-                    </FormControl>
+                <Box display='flex' width='100%'>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} justifyContent='space-between' width='60%' marginLeft='2%'>
+                    <GenericSelect
+                      isSearchable={true}
+                      label='Tipo de convenio'
+                      options={['Especifico', 'Colaboración', 'Otro...'].map((item) => ({
+                        value: item,
+                        label: item,
+                      }))}
+                      onChange={(e) => {
+                        setSelectedConvenio(e.target.value);
+                      }}
+                      width={{ base: '100%', md: '35%' }}
+                      mb='5vh'
+                    />
+                    <GenericInput
+                      placeholder='Nro Convenio'
+                      label='Nro Convenio'
+                      width={{ base: '100%', md: '35%' }}
+                      mb='5vh'
+                      onChange={(e) => setNroConvenio(Number(e.target.value))}
+                    />
 
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "35%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="nroConvenio"
-                        placeholder="Nro Convenio"
-                        onChange={(e) => setNroConvenio(Number(e.target.value))}
-                      />
-                      <FormLabel>Nro Convenio</FormLabel>
-                    </FormControl>
-
-                    <Box display="flex" justifyContent="flex-end" width="20%">
-                      <Button
-                        colorScheme="blue"
-                        variant="outline"
-                        // onClick={() => alert('new convenio')}
-                        onClick={agregarConvenio}
-                      >
+                    <Box display='flex' justifyContent='flex-end' width='20%'>
+                      <Button colorScheme='blue' variant='outline' onClick={agregarConvenio}>
                         Agregar
                       </Button>
                     </Box>
                   </Box>
-
                 </Box>
 
-                <Card width="100%">
-                  <CardBody>
-                    <TableContainer>
-                      <Table
-                        size="sm"
-                        variant="striped"
-                        colorScheme="blackAlpha"
-                      >
-                        <Thead>
-                          <Tr>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Tipo</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Número</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Eliminar</Text>
-                            </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {convenios?.map((item, index) => {
-                            return (
-                              <Tr key={index}>
-                                <Td textAlign="center">
-                                  <Text
-                                    fontSize="md"
-                                    {...register(
-                                      `convenios[${index}]`,
-                                      { value: item }
-                                    )}
-                                  >
-                                    {item.tipoConvenio}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <Text fontSize="md">
-                                    {item.nroConvenio}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <DeleteIcon
-                                    cursor={"pointer"}
-                                    onClick={() => {
-                                      eliminarConvenio(index)
-                                    }}
-                                  />
-                                </Td>
-                              </Tr>
-                            );
-                          })}
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                  </CardBody>
-                </Card>
+                <Tabla
+                  columnas={['Tipo', 'Número', 'Eliminar']}
+                  datos={convenios?.map((item, index) => {
+                    return [
+                      <div {...register(`convenios[${index}]`, { value: item })}>{item.tipoConvenio}</div>,
+                      item.nroConvenio,
+                      <DeleteIcon
+                        cursor={'pointer'}
+                        onClick={() => {
+                          eliminarConvenio(index);
+                        }}
+                      />,
+                    ];
+                  })}
+                  paginado={false}
+                />
               </Box>
-
             </CardBody>
           </Card>
           <br />
 
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">
-                Ingrese los datos del convenio {financiamiento === true ? 'con' : 'sin'} financiamiento
-              </Text>
+              <Text fontSize='md'>Ingrese los datos del convenio {tipoFinanciamiento === 'true' ? 'con' : 'sin'} financiamiento</Text>
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-              >
-                {(financiamiento === true) &&
-                  <Box
-                    display="flex"
-                    width="75%"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                {tipoFinanciamiento === 'true' && (
+                  <Box display='flex' width='75%' alignItems='center' justifyContent='center' flexDirection='column'>
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        name='titulo'
+                        placeholder='Título'
+                        register={register}
+                        label='Título'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          placeholder="Título"
-                          {...register("titulo")}
-                        />
-                        <FormLabel>Título</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                      />
+                      <GenericInput
+                        name='beneficiario'
+                        placeholder='Nombre del beneficiario'
+                        register={register}
+                        label='Nombre del beneficiario'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="text"
-                          placeholder="Nombre del beneficiario"
-                          {...register("beneficiario")}
-                        />
-                        <FormLabel>Nombre del beneficiario</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        type='number'
+                        name='monto'
+                        placeholder='Monto'
+                        register={register}
+                        label='Monto'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="number"
-                          placeholder="Monto"
-                          {...register("monto", { valueAsNumber: true })}
-                        />
-                        <FormLabel>Monto</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                      />
+                      <GenericInput
+                        type='number'
+                        name='desembolsos'
+                        placeholder='Cantidad de desembolsos'
+                        register={register}
+                        label='Cantidad de desembolsos'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="number"
-                          placeholder="Cantidad de desembolsos"
-                          {...register("desembolsos", { valueAsNumber: true })}
-                        />
-                        <FormLabel>Cantidad de desembolsos</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
 
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        type='date'
+                        name='presentacion'
+                        register={register}
+                        label='Presentación'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="date"
-                          {...register("presentacion", { valueAsDate: true })}
-                        />
-                        <FormLabel>Presentación</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                      />
+                      <GenericInput
+                        type='date'
+                        name='adjudicacion'
+                        register={register}
+                        label='Adjudicación'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="date"
-                          {...register("adjudicacion", { valueAsDate: true })}
-                        />
-                        <FormLabel>Adjudicación</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        type='number'
+                        name='plazoEjecucion'
+                        placeholder='Plazo de ejecución'
+                        register={register}
+                        label='Plazo de ejecución (meses)'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="number"
-                          placeholder="Plazo de ejecución"
-                          {...register("plazoEjecucion", { valueAsNumber: true })}
-                        />
-                        <FormLabel>Plazo de ejecución (meses)</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                      />
+                      <GenericSelect
+                        name='linea'
+                        label='Línea'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Select
-                          placeholder="Línea..."
-                          isSearchable={true}
-                          {...register("linea")}
-                        >
-                          {['1ro', '2do', '3ro'].map((item, index) => (
-                            <option key={index} value={item}>
-                              {item}
-                            </option>
-                          ))}
-                        </Select>
-                        <FormLabel>Línea</FormLabel>
-                      </FormControl>
+                        register={register}
+                        options={['1ro', '2do', '3ro'].map((item) => ({
+                          value: item,
+                          label: item,
+                        }))}
+                        placeholder='Línea...'
+                      />
                     </Box>
                   </Box>
-                }
+                )}
 
-                {(financiamiento === false) &&
-                  <Box
-                    display="flex"
-                    width="75%"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                  >
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                {tipoFinanciamiento === 'false' && (
+                  <Box display='flex' width='75%' alignItems='center' justifyContent='center' flexDirection='column'>
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        type='date'
+                        name='fechaInicio'
+                        register={register}
+                        label='Inicio'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="date"
-                          {...register("fechaInicio", { valueAsDate: true })}
-                        />
-                        <FormLabel>Inicio</FormLabel>
-                      </FormControl>
-
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "47.5%" }}
-                        mb="5vh"
+                      />
+                      <GenericInput
+                        type='date'
+                        name='fechaCierre'
+                        register={register}
+                        label='Cierre'
+                        width={{ base: '100%', md: '47.5%' }}
+                        mb='5vh'
                         isRequired
-                      >
-                        <Input
-                          type="date"
-                          {...register("fechaCierre", { valueAsDate: true })}
-                        />
-                        <FormLabel>Cierre</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <FormControl
-                        variant="floating"
-                        width={{ base: "100%", md: "100%" }}
-                        mb="5vh"
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        textArea
+                        name='descripcion'
+                        placeholder='Descripción'
+                        register={register}
+                        label='Descripción'
+                        width='100%'
+                        mb='5vh'
                         isRequired
-                      >
-                        <Textarea
-                          type="text"
-                          placeholder="Descripción"
-                          style={{ resize: "none" }}
-                          {...register("descripcion")}
-                        />
-                        <FormLabel>Descripción</FormLabel>
-                      </FormControl>
+                      />
                     </Box>
-
                   </Box>
-                }
-
+                )}
               </Box>
               <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              // justifyContent="center"
+                display='flex'
+                width='100%'
+                alignItems='center'
+                justifyContent='flex-end'
+                // justifyContent="center"
               >
-                <Button
-                  colorScheme="gray"
-                  variant="outline"
-                  onClick={() => navigate(-1)}
-                  mr="5%"
-                >
+                <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
                   Cancelar
                 </Button>
-                <Button
-                  onClick={openModal}
-                  colorScheme="blue"
-                  variant="outline"
-                  ml="5%"
-                >
+                <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline' ml='5%'>
                   Guardar
                 </Button>
                 <CustomModal
                   isOpen={isOpen}
                   onClose={closeModal}
                   guardar={true}
-                  title="Guardar nuevo PID"
-                  content="Se guardara el nuevo Proyecto"
+                  title='Guardar nuevo PID'
+                  content='Se guardara el nuevo Proyecto'
                   onSave={handleSubmit((values) => onSub(values))}
-                // onSave={handleSubmit((values) => mutate(values))}
-                // onSave={handleSubmit((values) => console.log(values))}
                 />
               </Box>
             </CardBody>
-
           </Card>
         </form>
       </CardBody>
