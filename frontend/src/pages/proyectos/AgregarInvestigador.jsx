@@ -1,58 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  RadioGroup,
-  Stack,
-  Radio,
-  Select,
-  FormControl,
-  FormLabel,
-  useToast,
-  Textarea,
-  VStack,
-} from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { useQuery, useMutation } from "react-query";
-import { createGrupo, getAllGrupos } from "../../utils/api/gruposApi";
-import { useFieldArray, useForm } from "react-hook-form";
-import { createPersona, getAllPersonas } from "../../utils/api/personasApi";
-import { updatePID } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
-import { getProyectoById } from "../../utils/api/proyectosApi";
+import React, { useState, useEffect } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { getAllPersonas } from '../../utils/api/personasApi';
+import { updatePID } from '../../utils/api/proyectosApi';
+import CustomModal from '../../components/CustomModal';
+import { getProyectoById } from '../../utils/api/proyectosApi';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import Tabla from '../../components/Tabla';
 
-const roles = [
-  "Director",
-  "CoDirector",
-  "Investigador",
-  "Becario",
-  "Asesor Cientifico",
-  "Técnico de Apoyo"
-];
+const roles = ['Director', 'CoDirector', 'Investigador', 'Becario', 'Asesor Cientifico', 'Técnico de Apoyo'];
 
 export default function AgregarInvestigador() {
   /* Usestate para el modal */
@@ -71,50 +30,30 @@ export default function AgregarInvestigador() {
 
   const { idPid } = useParams();
 
-  const { data: dataParticipa } = useQuery(["participa", idPid], () =>
-    getProyectoById(Number(idPid))
-  );
-  const [investigadores1, setInvestigadores1] = useState(
-    []
-  );
+  const { data: dataParticipa } = useQuery(['participa', idPid], () => getProyectoById(Number(idPid)));
+  const [investigadores1, setInvestigadores1] = useState([]);
 
-  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState(
-    []
-  );
-
-  const { data: dataInvestigadores } = useQuery(["investigadoresPID"], () =>
-  getAllPersonas()
-);
+  const [investigadoresFiltrados, setInvestigadoresFiltrados] = useState([]);
 
   useEffect(() => {
-    setInvestigadores1(dataParticipa?.proyecto.participa)
+    setInvestigadores1(dataParticipa?.proyecto.participa);
 
-    const investigadoresGrupo = investigadores.filter(investigador => {
-      return dataParticipa?.proyecto?.tiene.some(item => {
+    const investigadoresGrupo = investigadores.filter((investigador) => {
+      return dataParticipa?.proyecto?.tiene.some((item) => {
         return investigador.idGrupoInvestigacion === item.idGrupoInvestigacion;
       });
     });
 
-    setInvestigadoresFiltrados(investigadoresGrupo)
-  }, [dataParticipa])
-
-  const {
-    data,
-    isLoading: isLoadingGetGrupos,
-    error,
-  } = useQuery("grupos", () => getAllGrupos());
-
-  const grupos = data?.grupos;
-
-  const [grupoAdd, setGrupoAdd] = useState();
+    setInvestigadoresFiltrados(investigadoresGrupo);
+  }, [dataParticipa]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => updatePID(Number(idPid),formData),
+    mutationFn: (formData) => updatePID(Number(idPid), formData),
     onSuccess: () => {
       toast({
-        title: "Nuevo Proyecto",
-        description: `Se ha creado el nuevo proyecto exitosamente`,
-        status: "success",
+        title: 'Agregar investigador',
+        description: `Se ha agregado el investigador exitosamente`,
+        status: 'success',
         isClosable: true,
       });
       // navigate(`/investigadores/5`);
@@ -122,9 +61,9 @@ export default function AgregarInvestigador() {
     },
     onError: () => {
       toast({
-        title: "Error al crear el proyecto",
+        title: 'Error al agregar al investigador',
         description: `Intente de nuevo.`,
-        status: "error",
+        status: 'error',
         isClosable: true,
       });
     },
@@ -138,14 +77,12 @@ export default function AgregarInvestigador() {
     getValues,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-
-    },
+    defaultValues: {},
   });
 
   const { fields, append, remove, update } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "investigadores", // Nombre del campo de formulario que es un arreglo
+    name: 'investigadores', // Nombre del campo de formulario que es un arreglo
   });
 
   const onSubmit = (dataForm, event) => {
@@ -155,10 +92,10 @@ export default function AgregarInvestigador() {
   };
 
   const onChangeRadioProrroga = (value) => {
-    if (value === "true") {
-      setValue("pid.prorrogado", true);
+    if (value === 'true') {
+      setValue('pid.prorrogado', true);
     } else {
-      setValue("pid.prorrogado", false);
+      setValue('pid.prorrogado', false);
     }
   };
 
@@ -167,13 +104,10 @@ export default function AgregarInvestigador() {
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
-  const { data: dataPersonas } = useQuery("personas", () => getAllPersonas());
-  const [investigadores, setInvestigadores] = useState(
-    dataPersonas?.personas || []
-  );
+  const { data: dataPersonas } = useQuery('personas', () => getAllPersonas());
+  const [investigadores, setInvestigadores] = useState(dataPersonas?.personas || []);
 
-  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
-    useState([]);
+  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
 
   const sortedInvestigadores = [...investigadoresFiltrados]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
@@ -184,35 +118,26 @@ export default function AgregarInvestigador() {
   const agregarInvestigador = () => {
     console.log(sortedInvestigadores);
     console.log(selectedOptions);
-    const objetoBuscado = sortedInvestigadores.find(
-      (item) => item.idPersona == selectedOptions
-    );
+    const objetoBuscado = sortedInvestigadores.find((item) => item.idPersona == selectedOptions);
 
     const objetoAgregar = {
       idPersona: objetoBuscado.idPersona,
-      rol: "",
-      fechaInicio: ((new Date()).toISOString()),
+      rol: '',
+      fechaInicio: new Date().toISOString(),
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
-    const objetoYaAgregado = investigadoresSeleccionados.find(
-      (item) => item.idPersona == selectedOptions
-    );
+    const objetoYaAgregado = investigadoresSeleccionados.find((item) => item.idPersona == selectedOptions);
 
     if (!objetoYaAgregado) {
       append(objetoAgregar);
-      setInvestigadoresSeleccionados([
-        ...investigadoresSeleccionados,
-        objetoBuscado,
-      ]);
+      setInvestigadoresSeleccionados([...investigadoresSeleccionados, objetoBuscado]);
     }
   };
 
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevosInvestigadores = investigadoresSeleccionados.filter(
-      (item) => item.idPersona !== idAEliminar
-    );
+    const nuevosInvestigadores = investigadoresSeleccionados.filter((item) => item.idPersona !== idAEliminar);
 
     remove(index);
 
@@ -226,20 +151,18 @@ export default function AgregarInvestigador() {
   };
   // Obtén los objetos de investigadores que tienen un idPersona en común entre investigadores y investigadores1
   const obtenerInvestigadoresSeleccionados = () => {
-    const investigadoresSeleccionados = investigadores.filter(
-      (investigador) => {
-        return investigadores1.some((investigador1) => {
-          return investigador.idPersona === investigador1.idPersona;
-        });
-      }
-    );
+    const investigadoresSeleccionados = investigadores.filter((investigador) => {
+      return investigadores1.some((investigador1) => {
+        return investigador.idPersona === investigador1.idPersona;
+      });
+    });
 
     return investigadoresSeleccionados;
   };
 
   const [ejemplo, setEjemplo] = useState();
   useEffect(() => {
-    console.log("pepe");
+    console.log('pepe');
   }, [ejemplo]);
 
   useEffect(() => {
@@ -247,7 +170,7 @@ export default function AgregarInvestigador() {
     if (investigadores1?.length > 0) {
       // Llama a la función para obtener los investigadores seleccionados
       const investigadoresSeleccionados = obtenerInvestigadoresSeleccionados();
-      console.log("investigadoresSeleccionados:", investigadoresSeleccionados); // Agrega esta línea
+      console.log('investigadoresSeleccionados:', investigadoresSeleccionados); // Agrega esta línea
       setInvestigadoresSeleccionados(investigadoresSeleccionados);
 
       // Crea un nuevo array para los datos que deseas agregar
@@ -267,194 +190,98 @@ export default function AgregarInvestigador() {
   return (
     <Card>
       <CardBody>
-        <form
-          style={{ width: "100%" }}
-          onSubmit={handleSubmit((values) => onSub(values))}
-        >
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Heading as="h2" size="xl" textAlign="center">
+        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
+          <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+            <Heading as='h2' size='xl' textAlign='center'>
               Modificar Integrantes
             </Heading>
           </Box>
 
           {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Agregar los investigadores al proyecto</Text>
+              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
               <br />
-              <Box
-                display="flex"
-                flexDirection="column"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-              >
+              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                 <br />
-                <Box display="flex" width="100%">
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    width="45%"
-                    marginLeft="2%"
-                  >
-                    <Select
-                      placeholder="Integrantes"
-                      isSearchable={true}
+                <Box display='flex' width='100%'>
+                  <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                    <GenericSelect
+                      placeholder='Integrantes...'
+                      options={sortedInvestigadores.map((item) => ({
+                        value: item.idPersona,
+                        label: item.apellido + ', ' + item.nombre,
+                      }))}
                       onChange={(e) => {
                         setSelectedOptions(e.target.value);
                       }}
-                    >
-                      {sortedInvestigadores.map((item, index) => (
-                        <option key={item.idPersona} value={item.idPersona}>
-                          {item.apellido + ", " + item.nombre}
-                        </option>
-                      ))}
-                    </Select>
+                    />
                   </Box>
-                  <Box display="flex" justifyContent="flex-end" width="55%">
-                    <Button
-                      colorScheme="blue"
-                      variant="outline"
-                      mr="5"
-                      onClick={agregarInvestigador}
-                    >
+                  <Box display='flex' justifyContent='flex-end' width='55%'>
+                    <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarInvestigador}>
                       Agregar
                     </Button>
-                    <Button
-                      colorScheme="blue"
-                      variant="outline"
-                      mr="5"
-                      onClick={console.log(fields)}
-                    >
+                    <Button colorScheme='blue' variant='outline' mr='5' onClick={console.log(fields)}>
                       Prueba
                     </Button>
                   </Box>
                 </Box>
                 <br />
 
-                <Card width="100%">
-                  <CardBody>
-                    <TableContainer>
-                      <Table
-                        size="sm"
-                        variant="striped"
-                        colorScheme="blackAlpha"
-                      >
-                        <Thead>
-                          <Tr>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Apellido y Nombre</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Grupo</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Rol</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Eliminar</Text>
-                            </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {investigadoresSeleccionados?.map((item, index) => {
-                            return (
-                              <Tr key={index}>
-                                <Td textAlign="center">
-                                  <Text
-                                    fontSize="md"
-                                    {...register(
-                                      `investigadores[${index}].idPersona`,
-                                      { value: item.idPersona }
-                                    )}
-                                  >
-                                    {item.apellido + ", " + item.nombre}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <Text fontSize="md">
-                                    {item.gruposinvestigacion.siglas}
-                                  </Text>
-                                </Td>
-                                <Td textAlign="center">
-                                  <Select
-                                    placeholder="Rol"
-                                    onChange={(e) => {
-                                      const updatedArray = fields[index]; // Copia el array original
-                                      delete updatedArray.id
-                                      update(index,{
-                                        ...updatedArray, // Copia el objeto existente
-                                        rol: e.target.value, // Actualiza solo la propiedad "rol"
-                                      })
-                                      
-                                    }}
-                                    
-                                    defaultValue={investigadores1[index]?.rol}
-                                  >
-                                    {roles.map((role, roleIndex) => (
-                                      <option key={roleIndex} value={role}>
-                                        {role}
-                                      </option>
-                                    ))}
-                                  </Select>
-                                </Td>
-                                <Td textAlign="center">
-                                  <DeleteIcon
-                                    cursor={"pointer"}
-                                    onClick={() => {
-                                      eliminarInvestigador(
-                                        item.idPersona,
-                                        index
-                                      );
-                                    }}
-                                  />
-                                </Td>
-                              </Tr>
-                            );
-                          })}
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                  </CardBody>
-                </Card>
+                <Tabla
+                  columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Eliminar']}
+                  datos={investigadoresSeleccionados?.map((item, index) => {
+                    return [
+                      <div {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
+                      item.gruposinvestigacion.siglas,
+                      <GenericSelect
+                        placeholder='Rol...'
+                        options={roles.map((role) => ({
+                          value: role,
+                          label: role,
+                        }))}
+                        onChange={(e) => {
+                          const updatedArray = fields[index]; // Copia el array original
+                          delete updatedArray.id;
+                          update(index, {
+                            ...updatedArray, // Copia el objeto existente
+                            rol: e.target.value, // Actualiza solo la propiedad "rol"
+                          });
+                        }}
+                        defaultValue={investigadores1[index]?.rol}
+                      />,
+                      <DeleteIcon
+                        cursor={'pointer'}
+                        onClick={() => {
+                          eliminarInvestigador(item.idPersona, index);
+                        }}
+                      />,
+                    ];
+                  })}
+                  paginado={false}
+                />
               </Box>
               <br />
               <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
+                display='flex'
+                width='100%'
+                alignItems='center'
                 // justifyContent="flex-end"
-                justifyContent="center"
+                justifyContent='center'
               >
-                <Button
-                  colorScheme="gray"
-                  variant="outline"
-                  onClick={() => navigate(-1)}
-                  mr="5%"
-                >
+                <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
                   Cancelar
                 </Button>
-                <Button
-                  onClick={openModal}
-                  colorScheme="blue"
-                  variant="outline"
-                  ml="5%"
-                >
+                <Button onClick={openModal} colorScheme='blue' variant='outline' ml='5%'>
                   Guardar
                 </Button>
                 <CustomModal
                   isOpen={isOpen}
                   onClose={closeModal}
                   guardar={true}
-                  title="Guardar nuevo PID"
-                  content="Se guardara el nuevo PID"
+                  title='Guardar nuevo PID'
+                  content='Se guardara el nuevo PID'
                   onSave={handleSubmit((values) => mutate(values))}
                 />
               </Box>
