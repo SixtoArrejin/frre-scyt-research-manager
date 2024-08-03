@@ -1,71 +1,30 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  useToast,
-  Select,
-  Textarea,
-  VStack,
-  RadioGroup,
-  Stack,
-  Radio,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import { Search2Icon, AddIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, DeleteIcon, PlusSquareIcon } from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  FormControl,
-  FormLabel
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from '../../utils/data/ListaCategorias.json'
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import proyectosInv from '../../utils/data/proyectosInv.json';
-import { getAllPersonas, getPersonaById } from "../../utils/api/personasApi";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { formatoFechaISOaAAAAMMDD, formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from "../../utils/general";
-import { deleteCategoriaById } from "../../utils/api/categoriasApi";
-import { getProyectoById, updatePID } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
-import { useForm } from "react-hook-form";
-import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
-import { getAllRegionales } from "../../utils/api/regionalesApi";
+import React, { useState } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
+import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
+import { getProyectoById, updatePID } from '../../utils/api/proyectosApi';
+import CustomModal from '../../components/CustomModal';
+import { useForm } from 'react-hook-form';
+import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
+import { getAllRegionales } from '../../utils/api/regionalesApi';
+import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import GenericRadio from '../../components/formControls/GenericRadio';
 
-const tipoActividad = [
-  "Desarrollo Experimental",
-  "Investigación Aplicada",
-  "Investigación Básica",
-];
+const tipoActividad = ['Desarrollo Experimental', 'Investigación Aplicada', 'Investigación Básica'];
 
 const estadoProyecto = [
-  "EN TRÁMITE",
-  "HOMOLOGADO",
-  "REFORMULAR POR EVALUACIÓN EXTERNA",
-  "REFORMULAR POR CONSEJO DE PROGRAMAS",
-  "DENEGADO POR EVALUACIÓN EXTERNA",
-  "DENEGADO POR CONSEJO DE PROGRAMAS",
-  "CANCELADO",
+  'EN TRÁMITE',
+  'HOMOLOGADO',
+  'REFORMULAR POR EVALUACIÓN EXTERNA',
+  'REFORMULAR POR CONSEJO DE PROGRAMAS',
+  'DENEGADO POR EVALUACIÓN EXTERNA',
+  'DENEGADO POR CONSEJO DE PROGRAMAS',
+  'CANCELADO',
 ];
 
 export default function ModificarPIDs() {
-
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -80,56 +39,40 @@ export default function ModificarPIDs() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(["proyecto", idPid], () => getProyectoById(Number(idPid)))
-  const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa)
-  const [grupos, setGrupos] = useState(data?.proyecto?.tiene)
-  const [proyectoPID, setProyectoPID] = useState(data?.proyecto)
+  const { data, isLoading, error } = useQuery(['proyecto', idPid], () => getProyectoById(Number(idPid)));
 
-  const {
-    data: dataRegionales,
-    isLoading: isLoadingGetRegionales,
-    error: errorRegionales,
-  } = useQuery(["regionales",], () => getAllRegionales());
+  const { data: dataRegionales, isLoading: isLoadingGetRegionales, error: errorRegionales } = useQuery(['regionales'], () => getAllRegionales());
 
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
     error: errorTiposProyectos,
-  } = useQuery(["tiposProyectos",], () => getAllTiposProyectos());
-
-  useEffect(() => {
-    setIntegrantes(data?.proyecto?.participa)
-    setGrupos(data?.proyecto?.tiene)
-    setProyectoPID(data?.proyecto)
-  }, [data])
+  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updatePID(Number(idPid), formData),
     onSuccess: () => {
       toast({
-        title: "Modificar PID",
+        title: 'Modificar PID',
         description: `Se ha modificado el PID exitosamente`,
-        status: "success",
+        status: 'success',
         isClosable: true,
       });
       navigate(-1);
     },
     onError: () => {
       toast({
-        title: "Error al modificar los datos del PID",
+        title: 'Error al modificar los datos del PID',
         description: `Intente de nuevo.`,
-        status: "error",
+        status: 'error',
         isClosable: true,
       });
     },
   });
 
   const {
-    control,
     register,
     handleSubmit,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -142,244 +85,237 @@ export default function ModificarPIDs() {
         fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
         fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
         denominacion: data?.proyecto?.denominacion,
-        completo: data?.proyecto?.completo,
+        completo: data?.proyecto?.completo ? 'true' : 'false',
         regional: data?.proyecto?.regional,
         convocatoria: data?.proyecto?.convocatoria,
         estado: data?.proyecto?.estado,
         // idDirector: data?.proyecto?.idDirector,
         // idCodirector: data?.proyecto?.idCodirector
-      }
+        prorrogado: data?.proyecto?.prorrogado ? 'true' : 'false',
+      },
     },
   });
 
-  const onChangeRadioProrroga = (value) => {
-    if (value === "true") {
-      setValue("prorrogado", true);
-    } else {
-      setValue("prorrogado", false);
-    }
-  };
+  const onSubmit = (values) => {
+    const modifiedValues = {
+      ...values.proyecto,
+      prorrogado: values.proyecto.prorrogado === 'true',
+      completo: values.proyecto.completo === 'true',
+    };
+    const proyecto = {
+      proyecto: modifiedValues,
+    };
 
-  const onChangeRadioCompleto = (value) => {
-    if (value === "true") {
-      setValue("completo", true);
-    } else {
-      setValue("completo", false);
-    }
+    mutate(proyecto);
   };
 
   return (
     <Card>
       <CardBody>
-        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center' >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             Modificar datos del Proyecto
           </Heading>
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Datos del proyecto</Text>
+              <Text fontSize='md'>Datos del proyecto</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh' isRequired>
-                      <Input name="apellido" placeholder="Código PID" {...register("proyecto.codPid")} />
-                      <FormLabel>Código PID</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "65%" }}
-                      mb="5vh"
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      name='proyecto.codPid'
+                      label='Código PID'
+                      placeholder='Código PID'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
                       isRequired
-                    >
-                      <Select
-                        placeholder="Regional..."
-                        {...register("proyecto.regional")}
-                      >
-                        {(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional, key) => (
-                          <option key={key} value={regional}>
-                            {regional}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormLabel>Regional asociada</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-                    <FormControl variant="floating" width={{ base: '100%', md: '100%' }} mb='5vh' isRequired>
-                      <Textarea placeholder='Denominación' style={{ resize: 'none' }} {...register("proyecto.denominacion")} />
-                      <FormLabel>Denominación</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
+                      mb='5vh'
+                    />
 
-                    <FormControl variant="floating" id="fechaInicio" width={{ base: '100%', md: '30%' }} mb='5vh' isRequired>
-                      <Input type='date' name="fechaInicio" placeholder="Fecha Inicio" {...register("proyecto.fechaInicio")} />
-                      <FormLabel>Fecha Inicio</FormLabel>
-                    </FormControl>
-
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh' isRequired>
-                      <Input type='date' name="fechaFin" placeholder="Fecha Fin" {...register("proyecto.fechaInicio")} />
-                      <FormLabel>Fecha Fin</FormLabel>
-                    </FormControl>
-
-                    {/* <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh'>
-                      <Input name="prorroga" placeholder="Prorroga" defaultValue={data?.proyecto?.pids?.prorrogado ? 'Si' : 'No'} />
-                      <FormLabel>Prorroga</FormLabel>
-                    </FormControl> */}
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh' isRequired>
-                      <Input type='number' name="convocatoria" placeholder="Convocatoria" {...register("proyecto.convocatoria", {
-                        valueAsNumber: true,
-                      })} />
-                      <FormLabel>Convocatoria</FormLabel>
-                    </FormControl>
-                  </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                    <FormControl variant="floating" width={{ base: '100%', md: '47.5%' }} mb='5vh' isRequired>
-                      <Input name="programa" placeholder="Programa" {...register("proyecto.programa")} />
-                      <FormLabel>Programa</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "47.5%" }}
-                      mb="5vh"
+                    <GenericSelect
+                      name='proyecto.regional'
+                      label='Regional asociada'
+                      placeholder='Regional...'
+                      width={{ base: '100%', md: '65%' }}
+                      mb='5vh'
                       isRequired
-                    >
-                      <Select
-                        placeholder="Tipo de proyecto..."
-                        {...register("proyecto.tipoProyecto")}
-                      >
-                        {(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo, key) => (
-                          <option key={key} value={tipo}>
-                            {tipo}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormLabel>Tipo de proyecsto</FormLabel>
-                    </FormControl>
+                      register={register}
+                      options={(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional) => ({
+                        value: regional,
+                        label: regional,
+                      }))}
+                      errors={errors}
+                    />
                   </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "30%" }}
-                      mb="5vh"
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      textArea
+                      name='proyecto.denominacion'
+                      label='Denominación'
+                      placeholder='Denominación'
+                      register={register}
+                      errors={errors}
+                      width='100%'
                       isRequired
-                    >
-                      <Select
-                        placeholder="Tipo de actividad..."
-                        {...register("proyecto.tipoActividad")}
-                      >
-                        {tipoActividad.map((actividad, key) => (
-                          <option key={key} value={actividad}>
-                            {actividad}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormLabel>Tipo de actividad</FormLabel>
-                    </FormControl>
-
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "30%" }}
-                      mb="5vh"
-                      isRequired
-                    >
-                      <Select
-                        placeholder="Estado..."
-                        {...register("proyecto.estado")}
-                      >
-                        {estadoProyecto.map((estado, key) => (
-                          <option key={key} value={estado}>
-                            {estado}
-                          </option>
-                        ))}
-                      </Select>
-                      <FormLabel>Estado</FormLabel>
-                    </FormControl>
-
-                    <FormControl variant="floating" width={{ base: '100%', md: '30%' }} mb='5vh' isRequired>
-                      <Input name="disposicion" placeholder="Disposición" {...register("proyecto.disposicion")} />
-                      <FormLabel>Disposición</FormLabel>
-                    </FormControl>
+                      mb='5vh'
+                    />
                   </Box>
-                  <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems="center" justifyContent="space-between">
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      type='date'
+                      name='proyecto.fechaInicio'
+                      label='Fecha Inicio'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+                    <GenericInput
+                      type='date'
+                      name='proyecto.fechaFin'
+                      label='Fecha Fin'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
+                      isRequired
+                      mb='5vh'
+                    />
 
-                    <Box
-                      width={{ base: "100%", md: "50%" }}
-                      display="flex"
-                      justifyContent="center"
-                    >
-                      <VStack>
-                        <Text mb="1vh">Prorroga: </Text>
-                        <RadioGroup
-                          onChange={onChangeRadioProrroga}
-                          mb="5vh"
-                          defaultValue={data?.proyecto?.prorrogado ? 'true' : 'false'}
-                        >
-                          <Stack direction="row" spacing={10}>
-                            <Radio value="true">Si</Radio>
-                            <Radio value="false">No</Radio>
-                          </Stack>
-                        </RadioGroup>
-                      </VStack>
+                    <GenericInput
+                      type='number'
+                      name='proyecto.convocatoria'
+                      label='Convocatoria'
+                      placeholder='Convocatoria'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+                  </Box>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      name='proyecto.programa'
+                      label='Programa'
+                      placeholder='Programa'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '47.5%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+
+                    <GenericSelect
+                      name='proyecto.tipoProyecto'
+                      label='Tipo de proyecto'
+                      placeholder='Tipo de proyecto...'
+                      width={{ base: '100%', md: '47.5%' }}
+                      mb='5vh'
+                      isRequired
+                      register={register}
+                      options={(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo) => ({
+                        value: tipo,
+                        label: tipo,
+                      }))}
+                      errors={errors}
+                    />
+                  </Box>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericSelect
+                      name='proyecto.tipoActividad'
+                      label='Tipo de actividad'
+                      placeholder='Tipo de actividad...'
+                      width={{ base: '100%', md: '30%' }}
+                      mb='5vh'
+                      isRequired
+                      register={register}
+                      options={tipoActividad.map((actividad) => ({
+                        value: actividad,
+                        label: actividad,
+                      }))}
+                      errors={errors}
+                    />
+                    <GenericSelect
+                      name='proyecto.estado'
+                      label='Estado'
+                      placeholder='Estado...'
+                      width={{ base: '100%', md: '30%' }}
+                      mb='5vh'
+                      isRequired
+                      register={register}
+                      options={estadoProyecto.map((estado) => ({
+                        value: estado,
+                        label: estado,
+                      }))}
+                      errors={errors}
+                    />
+
+                    <GenericInput
+                      name='proyecto.disposicion'
+                      label='Disposición'
+                      placeholder='Disposición'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+                  </Box>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
+                      <GenericRadio
+                        name='proyecto.prorrogado'
+                        label='Prorroga:'
+                        direction='row'
+                        options={[
+                          { value: 'true', label: 'Si' },
+                          { value: 'false', label: 'No' },
+                        ]}
+                        register={register}
+                        defaultValue={data?.proyecto?.prorrogado ? 'true' : 'false'}
+                        errors={errors}
+                        mb='5vh'
+                      />
                     </Box>
 
-                    <Box
-                      width={{ base: "100%", md: "50%" }}
-                      display="flex"
-                      justifyContent="center"
-                    >
-                      <VStack>
-                        <Text mb="1vh">Completo: </Text>
-                        <RadioGroup
-                          onChange={onChangeRadioCompleto}
-                          defaultValue={data?.proyecto?.completo ? 'true' : 'false'}
-                          mb="5vh"
-                        >
-                          <Stack direction="row" spacing={10}>
-                            <Radio value="true">Si</Radio>
-                            <Radio value="false">No</Radio>
-                          </Stack>
-                        </RadioGroup>
-                      </VStack>
+                    <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
+                      <GenericRadio
+                        name='proyecto.completo'
+                        label='Completo:'
+                        direction='row'
+                        options={[
+                          { value: 'true', label: 'Si' },
+                          { value: 'false', label: 'No' },
+                        ]}
+                        register={register}
+                        defaultValue={data?.proyecto?.completo ? 'true' : 'false'}
+                        errors={errors}
+                        mb='5vh'
+                      />
                     </Box>
                   </Box>
-                  <Box
-                    display="flex"
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Button
-                      colorScheme="gray"
-                      variant="outline"
-                      onClick={() => navigate(-1)}
-                      mr="3%"
-                    >
+                  <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                    <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='3%'>
                       Cancelar
                     </Button>
-                    <Button onClick={openModal} colorScheme="blue" variant="outline">
+                    <Button onClick={openModal} colorScheme='blue' variant='outline' isLoading={isLoadingMutation}>
                       Aceptar
                     </Button>
                     <CustomModal
                       isOpen={isOpen}
                       onClose={closeModal}
                       guardar={true}
-                      title="Se modificaran los datos del proyecto."
-                      content="¿Seguro que desea modificar la información del proyecto?"
-                      // onSave={(handleSubmit((values) => console.log(values)))}
-                      onSave={handleSubmit((values) => { console.log(values); mutate(values) })}
+                      title='Se modificaran los datos del proyecto.'
+                      content='¿Seguro que desea modificar la información del proyecto?'
+                      onSave={handleSubmit((values) => onSubmit(values))}
                     />
                   </Box>
                 </Box>
               </Box>
-
             </CardBody>
           </Card>
         </Box>

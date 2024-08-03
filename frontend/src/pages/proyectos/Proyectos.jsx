@@ -15,7 +15,7 @@ export default function ProyectosPid() {
 
   const { data, isLoading, error } = useQuery('proyectos', () => getProyectos());
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
-  
+
   useEffect(() => {
     if (codPID === '' && denominacion === '') {
       // Si no se está filtrando nada, utiliza los datos originales data?.personas
