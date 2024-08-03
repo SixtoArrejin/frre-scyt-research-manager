@@ -1,446 +1,221 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  useToast,
-  Select,
-  Textarea,
-} from "@chakra-ui/react";
-import { Input, HStack } from "@chakra-ui/react";
-import {
-  Search2Icon,
-  AddIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  PlusSquareIcon,
-} from "@chakra-ui/icons";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
-  FormControl,
-  FormLabel,
-} from "@chakra-ui/react";
-import investigadores from "../../utils/data/investigadores.json";
-import InputLabel from "../../components/InputLabel";
-import categorias from "../../utils/data/ListaCategorias.json";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import proyectosInv from "../../utils/data/proyectosInv.json";
-import { getPersonaById } from "../../utils/api/personasApi";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  formatoFechaISOaDDMMAAAA,
-  getCategoriaMasActual,
-} from "../../utils/general";
-import { deleteCategoriaById } from "../../utils/api/categoriasApi";
-import { getProyectoById } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
-import { deleteConvenioById, getVinculacionById } from "../../utils/api/vinculacionesApi";
-
-const ITEMS_PER_PAGE = 10; // Define el número de elementos por página
+import React, { useState, useEffect } from 'react';
+import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { Link, useParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from 'react-query';
+import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
+import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
+import GenericInput from '../../components/formControls/GenericInput';
+import Tabla from '../../components/Tabla';
 
 export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
-  const navigate = useNavigate();
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
 
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(["vinculacion", idVinculacion], () =>
-    getVinculacionById(idVinculacion)
-  );
+  const { data, isLoading, error } = useQuery(['vinculacion', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
-    if (
-      !data ||
-      !data.vinculacion ||
-      data.vinculacion.vinculacionesconfinanciamiento == null
-    ) {
+    if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
       setFinanciamiento(false);
-    }
-    else {
-      setFinanciamiento(true)
+    } else {
+      setFinanciamiento(true);
     }
   }, [data]);
 
   const onDeleted = async (idConvenio) => {
-    await deleteConvenioById(Number(idConvenio))
-    queryClient.invalidateQueries(["vinculacion", idVinculacion]);
-    queryClient.refetchQueries(["vinculacion", idVinculacion]);
-  }
-  
+    await deleteConvenioById(Number(idConvenio));
+    queryClient.invalidateQueries(['vinculacion', idVinculacion]);
+    queryClient.refetchQueries(['vinculacion', idVinculacion]);
+  };
+
   return (
     <Card>
       <CardBody>
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Heading as="h2" size="xl" textAlign="center">
+        <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          <Heading as='h2' size='xl' textAlign='center'>
             Detalles de vinculación
           </Heading>
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Datos de vinculación</Text>
+              <Text fontSize='md'>Datos de vinculación</Text>
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-              >
-                <Box
-                  display="flex"
-                  width="70%"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                >
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "65%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Empresa/institución"
-                        placeholder="Empresa/institución"
-                        isDisabled
-                        value={data?.vinculacion?.empresaInstitucion}
-                      />
-                      <FormLabel>Empresa/institución</FormLabel>
-                    </FormControl>
-                    <FormControl
-                      variant="floating"
-                      width={{ base: "100%", md: "30%" }}
-                      mb="5vh"
-                    >
-                      <Input
-                        name="Nro Marco"
-                        placeholder="Nro Marco"
-                        isDisabled
-                        defaultValue={data?.vinculacion?.numeroMarco}
-                      />
-                      <FormLabel>Nro Marco</FormLabel>
-                    </FormControl>
+              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      label='Empresa/Institución'
+                      width={{ base: '100%', md: '65%' }}
+                      value={data?.vinculacion?.empresaInstitucion}
+                      isDisabled
+                      mb='5vh'
+                    />
+                    <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} value={data?.vinculacion?.numeroMarco} isDisabled mb='5vh' />
                   </Box>
                   {Financiamiento && (
-                    <Box width="100%">
+                    <Box width='100%'>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Titulo"
-                            placeholder="Titulo"
-                            isDisabled
-                            value={
-                              data?.vinculacion?.vinculacionesconfinanciamiento?.titulo
-                            }
-                          />
-                          <FormLabel>Titulo</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Nombre del beneficiario"
-                            placeholder="Nombre del beneficiario"
-                            isDisabled
-                            value={
-                              data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario
-                            }
-                          />
-                          <FormLabel>Nombre del beneficiario</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          label='Título'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Nombre del beneficiario'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          id="fechaInicio"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Monto"
-                            placeholder="Monto"
-                            isDisabled
-                            value={(
-                              data?.vinculacion?.vinculacionesconfinanciamiento?.monto
-                            )}
-                          />
-                          <FormLabel>Monto</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Cantidad de desembolsos"
-                            placeholder="Cantidad de desembolsos"
-                            isDisabled
-                            value={(
-                              data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos
-                            )}
-                          />
-                          <FormLabel>Cantidad de desembolsos</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          label='Monto'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Cantidad de desembolsos'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Fecha de presentación"
-                            placeholder="Fecha de presentación"
-                            isDisabled
-                            value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
-                          />
-                          <FormLabel>Fecha de presentación</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Fecha de adjudicación"
-                            placeholder="Fecha de adjudicación"
-                            isDisabled
-                            value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
-                          />
-                          <FormLabel>Fecha de adjudicación</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          label='Fecha de presentación'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Fecha de adjudicación'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Plazo de ejecución"
-                            placeholder="Plazo de ejecución"
-                            isDisabled
-                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
-                          />
-                          <FormLabel>Plazo de ejecución</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Linea"
-                            placeholder="Linea"
-                            isDisabled
-                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea}
-                          />
-                          <FormLabel>Linea</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          label='Plazo de ejecución (meses)'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Línea'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Estado"
-                            placeholder="Estado"
-                            isDisabled
-                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
-                          />
-                          <FormLabel>Estado</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Motivo desistido"
-                            placeholder="Motivo desistido"
-                            isDisabled
-                            value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
-                          />
-                          <FormLabel>Motivo desistido</FormLabel>
-                        </FormControl>
-                      </Box>{" "}
+                        <GenericInput
+                          label='Estado'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Motivo desistido'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
+                          isDisabled
+                          mb='5vh'
+                        />
+                      </Box>{' '}
                     </Box>
                   )}
                   {!Financiamiento && (
-                    <Box width="100%">
+                    <Box width='100%'>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Fecha Inicio"
-                            placeholder="Fecha de inicio"
-                            isDisabled
-                            value={
-                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)
-                            }
-                          />
-                          <FormLabel>Fecha de inicio</FormLabel>
-                        </FormControl>
-
-                        <FormControl
-                          variant="floating"
-                          width={{ base: "100%", md: "47.5%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Fecha cierre"
-                            placeholder="Fecha de cierre"
-                            isDisabled
-                            value={
-                              formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)
-                            }
-                          />
-                          <FormLabel>Fecha de cierre</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          label='Fecha de inicio'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)}
+                          isDisabled
+                          mb='5vh'
+                        />
+                        <GenericInput
+                          label='Fecha de cierre'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                       <Box
-                        display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
                       >
-                        <FormControl
-                          variant="floating"
-                          id="fechaInicio"
-                          width={{ base: "100%", md: "100%" }}
-                          mb="5vh"
-                        >
-                          <Input
-                            name="Descripción"
-                            placeholder="Descripción"
-                            isDisabled
-                            value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
-                          />
-                          <FormLabel>Descripción</FormLabel>
-                        </FormControl>
+                        <GenericInput
+                          textArea
+                          label='Descripción'
+                          width={{ base: '100%', md: '47.5%' }}
+                          value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
+                          isDisabled
+                          mb='5vh'
+                        />
                       </Box>
                     </Box>
                   )}
-                  <Box
-                    display="flex"
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    {/* <Button
-                      colorScheme="gray"
-                      variant="outline"
-                      onClick={() => navigate(-1)}
-                      mr="3%"
-                    >
-                      Cancelar
-                    </Button> */}
+                  <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                     <Link to={`modificar`}>
-                      <Button colorScheme="blue" variant="outline">
+                      <Button colorScheme='blue' variant='outline'>
                         Modificar
                       </Button>
                     </Link>
-                    {/* <CustomModal
-                      isOpen={isOpen}
-                      onClose={closeModal}
-                      guardar={true}
-                      title="Guardar nuevo investigador"
-                      content="Se guardara el nuevo investigador"
-                      // onSave={handleSubmit((values) => mutate(values))}
-                    /> */}
                   </Box>
                 </Box>
               </Box>
@@ -448,64 +223,27 @@ export default function DetalleVinculacion() {
           </Card>
 
           <br />
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md">Convenio</Text>
+              <Text fontSize='md'>Convenio</Text>
               <br />
-              <Card width="100%">
-                <CardBody>
-                  <TableContainer>
-                    <Table size="sm" variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Tipo</Text>
-                          </Th>
-                          <Th textAlign="center">
-                            <Text fontSize="md">Numero</Text>
-                          </Th>
-
-                          <Th textAlign="center">
-                            <Text fontSize="md">Eliminar</Text>
-                          </Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {data?.vinculacion?.convenios?.map((convenio, index) => {
-                          return (
-                            <Tr key={index}>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{convenio.tipo}</Text>
-                              </Td>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{convenio.numero}</Text>
-                              </Td>
-
-                              <Td textAlign="center">
-                                <Link to={``}>
-                                  <DeleteIcon
-                                    //onClick={() => deleteConvenioById(Number(convenio.idConvenio))}
-                                    onClick={() => onDeleted(convenio.idConvenio)}
-                                  />
-                                </Link>
-                              </Td>
-                            </Tr>
-                          );
-                        })}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                </CardBody>
-              </Card>
+              <Tabla
+                columnas={['Tipo', 'Número', 'Eliminar']}
+                datos={data?.vinculacion?.convenios?.map((convenio) => {
+                  return [
+                    convenio.tipo,
+                    convenio.numero,
+                    <Link>
+                      <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
+                    </Link>,
+                  ];
+                })}
+                paginado={false}
+              />
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              >
+              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`agregar-investigador`}>
-                  <Button colorScheme="blue" variant="outline">
+                  <Button colorScheme='blue' variant='outline'>
                     Agregar Convenio
                   </Button>
                 </Link>
@@ -516,97 +254,54 @@ export default function DetalleVinculacion() {
 
           <br />
           {Financiamiento && (
-            <Card width="100%">
+            <Card width='100%'>
               <CardBody>
-                <Text fontSize="md">Desembolsos</Text>
+                <Text fontSize='md'>Desembolsos</Text>
                 <br />
-                <Card width="100%">
-                  <CardBody>
-                    <TableContainer>
-                      <Table
-                        size="sm"
-                        variant="striped"
-                        colorScheme="blackAlpha"
-                      >
-                        <Thead>
-                          <Tr>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Nro. Desembolso</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Fecha de desembolso</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Monto desmbolsado ($)</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Estado</Text>
-                            </Th>
-                            <Th textAlign="center">
-                              <Text fontSize="md">Ver más</Text>
-                            </Th>
-                          </Tr>
-                        </Thead>
-                        <Tbody>
-                          {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => (
-                            <Tr key={index}>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{index + 1}</Text>
-                              </Td>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{formatoFechaISOaDDMMAAAA(item.fechaDesembolso)}</Text>
-                              </Td>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{item.montoDesembolsado}</Text>
-                              </Td>
-                              <Td textAlign="center">
-                                <Text fontSize="md">{item.estado || "-"}</Text>
-                              </Td>
-                              <Td textAlign="center">
-                                <Link to={`desembolso/${item.idDesembolso}`}>
-                                  <PlusSquareIcon />
-                                </Link>
-                              </Td>
-                            </Tr>
-                          ))}
-                        </Tbody>
-                      </Table>
-                    </TableContainer>
-                  </CardBody>
-                </Card>
+                <Tabla
+                  columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Estado', 'Ver más']}
+                  datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
+                    return [
+                      index + 1,
+                      formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
+                      item.montoDesembolsado,
+                      item.estado || '-',
+                      <Link to={`desembolso/${item.idDesembolso}`}>
+                        <PlusSquareIcon />
+                      </Link>,
+                    ];
+                  })}
+                  paginado={false}
+                />
                 <Box
-                  display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="space-between" // Cambiado de "flex-end" a "space-between"
+                  display='flex'
+                  width='100%'
+                  alignItems='center'
+                  justifyContent='space-between' // Cambiado de "flex-end" a "space-between"
                 >
-                  <FormControl
-                    variant="floating"
-                    width={{ base: "100%", md: "47.5%" }}
-                    mb="5vh"
-                    mt="9" // Asegura que no haya margen superior en FormControl
-                  >
-                    <Input
-                      name="Saldo"
-                      placeholder="Saldo ($)"
-                      isDisabled
-                      value={
-                        data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
-                        data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos
-                          ?.reduce((total, desembolso) => total + (desembolso.montoDesembolsado || 0), 0)
-                      }
-                    />
-                    <FormLabel>Saldo ($)</FormLabel>
-                  </FormControl>
-                  {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length < data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos &&
+                  <GenericInput
+                    label='Saldo ($)'
+                    width={{ base: '100%', md: '47.5%' }}
+                    value={
+                      data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
+                      data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.reduce(
+                        (total, desembolso) => total + (desembolso.montoDesembolsado || 0),
+                        0
+                      )
+                    }
+                    isDisabled
+                    mb='5vh'
+                    mt='9'
+                  />
+                  {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
+                    data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (
                     <Link to={`nuevo-desembolso`}>
-                      <Button colorScheme="blue" variant="outline">
+                      <Button colorScheme='blue' variant='outline'>
                         Agregar Desembolso
                       </Button>
                     </Link>
-                  }
+                  )}
                 </Box>
-
                 <br />
               </CardBody>
             </Card>
