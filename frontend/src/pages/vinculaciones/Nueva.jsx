@@ -295,7 +295,6 @@ export default function NuevaVinculacion() {
                         label='Adjudicación'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
-                        isRequired
                       />
                     </Box>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
