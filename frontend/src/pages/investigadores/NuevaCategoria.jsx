@@ -25,6 +25,15 @@ const schema = yup.object({
   fecha: yup.string().required('La fecha es requerida'),
 });
 
+const COMISIONES = [
+  'Ingeniería',
+  'Educación',
+  'Antropología',
+  'Ciencias de la Tierra, el Mar y la Atmosfera',
+  'Química, Bioquímica y Farmacia',
+  'Ciencias Básicas y Aplicadas',
+];
+
 export default function NuevaCategoria() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -194,15 +203,19 @@ export default function NuevaCategoria() {
                     </Box>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                       <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                        <GenericInput
+                        <GenericSelect
                           name='comision'
                           label='Comisión'
-                          placeholder='Comisión'
-                          register={register}
-                          errors={errors}
+                          placeholder='Seleccione la comisión...'
                           width={{ base: '100%', md: '50%' }}
-                          isRequired
                           mb='5vh'
+                          isRequired
+                          register={register}
+                          options={COMISIONES.map((comision) => ({
+                            value: comision,
+                            label: comision,
+                          }))}
+                          errors={errors}
                         />
                       </Box>
 
