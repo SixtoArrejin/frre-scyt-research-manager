@@ -109,6 +109,7 @@ export default function NuevoPid() {
       codPid: '',
       programa: '',
       disposicion: '',
+      tipo: 'pid',
     },
   });
 
@@ -227,7 +228,7 @@ export default function NuevoPid() {
     mutate(modifiedValues);
   };
 
-  const PidExterno = useWatch({ control, name: 'proyecto' });
+  const PidExterno = useWatch({ control, name: 'tipo' });
 
   return (
     <Card>
@@ -250,19 +251,19 @@ export default function NuevoPid() {
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                       <Box width={{ base: '100%', md: '20%' }} display='flex' justifyContent='center'>
                         <GenericRadio
-                          name='proyecto'
+                          name='tipo'
                           direction='row'
                           options={[
-                            { value: 'true', label: 'PID' },
-                            { value: 'false', label: 'Externo' },
+                            { value: 'pid', label: 'PID' },
+                            { value: 'externo', label: 'Externo' },
                           ]}
                           register={register}
-                          defaultValue='true'
+                          defaultValue='pid'
                           mb='5vh'
                           width={'100%'}
                         />
                       </Box>
-                      {PidExterno === 'true' && (
+                      {PidExterno === 'pid' && (
                         <GenericInput
                           name='codPid'
                           placeholder='Código PID'
@@ -278,7 +279,7 @@ export default function NuevoPid() {
                         name='regional'
                         label='Regional asociada'
                         placeholder='Regional...'
-                        width={{ base: '100%', md: PidExterno === 'true' ? '45%' : '75%' }}
+                        width={{ base: '100%', md: PidExterno === 'pid' ? '45%' : '75%' }}
                         mb='5vh'
                         isRequired
                         register={register}
@@ -359,7 +360,7 @@ export default function NuevoPid() {
                         errors={errors}
                       />
                     </Box>
-                    {PidExterno === 'true' && (
+                    {PidExterno === 'pid' && (
                       <Box
                         display='flex'
                         flexDirection={{ base: 'column', md: 'row' }}
@@ -408,7 +409,7 @@ export default function NuevoPid() {
                         />
                       </Box>
                     )}
-                    {PidExterno === 'true' && (
+                    {PidExterno === 'pid' && (
                       <Box
                         display='flex'
                         flexDirection={{ base: 'column', md: 'row' }}
