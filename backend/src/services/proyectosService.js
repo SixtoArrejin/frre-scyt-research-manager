@@ -61,7 +61,18 @@ export async function getProyectosExternosService(subtipo) {
 export async function getProyectoByIdService(idProyecto) {
   try {
     const proyecto = await getProyectoById(idProyecto);
-    return proyecto;
+    const {pid, proyectoExterno, ...restoProyecto} = proyecto
+    if (proyecto.pid){
+      return {
+        ...pid,
+        ...restoProyecto
+      }
+    } else {
+      return {
+        ...proyectoExterno,
+        ...restoProyecto
+      }
+    }
   } catch (error) {
     throw new Error(error.message);
   }
