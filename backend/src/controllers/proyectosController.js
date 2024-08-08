@@ -5,13 +5,14 @@ import {
   getProyectosExternosService,
   getProyectoByIdService,
   createProyectoService,
-  createPIDService,
   createTieneService,
   createParticipaService,
   updatePidService,
   createVinculacionService,
   createVinculacionConFinanciamientoService,
-  createVinculacionSinFinanciamientoService
+  createVinculacionSinFinanciamientoService,
+  createPidService,
+  createProyectoExternoService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -143,8 +144,17 @@ export async function getProyectoPorId(req, res) {
 
 export async function crearProyectos(req, res) {
   try {
-    const dataProyecto = req.body;
+    let dataProyecto = req.body;
     const newProyecto = await createProyectoService(dataProyecto);
+
+    if (newProyecto) {
+      dataProyecto.idProyecto = newProyecto.idProyecto
+      if (dataProyecto.tipo === 'pid') {
+        newProyecto.pid = await createPidService(dataProyecto);
+      } else {
+        newProyecto.externo = await createProyectoExternoService(dataProyecto);
+      }
+    }
 
     res
       .status(200)

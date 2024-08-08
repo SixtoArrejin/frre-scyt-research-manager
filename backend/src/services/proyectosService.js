@@ -10,7 +10,8 @@ import {
   createParticipa,
   createVinculacion,
   createVinculacionConFinanciamiento,
-  createVinculacionSinFinanciamiento
+  createVinculacionSinFinanciamiento,
+  createProyectoExterno
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -88,9 +89,18 @@ export async function createProyectoService(proyectoData) {
   }
 }
 
-export async function createPIDService(proyectoPIDData) {
+export async function createPidService(proyectoPidData) {
   try {
-    const newProyectoPID = await createProyectoPID(proyectoPIDData);
+    const newProyectoPID = await createProyectoPID(proyectoPidData);
+    return newProyectoPID;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createProyectoExternoService(proyectoPidData) {
+  try {
+    const newProyectoPID = await createProyectoExterno(proyectoPidData);
     return newProyectoPID;
   } catch (error) {
     throw new Error(error.message);
