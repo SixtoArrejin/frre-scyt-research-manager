@@ -3,7 +3,7 @@ import { prisma } from '../db.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectos() {
-  const includeRelations = ['participa', 'personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', 'tiene'];
+  const includeRelations = ['participa', 'regionales', 'director', 'codirector', 'tiene', 'tiposproyectos', 'pid', 'proyectoExterno'];
   return await getAll('proyectos', includeRelations);
 }
 
