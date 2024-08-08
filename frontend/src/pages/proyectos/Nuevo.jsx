@@ -4,7 +4,7 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
 import { getAllGrupos } from '../../utils/api/gruposApi';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { getAllPersonas } from '../../utils/api/personasApi';
 import { createProyecto } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
@@ -109,6 +109,7 @@ export default function NuevoPid() {
       codPid: '',
       programa: '',
       disposicion: '',
+      tipo: 'pid',
     },
   });
 
@@ -227,6 +228,8 @@ export default function NuevoPid() {
     mutate(modifiedValues);
   };
 
+  const PidExterno = useWatch({ control, name: 'tipo' });
+
   return (
     <Card>
       <CardBody>
@@ -246,21 +249,37 @@ export default function NuevoPid() {
                 <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <GenericInput
-                        name='codPid'
-                        placeholder='Código PID'
-                        register={register}
-                        label='Código PID'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
-                        isRequired
-                      />
+                      <Box width={{ base: '100%', md: '20%' }} display='flex' justifyContent='center'>
+                        <GenericRadio
+                          name='tipo'
+                          direction='row'
+                          options={[
+                            { value: 'pid', label: 'PID' },
+                            { value: 'externo', label: 'Externo' },
+                          ]}
+                          register={register}
+                          defaultValue='pid'
+                          mb='5vh'
+                          width={'100%'}
+                        />
+                      </Box>
+                      {PidExterno === 'pid' && (
+                        <GenericInput
+                          name='codPid'
+                          placeholder='Código PID'
+                          register={register}
+                          label='Código PID'
+                          width={{ base: '100%', md: '30%' }}
+                          mb='5vh'
+                          isRequired
+                        />
+                      )}
 
                       <GenericSelect
                         name='regional'
                         label='Regional asociada'
                         placeholder='Regional...'
-                        width={{ base: '100%', md: '65%' }}
+                        width={{ base: '100%', md: PidExterno === 'pid' ? '45%' : '75%' }}
                         mb='5vh'
                         isRequired
                         register={register}
@@ -341,64 +360,80 @@ export default function NuevoPid() {
                         errors={errors}
                       />
                     </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <GenericSelect
-                        name='tipoActividad'
-                        label='Tipo de actividad'
-                        placeholder='Tipo de actividad...'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
-                        isRequired
-                        register={register}
-                        options={tipoActividad.map((actividad) => ({
-                          value: actividad,
-                          label: actividad,
-                        }))}
-                        errors={errors}
-                      />
-
-                      <GenericSelect
-                        name='estado'
-                        label='Estado'
-                        placeholder='Estado...'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
-                        isRequired
-                        register={register}
-                        options={estadoProyecto.map((estado) => ({
-                          value: estado,
-                          label: estado,
-                        }))}
-                        errors={errors}
-                      />
-
-                      <GenericInput
-                        name='disposicion'
-                        placeholder='Disposición'
-                        register={register}
-                        label='Disposición'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
-                        isRequired
-                      />
-                    </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
-                        <GenericRadio
-                          name='prorrogado'
-                          label='Prorroga'
-                          direction='row'
-                          options={[
-                            { value: 'true', label: 'Si' },
-                            { value: 'false', label: 'No' },
-                          ]}
-                          register={register}
-                          defaultValue='false'
-                          errors={errors}
+                    {PidExterno === 'pid' && (
+                      <Box
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <GenericSelect
+                          name='tipoActividad'
+                          label='Tipo de actividad'
+                          placeholder='Tipo de actividad...'
+                          width={{ base: '100%', md: '30%' }}
                           mb='5vh'
+                          isRequired
+                          register={register}
+                          options={tipoActividad.map((actividad) => ({
+                            value: actividad,
+                            label: actividad,
+                          }))}
+                          errors={errors}
+                        />
+
+                        <GenericSelect
+                          name='estado'
+                          label='Estado'
+                          placeholder='Estado...'
+                          width={{ base: '100%', md: '30%' }}
+                          mb='5vh'
+                          isRequired
+                          register={register}
+                          options={estadoProyecto.map((estado) => ({
+                            value: estado,
+                            label: estado,
+                          }))}
+                          errors={errors}
+                        />
+
+                        <GenericInput
+                          name='disposicion'
+                          placeholder='Disposición'
+                          register={register}
+                          label='Disposición'
+                          width={{ base: '100%', md: '30%' }}
+                          mb='5vh'
+                          isRequired
                         />
                       </Box>
-                    </Box>
+                    )}
+                    {PidExterno === 'pid' && (
+                      <Box
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <Box width={{ base: '100%', md: '15%' }} display='flex' justifyContent='center'>
+                          <GenericRadio
+                            name='prorrogado'
+                            label='Prorroga'
+                            direction='row'
+                            options={[
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
+                            ]}
+                            register={register}
+                            defaultValue='false'
+                            errors={errors}
+                            mb='5vh'
+                          />
+                        </Box>
+                      </Box>
+                    )}
                   </Box>
                 </Box>
               </CardBody>
