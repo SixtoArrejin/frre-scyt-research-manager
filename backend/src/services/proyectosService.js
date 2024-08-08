@@ -18,7 +18,23 @@ import convertToISOString from '../utils/funciones.js';
 export async function getAllProyectosService() {
   try {
     const proyectos = await getAllProyectos();
-    return proyectos;
+    
+    const proyectoD = proyectos.map(proyecto => {
+      const { pid, proyectoExterno, ...restoProyecto } = proyecto;
+      if (proyecto.pid) {
+        return {
+          ...restoProyecto,
+          ...pid  // Añadir los atributos de pid al objeto proyecto
+        };
+      } else {
+        return {
+          ...restoProyecto,
+          ...proyectoExterno
+        };
+      }
+    });
+
+    return proyectoD;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -45,7 +61,18 @@ export async function getProyectosExternosService(subtipo) {
 export async function getProyectoByIdService(idProyecto) {
   try {
     const proyecto = await getProyectoById(idProyecto);
-    return proyecto;
+    const {pid, proyectoExterno, ...restoProyecto} = proyecto
+    if (proyecto.pid){
+      return {
+        ...pid,
+        ...restoProyecto
+      }
+    } else {
+      return {
+        ...proyectoExterno,
+        ...restoProyecto
+      }
+    }
   } catch (error) {
     throw new Error(error.message);
   }
@@ -131,42 +158,42 @@ export async function updatePidService(idProyecto, data) {
     let projectUpdate = {};
     const proyectoSearch = await getProyectoById(idProyecto)
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
-        if (data.proyecto) {
-          if (data.proyecto.fechaInicio) {
-            data.proyecto.fechaInicio = convertToISOString(data.proyecto.fechaInicio)
-          };
-          if (data.proyecto.fechaFin) {
-            data.proyecto.fechaFin = convertToISOString(data.proyecto.fechaFin)
-          };
-          projectUpdate.proyecto = await update('proyectos', filter, data.proyecto);
-          console.log('Buena: ', projectUpdate)
-        }
-        console.log(data)
-        if (data && data.investigadores) {
-          console.log("Investigadores: ", data.investigadores)
-          let bandera = false;
+      if (data.proyecto) {
+        if (data.proyecto.fechaInicio) {
+          data.proyecto.fechaInicio = convertToISOString(data.proyecto.fechaInicio)
+        };
+        if (data.proyecto.fechaFin) {
+          data.proyecto.fechaFin = convertToISOString(data.proyecto.fechaFin)
+        };
+        projectUpdate.proyecto = await update('proyectos', filter, data.proyecto);
+        console.log('Buena: ', projectUpdate)
+      }
+      console.log(data)
+      if (data && data.investigadores) {
+        console.log("Investigadores: ", data.investigadores)
+        let bandera = false;
 
+        try {
+          await deleteByFilter('participa', filter)
+          bandera = true
+          console.log('delete')
+        } catch {
+          bandera = false
+        }
+        if (bandera) {
+          const investigadoresP = data.investigadores.map(investigador => ({
+            ...investigador,
+            idProyecto: idProyecto,
+          }));
           try {
-            await deleteByFilter('participa', filter)
-            bandera = true
-            console.log('delete')
-          } catch {
-            bandera = false
-          }
-          if (bandera) {
-            const investigadoresP = data.investigadores.map(investigador => ({
-              ...investigador,
-              idProyecto: idProyecto,
-            }));
-            try {
-              for (const investigador of investigadoresP) {
-                await create('participa', investigador);
-              }
-            } catch (error) {
-              console.log(error);
+            for (const investigador of investigadoresP) {
+              await create('participa', investigador);
             }
+          } catch (error) {
+            console.log(error);
           }
         }
+      }
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`)
     }
@@ -182,7 +209,7 @@ export async function updatePidService(idProyecto, data) {
   }
 }
 
-export async function createVinculacionService(idProyecto, dataVinculacion){
+export async function createVinculacionService(idProyecto, dataVinculacion) {
   try {
     const newVinculacion = await createVinculacion(idProyecto, dataVinculacion);
     return newVinculacion;

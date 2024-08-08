@@ -3,7 +3,7 @@ import { prisma } from '../db.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectos() {
-  const includeRelations = ['participa', 'personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', 'tiene'];
+  const includeRelations = ['participa', 'regionales', 'director', 'codirector', 'tiene', 'tiposproyectos', 'pid', 'proyectoExterno'];
   return await getAll('proyectos', includeRelations);
 }
 
@@ -23,7 +23,7 @@ export async function getProyectosExternos(subtipo = null) {
 }
 
 export async function getProyectoById(idProyecto) { //SACAR CODIRECTOR
-  const includeRelations = ['personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', { participa: [{ personas: ['categorias'] }] }, { tiene: ['gruposinvestigacion'] }];
+  const includeRelations = ['director', 'codirector', 'pid', 'proyectoExterno', { participa: [{ personas: ['categorias'] }] }, { tiene: ['gruposinvestigacion'] }];
   return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
 }
 

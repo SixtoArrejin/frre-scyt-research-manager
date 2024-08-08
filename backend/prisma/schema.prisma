@@ -44,42 +44,42 @@ model participa {
 }
 
 model personas {
-  idPersona                                  Int                 @id @default(autoincrement())
-  dni                                        Int?                @unique(map: "dni")
-  nombre                                     String?             @db.VarChar(30)
-  apellido                                   String?             @db.VarChar(30)
-  fechaIngreso                               DateTime?           @db.Date
-  activo                                     Boolean?
-  idGrupoInvestigacion                       Int
-  categorias                                 categorias[]
-  participa                                  participa[]
-  gruposinvestigacion                        gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
-  proyectos_proyectos_idDirectorTopersonas   proyectos[]         @relation("proyectos_idDirectorTopersonas")
-  proyectos_proyectos_idCodirectorTopersonas proyectos[]         @relation("proyectos_idCodirectorTopersonas")
+  idPersona            Int                 @id @default(autoincrement())
+  dni                  Int?                @unique(map: "dni")
+  nombre               String?             @db.VarChar(30)
+  apellido             String?             @db.VarChar(30)
+  fechaIngreso         DateTime?           @db.Date
+  activo               Boolean?
+  idGrupoInvestigacion Int
+  categorias           categorias[]
+  participa            participa[]
+  gruposinvestigacion  gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
+  proyectosDirector    proyectos[]         @relation("proyectos_idDirectorTopersonas")
+  proyectosCodirector  proyectos[]         @relation("proyectos_idCodirectorTopersonas")
 
   @@index([idGrupoInvestigacion], map: "personas_idGrupoInvestigacion")
 }
 
 model proyectos {
-  idProyecto                                Int                @id @default(autoincrement())
-  fechaInicio                               DateTime?          @db.Date
-  fechaFin                                  DateTime?          @db.Date
-  denominacion                              String?            @db.VarChar(256)
-  regional                                  String?            @db.VarChar(256)
-  convocatoria                              Int?
-  idDirector                                Int
-  idCodirector                              Int?
-  tipoProyecto                              String?            @db.VarChar(256)
-  programa                                  String?            @db.VarChar(256)
-  participa                                 participa[]
-  regionales                                regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
-  personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
-  personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
-  tiposproyectos                            tiposproyectos?    @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
-  tiene                                     tiene[]
-  vinculaciones                             vinculaciones[]
-  pid                                       pids?              @relation("proyectos_pids")
-  proyectoExterno                           proyectosExternos? @relation("proyectos_externos")
+  idProyecto      Int                @id @default(autoincrement())
+  fechaInicio     DateTime?          @db.Date
+  fechaFin        DateTime?          @db.Date
+  denominacion    String?            @db.VarChar(256)
+  regional        String?            @db.VarChar(256)
+  convocatoria    Int?
+  idDirector      Int
+  idCodirector    Int?
+  tipoProyecto    String?            @db.VarChar(256)
+  programa        String?            @db.VarChar(256)
+  participa       participa[]
+  regionales      regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
+  director        personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  codirector      personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
+  tiposproyectos  tiposproyectos?    @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
+  tiene           tiene[]
+  vinculaciones   vinculaciones[]
+  pid             pids?              @relation("proyectos_pids")
+  proyectoExterno proyectosExternos? @relation("proyectos_externos")
 
   @@index([idCodirector], map: "proyectos_idCodirector")
   @@index([idDirector], map: "proyectos_idDirector")
