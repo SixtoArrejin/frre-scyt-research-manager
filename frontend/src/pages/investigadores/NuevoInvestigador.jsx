@@ -130,7 +130,7 @@ export default function NuevoInvestigador() {
                       <GenericInput
                         type='number'
                         name='dni'
-                        label='DNIi'
+                        label='DNI'
                         placeholder='DNI'
                         register={register}
                         errors={errors}

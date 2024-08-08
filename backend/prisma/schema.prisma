@@ -61,34 +61,46 @@ model personas {
 }
 
 model proyectos {
-  idProyecto                                Int             @id @default(autoincrement())
-  tipoActividad                             String?         @db.VarChar(256)
-  fechaInicio                               DateTime?       @db.Date
-  fechaFin                                  DateTime?       @db.Date
-  denominacion                              String?         @db.VarChar(256)
-  completo                                  Boolean?
-  regional                                  String?         @db.VarChar(256)
+  idProyecto                                Int                @id @default(autoincrement())
+  fechaInicio                               DateTime?          @db.Date
+  fechaFin                                  DateTime?          @db.Date
+  denominacion                              String?            @db.VarChar(256)
+  regional                                  String?            @db.VarChar(256)
   convocatoria                              Int?
-  estado                                    String?         @db.VarChar(256)
   idDirector                                Int
   idCodirector                              Int?
-  tipoProyecto                              String?         @db.VarChar(256)
-  codPid                                    String?         @db.VarChar(256)
-  programa                                  String?         @db.VarChar(256)
-  disposicion                               String?         @db.VarChar(256)
-  prorrogado                                Boolean?
+  tipoProyecto                              String?            @db.VarChar(256)
+  programa                                  String?            @db.VarChar(256)
   participa                                 participa[]
-  regionales                                regionales?     @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
-  personas_proyectos_idDirectorTopersonas   personas        @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
-  personas_proyectos_idCodirectorTopersonas personas?       @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
-  tiposproyectos                            tiposproyectos? @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
+  regionales                                regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
+  personas_proyectos_idDirectorTopersonas   personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  personas_proyectos_idCodirectorTopersonas personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
+  tiposproyectos                            tiposproyectos?    @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
   tiene                                     tiene[]
   vinculaciones                             vinculaciones[]
+  pid                                       pids?              @relation("proyectos_pids")
+  proyectoExterno                           proyectosExternos? @relation("proyectos_externos")
 
   @@index([idCodirector], map: "proyectos_idCodirector")
   @@index([idDirector], map: "proyectos_idDirector")
   @@index([regional], map: "proyectos_fk_proyectos_regionales")
   @@index([tipoProyecto], map: "proyectos_tipoProyecto")
+}
+
+model pids {
+  idPid         Int       @id @unique
+  codPid        String    @unique
+  tipoActividad String?   @db.VarChar(256)
+  completo      Boolean?
+  estado        String?   @db.VarChar(256)
+  disposicion   String?   @db.VarChar(256)
+  prorrogado    Boolean?
+  proyecto      proyectos @relation("proyectos_pids", fields: [idPid], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model proyectosExternos {
+  idProyectoExterno Int       @id @unique
+  proyecto          proyectos @relation("proyectos_externos", fields: [idProyectoExterno], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model tiene {

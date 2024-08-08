@@ -3,7 +3,7 @@ import { prisma } from '../db.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectos() {
-  const includeRelations = ['participa','personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', 'tiene'];
+  const includeRelations = ['participa', 'personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', 'tiene'];
   return await getAll('proyectos', includeRelations);
 }
 
@@ -14,7 +14,7 @@ export async function getProyectosPids() {
 
 export async function getProyectosExternos(subtipo = null) {
   if (subtipo === 'financiamiento') {
-    const includeRelations = [{proyectosexternos: ["proyectos"]}];
+    const includeRelations = [{ proyectosexternos: ["proyectos"] }];
     return await getAll('proyectosconfinanciamiento', includeRelations);
   };
   //falta el caso en que el subtipo='sinFinanciamiento' pero aún no implementamos esa tabla
@@ -22,14 +22,30 @@ export async function getProyectosExternos(subtipo = null) {
   return await getAll('proyectosexternos', includeRelations);
 }
 
-export async function getProyectoById(idProyecto){ //SACAR CODIRECTOR
-  const includeRelations = [ 'personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', {participa: [{personas: ['categorias']}]}, {tiene: ['gruposinvestigacion']}];
+export async function getProyectoById(idProyecto) { //SACAR CODIRECTOR
+  const includeRelations = ['personas_proyectos_idDirectorTopersonas', 'personas_proyectos_idCodirectorTopersonas', { participa: [{ personas: ['categorias'] }] }, { tiene: ['gruposinvestigacion'] }];
   return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
 }
 
 export async function createProyecto(proyectoData) {
   try {
-    const newProyecto = await create('proyectos', proyectoData);
+    const proyectoPayload = {
+      fechaInicio: proyectoData.fechaInicio,
+      fechaFin: proyectoData.fechaFin,
+      denominacion: proyectoData.denominacion,
+      regional: proyectoData.regional,
+      convocatoria: proyectoData.convocatoria,
+      idDirector: proyectoData.idDirector,
+      tipoProyecto: proyectoData.tipoProyecto,
+      programa: proyectoData.programa,
+    };
+
+    // Codirector podría no estar
+    if (proyectoData.idCodirector) {
+      proyectoPayload.idCodirector = proyectoData.idCodirector;
+    }
+
+    const newProyecto = await create('proyectos', proyectoPayload);
     return newProyecto;
   } catch (error) {
     throw new Error(error.message);
@@ -38,7 +54,30 @@ export async function createProyecto(proyectoData) {
 
 export async function createProyectoPID(proyectoPIDData) {
   try {
-    const newProyectoPID = await create('pids', proyectoPIDData);
+    const proyectoPayload = {
+      idPid: proyectoPIDData.idProyecto,
+      codPid: proyectoPIDData.codPid,
+      tipoActividad: proyectoPIDData.tipoActividad,
+      completo: proyectoPIDData.completo,
+      estado: proyectoPIDData.estado,
+      disposicion: proyectoPIDData.disposicion,
+      prorrogado: proyectoPIDData.prorrogado
+    };
+
+    const newProyectoPID = await create('pids', proyectoPayload);
+    return newProyectoPID;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createProyectoExterno(proyectoExternoData) {
+  try {
+    const proyectoPayload = {
+      idProyectoExterno: proyectoExternoData.idProyecto
+    };
+
+    const newProyectoPID = await create('proyectosExternos', proyectoPayload);
     return newProyectoPID;
   } catch (error) {
     throw new Error(error.message);
