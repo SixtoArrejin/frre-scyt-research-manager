@@ -28,7 +28,7 @@ export async function getVinculacionByIdService(idVinculacion) {
 export async function createDesembolsoService(desembolsoData) {
   try {
     desembolsoData.fechaDesembolso = convertToISOString(desembolsoData.fechaDesembolso);
-    desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado);
+    // desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado);
     desembolsoData.estado = "En ejecución"
     console.log(desembolsoData.fechaDesembolso)
     const newDesembolso = await createDesembolso(desembolsoData);

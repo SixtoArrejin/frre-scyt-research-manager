@@ -39,7 +39,7 @@ export default function NuevoDesembolso() {
     defaultValues: {
       idConFinanciamiento: parseInt(idVinculacion),
       fechaDesembolso: new Date().toISOString().split('T')[0],
-      fechaAprobado: new Date().toISOString().split('T')[0],
+      // fechaAprobado: new Date().toISOString().split('T')[0],
       plazoEtapa: null,
       montoDesembolsado: null,
     },
@@ -133,7 +133,7 @@ export default function NuevoDesembolso() {
                       />
                     </Box>
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-                      <GenericInput
+                      {/* <GenericInput
                         name='fechaAprobado'
                         label='Fecha de aprobado'
                         type='date'
@@ -142,7 +142,7 @@ export default function NuevoDesembolso() {
                         width={{ base: '100%', md: '50%' }}
                         isRequired
                         mb='5vh'
-                      />
+                      /> */}
                     </Box>
                   </Box>
                   <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
