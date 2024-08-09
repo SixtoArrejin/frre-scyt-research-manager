@@ -15,10 +15,14 @@ export default function DetalleProyectoPid() {
   const { data, isLoading, error } = useQuery(['proyecto', idProyecto], () => getProyectoById(Number(idProyecto)));
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
+  const [esPid, setEsPId] = useState(false);
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
+    if (data?.proyecto?.codPid) {
+      setEsPId(true);
+    }
   }, [data]);
 
   const {
@@ -49,10 +53,12 @@ export default function DetalleProyectoPid() {
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput label='Código PID' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.codPid} isDisabled mb='5vh' />
+                    {esPid && (
+                      <GenericInput label='Código PID' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.codPid} isDisabled mb='5vh' />
+                    )}
                     <GenericInput
                       label='Regional asociada'
-                      width={{ base: '100%', md: '65%' }}
+                      width={{ base: '100%', md: esPid === true ? '65%' : '100%' }}
                       value={data?.proyecto?.regional}
                       isDisabled
                       mb='5vh'
@@ -79,7 +85,7 @@ export default function DetalleProyectoPid() {
                     <GenericInput
                       label='Codirector'
                       width={{ base: '100%', md: '47.5%' }}
-                      value={data?.proyecto?.codirector?.apellido + ', ' + data?.proyecto?.codirector?.nombre}
+                      value={data?.proyecto?.codirector ? data?.proyecto?.codirector?.apellido + ', ' + data?.proyecto?.codirector?.nombre : '-'}
                       isDisabled
                       mb='5vh'
                     />
@@ -117,15 +123,21 @@ export default function DetalleProyectoPid() {
                       mb='5vh'
                     />
                   </Box>
+                  {esPid && (
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericInput
+                        label='Tipo Actividad'
+                        width={{ base: '100%', md: '30%' }}
+                        value={data?.proyecto?.tipoActividad}
+                        isDisabled
+                        mb='5vh'
+                      />
+                      <GenericInput label='Estado' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.estado} isDisabled mb='5vh' />
+                      <GenericInput label='Disposición' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.disposicion} isDisabled mb='5vh' />
+                    </Box>
+                  )}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput
-                      label='Tipo Actividad'
-                      width={{ base: '100%', md: '30%' }}
-                      value={data?.proyecto?.tipoActividad}
-                      isDisabled
-                      mb='5vh'
-                    />
-                    <GenericInput label='Estado' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.estado} isDisabled mb='5vh' />
+                    <GenericInput label='Convocatoria' width={{ base: '100%', md: '65%' }} value={data?.proyecto?.convocatoria} isDisabled mb='5vh' />
                     <GenericInput
                       label='Completo'
                       width={{ base: '100%', md: '30%' }}
@@ -133,16 +145,6 @@ export default function DetalleProyectoPid() {
                       isDisabled
                       mb='5vh'
                     />
-                  </Box>
-                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput
-                      label='Convocatoria'
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={data?.proyecto?.convocatoria}
-                      isDisabled
-                      mb='5vh'
-                    />
-                    <GenericInput label='Disposición' width={{ base: '100%', md: '47.5%' }} value={data?.proyecto?.disposicion} isDisabled mb='5vh' />
                   </Box>
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                     <Link to={`modificar`}>
