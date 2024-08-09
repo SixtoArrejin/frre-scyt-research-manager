@@ -27,6 +27,11 @@ export async function updatePID(id, data) {
   return put(`/api/proyectos/pid/${id}`, data);
 }
 
+export async function updateProyecto(id, data) {
+  return put(`/api/proyectos/${id}`, data);
+}
+
+
 export async function createVinculacion(id, data) {
   return post(`/api/proyectos/${id}/vinculaciones`, data);
 }

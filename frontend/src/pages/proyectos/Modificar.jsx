@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
-import { getProyectoById, updatePID } from '../../utils/api/proyectosApi';
+import { getProyectoById, updateProyecto } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import { useForm } from 'react-hook-form';
 import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
@@ -50,7 +50,7 @@ export default function ModificarPIDs() {
   } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => updatePID(Number(idPid), formData),
+    mutationFn: (formData) => updateProyecto(Number(idPid), formData),
     onSuccess: () => {
       toast({
         title: 'Modificar PID',

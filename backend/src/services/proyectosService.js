@@ -154,46 +154,34 @@ export async function createParticipaService(dataParticipa) {
 
 export async function updatePidService(idProyecto, data) {
   try {
-    const filter = { idProyecto: idProyecto };
     let projectUpdate = {};
     const proyectoSearch = await getProyectoById(idProyecto)
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
-      if (data.proyecto) {
-        if (data.proyecto.fechaInicio) {
-          data.proyecto.fechaInicio = convertToISOString(data.proyecto.fechaInicio)
-        };
-        if (data.proyecto.fechaFin) {
-          data.proyecto.fechaFin = convertToISOString(data.proyecto.fechaFin)
-        };
-        projectUpdate.proyecto = await update('proyectos', filter, data.proyecto);
-        console.log('Buena: ', projectUpdate)
-      }
-      console.log(data)
-      if (data && data.investigadores) {
-        console.log("Investigadores: ", data.investigadores)
-        let bandera = false;
-
-        try {
-          await deleteByFilter('participa', filter)
-          bandera = true
-          console.log('delete')
-        } catch {
-          bandera = false
+      if (data) {
+        const dataProyecto = {
+          fechaInicio: convertToISOString(data.fechaInicio),
+          fechaFin: convertToISOString(data.fechaFin),
+          denominacion: data.denominacion,
+          regional: data.regional,
+          convocatoria: data.convocatoria,
+          tipoProyecto: data.tipoProyecto,
+          programa: data.programa,
         }
-        if (bandera) {
-          const investigadoresP = data.investigadores.map(investigador => ({
-            ...investigador,
-            idProyecto: idProyecto,
-          }));
-          try {
-            for (const investigador of investigadoresP) {
-              await create('participa', investigador);
-            }
-          } catch (error) {
-            console.log(error);
-          }
+        const dataPID = {
+          codPid: data.codPid,
+          tipoActividad: data.tipoActividad,
+          completo: data.completo,
+          estado: data.estado,
+          disposicion: data.disposicion,
+          prorrogado: data.prorrogado,
         }
-      }
+        let filter = { idProyecto: idProyecto };
+        projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
+        if (projectUpdate){
+          filter = { idPid: idProyecto };
+          projectUpdate.pid = await update('pids', filter, dataPID)
+        } 
+      } 
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`)
     }
