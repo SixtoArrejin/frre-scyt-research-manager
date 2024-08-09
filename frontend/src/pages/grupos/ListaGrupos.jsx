@@ -71,7 +71,7 @@ export default function ListaGrupos() {
 
           <br />
 
-          {grupos ? (
+          {grupos?.length > 0 ? (
             <Tabla
               columnas={['Grupo', 'Resolución', 'Fecha Creación', 'Ver Más']}
               datos={sortedGrupos?.map((item) => {
@@ -89,7 +89,6 @@ export default function ListaGrupos() {
           ) : (
             <ImgDefault src={NoData} alt='No Data' width='30%' text='Aún no se han cargado grupos de investigación' />
           )}
-
           <br />
         </Box>
       </CardBody>
