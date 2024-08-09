@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { getPersonaById, updatePersona } from '../../utils/api/personasApi';
@@ -100,6 +100,14 @@ export default function ModificarInvestigador() {
     };
     mutate(modifiedValues);
   };
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>
