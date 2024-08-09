@@ -197,6 +197,39 @@ export async function updatePidService(idProyecto, data) {
   }
 }
 
+export async function updateProyectoExternoService(idProyecto, data) {
+  try {
+    let projectUpdate = {};
+    const proyectoSearch = await getProyectoById(idProyecto)
+    if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
+      if (data) {
+        const dataProyecto = {
+          fechaInicio: convertToISOString(data.fechaInicio),
+          fechaFin: convertToISOString(data.fechaFin),
+          denominacion: data.denominacion,
+          regional: data.regional,
+          convocatoria: data.convocatoria,
+          tipoProyecto: data.tipoProyecto,
+          programa: data.programa,
+        }
+        const filter = { idProyecto: idProyecto };
+        projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
+      } 
+    } else {
+      throw new Error(`El proyecto con id ${idProyecto} no existe`)
+    }
+
+    // console.log(proyectoSearch);
+
+    // const updatedPid = await update('pids', filter, pidData);
+    // return updatedPid;
+    return projectUpdate
+  } catch (error) {
+    console.log('maleta')
+    throw new Error(error.message);
+  }
+}
+
 export async function createVinculacionService(idProyecto, dataVinculacion) {
   try {
     const newVinculacion = await createVinculacion(idProyecto, dataVinculacion);

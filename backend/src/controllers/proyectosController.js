@@ -12,7 +12,8 @@ import {
   createVinculacionConFinanciamientoService,
   createVinculacionSinFinanciamientoService,
   createPidService,
-  createProyectoExternoService
+  createProyectoExternoService,
+  updateProyectoExternoService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -174,7 +175,7 @@ export async function updateProyectoController(req, res) {
       if (dataP.proyecto.codPid) {
         updatedP = await updatePidService(idProyecto, dataP.proyecto);
       } else {
-        // updatedP = await updateProyectoExternoService(idProyecto, dataP.proyecto);
+        updatedP = await updateProyectoExternoService(idProyecto, dataP.proyecto);
       }
     }
     if (dataP.investifadores) {
@@ -183,7 +184,6 @@ export async function updateProyectoController(req, res) {
     if (dataP.grupos) {
       console.log('grupos')
     }
-
     return res
       .status(200)
       .json({
