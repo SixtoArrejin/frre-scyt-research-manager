@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import investigadores from '../../utils/data/investigadores.json';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,7 +29,7 @@ export default function AgregarGrupo() {
 
   const { idPid } = useParams();
 
-  const { data: dataParticipa } = useQuery(['participa', idPid], () => getProyectoById(Number(idPid)));
+  const { data: dataParticipa, isLoading } = useQuery(['participa', idPid], () => getProyectoById(Number(idPid)));
   const [grupos1, setGrupos1] = useState([]);
   const [investigadores1, setInvestigadores1] = useState([]);
 
@@ -72,7 +72,7 @@ export default function AgregarGrupo() {
     setInvestigadoresFiltrados(investigadoresGrupo);
   }, [dataParticipa]);
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updatePID(Number(idPid), formData),
     onSuccess: () => {
       toast({
@@ -153,6 +153,14 @@ export default function AgregarGrupo() {
     }
   }, [grupos1]);
 
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
+
   return (
     <Card>
       <CardBody>
@@ -224,7 +232,7 @@ export default function AgregarGrupo() {
                 <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
                   Cancelar
                 </Button>
-                <Button onClick={openModal} colorScheme='blue' variant='outline' ml='5%'>
+                <Button onClick={openModal} isLoading={isLoadingMutation} colorScheme='blue' variant='outline' ml='5%'>
                   Guardar
                 </Button>
                 <CustomModal

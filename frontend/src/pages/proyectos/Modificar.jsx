@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
@@ -92,7 +92,7 @@ export default function ModificarPIDs() {
         // idDirector: data?.proyecto?.idDirector,
         // idCodirector: data?.proyecto?.idCodirector
         prorrogado: data?.proyecto?.prorrogado ? 'true' : 'false',
-        tipo: data?.proyecto?.codPid ? 'pid' : 'externo'
+        tipo: data?.proyecto?.codPid ? 'pid' : 'externo',
       },
     },
   });
@@ -107,9 +107,17 @@ export default function ModificarPIDs() {
       proyecto: modifiedValues,
     };
 
-    console.log(proyecto)
+    console.log(proyecto);
     mutate(proyecto);
   };
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>
