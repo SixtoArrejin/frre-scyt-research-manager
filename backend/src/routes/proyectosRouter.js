@@ -5,8 +5,8 @@ import {
     getProyectosDePersona,
     getProyectoPorId,
     crearProyectos,
-    updatePIDController,
     crearVinculaciones,
+    updateProyectoController,
 } from '../controllers/proyectosController.js';
 
 const router = Router();
@@ -18,6 +18,6 @@ router.get('/:idProyecto', getProyectoPorId)
 
 router.post('/', crearProyectos);
 router.post('/:idProyecto/vinculaciones', crearVinculaciones);
-router.put('/pid/:idProyecto', updatePIDController);
+router.put('/:idProyecto', updateProyectoController);
 
 export default router;

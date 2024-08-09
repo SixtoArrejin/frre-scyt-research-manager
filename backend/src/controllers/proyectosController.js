@@ -12,7 +12,8 @@ import {
   createVinculacionConFinanciamientoService,
   createVinculacionSinFinanciamientoService,
   createPidService,
-  createProyectoExternoService
+  createProyectoExternoService,
+  updateProyectoExternoService
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -164,12 +165,25 @@ export async function crearProyectos(req, res) {
   }
 }
 
-export async function updatePIDController(req, res) {
+export async function updateProyectoController(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const dataP = req.body;
   console.log(dataP);
   try {
-    const updatedP = await updatePidService(idProyecto, dataP);
+    let updatedP
+    if (dataP.proyecto) {
+      if (dataP.proyecto.codPid) {
+        updatedP = await updatePidService(idProyecto, dataP.proyecto);
+      } else {
+        updatedP = await updateProyectoExternoService(idProyecto, dataP.proyecto);
+      }
+    }
+    if (dataP.investifadores) {
+      console.log('investigadores')
+    }
+    if (dataP.grupos) {
+      console.log('grupos')
+    }
     return res
       .status(200)
       .json({

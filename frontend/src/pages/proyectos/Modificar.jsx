@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
-import { getProyectoById, updatePID } from '../../utils/api/proyectosApi';
+import { getProyectoById, updateProyecto } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import { useForm } from 'react-hook-form';
 import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
@@ -50,7 +50,7 @@ export default function ModificarPIDs() {
   } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => updatePID(Number(idPid), formData),
+    mutationFn: (formData) => updateProyecto(Number(idPid), formData),
     onSuccess: () => {
       toast({
         title: 'Modificar PID',
@@ -92,6 +92,7 @@ export default function ModificarPIDs() {
         // idDirector: data?.proyecto?.idDirector,
         // idCodirector: data?.proyecto?.idCodirector
         prorrogado: data?.proyecto?.prorrogado ? 'true' : 'false',
+        tipo: data?.proyecto?.codPid ? 'pid' : 'externo'
       },
     },
   });
@@ -106,6 +107,7 @@ export default function ModificarPIDs() {
       proyecto: modifiedValues,
     };
 
+    console.log(proyecto)
     mutate(proyecto);
   };
 
@@ -124,22 +126,24 @@ export default function ModificarPIDs() {
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput
-                      name='proyecto.codPid'
-                      label='Código PID'
-                      placeholder='Código PID'
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired
-                      mb='5vh'
-                    />
+                    {data?.proyecto?.codPid && (
+                      <GenericInput
+                        name='proyecto.codPid'
+                        label='Código PID'
+                        placeholder='Código PID'
+                        register={register}
+                        errors={errors}
+                        width={{ base: '100%', md: '30%' }}
+                        isRequired
+                        mb='5vh'
+                      />
+                    )}
 
                     <GenericSelect
                       name='proyecto.regional'
                       label='Regional asociada'
                       placeholder='Regional...'
-                      width={{ base: '100%', md: '65%' }}
+                      width={data?.proyecto?.codPid ? { base: '100%', md: '65%' } : '100%'}
                       mb='5vh'
                       isRequired
                       register={register}
@@ -224,80 +228,97 @@ export default function ModificarPIDs() {
                       errors={errors}
                     />
                   </Box>
-                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericSelect
-                      name='proyecto.tipoActividad'
-                      label='Tipo de actividad'
-                      placeholder='Tipo de actividad...'
-                      width={{ base: '100%', md: '30%' }}
-                      mb='5vh'
-                      isRequired
-                      register={register}
-                      options={tipoActividad.map((actividad) => ({
-                        value: actividad,
-                        label: actividad,
-                      }))}
-                      errors={errors}
-                    />
-                    <GenericSelect
-                      name='proyecto.estado'
-                      label='Estado'
-                      placeholder='Estado...'
-                      width={{ base: '100%', md: '30%' }}
-                      mb='5vh'
-                      isRequired
-                      register={register}
-                      options={estadoProyecto.map((estado) => ({
-                        value: estado,
-                        label: estado,
-                      }))}
-                      errors={errors}
-                    />
+                  {data?.proyecto?.codPid && (
+                    <>
+                      <Box
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <GenericSelect
+                          name='proyecto.tipoActividad'
+                          label='Tipo de actividad'
+                          placeholder='Tipo de actividad...'
+                          width={{ base: '100%', md: '30%' }}
+                          mb='5vh'
+                          isRequired
+                          register={register}
+                          options={tipoActividad.map((actividad) => ({
+                            value: actividad,
+                            label: actividad,
+                          }))}
+                          errors={errors}
+                        />
+                        <GenericSelect
+                          name='proyecto.estado'
+                          label='Estado'
+                          placeholder='Estado...'
+                          width={{ base: '100%', md: '30%' }}
+                          mb='5vh'
+                          isRequired
+                          register={register}
+                          options={estadoProyecto.map((estado) => ({
+                            value: estado,
+                            label: estado,
+                          }))}
+                          errors={errors}
+                        />
 
-                    <GenericInput
-                      name='proyecto.disposicion'
-                      label='Disposición'
-                      placeholder='Disposición'
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired
-                      mb='5vh'
-                    />
-                  </Box>
-                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
-                      <GenericRadio
-                        name='proyecto.prorrogado'
-                        label='Prorroga:'
-                        direction='row'
-                        options={[
-                          { value: 'true', label: 'Si' },
-                          { value: 'false', label: 'No' },
-                        ]}
-                        register={register}
-                        defaultValue={data?.proyecto?.prorrogado ? 'true' : 'false'}
-                        errors={errors}
-                        mb='5vh'
-                      />
-                    </Box>
+                        <GenericInput
+                          name='proyecto.disposicion'
+                          label='Disposición'
+                          placeholder='Disposición'
+                          register={register}
+                          errors={errors}
+                          width={{ base: '100%', md: '30%' }}
+                          isRequired
+                          mb='5vh'
+                        />
+                      </Box>
 
-                    <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
-                      <GenericRadio
-                        name='proyecto.completo'
-                        label='Completo:'
-                        direction='row'
-                        options={[
-                          { value: 'true', label: 'Si' },
-                          { value: 'false', label: 'No' },
-                        ]}
-                        register={register}
-                        defaultValue={data?.proyecto?.completo ? 'true' : 'false'}
-                        errors={errors}
-                        mb='5vh'
-                      />
-                    </Box>
-                  </Box>
+                      <Box
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        alignItems='center'
+                        justifyContent='space-between'
+                      >
+                        <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
+                          <GenericRadio
+                            name='proyecto.prorrogado'
+                            label='Prorroga:'
+                            direction='row'
+                            options={[
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
+                            ]}
+                            register={register}
+                            defaultValue={data?.proyecto?.prorrogado ? 'true' : 'false'}
+                            errors={errors}
+                            mb='5vh'
+                          />
+                        </Box>
+
+                        <Box width={{ base: '100%', md: '50%' }} display='flex' justifyContent='center'>
+                          <GenericRadio
+                            name='proyecto.completo'
+                            label='Completo:'
+                            direction='row'
+                            options={[
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
+                            ]}
+                            register={register}
+                            defaultValue={data?.proyecto?.completo ? 'true' : 'false'}
+                            errors={errors}
+                            mb='5vh'
+                          />
+                        </Box>
+                      </Box>
+                    </>
+                  )}
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                     <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='3%'>
                       Cancelar
