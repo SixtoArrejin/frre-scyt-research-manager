@@ -33,7 +33,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { BiNetworkChart, BiTask } from "react-icons/bi";
-import Logo from "../img/Logo2.jpg";
+import Logo from "../../src/img/Logo2-SinFondo.png";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
