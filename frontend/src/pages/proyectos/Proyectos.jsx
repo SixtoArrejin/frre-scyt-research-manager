@@ -32,10 +32,17 @@ export default function ProyectosPid() {
 
         // Luego filtramos por denominacion en los que tienen codPid
         filteredProyectos = proyectosConCodPid.filter((item) => item.denominacion.toLowerCase().includes(denominacion.toLowerCase()));
-        setPidExterno('pid')
+        setPidExterno('pid');
       } else {
-        // Si no hay valor en codPID, solo filtramos por denominacion en todos los proyectos
-        filteredProyectos = data?.proyectos.filter((item) => item.denominacion.toLowerCase().includes(denominacion.toLowerCase()));
+        let typeFilter;
+        if (pidExterno === 'pid') {
+          typeFilter = data?.proyectos.filter((item) => item.codPid && item.codPid.toLowerCase().includes(codPID.toLowerCase()));
+        } else if (pidExterno === 'externos') {
+          typeFilter = data?.proyectos.filter((item) => !item.codPid);
+        } else {
+          typeFilter = data?.proyectos || [];
+        }
+        filteredProyectos = typeFilter.filter((item) => item.denominacion.toLowerCase().includes(denominacion.toLowerCase()));
       }
 
       setProyectos(filteredProyectos);
@@ -81,19 +88,9 @@ export default function ProyectosPid() {
                   { value: 'pid', label: 'PID' },
                   { value: 'externos', label: 'Externos' },
                 ]}
-                value={pidExterno} // Pasamos el valor seleccionado al select
-                onChange={(event) => setPidExterno(event.target.value)} // Pasamos setSelectedValue directamente
+                value={pidExterno}
+                onChange={(event) => setPidExterno(event.target.value)}
               />
-              <Button
-                onClick={() => {
-                  console.log(pidExterno);
-                }}
-                colorScheme='blue'
-                variant='outline'
-                mr='5'
-              >
-                Proyecto +
-              </Button>
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
               <Link to={'nuevo'}>
@@ -116,11 +113,11 @@ export default function ProyectosPid() {
               }
 
               return [
-                item.codPid ? item.codPid : 'Externo',
+                item.codPid ? item.codPid : '-',
                 formatoFechaISOaDDMMAAAA(item?.fechaInicio),
                 denominacion,
                 regional,
-                item?.estado ? item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1) : 'Externo',
+                item?.estado ? item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1) : '-',
                 <Link to={`/proyectos/${item.idProyecto}`}>
                   <PlusSquareIcon />
                 </Link>,
