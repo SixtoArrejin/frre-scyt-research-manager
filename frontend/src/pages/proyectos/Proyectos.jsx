@@ -7,6 +7,7 @@ import { getProyectos } from '../../utils/api/proyectosApi';
 import Tabla from '../../components/Tabla';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
 
 export default function ProyectosPid() {
   const [codPID, setCodPID] = useState('');
@@ -15,20 +16,32 @@ export default function ProyectosPid() {
 
   const { data, isLoading, error } = useQuery('proyectos', () => getProyectos());
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
+  const [pidExterno, setPidExterno] = useState('todos');
 
   useEffect(() => {
-    if (codPID === '' && denominacion === '') {
-      // Si no se está filtrando nada, utiliza los datos originales data?.personas
+    if (codPID === '' && denominacion === '' && pidExterno === 'todos') {
+      // Mostrar todos los proyectos sin filtrar
       setProyectos(data?.proyectos || []);
       setFiltro(false);
     } else {
-      const filteredProyectos = data?.proyectos.filter(
-        (item) => item.codPid.toLowerCase().includes(codPID.toLowerCase()) && item.denominacion.toLowerCase().includes(denominacion.toLowerCase())
-      );
+      let filteredProyectos;
+
+      // Si hay un valor en codPID, primero filtramos solo aquellos proyectos que tienen codPid
+      if (codPID) {
+        const proyectosConCodPid = data?.proyectos.filter((item) => item.codPid && item.codPid.toLowerCase().includes(codPID.toLowerCase()));
+
+        // Luego filtramos por denominacion en los que tienen codPid
+        filteredProyectos = proyectosConCodPid.filter((item) => item.denominacion.toLowerCase().includes(denominacion.toLowerCase()));
+        setPidExterno('pid')
+      } else {
+        // Si no hay valor en codPID, solo filtramos por denominacion en todos los proyectos
+        filteredProyectos = data?.proyectos.filter((item) => item.denominacion.toLowerCase().includes(denominacion.toLowerCase()));
+      }
+
       setProyectos(filteredProyectos);
       setFiltro(true);
     }
-  }, [codPID, denominacion, data]);
+  }, [codPID, denominacion, pidExterno, data]);
 
   if (isLoading) {
     return <Text fontSize='md'>Cargando...</Text>;
@@ -45,7 +58,7 @@ export default function ProyectosPid() {
           <br />
 
           <Box display='flex' width='100%'>
-            <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+            <Box display='flex' justifyContent='space-between' width='85%' marginLeft='2%'>
               <GenericInput
                 placeholder='Código PID'
                 label='Código PID'
@@ -60,11 +73,32 @@ export default function ProyectosPid() {
                 value={denominacion}
                 onChange={(event) => setDenominacion(event.target.value)}
               />
+              <GenericSelect
+                name='pidExterno'
+                width='15vw'
+                options={[
+                  { value: 'todos', label: 'Todos' },
+                  { value: 'pid', label: 'PID' },
+                  { value: 'externos', label: 'Externos' },
+                ]}
+                value={pidExterno} // Pasamos el valor seleccionado al select
+                onChange={(event) => setPidExterno(event.target.value)} // Pasamos setSelectedValue directamente
+              />
+              <Button
+                onClick={() => {
+                  console.log(pidExterno);
+                }}
+                colorScheme='blue'
+                variant='outline'
+                mr='5'
+              >
+                Proyecto +
+              </Button>
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
               <Link to={'nuevo'}>
                 <Button colorScheme='blue' variant='outline' mr='5'>
-                  Proyecto PID +
+                  Proyecto +
                 </Button>
               </Link>
             </Box>
@@ -86,7 +120,7 @@ export default function ProyectosPid() {
                 formatoFechaISOaDDMMAAAA(item?.fechaInicio),
                 denominacion,
                 regional,
-                item?.estado ? (item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1)) : 'Externo',
+                item?.estado ? item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1) : 'Externo',
                 <Link to={`/proyectos/${item.idProyecto}`}>
                   <PlusSquareIcon />
                 </Link>,
