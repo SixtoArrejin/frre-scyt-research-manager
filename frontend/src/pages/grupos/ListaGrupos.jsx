@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import Tabla from '../../components/Tabla';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import GenericInput from '../../components/formControls/GenericInput';
+import { Spinner } from '@chakra-ui/react';
 
 export default function ListaGrupos() {
   const [siglas, setSiglas] = useState('');
@@ -30,7 +31,11 @@ export default function ListaGrupos() {
   }, [siglas, data]);
 
   if (isLoading) {
-    return <Text fontSize='md'>Cargando...</Text>;
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
   }
 
   const sortedGrupos = [...grupos]?.sort((a, b) => {
@@ -51,13 +56,7 @@ export default function ListaGrupos() {
 
           <Box display='flex' width='100%'>
             <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
-              <GenericInput
-                label='Siglas'
-                placeholder='Siglas'
-                width='15vw'
-                value={siglas}
-                onChange={(event) => setSiglas(event.target.value)}
-              />
+              <GenericInput label='Siglas' placeholder='Siglas' width='15vw' value={siglas} onChange={(event) => setSiglas(event.target.value)} />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
               <Link to={'nuevo'}>
