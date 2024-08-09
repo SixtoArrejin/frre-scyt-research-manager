@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, Image } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getGrupoById } from '../../utils/api/gruposApi';
@@ -8,11 +8,14 @@ import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from '../../utils/gen
 import { getProyectosByIdGrupo } from '../../utils/api/proyectosApi';
 import Tabla from '../../components/Tabla';
 import GenericInput from '../../components/formControls/GenericInput';
+import NoData from '../../img/no-data.png';
+import NoData2 from '../../img/no-data-2.png';
+import ImgDefault from '../../components/ImgDefault';
 
 export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams();
 
-  const { data, isLoading} = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
+  const { data, isLoading } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
 
   const { data: dataProyectos } = useQuery(['proyectosGrupo'], () => getProyectosByIdGrupo(idGrupoInvestigacion));
 
@@ -101,22 +104,26 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize='md'>Integrantes</Text>
               <br />
-              <Tabla
-                columnas={['DNI', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Categoría', 'Ver Más']}
-                datos={sortedInvestigadores?.map((item) => {
-                  const categoriaMIN = getCategoriaMasActual(item.categorias, 'ministerio');
-                  return [
-                    item.dni,
-                    item.apellido + ' ' + item.nombre,
-                    item.activo ? 'Activo' : 'Inactivo',
-                    formatoFechaISOaDDMMAAAA(item.fechaIngreso),
-                    categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
-                    <Link to={`/investigadores/${item.idPersona}`}>
-                      <PlusSquareIcon />
-                    </Link>,
-                  ];
-                })}
-              />
+              {sortedInvestigadores?.length > 0 ? (
+                <Tabla
+                  columnas={['DNI', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Categoría', 'Ver Más']}
+                  datos={sortedInvestigadores?.map((item) => {
+                    const categoriaMIN = getCategoriaMasActual(item.categorias, 'ministerio');
+                    return [
+                      item.dni,
+                      item.apellido + ' ' + item.nombre,
+                      item.activo ? 'Activo' : 'Inactivo',
+                      formatoFechaISOaDDMMAAAA(item.fechaIngreso),
+                      categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
+                      <Link to={`/investigadores/${item.idPersona}`}>
+                        <PlusSquareIcon />
+                      </Link>,
+                    ];
+                  })}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='Este grupo aún no tiene integrantes' />
+              )}
             </CardBody>
           </Card>
 
@@ -125,22 +132,26 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize='md'>Proyectos</Text>
               <br />
-              <Tabla
-                columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
-                datos={proyectos?.map((item, index) => {
-                  return [
-                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
-                    item.tipoActividad,
-                    item.personas_proyectos_idDirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idDirectorTopersonas?.nombre,
-                    item.personas_proyectos_idCodirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idCodirectorTopersonas?.nombre,
-                    item.denominacion,
-                    item.estado,
-                    <Link to={`/investigadores/${item.idPersona}`}>
-                      <PlusSquareIcon />
-                    </Link>,
-                  ];
-                })}
-              />
+              {proyectos?.length > 0 ? (
+                <Tabla
+                  columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
+                  datos={proyectos?.map((item, index) => {
+                    return [
+                      formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                      item.tipoActividad,
+                      item.personas_proyectos_idDirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idDirectorTopersonas?.nombre,
+                      item.personas_proyectos_idCodirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idCodirectorTopersonas?.nombre,
+                      item.denominacion,
+                      item.estado,
+                      <Link to={`/investigadores/${item.idPersona}`}>
+                        <PlusSquareIcon />
+                      </Link>,
+                    ];
+                  })}
+                />
+              ) : (
+                <ImgDefault src={NoData2} alt='No Data' width='30%' text='Este grupo aún no tiene proyectos' />
+              )}
             </CardBody>
           </Card>
         </Box>

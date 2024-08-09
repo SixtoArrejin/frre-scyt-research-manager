@@ -8,6 +8,8 @@ import Tabla from '../../components/Tabla';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import GenericInput from '../../components/formControls/GenericInput';
 import { Spinner } from '@chakra-ui/react';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data-3.png';
 
 export default function ListaGrupos() {
   const [siglas, setSiglas] = useState('');
@@ -69,7 +71,7 @@ export default function ListaGrupos() {
 
           <br />
 
-          {grupos && (
+          {grupos ? (
             <Tabla
               columnas={['Grupo', 'Resolución', 'Fecha Creación', 'Ver Más']}
               datos={sortedGrupos?.map((item) => {
@@ -84,6 +86,8 @@ export default function ListaGrupos() {
               })}
               filtro={filtro}
             />
+          ) : (
+            <ImgDefault src={NoData} alt='No Data' width='30%' text='Aún no se han cargado grupos de investigación' />
           )}
 
           <br />
