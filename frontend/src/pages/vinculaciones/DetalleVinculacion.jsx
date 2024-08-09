@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
@@ -29,6 +29,14 @@ export default function DetalleVinculacion() {
     queryClient.invalidateQueries(['vinculacion', idVinculacion]);
     queryClient.refetchQueries(['vinculacion', idVinculacion]);
   };
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>
