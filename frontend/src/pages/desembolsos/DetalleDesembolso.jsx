@@ -15,6 +15,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Stack,
+  Spinner,
 } from '@chakra-ui/react';
 import { Input } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -54,7 +55,7 @@ export default function DetalleDesembolso() {
     setIsOpenFueraPlazo(false);
   };
 
-  const { data: dataDesembolso } = useQuery(['desembolso', idDesembolso], () => getDesembolsoById(idDesembolso));
+  const { data: dataDesembolso, isLoading } = useQuery(['desembolso', idDesembolso], () => getDesembolsoById(idDesembolso));
   // Función para sumar meses a una fecha
   function sumarMeses(fecha, meses) {
     const fechaInicio = new Date(fecha); // Convertir la fecha ISO en objeto Date
@@ -105,6 +106,14 @@ export default function DetalleDesembolso() {
     mutateRendicion(values);
     closeModalRendicion();
   };
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Image } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, Image } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getGrupoById } from '../../utils/api/gruposApi';
@@ -13,7 +13,7 @@ import NoData from '../../img/no-data.png';
 export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams();
 
-  const { data } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
+  const { data, isLoading} = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
 
   const { data: dataProyectos } = useQuery(['proyectosGrupo'], () => getProyectosByIdGrupo(idGrupoInvestigacion));
 
@@ -39,6 +39,14 @@ export default function DetalleGrupo() {
       setProyectos(dataProyectos.proyectos);
     }
   }, [data, dataProyectos]);
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>

@@ -17,7 +17,7 @@ import {
   useCounter,
   useToast,
 } from '@chakra-ui/react'
-import Logo from '../img/SCyT.jpg'
+import Logo from '../img/SCyT-SinFondo.png'
 import { UserContext } from '../context/UserContext';
 import { useContext } from "react";
 import { useEffect } from 'react';

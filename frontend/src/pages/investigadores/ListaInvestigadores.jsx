@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardBody,
-  Heading,
-  Box,
-  Button
-} from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Button, Spinner } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllPersonas } from '../../utils/api/personasApi';
@@ -64,6 +58,14 @@ export default function ListaInvestigadores() {
       setFiltro(true);
     }
   }, [nombre, grupo, data]);
+
+  if (isLoading) {
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
+  }
 
   return (
     <Card>
