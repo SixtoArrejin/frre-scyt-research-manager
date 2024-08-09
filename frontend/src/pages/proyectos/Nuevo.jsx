@@ -244,7 +244,7 @@ export default function NuevoPid() {
             <br />
             <Card width='100%'>
               <CardBody>
-                <Text fontSize='md'>Ingrese los datos del proyecto de investigación y desarrollo</Text>
+                <Text fontSize='md'>Ingrese los datos del proyecto: </Text>
                 <br />
                 <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>

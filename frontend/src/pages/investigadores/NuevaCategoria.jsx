@@ -19,8 +19,8 @@ const schema = yup.object({
   categoria: yup.string().required('La categoria es requerida'),
   normativa: yup
     .string()
-    .required('La normativa es requerida')
-    .matches(/^\d+\/\d+$/, "El formato de la normativa debe ser '###/###'"),
+    .required('La resolución es requerida')
+    .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
   comision: yup.string().required('La comisión es requerida'),
   fecha: yup.string().required('La fecha es requerida'),
 });
@@ -191,8 +191,8 @@ export default function NuevaCategoria() {
                       <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                         <GenericInput
                           name='normativa'
-                          label='Normativa'
-                          placeholder='Normativa'
+                          label='Resolución'
+                          placeholder='Resolución'
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '50%' }}
