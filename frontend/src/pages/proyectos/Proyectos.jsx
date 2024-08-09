@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -51,9 +51,12 @@ export default function ProyectosPid() {
   }, [codPID, denominacion, pidExterno, data]);
 
   if (isLoading) {
-    return <Text fontSize='md'>Cargando...</Text>;
+    return (
+      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
+      </Box>
+    );
   }
-
   return (
     <Card>
       <CardBody>
