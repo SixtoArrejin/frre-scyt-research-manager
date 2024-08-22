@@ -1,17 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Text,
-  Heading,
-  Box,
-  Spinner,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-} from '@chakra-ui/react';
+import { Card, CardBody, CardFooter, Text, Heading, Box, Spinner, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import { getAllPersonas } from '../utils/api/personasApi';
 import { getAllGrupos } from '../utils/api/gruposApi';
@@ -50,7 +37,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <Box display='flex' height='84vh' width='100%' alignItems='center' justifyContent='center'>
+      <Box display='flex' height='calc(100vh - 80px - 16px - 1px - 16px)' width='100%' alignItems='center' justifyContent='center'>
         <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
       </Box>
     );
