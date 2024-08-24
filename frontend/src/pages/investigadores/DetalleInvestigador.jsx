@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
-import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { DeleteIcon, PlusSquareIcon, EditIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getPersonaById } from '../../utils/api/personasApi';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -14,17 +14,24 @@ import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import NoData3 from '../../img/no-data-3.png';
 import ImgDefault from '../../components/ImgDefault';
+import EditCategoriaModal from './EditCategoriaModal';
 
 export default function DetalleInvestigador() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
   };
-
+  const openModalEdit = () => {
+    setIsOpenEdit(true);
+  };
   const closeModal = () => {
     setIsOpen(false);
+  };
+  const closeModalEdit = () => {
+    setIsOpenEdit(false);
   };
 
   const { idPersona } = useParams();
@@ -130,13 +137,13 @@ export default function DetalleInvestigador() {
               <br />
               {categoriasMIN?.length > 0 ? (
                 <Tabla
-                  columnas={['Fecha', 'Categoría', 'Resolución', 'Comisión', 'Eliminar']}
+                  columnas={['Fecha', 'Categoría', 'Resolución', 'Comisión', '', '']}
                   datos={categoriasMIN?.map((item) => [
                     formatoFechaISOaDDMMAAAA(item.fecha),
                     item.categoria,
                     item.normativa,
                     item.comision,
-                    <Link key={item.idCategoria}>
+                    <Link>
                       <DeleteIcon onClick={openModal} />
                       <CustomModal
                         isOpen={isOpen}
@@ -145,6 +152,17 @@ export default function DetalleInvestigador() {
                         title='Eliminar categoria'
                         content='Se eliminara la categoria UTN'
                         onSave={() => mutate(item.idCategoria)}
+                      />
+                    </Link>,
+                    <Link>
+                      <EditIcon onClick={openModalEdit} />
+                      <EditCategoriaModal
+                        categoria={item}
+                        isOpen={isOpenEdit}
+                        onClose={closeModalEdit}
+                        guardar={true}
+                        title='Editar categoria'
+                        content='Se eliminara la categoria UTN'
                       />
                     </Link>,
                   ])}
@@ -166,7 +184,7 @@ export default function DetalleInvestigador() {
                     item.normativa,
                     item.equiparacion ? 'SI' : 'NO',
                     item.comision,
-                    <Link key={item.idCategoria}>
+                    <Link>
                       <DeleteIcon onClick={openModal} />
                       <CustomModal
                         isOpen={isOpen}
@@ -210,7 +228,7 @@ export default function DetalleInvestigador() {
                     item.estado,
                     formatoFechaISOaDDMMAAAA(item.fechaIngreso),
                     item.rol,
-                    <Link to={`/proyectos/${item.idProyecto}`} key={item.idProyecto}>
+                    <Link to={`/proyectos/${item.idProyecto}`}>
                       <PlusSquareIcon />
                     </Link>,
                   ])}

@@ -8,3 +8,11 @@ export async function createCategoria(data) {
 export async function deleteCategoriaById(idCategoria) {
   return del(`/api/categorias/${idCategoria}`);
 }
+
+export async function getCategoriaById(idCategoria) {
+  return get(`/api/categorias/${idCategoria}`);
+}
+
+export async function putCategoriaById(idCategoria, data) {
+  return put(`/api/categorias/${idCategoria}`, data);
+}

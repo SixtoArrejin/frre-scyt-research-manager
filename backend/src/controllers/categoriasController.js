@@ -1,4 +1,4 @@
-import { createCategoriaService, getCategoriaByIdService, deleteCategoriaService } from '../services/categoriasService.js';
+import { createCategoriaService, getCategoriaByIdService, deleteCategoriaService, updateCategoriaService } from '../services/categoriasService.js';
 import { getById } from '../repository/baseRepository.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -41,6 +41,18 @@ export async function deleteCategoria(req, res) {
     await deleteCategoriaService(idCategoria);
 
     return res.status(200).json({ message: 'Categoría eliminada exitosamente', success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function updateCategoria(req, res) {
+  try {
+    const {idCategoria} = req.params;
+    const categoriaId = parseInt(idCategoria);
+    const categoriaData = req.body;
+    const categoria = await updateCategoriaService(categoriaId, categoriaData);
+    return res.status(200).json({ message: 'Categoria modificada', success: true, categoria });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
