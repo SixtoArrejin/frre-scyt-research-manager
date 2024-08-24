@@ -7,6 +7,9 @@ import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data.png';
+import NoData1 from '../../img/no-data-2.png';
 
 export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
@@ -235,19 +238,23 @@ export default function DetalleVinculacion() {
             <CardBody>
               <Text fontSize='md'>Convenio</Text>
               <br />
-              <Tabla
-                columnas={['Tipo', 'Número', 'Eliminar']}
-                datos={data?.vinculacion?.convenios?.map((convenio) => {
-                  return [
-                    convenio.tipo,
-                    convenio.numero,
-                    <Link>
-                      <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
-                    </Link>,
-                  ];
-                })}
-                paginado={false}
-              />
+              {data?.vinculacion?.convenios?.length > 0 ? (
+                <Tabla
+                  columnas={['Tipo', 'Número', 'Eliminar']}
+                  datos={data?.vinculacion?.convenios?.map((convenio) => {
+                    return [
+                      convenio.tipo,
+                      convenio.numero,
+                      <Link>
+                        <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
+                      </Link>,
+                    ];
+                  })}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay convenios para mostrar.' />
+              )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`agregar-investigador`}>
@@ -266,21 +273,25 @@ export default function DetalleVinculacion() {
               <CardBody>
                 <Text fontSize='md'>Desembolsos</Text>
                 <br />
-                <Tabla
-                  columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Estado', 'Ver más']}
-                  datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
-                    return [
-                      index + 1,
-                      formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
-                      item.montoDesembolsado,
-                      item.estado || '-',
-                      <Link to={`desembolso/${item.idDesembolso}`}>
-                        <PlusSquareIcon />
-                      </Link>,
-                    ];
-                  })}
-                  paginado={false}
-                />
+                {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
+                  <Tabla
+                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Estado', 'Ver más']}
+                    datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
+                      return [
+                        index + 1,
+                        formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
+                        item.montoDesembolsado,
+                        item.estado || '-',
+                        <Link to={`desembolso/${item.idDesembolso}`}>
+                          <PlusSquareIcon />
+                        </Link>,
+                      ];
+                    })}
+                    paginado={false}
+                  />
+                ) : (
+                  <ImgDefault src={NoData1} alt='No Data' width='30%' text='Aún no hay desembolsos para mostrar.' />
+                )}
                 <Box
                   display='flex'
                   width='100%'

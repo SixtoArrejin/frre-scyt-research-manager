@@ -8,6 +8,8 @@ import Tabla from '../../components/Tabla';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data-2.png';
 
 export default function ProyectosPid() {
   const [codPID, setCodPID] = useState('');
@@ -105,7 +107,7 @@ export default function ProyectosPid() {
           </Box>
 
           <br />
-          <Tabla
+          {proyectos?.length > 0 ? (<Tabla
             columnas={['Cod. PID', 'Fecha Inicio', 'Denominación', 'Regional', 'Estado', 'Ver Más']}
             datos={proyectos?.map((item) => {
               const denominacion =
@@ -127,7 +129,9 @@ export default function ProyectosPid() {
               ];
             })}
             filtro={filtro}
-          />
+          />) : (
+            <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay proyectos para mostrar.' />
+          )}
         </Box>
       </CardBody>
     </Card>

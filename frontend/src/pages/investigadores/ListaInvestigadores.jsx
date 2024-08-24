@@ -9,6 +9,8 @@ import { getAllGrupos } from '../../utils/api/gruposApi';
 import { getCategoriaMasActual } from '../../utils/general';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data.png';
 
 const columnas = ['Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'];
 
@@ -102,7 +104,11 @@ export default function ListaInvestigadores() {
 
           <br />
 
-          {investigadores && <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />}
+          {investigadores?.length > 0 ? (
+            <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />
+          ) : (
+            <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay investigadores para mostrar' />
+          )}
 
           <br />
 

@@ -7,6 +7,8 @@ import Tabla from '../../components/Tabla';
 import { getVinculaciones } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data.png';
 
 const financiamientos = ['Sin financiamiento', 'Con financiamiento'];
 const columnas = ['Empresa/Institución', 'Nro. Marco', 'Financiamiento', 'Ver Más'];
@@ -93,7 +95,11 @@ export default function ListaInvestigadores() {
 
           <br />
 
-          {vinculaciones && <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />}
+          {filas.length > 0 ? (
+            <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />
+          ) : (
+            <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay vinculaciones para mostrar.' />
+          )}
 
           <br />
 

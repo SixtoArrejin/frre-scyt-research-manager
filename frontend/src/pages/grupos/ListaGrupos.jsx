@@ -87,7 +87,7 @@ export default function ListaGrupos() {
               filtro={filtro}
             />
           ) : (
-            <ImgDefault src={NoData} alt='No Data' width='30%' text='Aún no se han cargado grupos de investigación' />
+            <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay grupos de investigación para mostrar.' />
           )}
           <br />
         </Box>

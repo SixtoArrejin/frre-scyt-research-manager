@@ -10,6 +10,10 @@ import { getProyectosByPersonaId } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
+import NoData from '../../img/no-data.png';
+import NoData2 from '../../img/no-data-2.png';
+import NoData3 from '../../img/no-data-3.png';
+import ImgDefault from '../../components/ImgDefault';
 
 export default function DetalleInvestigador() {
   /* Usestate para el modal */
@@ -124,53 +128,61 @@ export default function DetalleInvestigador() {
             <CardBody>
               <Text fontSize='md'>Categoría Ministerio</Text>
               <br />
-              <Tabla
-                columnas={['Fecha', 'Categoría', 'Resolución', 'Comisión', 'Eliminar']}
-                datos={categoriasMIN?.map((item) => [
-                  formatoFechaISOaDDMMAAAA(item.fecha),
-                  item.categoria,
-                  item.normativa,
-                  item.comision,
-                  <Link key={item.idCategoria}>
-                    <DeleteIcon onClick={openModal} />
-                    <CustomModal
-                      isOpen={isOpen}
-                      onClose={closeModal}
-                      eliminar={true}
-                      title='Eliminar categoria'
-                      content='Se eliminara la categoria UTN'
-                      onSave={() => mutate(item.idCategoria)}
-                    />
-                  </Link>,
-                ])}
-                paginado={false}
-              />
+              {categoriasMIN?.length > 0 ? (
+                <Tabla
+                  columnas={['Fecha', 'Categoría', 'Resolución', 'Comisión', 'Eliminar']}
+                  datos={categoriasMIN?.map((item) => [
+                    formatoFechaISOaDDMMAAAA(item.fecha),
+                    item.categoria,
+                    item.normativa,
+                    item.comision,
+                    <Link key={item.idCategoria}>
+                      <DeleteIcon onClick={openModal} />
+                      <CustomModal
+                        isOpen={isOpen}
+                        onClose={closeModal}
+                        eliminar={true}
+                        title='Eliminar categoria'
+                        content='Se eliminara la categoria UTN'
+                        onSave={() => mutate(item.idCategoria)}
+                      />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay categorías de ministerio para mostrar.' />
+              )}
 
               <br />
               <Text fontSize='md'>Categoría UTN</Text>
               <br />
-              <Tabla
-                columnas={['Fecha', 'Categoría', 'Resolución', 'Equiparación', 'Comisión', 'Eliminar']}
-                datos={categoriasUTN?.map((item) => [
-                  formatoFechaISOaDDMMAAAA(item.fecha),
-                  item.categoria,
-                  item.normativa,
-                  item.equiparacion ? 'SI' : 'NO',
-                  item.comision,
-                  <Link key={item.idCategoria}>
-                    <DeleteIcon onClick={openModal} />
-                    <CustomModal
-                      isOpen={isOpen}
-                      onClose={closeModal}
-                      eliminar={true}
-                      title='Eliminar categoria'
-                      content='Se eliminara la categoria UTN'
-                      onSave={() => mutate(item.idCategoria)}
-                    />
-                  </Link>,
-                ])}
-                paginado={false}
-              />
+              {categoriasUTN?.length > 0 ? (
+                <Tabla
+                  columnas={['Fecha', 'Categoría', 'Resolución', 'Equiparación', 'Comisión', 'Eliminar']}
+                  datos={categoriasUTN?.map((item) => [
+                    formatoFechaISOaDDMMAAAA(item.fecha),
+                    item.categoria,
+                    item.normativa,
+                    item.equiparacion ? 'SI' : 'NO',
+                    item.comision,
+                    <Link key={item.idCategoria}>
+                      <DeleteIcon onClick={openModal} />
+                      <CustomModal
+                        isOpen={isOpen}
+                        onClose={closeModal}
+                        eliminar={true}
+                        title='Eliminar categoria'
+                        content='Se eliminara la categoria UTN'
+                        onSave={() => mutate(item.idCategoria)}
+                      />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData2} alt='No Data' width='30%' text='No hay categorías UTN para mostrar.' />
+              )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`nueva-categoria`}>
@@ -187,22 +199,26 @@ export default function DetalleInvestigador() {
             <CardBody>
               <Text fontSize='md'>Proyectos</Text>
               <br />
-              <Tabla
-                columnas={['Fec. Inicio', 'Fec. Fin', 'Denominación', 'Tipo Act.', 'Estado', 'Ing. al proyecto', 'Rol', 'Más']}
-                datos={dataProyectos?.proyectos?.map((item) => [
-                  formatoFechaISOaDDMMAAAA(item.fechaInicio),
-                  formatoFechaISOaDDMMAAAA(item.fechaFin),
-                  item.denominacion,
-                  item.tipoActividad,
-                  item.estado,
-                  formatoFechaISOaDDMMAAAA(item.fechaIngreso),
-                  item.rol,
-                  <Link to={`/proyectos/${item.idProyecto}`} key={item.idProyecto}>
-                    <PlusSquareIcon />
-                  </Link>,
-                ])}
-                paginado={false}
-              />
+              {dataProyectos?.length > 0 ? (
+                <Tabla
+                  columnas={['Fec. Inicio', 'Fec. Fin', 'Denominación', 'Tipo Act.', 'Estado', 'Ing. al proyecto', 'Rol', 'Más']}
+                  datos={dataProyectos?.proyectos?.map((item) => [
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                    formatoFechaISOaDDMMAAAA(item.fechaFin),
+                    item.denominacion,
+                    item.tipoActividad,
+                    item.estado,
+                    formatoFechaISOaDDMMAAAA(item.fechaIngreso),
+                    item.rol,
+                    <Link to={`/proyectos/${item.idProyecto}`} key={item.idProyecto}>
+                      <PlusSquareIcon />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData3} alt='No Data' width='30%' text='No hay proyectos para mostrar.' />
+              )}
               <br />
             </CardBody>
           </Card>

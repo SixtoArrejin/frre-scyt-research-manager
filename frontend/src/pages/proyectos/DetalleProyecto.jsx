@@ -8,6 +8,10 @@ import { getProyectoById } from '../../utils/api/proyectosApi';
 import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data.png';
+import NoData2 from '../../img/no-data-2.png';
+import NoData3 from '../../img/no-data-3.png';
 
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
@@ -172,26 +176,30 @@ export default function DetalleProyectoPid() {
               <Text fontSize='md'>Integrantes del proyecto</Text>
               <br />
 
-              <Tabla
-                columnas={['Rol', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Cat. UTN', 'Cat. MIN.', 'Más']}
-                datos={integrantes?.map((item, index) => {
-                  const ayn = item?.personas.apellido + ' ' + item?.personas.nombre;
-                  const catUTN = getCategoriaMasActual(item?.personas.categorias, 'utn');
-                  const catMIN = getCategoriaMasActual(item?.personas.categorias, 'ministerio');
-                  return [
-                    item.rol,
-                    ayn,
-                    item.personas.activo ? 'Activo' : 'Inactivo',
-                    data?.proyecto?.participa[index]?.fechaInicio ? formatoFechaISOaDDMMAAAA(data.proyecto.participa[index].fechaInicio) : '-',
-                    catUTN ? catUTN.categoria : '-',
-                    catMIN ? catMIN.categoria : '-',
-                    <Link to={`/investigadores/${item.idPersona}`}>
-                      <PlusSquareIcon />
-                    </Link>,
-                  ];
-                })}
-                paginado={false}
-              />
+              {integrantes?.length > 0 ? (
+                <Tabla
+                  columnas={['Rol', 'Apellido y Nombre', 'Estado', 'Fecha Ingreso', 'Cat. UTN', 'Cat. MIN.', 'Más']}
+                  datos={integrantes?.map((item, index) => {
+                    const ayn = item?.personas.apellido + ' ' + item?.personas.nombre;
+                    const catUTN = getCategoriaMasActual(item?.personas.categorias, 'utn');
+                    const catMIN = getCategoriaMasActual(item?.personas.categorias, 'ministerio');
+                    return [
+                      item.rol,
+                      ayn,
+                      item.personas.activo ? 'Activo' : 'Inactivo',
+                      data?.proyecto?.participa[index]?.fechaInicio ? formatoFechaISOaDDMMAAAA(data.proyecto.participa[index].fechaInicio) : '-',
+                      catUTN ? catUTN.categoria : '-',
+                      catMIN ? catMIN.categoria : '-',
+                      <Link to={`/investigadores/${item.idPersona}`}>
+                        <PlusSquareIcon />
+                      </Link>,
+                    ];
+                  })}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='Este proyecto aún no tiene integrantes.' />
+              )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`agregar-investigador`}>
@@ -209,18 +217,22 @@ export default function DetalleProyectoPid() {
               <Text fontSize='md'>Grupos</Text>
               <br />
 
-              <Tabla
-                columnas={['Grupo', 'Resolución', 'Fecha de creación', 'Ver más']}
-                datos={grupos?.map((item) => [
-                  item.gruposinvestigacion?.siglas,
-                  item.gruposinvestigacion?.resolucion,
-                  formatoFechaISOaDDMMAAAA(item.gruposinvestigacion?.fechaCreacion),
-                  <Link to={`/grupos-investigacion/${item.gruposinvestigacion?.idGrupoInvestigacion}`}>
-                    <PlusSquareIcon />
-                  </Link>,
-                ])}
-                paginado={false}
-              />
+              {grupos?.length > 0 ? (
+                <Tabla
+                  columnas={['Grupo', 'Resolución', 'Fecha de creación', 'Ver más']}
+                  datos={grupos?.map((item) => [
+                    item.gruposinvestigacion?.siglas,
+                    item.gruposinvestigacion?.resolucion,
+                    formatoFechaISOaDDMMAAAA(item.gruposinvestigacion?.fechaCreacion),
+                    <Link to={`/grupos-investigacion/${item.gruposinvestigacion?.idGrupoInvestigacion}`}>
+                      <PlusSquareIcon />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData2} alt='No Data' width='30%' text='Este proyecto aún no tiene grupos.' />
+              )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`agregar-grupo`}>
@@ -237,18 +249,22 @@ export default function DetalleProyectoPid() {
             <CardBody>
               <Text fontSize='md'>Vinculaciones</Text>
               <br />
-              <Tabla
-                columnas={['Empresa/Institución', 'Financiamiento', 'Marco', 'Ver más']}
-                datos={vinculaciones?.map((item) => [
-                  item.empresaInstitucion,
-                  item.vinculacionesconfinanciamiento ? 'Si' : 'No',
-                  item.numeroMarco,
-                  <Link to={`vinculacion/${item.idVinculacion}`}>
-                    <PlusSquareIcon />
-                  </Link>,
-                ])}
-                paginado={false}
-              />
+              {vinculaciones?.length > 0 ? (
+                <Tabla
+                  columnas={['Empresa/Institución', 'Financiamiento', 'Marco', 'Ver más']}
+                  datos={vinculaciones?.map((item) => [
+                    item.empresaInstitucion,
+                    item.vinculacionesconfinanciamiento ? 'Si' : 'No',
+                    item.numeroMarco,
+                    <Link to={`vinculacion/${item.idVinculacion}`}>
+                      <PlusSquareIcon />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData3} alt='No Data' width='30%' text='Este proyecto aún no tiene vinculaciones.' />
+              )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                 <Link to={`nueva-vinculacion`}>
