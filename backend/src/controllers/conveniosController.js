@@ -1,5 +1,5 @@
 import { getById } from '../repository/baseRepository.js';
-import { deleteConvenioService } from '../services/conveniosService.js';
+import { deleteConvenioService, createConvenioService } from '../services/conveniosService.js';
 
 export async function deleteConvenio(req, res) {
   try {
@@ -13,6 +13,17 @@ export async function deleteConvenio(req, res) {
     await deleteConvenioService(idConvenio);
 
     return res.status(200).json({ message: 'Convenio eliminado exitosamente', success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function createConvenio(req, res) {
+  try {
+    const convenioData = req.body;
+    console.log(convenioData)
+    const newConvenio = await createConvenioService(convenioData.idVinculacion, convenioData);
+    return res.status(201).json({ message: 'Convenio creado exitosamente', success: true, newConvenio });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

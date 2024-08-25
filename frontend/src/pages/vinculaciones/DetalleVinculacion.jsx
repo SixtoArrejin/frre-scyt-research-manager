@@ -10,9 +10,20 @@ import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
 import NoData1 from '../../img/no-data-2.png';
+import NuevoConvenioModal from './NuevoConvenioModal';
 
 export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
+
+  const [isOpenModalConvenio, setIsOpenModalConvenio] = useState(false);
+
+  const openModal = () => {
+    setIsOpenModalConvenio(true);
+  };
+
+  const closeModal = () => {
+    setIsOpenModalConvenio(false);
+  };
 
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
@@ -257,11 +268,18 @@ export default function DetalleVinculacion() {
               )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <Link to={`agregar-investigador`}>
-                  <Button colorScheme='blue' variant='outline'>
+                <Link>
+                  <Button colorScheme='blue' variant='outline' onClick={() => openModal()}>
                     Agregar Convenio
                   </Button>
                 </Link>
+                <NuevoConvenioModal
+                  // key={item.idCategoria}
+                  isOpen={isOpenModalConvenio}
+                  onClose={closeModal}
+                  guardar={true}
+                  title='Nuevo Convenio'
+                />
               </Box>
               <br />
             </CardBody>
