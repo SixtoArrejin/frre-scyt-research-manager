@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useToast, Box } from '@chakra-ui/react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getCategoriaById, putCategoriaById } from '../../utils/api/categoriasApi';
-import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
+import { putCategoriaById } from '../../utils/api/categoriasApi';
+import { useForm, useWatch } from 'react-hook-form';
 import GenericInput from '../../components/formControls/GenericInput';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import GenericRadio from '../../components/formControls/GenericRadio';
 
 const COMISIONES = [
   'Ingeniería',
@@ -16,21 +17,42 @@ const COMISIONES = [
   'Ciencias Básicas y Aplicadas',
 ];
 
-export default function EditCategoriaModal({ isOpen, onClose, guardar = false, title, onSave, eliminar = false, categoria = null }) {
-  const { data, isLoading, error } = useQuery(['categoria', categoria.idCategoria], () => getCategoriaById(categoria.idCategoria));
+const catUTN = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+const catMIN = ['I', 'II', 'III', 'IV', 'V'];
 
+export default function EditCategoriaModal({ isOpen, onClose, guardar = false, title, onSave, eliminar = false, categoria = null }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
+    reset,
   } = useForm({
     defaultValues: {
-      fecha: formatoFechaISOaAAAAMMDD(categoria?.fecha),
-      categoria: categoria?.categoria,
-      comision: categoria?.comision,
-      normativa: categoria?.normativa,
+      fecha: '',
+      categoria: '',
+      comision: '',
+      normativa: '',
+      tipo: '',
+      equiparacion: '',
     },
   });
+
+  useEffect(() => {
+    if (categoria) {
+      reset({
+        fecha: formatoFechaISOaAAAAMMDD(categoria.fecha),
+        categoria: categoria.categoria,
+        comision: categoria.comision,
+        normativa: categoria.normativa,
+        tipo: categoria.tipo,
+        equiparacion: categoria.equiparacion ? 'true' : 'false',
+      });
+    }
+  }, [categoria, reset]);
+
+  const tipoCategoria = useWatch({ control, name: 'tipo' });
+
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -56,9 +78,13 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
     },
   });
   const onSub = (values) => {
-    // console.log(values);
-    mutate(values);
+    const modifiedValues = {
+      ...values,
+      equiparacion: values.equiparacion === 'true',
+    };
+    mutate(modifiedValues);
   };
+  
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />
@@ -79,6 +105,7 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
               mb='5vh'
             />
             <GenericSelect
+              key={`${categoria?.idCategoria}-${tipoCategoria}`} // Cambia la key cada vez que se modifica la categoría o el tipo
               name='categoria'
               label='Categoria'
               placeholder='Seleccione categoria...'
@@ -86,7 +113,7 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
               mb='5vh'
               isRequired
               register={register}
-              options={['I', 'II', 'III', 'IV', 'V'].map((option) => ({
+              options={(tipoCategoria === 'ministerio' ? catMIN : catUTN).map((option) => ({
                 value: option,
                 label: option,
               }))}
@@ -94,21 +121,12 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
             />
           </Box>
           <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-            <GenericInput
-              name='normativa'
-              label='Resolución'
-              register={register}
-              errors={errors}
-              width={{ base: '100%', md: '47.5%' }}
-              isRequired
-              mb='5vh'
-            />
+            <GenericInput name='normativa' label='Resolución' register={register} errors={errors} width={{ base: '100%', md: '47.5%' }} isRequired />
             <GenericSelect
               name='comision'
               label='Comisión'
               placeholder='Seleccione la comisión...'
               width={{ base: '100%', md: '47.5%' }}
-              mb='5vh'
               isRequired
               register={register}
               options={COMISIONES.map((comision) => ({
@@ -118,6 +136,23 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
               errors={errors}
             />
           </Box>
+          {tipoCategoria === 'utn' && (
+            <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='center'>
+              <GenericRadio
+                name='equiparacion'
+                label='Equiparación:'
+                direction='row'
+                options={[
+                  { value: 'true', label: 'Si' },
+                  { value: 'false', label: 'No' },
+                ]}
+                register={register}
+                defaultValue={categoria?.equiparacion ? 'true' : 'false'}
+                errors={errors}
+                mt='5vh'
+              />
+            </Box>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button onClick={onClose}>Cerrar</Button>

@@ -20,17 +20,25 @@ export default function DetalleInvestigador() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [selectedCategoria, setSelectedCategoria] = useState(null);
 
-  const openModal = () => {
+  const openModal = (categoria) => {
+    setSelectedCategoria(categoria);
     setIsOpen(true);
   };
-  const openModalEdit = () => {
+
+  const openModalEdit = (categoria) => {
+    setSelectedCategoria(categoria);
     setIsOpenEdit(true);
   };
+
   const closeModal = () => {
+    setSelectedCategoria(null);
     setIsOpen(false);
   };
+
   const closeModalEdit = () => {
+    setSelectedCategoria(null);
     setIsOpenEdit(false);
   };
 
@@ -143,26 +151,30 @@ export default function DetalleInvestigador() {
                     item.categoria,
                     item.normativa,
                     item.comision,
-                    <Link>
-                      <DeleteIcon onClick={openModal} />
+                    <Link key={item.idCategoria}>
+                      <DeleteIcon onClick={() => openModal(item)} />
                       <CustomModal
                         isOpen={isOpen}
                         onClose={closeModal}
                         eliminar={true}
                         title='Eliminar categoria'
                         content='Se eliminara la categoria UTN'
-                        onSave={() => mutate(item.idCategoria)}
+                        onSave={() => {
+                          if (selectedCategoria) {
+                            mutate(selectedCategoria.idCategoria);
+                          }
+                        }}
                       />
                     </Link>,
-                    <Link>
-                      <EditIcon onClick={openModalEdit} />
+                    <Link key={item.idCategoria}>
+                      <EditIcon onClick={() => openModalEdit(item)} />
                       <EditCategoriaModal
-                        categoria={item}
+                        key={item.idCategoria}
+                        categoria={selectedCategoria}
                         isOpen={isOpenEdit}
                         onClose={closeModalEdit}
                         guardar={true}
                         title='Editar categoria'
-                        content='Se eliminara la categoria UTN'
                       />
                     </Link>,
                   ])}
@@ -177,22 +189,37 @@ export default function DetalleInvestigador() {
               <br />
               {categoriasUTN?.length > 0 ? (
                 <Tabla
-                  columnas={['Fecha', 'Categoría', 'Resolución', 'Equiparación', 'Comisión', 'Eliminar']}
+                  columnas={['Fecha', 'Categoría', 'Resolución', 'Equiparación', 'Comisión', '', '']}
                   datos={categoriasUTN?.map((item) => [
                     formatoFechaISOaDDMMAAAA(item.fecha),
                     item.categoria,
                     item.normativa,
                     item.equiparacion ? 'SI' : 'NO',
                     item.comision,
-                    <Link>
-                      <DeleteIcon onClick={openModal} />
+                    <Link key={item.idCategoria}>
+                      <DeleteIcon onClick={() => openModal(item)} />
                       <CustomModal
                         isOpen={isOpen}
                         onClose={closeModal}
                         eliminar={true}
                         title='Eliminar categoria'
                         content='Se eliminara la categoria UTN'
-                        onSave={() => mutate(item.idCategoria)}
+                        onSave={() => {
+                          if (selectedCategoria) {
+                            mutate(selectedCategoria.idCategoria);
+                          }
+                        }}
+                      />
+                    </Link>,
+                    <Link key={item.idCategoria}>
+                      <EditIcon onClick={() => openModalEdit(item)} />
+                      <EditCategoriaModal
+                        key={item.idCategoria}
+                        categoria={selectedCategoria}
+                        isOpen={isOpenEdit}
+                        onClose={closeModalEdit}
+                        guardar={true}
+                        title='Editar categoria'
                       />
                     </Link>,
                   ])}
