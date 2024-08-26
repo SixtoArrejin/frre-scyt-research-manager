@@ -110,6 +110,7 @@ export default function NuevoPid() {
       programa: '',
       disposicion: '',
       tipo: 'pid',
+      empresaInstitucion: '',
     },
   });
 
@@ -409,18 +410,32 @@ export default function NuevoPid() {
                         />
                       </Box>
                     )}
-                    {PidExterno === 'pid' && (
-                      <Box
-                        display='flex'
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        width='100%'
-                        alignItems='center'
-                        justifyContent='space-between'
-                      >
-                        <Box width={{ base: '100%', md: '15%' }} display='flex' justifyContent='center'>
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      {PidExterno !== 'pid' && (
+                        <GenericInput
+                          name='empresaInstitucion'
+                          placeholder='Empresa/Institución'
+                          register={register}
+                          label='Empresa/Institución'
+                          width={{ base: '100%', md: '47.5%' }}
+                          mb='5vh'
+                        />
+                      )}
+                      {PidExterno === 'pid' && (
+                        <Box
+                          width={{ base: '100%', md: '47.5%' }}
+                          display='flex'
+                          justifyContent='flex-start'
+                          alignItems='flex-start'
+                          height='100%'
+                          mb='5%'
+                          ml='1%'
+                        >
+                          <Text mr='2%' as='b'>
+                            Prorroga:
+                          </Text>
                           <GenericRadio
                             name='prorrogado'
-                            label='Prorroga'
                             direction='row'
                             options={[
                               { value: 'true', label: 'Si' },
@@ -429,11 +444,10 @@ export default function NuevoPid() {
                             register={register}
                             defaultValue='false'
                             errors={errors}
-                            mb='5vh'
                           />
                         </Box>
-                      </Box>
-                    )}
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               </CardBody>
@@ -489,84 +503,86 @@ export default function NuevoPid() {
 
           {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
           <br />
-          <Card width='100%'>
-            <CardBody>
-              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
-              <br />
-              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          {gruposSeleccionados.length > 0 && (
+            <Card width='100%'>
+              <CardBody>
+                <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
                 <br />
-                <Box display='flex' width='100%'>
-                  <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
-                    <GenericSelect
-                      placeholder='Integrantes...'
-                      isSearchable={true}
-                      options={sortedInvestigadores?.map((investigador) => ({
-                        value: investigador.idPersona,
-                        label: investigador.apellido + ', ' + investigador.nombre,
-                      }))}
-                      onChange={(e) => {
-                        setSelectedOptions(e.target.value);
-                      }}
-                    />
+                <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                  <br />
+                  <Box display='flex' width='100%'>
+                    <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                      <GenericSelect
+                        placeholder='Integrantes...'
+                        isSearchable={true}
+                        options={sortedInvestigadores?.map((investigador) => ({
+                          value: investigador.idPersona,
+                          label: investigador.apellido + ', ' + investigador.nombre,
+                        }))}
+                        onChange={(e) => {
+                          setSelectedOptions(e.target.value);
+                        }}
+                      />
+                    </Box>
+                    <Box display='flex' justifyContent='flex-end' width='55%'>
+                      <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarInvestigador}>
+                        Agregar
+                      </Button>
+                    </Box>
                   </Box>
-                  <Box display='flex' justifyContent='flex-end' width='55%'>
-                    <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarInvestigador}>
-                      Agregar
-                    </Button>
-                  </Box>
+                  <br />
+
+                  <Tabla
+                    columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Eliminar']}
+                    datos={investigadoresSeleccionados?.map((item, index) => [
+                      <div {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
+                      item.gruposinvestigacion.siglas,
+                      <GenericSelect
+                        placeholder='Rol...'
+                        options={roles.map((rol) => ({
+                          value: rol,
+                          label: rol,
+                        }))}
+                        onChange={(e) => {
+                          update(index, { rol: e.target.value });
+                          if (e.target.value === 'CoDirector') {
+                            setValue('idCodirector', Number(item.idPersona));
+                          }
+                          if (e.target.value === 'Director') {
+                            setValue('idDirector', Number(item.idPersona));
+                          }
+                        }}
+                      />,
+                      <DeleteIcon
+                        cursor={'pointer'}
+                        onClick={() => {
+                          eliminarInvestigador(item.idPersona, index);
+                        }}
+                      />,
+                    ])}
+                    paginado={false}
+                  />
                 </Box>
                 <br />
-
-                <Tabla
-                  columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Eliminar']}
-                  datos={investigadoresSeleccionados?.map((item, index) => [
-                    <div {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
-                    item.gruposinvestigacion.siglas,
-                    <GenericSelect
-                      placeholder='Rol...'
-                      options={roles.map((rol) => ({
-                        value: rol,
-                        label: rol,
-                      }))}
-                      onChange={(e) => {
-                        update(index, { rol: e.target.value });
-                        if (e.target.value === 'CoDirector') {
-                          setValue('idCodirector', Number(item.idPersona));
-                        }
-                        if (e.target.value === 'Director') {
-                          setValue('idDirector', Number(item.idPersona));
-                        }
-                      }}
-                    />,
-                    <DeleteIcon
-                      cursor={'pointer'}
-                      onClick={() => {
-                        eliminarInvestigador(item.idPersona, index);
-                      }}
-                    />,
-                  ])}
-                  paginado={false}
-                />
-              </Box>
-              <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='center'>
-                <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
-                  Cancelar
-                </Button>
-                <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline' ml='5%'>
-                  Guardar
-                </Button>
-                <CustomModal
-                  isOpen={isOpen}
-                  onClose={closeModal}
-                  guardar={true}
-                  title='Guardar nuevo PID'
-                  content='Se guardara el nuevo Proyecto'
-                  onSave={handleSubmit((values) => onSubmit(values))}
-                />
-              </Box>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+          )}
+          <Box display='flex' width='100%' alignItems='center' justifyContent='center' mt='2%'>
+            <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
+              Cancelar
+            </Button>
+            <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline' ml='5%'>
+              Guardar
+            </Button>
+            <CustomModal
+              isOpen={isOpen}
+              onClose={closeModal}
+              guardar={true}
+              title='Guardar nuevo PID'
+              content='Se guardara el nuevo Proyecto'
+              onSave={handleSubmit((values) => onSubmit(values))}
+            />
+          </Box>
         </form>
       </CardBody>
     </Card>
