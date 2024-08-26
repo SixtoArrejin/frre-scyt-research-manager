@@ -144,8 +144,22 @@ export default function DetalleProyectoPid() {
                         isDisabled
                         mb='5vh'
                       />
-                      <GenericInput label='Estado' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.estado} isDisabled mb='5vh' />
-                      <GenericInput label='Disposición' width={{ base: '100%', md: '30%' }} value={data?.proyecto?.disposicion} isDisabled mb='5vh' />
+                      <GenericInput
+                        label='Estado'
+                        width={{ base: '100%', md: data?.proyecto?.estado === 'HOMOLOGADO' ? '30%' : '65%' }}
+                        value={data?.proyecto?.estado}
+                        isDisabled
+                        mb='5vh'
+                      />
+                      {data?.proyecto?.estado === 'HOMOLOGADO' && (
+                        <GenericInput
+                          label='Disposición'
+                          width={{ base: '100%', md: '30%' }}
+                          value={data?.proyecto?.disposicion}
+                          isDisabled
+                          mb='5vh'
+                        />
+                      )}
                     </Box>
                   )}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
