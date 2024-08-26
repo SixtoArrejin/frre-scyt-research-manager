@@ -205,11 +205,7 @@ export default function DetalleDesembolso() {
                     <GenericInput
                       label='Fecha de aprobado'
                       width={{ base: '100%', md: '34%' }}
-                      value={
-                        dataDesembolso?.desembolso?.fechaAprobado
-                          ? formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaAprobado)
-                          : '-'
-                      }
+                      value={dataDesembolso?.desembolso?.fechaAprobado ? formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaAprobado) : '-'}
                       isDisabled
                       mb='5vh'
                     />
@@ -341,13 +337,7 @@ export default function DetalleDesembolso() {
                           <ModalCloseButton onClick={closeModalAprobado} />
                           <ModalBody>
                             <Stack spacing={4}>
-                              <GenericInput
-                                name='fechaAprobado'
-                                label='Fecha de Aprobado'
-                                type='date'
-                                register={registerAprobado}
-                                isRequired
-                              />
+                              <GenericInput name='fechaAprobado' label='Fecha de Aprobado' type='date' register={registerAprobado} isRequired />
                             </Stack>
                           </ModalBody>
                           <ModalFooter>
