@@ -45,6 +45,15 @@ export default function DetalleDesembolso() {
     setIsOpenRendicion(false);
   };
 
+  const [isOpenAprobado, setIsOpenAprobado] = useState(false);
+  const openModalAprobado = () => {
+    setIsOpenAprobado(true);
+  };
+
+  const closeModalAprobado = () => {
+    setIsOpenAprobado(false);
+  };
+
   const [isOpenFueraPlazo, setIsOpenFueraPlazo] = useState(false);
 
   const openModalFueraPlazo = () => {
@@ -80,7 +89,39 @@ export default function DetalleDesembolso() {
     resolver: yupResolver(schema),
   });
 
+  const {
+    register: registerAprobado,
+    handleSubmit: handleSubmitAprobado,
+    formState: { errors: errorsAprobado },
+  } = useForm({
+    defaultValues: {
+      fechaAprobado: new Date().toISOString().split('T')[0],
+    },
+    resolver: yupResolver(schema),
+  });
+
   const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
+    mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
+    onSuccess: () => {
+      queryClient.refetchQueries(['desembolso', idDesembolso]);
+      toast({
+        title: 'Rendición cargada',
+        description: `Se ha cargado exitosamente`,
+        status: 'success',
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error al registrar la rendición',
+        description: `Intente de nuevo.`,
+        status: 'error',
+        isClosable: true,
+      });
+    },
+  });
+
+  const { mutate: mutateAprobado, isLoading: isLoadingMutationAprobado } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
@@ -105,6 +146,12 @@ export default function DetalleDesembolso() {
     console.log(values);
     mutateRendicion(values);
     closeModalRendicion();
+  };
+
+  const onSubmitAprobado = (values) => {
+    console.log(values);
+    mutateAprobado(values);
+    closeModalAprobado();
   };
 
   if (isLoading) {
@@ -158,7 +205,11 @@ export default function DetalleDesembolso() {
                     <GenericInput
                       label='Fecha de aprobado'
                       width={{ base: '100%', md: '34%' }}
-                      value={formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaAprobado)}
+                      value={
+                        dataDesembolso?.desembolso?.fechaAprobado
+                          ? formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaAprobado)
+                          : '-'
+                      }
                       isDisabled
                       mb='5vh'
                     />
@@ -177,7 +228,7 @@ export default function DetalleDesembolso() {
                       value={
                         dataDesembolso?.desembolso?.fechaDeRendicionReal
                           ? formatoFechaISOaDDMMAAAA(dataDesembolso?.desembolso?.fechaDeRendicionReal)
-                          : null
+                          : '-'
                       }
                       isDisabled
                       mb='5vh'
@@ -208,11 +259,11 @@ export default function DetalleDesembolso() {
                   </Box>
 
                   <Box display='flex' width='100%' alignItems='center'>
-                    <Box width='70%'>
+                    <Box width='80%'>
                       {' '}
                       {!dataDesembolso?.desembolso?.montoRendido && (
                         <Button colorScheme='blue' variant='outline' onClick={openModalRendicion}>
-                          Ingresar fecha de rendición
+                          Ingresar Fecha Rendición
                         </Button>
                       )}
                       <Modal isCentered isOpen={isOpenRendicion} onClose={closeModalRendicion}>
@@ -250,7 +301,7 @@ export default function DetalleDesembolso() {
                       {/* No esta andando la comparacion de fechas - AHORA SI */}
                       {convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) && (
                         <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
-                          Ingresar motivo de fuera de plazo
+                          Motivo de fuera de plazo
                         </Button>
                       )}
                       <Modal isCentered isOpen={isOpenFueraPlazo} onClose={closeModalFueraPlazo}>
@@ -277,9 +328,38 @@ export default function DetalleDesembolso() {
                             </Button>
                           </ModalFooter>
                         </ModalContent>
-                      </Modal>
+                      </Modal>{' '}
+                      {!dataDesembolso?.desembolso?.fechaAprobado && (
+                        <Button colorScheme='blue' variant='outline' onClick={openModalAprobado}>
+                          Ingresar Fecha Aprobado
+                        </Button>
+                      )}
+                      <Modal isCentered isOpen={isOpenAprobado} onClose={closeModalAprobado}>
+                        <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />
+                        <ModalContent>
+                          <ModalHeader>Ingrese la fecha de aprobado</ModalHeader>
+                          <ModalCloseButton onClick={closeModalAprobado} />
+                          <ModalBody>
+                            <Stack spacing={4}>
+                              <GenericInput
+                                name='fechaAprobado'
+                                label='Fecha de Aprobado'
+                                type='date'
+                                register={registerAprobado}
+                                isRequired
+                              />
+                            </Stack>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button onClick={closeModalAprobado}>Cerrar</Button>
+                            <Button ml={2} onClick={handleSubmitAprobado((values) => onSubmitAprobado(values))} colorScheme='blue'>
+                              Guardar
+                            </Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>{' '}
                     </Box>
-                    <Box display='flex' width='30%' justifyContent='flex-end'>
+                    <Box display='flex' width='20%' justifyContent='flex-end'>
                       <Button
                         colorScheme='blue'
                         variant='outline'

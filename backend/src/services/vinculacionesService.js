@@ -50,6 +50,12 @@ export async function getDesembolsoByIdService(idDesembolso) {
 export async function updateDesembolsoService(idDesembolso, desembolsoData) {
   try {
     const filter = { idDesembolso };
+    if (desembolsoData.fechaDeRendicionReal){
+      desembolsoData.fechaDeRendicionReal = convertToISOString(desembolsoData.fechaDeRendicionReal);
+    }
+    if (desembolsoData.fechaAprobado) {
+      desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado)
+    }
     const updatedDesembolso = await update('desembolsos', filter, desembolsoData);
     return updatedDesembolso;
   } catch (error) {
