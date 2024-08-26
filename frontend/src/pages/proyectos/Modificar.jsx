@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
@@ -69,33 +69,36 @@ export default function ModificarPIDs() {
       });
     },
   });
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      proyecto: {
-        codPid: data?.proyecto.codPid,
-        tipoActividad: data?.proyecto?.tipoActividad,
-        tipoProyecto: data?.proyecto?.tipoProyecto,
-        programa: data?.proyecto?.programa,
-        disposicion: data?.proyecto?.disposicion,
-        fechaInicio: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaInicio),
-        fechaFin: formatoFechaISOaAAAAMMDD(data?.proyecto?.fechaFin),
-        denominacion: data?.proyecto?.denominacion,
-        completo: data?.proyecto?.completo ? 'true' : 'false',
-        regional: data?.proyecto?.regional,
-        convocatoria: data?.proyecto?.convocatoria,
-        estado: data?.proyecto?.estado,
-        // idDirector: data?.proyecto?.idDirector,
-        // idCodirector: data?.proyecto?.idCodirector
-        prorrogado: data?.proyecto?.prorrogado ? 'true' : 'false',
-        tipo: data?.proyecto?.codPid ? 'pid' : 'externo',
-      },
-    },
-  });
+    reset,
+  } = useForm();
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        proyecto: {
+          codPid: data.proyecto.codPid,
+          tipoActividad: data.proyecto.tipoActividad,
+          tipoProyecto: data.proyecto.tipoProyecto,
+          programa: data.proyecto.programa,
+          disposicion: data.proyecto.disposicion,
+          fechaInicio: formatoFechaISOaAAAAMMDD(data.proyecto.fechaInicio),
+          fechaFin: formatoFechaISOaAAAAMMDD(data.proyecto.fechaFin),
+          denominacion: data.proyecto.denominacion,
+          completo: data.proyecto.completo ? 'true' : 'false',
+          regional: data.proyecto.regional,
+          convocatoria: data.proyecto.convocatoria,
+          estado: data.proyecto.estado,
+          prorrogado: data.proyecto.prorrogado ? 'true' : 'false',
+          tipo: data.proyecto.codPid ? 'pid' : 'externo',
+        },
+      });
+      setEstado(data.proyecto.estado)
+    }
+  }, [data, reset]);
 
   const onSubmit = (values) => {
     const modifiedValues = {
@@ -110,6 +113,8 @@ export default function ModificarPIDs() {
     console.log(proyecto);
     mutate(proyecto);
   };
+
+  const [estado, setEstado] = useState(data?.proyecto?.estado || '');
 
   if (isLoading) {
     return (
@@ -263,7 +268,7 @@ export default function ModificarPIDs() {
                           name='proyecto.estado'
                           label='Estado'
                           placeholder='Estado...'
-                          width={{ base: '100%', md: '30%' }}
+                          width={{ base: '100%', md: estado === 'HOMOLOGADO' ? '30%' : '65%' }}
                           mb='5vh'
                           isRequired
                           register={register}
@@ -272,18 +277,21 @@ export default function ModificarPIDs() {
                             label: estado,
                           }))}
                           errors={errors}
+                          onChange={(e) => setEstado(e.target.value)}
                         />
 
-                        <GenericInput
-                          name='proyecto.disposicion'
-                          label='Disposición'
-                          placeholder='Disposición'
-                          register={register}
-                          errors={errors}
-                          width={{ base: '100%', md: '30%' }}
-                          isRequired
-                          mb='5vh'
-                        />
+                        {estado === 'HOMOLOGADO' && (
+                          <GenericInput
+                            name='proyecto.disposicion'
+                            label='Disposición'
+                            placeholder='Disposición'
+                            register={register}
+                            errors={errors}
+                            width={{ base: '100%', md: '30%' }}
+                            isRequired={estado === 'HOMOLOGADO'}
+                            mb='5vh'
+                          />
+                        )}
                       </Box>
 
                       <Box

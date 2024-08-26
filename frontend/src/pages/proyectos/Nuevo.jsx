@@ -230,6 +230,7 @@ export default function NuevoPid() {
   };
 
   const PidExterno = useWatch({ control, name: 'tipo' });
+  const [estado, setEstado] = useState('');
 
   return (
     <Card>
@@ -388,7 +389,7 @@ export default function NuevoPid() {
                           name='estado'
                           label='Estado'
                           placeholder='Estado...'
-                          width={{ base: '100%', md: '30%' }}
+                          width={{ base: '100%', md: estado === 'HOMOLOGADO' ? '30%' : '65%' }}
                           mb='5vh'
                           isRequired
                           register={register}
@@ -397,17 +398,20 @@ export default function NuevoPid() {
                             label: estado,
                           }))}
                           errors={errors}
+                          onChange={(e) => setEstado(e.target.value)}
                         />
 
-                        <GenericInput
-                          name='disposicion'
-                          placeholder='Disposición'
-                          register={register}
-                          label='Disposición'
-                          width={{ base: '100%', md: '30%' }}
-                          mb='5vh'
-                          isRequired
-                        />
+                        {estado === 'HOMOLOGADO' && (
+                          <GenericInput
+                            name='disposicion'
+                            placeholder='Disposición'
+                            register={register}
+                            label='Disposición'
+                            width={{ base: '100%', md: '30%' }}
+                            mb='5vh'
+                            isRequired={estado === 'HOMOLOGADO'}
+                          />
+                        )}
                       </Box>
                     )}
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
