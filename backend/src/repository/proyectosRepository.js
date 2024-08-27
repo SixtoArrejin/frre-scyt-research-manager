@@ -38,6 +38,7 @@ export async function createProyecto(proyectoData) {
       idDirector: proyectoData.idDirector,
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
+      empresaInstitucion: proyectoData.empresaInstitucion
     };
 
     // Codirector podría no estar

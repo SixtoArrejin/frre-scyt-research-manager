@@ -61,25 +61,26 @@ model personas {
 }
 
 model proyectos {
-  idProyecto      Int                @id @default(autoincrement())
-  fechaInicio     DateTime?          @db.Date
-  fechaFin        DateTime?          @db.Date
-  denominacion    String?            @db.VarChar(256)
-  regional        String?            @db.VarChar(256)
-  convocatoria    Int?
-  idDirector      Int
-  idCodirector    Int?
-  tipoProyecto    String?            @db.VarChar(256)
-  programa        String?            @db.VarChar(256)
-  participa       participa[]
-  regionales      regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
-  director        personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
-  codirector      personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
-  tiposproyectos  tiposproyectos?    @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
-  tiene           tiene[]
-  vinculaciones   vinculaciones[]
-  pid             pids?              @relation("proyectos_pids")
-  proyectoExterno proyectosExternos? @relation("proyectos_externos")
+  idProyecto         Int                @id @default(autoincrement())
+  fechaInicio        DateTime?          @db.Date
+  fechaFin           DateTime?          @db.Date
+  denominacion       String?            @db.VarChar(256)
+  regional           String?            @db.VarChar(256)
+  convocatoria       Int?
+  idDirector         Int
+  idCodirector       Int?
+  tipoProyecto       String?            @db.VarChar(256)
+  programa           String?            @db.VarChar(256)
+  empresaInstitucion String?            @db.VarChar(256)
+  participa          participa[]
+  regionales         regionales?        @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
+  director           personas           @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  codirector         personas?          @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
+  tiposproyectos     tiposproyectos?    @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
+  tiene              tiene[]
+  vinculaciones      vinculaciones[]
+  pid                pids?              @relation("proyectos_pids")
+  proyectoExterno    proyectosExternos? @relation("proyectos_externos")
 
   @@index([idCodirector], map: "proyectos_idCodirector")
   @@index([idDirector], map: "proyectos_idDirector")
