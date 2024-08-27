@@ -141,14 +141,6 @@ export default function NuevoPid() {
     name: 'regionales', // Nombre del campo de formulario que es un arreglo
   });
 
-  const onChangeRadioProrroga = (value) => {
-    if (value === 'true') {
-      setValue('prorrogado', true);
-    } else {
-      setValue('prorrogado', false);
-    }
-  };
-
   const tipoProyectosConRegionales = [
     'Integrador Asociado (PID IA) con Incentivo',
     'Integrador Asociado (PID IA) sin Incentivo',
@@ -225,7 +217,6 @@ export default function NuevoPid() {
     }
   };
 
-  
   const agregarRegional = () => {
     // Verificar si el objeto ya está en regionalesSeleccionadas antes de agregarlo
     const objetoYaAgregado = regionalesSeleccionados.find((item) => item == selectedOptionsRegionales);

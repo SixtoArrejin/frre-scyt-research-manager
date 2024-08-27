@@ -11,14 +11,15 @@ import {
   createVinculacion,
   createVinculacionConFinanciamiento,
   createVinculacionSinFinanciamiento,
-  createProyectoExterno
+  createProyectoExterno,
+  createRegionalesProyectos
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectosService() {
   try {
     const proyectos = await getAllProyectos();
-    
+
     const proyectoD = proyectos.map(proyecto => {
       const { pid, proyectoExterno, ...restoProyecto } = proyecto;
       if (proyecto.pid) {
@@ -61,8 +62,8 @@ export async function getProyectosExternosService(subtipo) {
 export async function getProyectoByIdService(idProyecto) {
   try {
     const proyecto = await getProyectoById(idProyecto);
-    const {pid, proyectoExterno, ...restoProyecto} = proyecto
-    if (proyecto.pid){
+    const { pid, proyectoExterno, ...restoProyecto } = proyecto
+    if (proyecto.pid) {
       return {
         ...pid,
         ...restoProyecto
@@ -79,15 +80,26 @@ export async function getProyectoByIdService(idProyecto) {
 }
 
 export async function createProyectoService(proyectoData) {
+  const tipoProyectosConRegionales = [
+    'Integrador Asociado (PID IA) con Incentivo',
+    'Integrador Asociado (PID IA) sin Incentivo',
+    'Inter-institucional (PIC IN) con Incentivos',
+    'Inter-institucional (PIC IN) sin Incentivos',
+    'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
+    'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
+    'Tutorado con Incentivo',
+    'Tutorado sin Incentivo',
+  ];
   try {
 
-    const { grupos, investigadores, ...dataProyecto } = proyectoData;
+    const { grupos, investigadores, regionales, ...dataProyecto } = proyectoData;
     dataProyecto.fechaInicio = convertToISOString(dataProyecto.fechaInicio);
     dataProyecto.fechaFin = convertToISOString(dataProyecto.fechaFin);
 
     const newProyecto = await createProyecto(dataProyecto);
     newProyecto.grupos = [];
     newProyecto.integrantes = [];
+    newProyecto.regionales = [];
 
     if (newProyecto) {
 
@@ -108,6 +120,17 @@ export async function createProyectoService(proyectoData) {
         });
         newProyecto.integrantes.push(newInvestigador);
       }
+
+      if (tipoProyectosConRegionales.includes(newProyecto.tipoProyecto)){
+        for (const regional of regionales || []) {
+        const newRegionalesProyectos = await createRegionalesProyectosService({
+          idProyecto: newProyecto.idProyecto,
+          nombreRegional: regional
+        });
+        newProyecto.regionales.push(newRegionalesProyectos);
+      }
+      }
+      
     }
 
     return newProyecto;
@@ -152,6 +175,15 @@ export async function createParticipaService(dataParticipa) {
   }
 }
 
+export async function createRegionalesProyectosService(dataP) {
+  try {
+    const newRP = await createRegionalesProyectos(dataP);
+    return newRP;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function updatePidService(idProyecto, data) {
   try {
     let projectUpdate = {};
@@ -177,11 +209,11 @@ export async function updatePidService(idProyecto, data) {
         }
         let filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
-        if (projectUpdate){
+        if (projectUpdate) {
           filter = { idPid: idProyecto };
           projectUpdate.pid = await update('pids', filter, dataPID)
-        } 
-      } 
+        }
+      }
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`)
     }
@@ -217,12 +249,12 @@ export async function updateProyectoExternoService(idProyecto, data) {
         }
         let filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
-        if (projectUpdate){
+        if (projectUpdate) {
           filter = { idProyectoExterno: idProyecto };
           console.log('asd')
           projectUpdate.pid = await update('proyectosExternos', filter, dataExterno)
-        } 
-      } 
+        }
+      }
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`)
     }
