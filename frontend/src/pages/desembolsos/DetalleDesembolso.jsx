@@ -85,6 +85,7 @@ export default function DetalleDesembolso() {
       // idDesembolso: parseInt(idDesembolso),
       fechaDeRendicionReal: new Date().toISOString().split('T')[0],
       montoRendido: null,
+      estado: 'Rendido',
     },
     resolver: yupResolver(schema),
   });
@@ -96,6 +97,18 @@ export default function DetalleDesembolso() {
   } = useForm({
     defaultValues: {
       fechaAprobado: new Date().toISOString().split('T')[0],
+      estado: 'Aprobado',
+    },
+    resolver: yupResolver(schema),
+  });
+
+  const {
+    register: registerMotivo,
+    handleSubmit: handleSubmitMotivo,
+    formState: { errors: errorsMotivo },
+  } = useForm({
+    defaultValues: {
+      motivoEstado: '',
     },
     resolver: yupResolver(schema),
   });
@@ -142,6 +155,27 @@ export default function DetalleDesembolso() {
     },
   });
 
+  const { mutate: mutateMotivo, isLoading: isLoadingMutationMotivo } = useMutation({
+    mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
+    onSuccess: () => {
+      queryClient.refetchQueries(['desembolso', idDesembolso]);
+      toast({
+        title: 'Motivo cargado',
+        description: `Se ha cargado exitosamente`,
+        status: 'success',
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error al registrar el motivo de fuera de plazo',
+        description: `Intente de nuevo.`,
+        status: 'error',
+        isClosable: true,
+      });
+    },
+  });
+
   const onSubmitRendicion = (values) => {
     console.log(values);
     mutateRendicion(values);
@@ -152,6 +186,12 @@ export default function DetalleDesembolso() {
     console.log(values);
     mutateAprobado(values);
     closeModalAprobado();
+  };
+
+  const onSubmitMotivo = (values) => {
+    console.log(values);
+    mutateMotivo(values);
+    closeModalFueraPlazo();
   };
 
   if (isLoading) {
@@ -209,13 +249,7 @@ export default function DetalleDesembolso() {
                       isDisabled
                       mb='5vh'
                     />
-                    <GenericInput
-                      label='Fecha de rendición estimada'
-                      width={{ base: '100%', md: '34%' }}
-                      value={fechaRendicion}
-                      isDisabled
-                      mb='5vh'
-                    />
+                    <GenericInput label='Rendición estimada' width={{ base: '100%', md: '34%' }} value={fechaRendicion} isDisabled mb='5vh' />
                   </Box>
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
@@ -241,22 +275,30 @@ export default function DetalleDesembolso() {
                     <GenericInput
                       label='Estado'
                       width={{ base: '100%', md: '47.5%' }}
-                      value={dataDesembolso?.desembolso?.estado || '-'}
+                      value={
+                        convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
+                          ? dataDesembolso?.desembolso?.estado == 'En ejecución'
+                            ? 'En ejecución - Fuera de plazo'
+                            : dataDesembolso?.desembolso?.estado
+                          : dataDesembolso?.desembolso?.estado || '-'
+                      }
                       isDisabled
                       mb='5vh'
                     />
-                    <GenericInput
-                      label='Motivo de estado'
-                      width={{ base: '100%', md: '47.5%' }}
-                      /* value={data?.proyecto?.tipoActividad} */
-                      isDisabled
-                      mb='5vh'
-                    />
+                    {dataDesembolso?.desembolso?.motivoEstado && (
+                      <GenericInput
+                        label='Motivo de estado'
+                        name='motivo'
+                        width={{ base: '100%', md: '47.5%' }}
+                        value={dataDesembolso?.desembolso?.motivoEstado || '-'}
+                        isDisabled
+                        mb='5vh'
+                      />
+                    )}
                   </Box>
 
                   <Box display='flex' width='100%' alignItems='center'>
                     <Box width='80%'>
-                      {' '}
                       {!dataDesembolso?.desembolso?.montoRendido && (
                         <Button colorScheme='blue' variant='outline' onClick={openModalRendicion}>
                           Ingresar Fecha Rendición
@@ -295,31 +337,31 @@ export default function DetalleDesembolso() {
                         </ModalContent>
                       </Modal>{' '}
                       {/* No esta andando la comparacion de fechas - AHORA SI */}
-                      {convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) && (
-                        <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
-                          Motivo de fuera de plazo
-                        </Button>
-                      )}
+                      {convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) &&
+                        !dataDesembolso?.desembolso?.motivoEstado && (
+                          <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
+                            Motivo de fuera de plazo
+                          </Button>
+                        )}
                       <Modal isCentered isOpen={isOpenFueraPlazo} onClose={closeModalFueraPlazo}>
                         <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />
                         <ModalContent>
-                          <ModalHeader>Ingrese los datos</ModalHeader>
+                          <ModalHeader>Ingrese El motivo de ejecución fuera de plazo</ModalHeader>
                           <ModalCloseButton onClick={closeModalFueraPlazo} />
                           <ModalBody>
                             <Stack spacing={4}>
-                              <Input name='Motivo de estado' placeholder='Montivo de estado' />
+                              <GenericInput
+                                name='motivoEstado'
+                                label='Motivo fuera de plazo'
+                                placeholder='Motivo fuera de plazo'
+                                register={registerMotivo}
+                                isRequired
+                              />
                             </Stack>
                           </ModalBody>
                           <ModalFooter>
                             <Button onClick={closeModalFueraPlazo}>Cerrar</Button>
-                            <Button
-                              ml={2}
-                              onClick={() => {
-                                /* onSave(); */
-                                closeModalFueraPlazo();
-                              }}
-                              colorScheme='blue'
-                            >
+                            <Button ml={2} onClick={handleSubmitMotivo((values) => onSubmitMotivo(values))} colorScheme='blue'>
                               Guardar
                             </Button>
                           </ModalFooter>
