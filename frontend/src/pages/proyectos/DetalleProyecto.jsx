@@ -163,7 +163,22 @@ export default function DetalleProyectoPid() {
                     </Box>
                   )}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput label='Convocatoria' width={{ base: '100%', md: '65%' }} value={data?.proyecto?.convocatoria} isDisabled mb='5vh' />
+                    <GenericInput
+                      label='Convocatoria'
+                      width={{ base: '100%', md: '47.5%' }}
+                      value={data?.proyecto?.convocatoria}
+                      isDisabled
+                      mb='5vh'
+                    />
+                    {!esPid && (
+                      <GenericInput
+                        label='Empresa/Institución'
+                        width={{ base: '100%', md: '47.5%' }}
+                        value={data?.proyecto?.empresaInstitucion}
+                        isDisabled
+                        mb='5vh'
+                      />
+                    )}
                   </Box>
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                     <Link to={`modificar`}>

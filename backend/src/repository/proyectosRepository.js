@@ -38,7 +38,6 @@ export async function createProyecto(proyectoData) {
       idDirector: proyectoData.idDirector,
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
-      empresaInstitucion: proyectoData.empresaInstitucion
     };
 
     // Codirector podría no estar
@@ -75,7 +74,8 @@ export async function createProyectoPID(proyectoPIDData) {
 export async function createProyectoExterno(proyectoExternoData) {
   try {
     const proyectoPayload = {
-      idProyectoExterno: proyectoExternoData.idProyecto
+      idProyectoExterno: proyectoExternoData.idProyecto,
+      empresaInstitucion: proyectoExternoData.empresaInstitucion
     };
 
     const newProyectoPID = await create('proyectosExternos', proyectoPayload);

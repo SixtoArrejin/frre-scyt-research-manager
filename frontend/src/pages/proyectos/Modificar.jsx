@@ -94,6 +94,7 @@ export default function ModificarPIDs() {
           estado: data.proyecto.estado,
           prorrogado: data.proyecto.prorrogado ? 'true' : 'false',
           tipo: data.proyecto.codPid ? 'pid' : 'externo',
+          empresaInstitucion: data.proyecto.empresaInstitucion
         },
       });
       setEstado(data.proyecto.estado)
@@ -241,6 +242,18 @@ export default function ModificarPIDs() {
                       errors={errors}
                     />
                   </Box>
+                  {!data?.proyecto?.codPid && (<Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      name='proyecto.empresaInstitucion'
+                      label='Empresa/Institución'
+                      placeholder='Empresa/Institución'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '50%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+                  </Box>)}
                   {data?.proyecto?.codPid && (
                     <>
                       <Box

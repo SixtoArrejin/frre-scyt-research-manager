@@ -212,8 +212,16 @@ export async function updateProyectoExternoService(idProyecto, data) {
           tipoProyecto: data.tipoProyecto,
           programa: data.programa,
         }
-        const filter = { idProyecto: idProyecto };
+        const dataExterno = {
+          empresaInstitucion: data.empresaInstitucion,
+        }
+        let filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
+        if (projectUpdate){
+          filter = { idProyectoExterno: idProyecto };
+          console.log('asd')
+          projectUpdate.pid = await update('proyectosExternos', filter, dataExterno)
+        } 
       } 
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`)
@@ -225,7 +233,7 @@ export async function updateProyectoExternoService(idProyecto, data) {
     // return updatedPid;
     return projectUpdate
   } catch (error) {
-    console.log('maleta')
+    console.log(error.message)
     throw new Error(error.message);
   }
 }
