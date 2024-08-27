@@ -88,6 +88,7 @@ export default function NuevoPid() {
 
   const {
     control,
+    watch,
     register,
     handleSubmit,
     setValue,
@@ -111,6 +112,7 @@ export default function NuevoPid() {
       disposicion: '',
       tipo: 'pid',
       empresaInstitucion: '',
+      regionales: [],
     },
   });
 
@@ -129,6 +131,16 @@ export default function NuevoPid() {
     name: 'grupos', // Nombre del campo de formulario que es un arreglo
   });
 
+  const {
+    fields: fieldsRegionales,
+    append: appendR,
+    remove: removeR,
+    update: updateR,
+  } = useFieldArray({
+    control, // Debes proporcionar el objeto control de useForm
+    name: 'regionales', // Nombre del campo de formulario que es un arreglo
+  });
+
   const onChangeRadioProrroga = (value) => {
     if (value === 'true') {
       setValue('prorrogado', true);
@@ -137,12 +149,31 @@ export default function NuevoPid() {
     }
   };
 
+  const tipoProyectosConRegionales = [
+    'Integrador Asociado (PID IA) con Incentivo',
+    'Integrador Asociado (PID IA) sin Incentivo',
+    'Inter-institucional (PIC IN) con Incentivos',
+    'Inter-institucional (PIC IN) sin Incentivos',
+    'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
+    'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
+    'Tutorado con Incentivo',
+    'Tutorado sin Incentivo',
+  ];
+  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
+
+  const handleTipoProyectoChange = (e) => {
+    const value = e.target.value;
+    setSelectedTipoProyecto(value);
+  };
+
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
+  const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
 
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
+  const [regionalesSeleccionados, setRegionalesSeleccionados] = useState([]);
   const [investigadoresDelGrupo, setInvestigadoresDelGrupo] = useState([]);
 
   const sortedInvestigadores = investigadoresDelGrupo?.sort((a, b) => {
@@ -194,6 +225,17 @@ export default function NuevoPid() {
     }
   };
 
+  
+  const agregarRegional = () => {
+    // Verificar si el objeto ya está en regionalesSeleccionadas antes de agregarlo
+    const objetoYaAgregado = regionalesSeleccionados.find((item) => item == selectedOptionsRegionales);
+
+    if (!objetoYaAgregado) {
+      appendR(selectedOptionsRegionales);
+      setRegionalesSeleccionados([...regionalesSeleccionados, selectedOptionsRegionales]);
+    }
+  };
+
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosInvestigadores = investigadoresSeleccionados.filter((item) => item.idPersona !== idAEliminar);
@@ -217,6 +259,15 @@ export default function NuevoPid() {
     setInvestigadoresDelGrupo(investigadoresRestantes);
     console.log(investigadoresRestantes);
     setGruposSeleccionados(nuevosGrupos);
+  };
+
+  const eliminarRegional = (itemEliminar, index) => {
+    // Filtrar las regionales y crear un nuevo arreglo sin el objeto a eliminar
+    const nuevasRegionales = regionalesSeleccionados.filter((item) => item !== itemEliminar);
+
+    removeR(index);
+
+    setRegionalesSeleccionados(nuevasRegionales);
   };
 
   const onSubmit = (values) => {
@@ -335,6 +386,7 @@ export default function NuevoPid() {
                           label: tipo,
                         }))}
                         errors={errors}
+                        onChange={handleTipoProyectoChange}
                       />
                     </Box>
                     {PidExterno === 'pid' && (
@@ -536,6 +588,53 @@ export default function NuevoPid() {
                         cursor={'pointer'}
                         onClick={() => {
                           eliminarInvestigador(item.idPersona, index);
+                        }}
+                      />,
+                    ])}
+                    paginado={false}
+                  />
+                </Box>
+                <br />
+              </CardBody>
+            </Card>
+          )}
+          {tipoProyectosConRegionales?.includes(selectedTipoProyecto) && (
+            <Card width='100%'>
+              <CardBody>
+                <Text fontSize='md'>Agregar las regionales asociadas</Text>
+                <br />
+                <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                  <br />
+                  <Box display='flex' width='100%'>
+                    <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                      <GenericSelect
+                        placeholder='Regionales...'
+                        isSearchable={true}
+                        options={dataRegionales?.regionales?.map((regional) => ({
+                          value: regional,
+                          label: regional,
+                        }))}
+                        onChange={(e) => {
+                          setSelectedOptionsRegionales(e.target.value);
+                        }}
+                      />
+                    </Box>
+                    <Box display='flex' justifyContent='flex-end' width='55%'>
+                      <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarRegional}>
+                        Agregar
+                      </Button>
+                    </Box>
+                  </Box>
+                  <br />
+
+                  <Tabla
+                    columnas={['Regional', 'Eliminar']}
+                    datos={regionalesSeleccionados?.map((item, index) => [
+                      item,
+                      <DeleteIcon
+                        cursor={'pointer'}
+                        onClick={() => {
+                          eliminarRegional(item, index);
                         }}
                       />,
                     ])}
