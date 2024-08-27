@@ -293,12 +293,13 @@ export default function DetalleVinculacion() {
                 <br />
                 {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
                   <Tabla
-                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Estado', 'Ver más']}
+                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
                     datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
                       return [
                         index + 1,
                         formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
                         item.montoDesembolsado,
+                        item.montoRendido ? item.montoRendido : '-'  ,
                         item.estado || '-',
                         <Link to={`desembolso/${item.idDesembolso}`}>
                           <PlusSquareIcon />
@@ -322,7 +323,7 @@ export default function DetalleVinculacion() {
                     value={
                       data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
                       data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.reduce(
-                        (total, desembolso) => total + (desembolso.montoDesembolsado || 0),
+                        (total, desembolso) => total + (desembolso.montoRendido || 0),
                         0
                       )
                     }
