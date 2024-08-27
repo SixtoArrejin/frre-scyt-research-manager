@@ -251,7 +251,7 @@ export default function NuevoPid() {
                 <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <Box width={{ base: '100%', md: '20%' }} display='flex' justifyContent='center'>
+                      <Box width={{ base: '100%', md: '20%' }} display='flex' justifyContent='center' mt='15px'>
                         <GenericRadio
                           name='tipo'
                           direction='row'
@@ -271,26 +271,11 @@ export default function NuevoPid() {
                           placeholder='Código PID'
                           register={register}
                           label='Código PID'
-                          width={{ base: '100%', md: '30%' }}
+                          width={{ base: '100%', md: '80%' }}
                           mb='5vh'
                           isRequired
                         />
                       )}
-
-                      <GenericSelect
-                        name='regional'
-                        label='Regional asociada'
-                        placeholder='Regional...'
-                        width={{ base: '100%', md: PidExterno === 'pid' ? '45%' : '75%' }}
-                        mb='5vh'
-                        isRequired
-                        register={register}
-                        options={(isLoadingGetRegionales ? ['Cargando...'] : dataRegionales.regionales).map((regional) => ({
-                          value: regional,
-                          label: regional,
-                        }))}
-                        errors={errors}
-                      />
                     </Box>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                       <GenericInput
@@ -312,18 +297,9 @@ export default function NuevoPid() {
                         label='Fecha Inicio'
                         width={{ base: '100%', md: '30%' }}
                         mb='5vh'
-                        isRequired
                       />
 
-                      <GenericInput
-                        name='fechaFin'
-                        type='date'
-                        register={register}
-                        label='Fecha Fin'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
-                        isRequired
-                      />
+                      <GenericInput name='fechaFin' type='date' register={register} label='Fecha Fin' width={{ base: '100%', md: '30%' }} mb='5vh' />
 
                       <GenericInput
                         type='number'
@@ -353,7 +329,6 @@ export default function NuevoPid() {
                         placeholder='Tipo de proyecto...'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
-                        isRequired
                         register={register}
                         options={(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo) => ({
                           value: tipo,
