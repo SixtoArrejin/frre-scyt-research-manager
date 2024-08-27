@@ -278,7 +278,7 @@ export default function DetalleDesembolso() {
                       value={
                         convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
                           ? dataDesembolso?.desembolso?.estado == 'En ejecución'
-                            ? 'En ejecución - Fuerza de plazo'
+                            ? 'En ejecución - Fuera de plazo'
                             : dataDesembolso?.desembolso?.estado
                           : dataDesembolso?.desembolso?.estado || '-'
                       }
