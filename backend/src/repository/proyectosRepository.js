@@ -35,12 +35,14 @@ export async function createProyecto(proyectoData) {
       denominacion: proyectoData.denominacion,
       regional: proyectoData.regional,
       convocatoria: proyectoData.convocatoria,
-      idDirector: proyectoData.idDirector,
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
     };
 
-    // Codirector podría no estar
+    // Director y Codirector podría no estar
+    if (proyectoData.idDirector) {
+      proyectoPayload.idDirector = proyectoData.idDirector;
+    }
     if (proyectoData.idCodirector) {
       proyectoPayload.idCodirector = proyectoData.idCodirector;
     }

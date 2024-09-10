@@ -103,34 +103,39 @@ export async function createProyectoService(proyectoData) {
 
     if (newProyecto) {
 
-      for (const grupo of grupos || []) {
-        const newGroup = await createTieneService({
-          idGrupoInvestigacion: grupo.idGrupoInvestigacion,
-          idProyecto: newProyecto.idProyecto,
-        });
-        newProyecto.grupos.push(newGroup);
+      if (grupos) {
+        for (const grupo of grupos || []) {
+          const newGroup = await createTieneService({
+            idGrupoInvestigacion: grupo.idGrupoInvestigacion,
+            idProyecto: newProyecto.idProyecto,
+          });
+          newProyecto.grupos.push(newGroup);
+        }
       }
 
-      for (const investigador of investigadores || []) {
-        const newInvestigador = await createParticipaService({
-          idProyecto: newProyecto.idProyecto,
-          idPersona: investigador.idPersona,
-          rol: investigador.rol,
-          fechaInicio: new Date()
-        });
-        newProyecto.integrantes.push(newInvestigador);
+      if (investigadores) {
+        for (const investigador of investigadores || []) {
+          const newInvestigador = await createParticipaService({
+            idProyecto: newProyecto.idProyecto,
+            idPersona: investigador.idPersona,
+            rol: investigador.rol,
+            fechaInicio: new Date()
+          });
+          newProyecto.integrantes.push(newInvestigador);
+        }
       }
 
-      if (tipoProyectosConRegionales.includes(newProyecto.tipoProyecto)){
+
+      if (tipoProyectosConRegionales.includes(newProyecto.tipoProyecto)) {
         for (const regional of regionales || []) {
-        const newRegionalesProyectos = await createRegionalesProyectosService({
-          idProyecto: newProyecto.idProyecto,
-          nombreRegional: regional
-        });
-        newProyecto.regionales.push(newRegionalesProyectos);
+          const newRegionalesProyectos = await createRegionalesProyectosService({
+            idProyecto: newProyecto.idProyecto,
+            nombreRegional: regional
+          });
+          newProyecto.regionales.push(newRegionalesProyectos);
+        }
       }
-      }
-      
+
     }
 
     return newProyecto;
