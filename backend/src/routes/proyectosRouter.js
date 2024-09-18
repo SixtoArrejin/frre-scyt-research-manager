@@ -9,6 +9,8 @@ import {
     updateProyectoController,
     addInvestigador,
     delInvestigador,
+    addGrupo,
+    delGrupo,
 } from '../controllers/proyectosController.js';
 
 const router = Router();
@@ -23,5 +25,7 @@ router.post('/:idProyecto/vinculaciones', crearVinculaciones);
 router.post('/:idProyecto/investigador', addInvestigador);
 router.put('/:idProyecto', updateProyectoController);
 router.delete('/:idProyecto/investigador/:idInvestigador', delInvestigador);
+router.post('/:idProyecto/grupo', addGrupo);
+router.delete('/:idProyecto/grupo/:idGrupo', delGrupo);
 
 export default router;

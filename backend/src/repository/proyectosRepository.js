@@ -207,3 +207,28 @@ export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
     throw new Error(error.message);
   }
 }
+
+export async function createProyectoTieneGrupo(idProyecto, idGrupo) {
+  const tieneData = {
+    idGrupoInvestigacion: idGrupo,
+    idProyecto: idProyecto
+  }
+  console.log(tieneData)
+  try {
+    const newGrupo = await create('tiene', tieneData);
+    return newGrupo;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function delProyectoTieneGrupo(idProyecto, idGrupo) {
+  try {
+    const deletedGrupo = await deleteByCompositeKey('tiene', 'idGrupoInvestigacion', idGrupo, 'idProyecto', idProyecto);
+    return deletedGrupo;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueries, useQueryClient } from 'react-query';
-import { useFieldArray, useForm } from 'react-hook-form';
 import { getAllPersonas, getPersonasByGroup } from '../../utils/api/personasApi';
-import { addInvestigador, delInvestigador, updatePID } from '../../utils/api/proyectosApi';
+import { addInvestigador, delInvestigador } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import GenericSelect from '../../components/formControls/GenericSelect';
@@ -190,15 +189,20 @@ export default function AgregarInvestigador2() {
               />
             </Box>
             <br />
-            <CustomModal
-              isOpen={isOpen}
-              onClose={closeModal}
-              guardar={true}
-              title='Guardar nuevo PID'
-              content='Se guardara el nuevo PID'
-              // onSave={handleSubmit((values) => mutate(values))}
-              onSave={() => mutateInvestigador()}
-            />
+            <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+              <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
+                Volver
+              </Button>
+              <CustomModal
+                isOpen={isOpen}
+                onClose={closeModal}
+                guardar={true}
+                title='Guardar nuevo PID'
+                content='Se guardara el nuevo PID'
+                // onSave={handleSubmit((values) => mutate(values))}
+                // onSave={() => mutateInvestigador()}
+              />
+            </Box>
           </CardBody>
         </Card>
       </CardBody>

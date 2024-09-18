@@ -44,3 +44,13 @@ export async function delInvestigador(idProyecto, idInvestigador) {
   console.log("info: ", idProyecto, idInvestigador)
   return del(`/api/proyectos/${idProyecto}/investigador/${idInvestigador}`);
 }
+
+export async function addGrupo(idProyecto, idGrupo) {
+  console.log("info: ", idProyecto, idGrupo)
+  return post(`/api/proyectos/${idProyecto}/grupo`, {idGrupo});
+}
+
+export async function delGrupo(idProyecto, idGrupo) {
+  console.log("info: ", idProyecto, idGrupo)
+  return del(`/api/proyectos/${idProyecto}/grupo/${idGrupo}`);
+}

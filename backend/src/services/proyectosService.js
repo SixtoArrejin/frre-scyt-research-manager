@@ -15,6 +15,8 @@ import {
   createRegionalesProyectos,
   createPersonaParticipaProyecto,
   delPersonaParticipaProyecto,
+  createProyectoTieneGrupo,
+  delProyectoTieneGrupo,
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -318,6 +320,26 @@ export async function delPersonaParticipaProyectoService(idProyecto, idInvestiga
   try {
     const delParticipante = await delPersonaParticipaProyecto(idProyecto, idInvestigador);
     return delParticipante;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function createProyectoTieneGrupoService(idProyecto, idGrupo) {
+  try {
+    const newGrupo = await createProyectoTieneGrupo(idProyecto, idGrupo);
+    return newGrupo;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function delProyectoTieneGrupoService(idProyecto, idGrupo) {
+  try {
+    const delGrupo = await delProyectoTieneGrupo(idProyecto, idGrupo);
+    return delGrupo;
   } catch (error) {
     console.log(error.message)
     throw new Error(error.message);

@@ -16,6 +16,8 @@ import {
   updateProyectoExternoService,
   createPersonaParticipaProyectoService,
   delPersonaParticipaProyectoService,
+  createProyectoTieneGrupoService,
+  delProyectoTieneGrupoService,
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -268,6 +270,47 @@ export async function delInvestigador(req, res) {
         message: `Integrante eliminado.`,
         success: true,
         vinculacion: delParticipa,
+      });
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function addGrupo(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const {idGrupo} = req.body;
+  console.log("id del grupo a agregar: ", idGrupo)
+  try {
+    const newGrupo = await createProyectoTieneGrupoService(idProyecto, idGrupo);
+    res
+      .status(200)
+      .json({
+        message: `Grupo agregado.`,
+        success: true,
+        vinculacion: newGrupo,
+      });
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function delGrupo(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const idGrupo = parseInt(req.params.idGrupo, 10);
+  console.log("idProyecto: ", idProyecto)
+  console.log("idGrupo: ", idGrupo)
+  try {
+    const delGrupo = await delProyectoTieneGrupoService(idProyecto, idGrupo);
+    res
+      .status(200)
+      .json({
+        message: `Grupo eliminado.`,
+        success: true,
+        vinculacion: delGrupo,
       });
 
   } catch (error) {
