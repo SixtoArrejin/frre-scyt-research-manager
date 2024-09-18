@@ -3,6 +3,7 @@ import {
   getAllPersonas,
   createPersona,
   getPersonaById,
+  getPersonasByGroup
 } from '../repository/personasRepository.js';
 import { update } from '../repository/baseRepository.js';
 
@@ -19,6 +20,15 @@ export async function getPersonaByIdService(idPersona) {
   try {
     const persona = await getPersonaById(idPersona);
     return persona
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getPersonaByGroupService(idGrupo) {
+  try {
+    const personasGrupo = await getPersonasByGroup(idGrupo);
+    return personasGrupo
   } catch (error) {
     throw new Error(error.message);
   }

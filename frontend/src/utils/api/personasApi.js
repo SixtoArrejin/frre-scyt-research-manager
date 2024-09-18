@@ -9,6 +9,10 @@ export async function getPersonaById(idPersona) {
   return get(`/api/personas/${idPersona}`)
 }
 
+export async function getPersonasByGroup(idGrupo) {
+  return get(`/api/personas/grupo/${idGrupo}`)
+}
+
 export async function createPersona(data) {
   return post(`/api/personas`, data);
 }

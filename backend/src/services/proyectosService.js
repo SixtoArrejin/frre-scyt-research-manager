@@ -12,7 +12,9 @@ import {
   createVinculacionConFinanciamiento,
   createVinculacionSinFinanciamiento,
   createProyectoExterno,
-  createRegionalesProyectos
+  createRegionalesProyectos,
+  createPersonaParticipaProyecto,
+  delPersonaParticipaProyecto,
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -298,6 +300,26 @@ export async function createVinculacionConFinanciamientoService(idVinculacion, v
     const newVinculacion = await createVinculacionConFinanciamiento(idVinculacion, vinculacionData);
     return newVinculacion;
   } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createPersonaParticipaProyectoService(idProyecto, dataInvestigador) {
+  try {
+    const newParticipante = await createPersonaParticipaProyecto(idProyecto, dataInvestigador);
+    return newParticipante;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function delPersonaParticipaProyectoService(idProyecto, idInvestigador) {
+  try {
+    const delParticipante = await delPersonaParticipaProyecto(idProyecto, idInvestigador);
+    return delParticipante;
+  } catch (error) {
+    console.log(error.message)
     throw new Error(error.message);
   }
 }

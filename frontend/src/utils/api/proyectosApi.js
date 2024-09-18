@@ -31,7 +31,16 @@ export async function updateProyecto(id, data) {
   return put(`/api/proyectos/${id}`, data);
 }
 
-
 export async function createVinculacion(id, data) {
   return post(`/api/proyectos/${id}/vinculaciones`, data);
+}
+
+export async function addInvestigador(idProyecto, data) {
+  console.log("info: ", idProyecto, data)
+  return post(`/api/proyectos/${idProyecto}/investigador`, data);
+}
+
+export async function delInvestigador(idProyecto, idInvestigador) {
+  console.log("info: ", idProyecto, idInvestigador)
+  return del(`/api/proyectos/${idProyecto}/investigador/${idInvestigador}`);
 }

@@ -1,4 +1,4 @@
-import { getAllPersonasService, createPersonaService, updatePersonaService, getPersonaByIdService } from '../services/personasService.js';
+import { getAllPersonasService, createPersonaService, updatePersonaService, getPersonaByIdService, getPersonaByGroupService } from '../services/personasService.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getPersonas(req, res) {
@@ -12,7 +12,7 @@ export async function getPersonas(req, res) {
 
 export async function getPersonasById(req, res) {
   try {
-    const {idPersona} = req.params;
+    const { idPersona } = req.params;
     const personaId = parseInt(idPersona);
     const persona = await getPersonaByIdService(personaId);
     return res.status(200).json({ message: 'Persona encontrada', success: true, persona });
@@ -21,9 +21,20 @@ export async function getPersonasById(req, res) {
   }
 }
 
+export async function getPersonasByGroup(req, res) {
+  try {
+    const { idGrupo } = req.params;
+    const idgrupo = parseInt(idGrupo)
+    const personasGrupo = await getPersonaByGroupService(idgrupo);
+    return res.status(200).json({ message: 'Personas encontradas', success: true, personasGrupo });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
 export async function createPersona(req, res) {
   try {
-    const personaData = { fechaIngreso: new Date(), ...req.body};
+    const personaData = { fechaIngreso: new Date(), ...req.body };
 
     // const fechaActual = new Date();
     // personaData.fechaIngreso = "2023-08-30T00:00:00.000Z"

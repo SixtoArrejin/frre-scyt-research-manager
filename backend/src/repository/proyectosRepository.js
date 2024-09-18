@@ -1,4 +1,4 @@
-import { getAll, create, update, getById } from './baseRepository.js';
+import { getAll, create, update, getById, deleteByCompositeKey } from './baseRepository.js';
 import { prisma } from '../db.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -177,6 +177,33 @@ export async function createVinculacionConFinanciamiento(idVinculacion, dataVinc
     const newVinculacion = await create('vinculacionesconfinanciamiento', vinculacionData);
     return newVinculacion;
   } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createPersonaParticipaProyecto(idProyecto, dataPersona) {
+  const participaData = {
+    idProyecto: parseInt(idProyecto),
+    idPersona: parseInt(dataPersona.idInvestigador),
+    rol: dataPersona.rol,
+    fechaInicio: new Date(),
+  }
+  console.log(participaData)
+  try {
+    const newParticipacion = await create('participa', participaData);
+    return newParticipacion;
+  } catch (error) {
+    console.log(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
+  try {
+    const deletedParticipante = await deleteByCompositeKey('participa', 'idPersona', idPersona, 'idProyecto', idProyecto);
+    return deletedParticipante;
+  } catch (error) {
+    console.log(error.message)
     throw new Error(error.message);
   }
 }

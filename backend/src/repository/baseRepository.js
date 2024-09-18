@@ -130,7 +130,25 @@ export async function deleteByFilter(tableName, filter) {
   }
 }
 
+export async function deleteByCompositeKey(tableName, key1Name, key1Value, key2Name, key2Value) {
+  try {
+    // Construimos el objeto compuesto para el `where`
+    const compositeKey = {
+      [`${key1Name}_${key2Name}`]: {
+        [key1Name]: key1Value,
+        [key2Name]: key2Value,
+      },
+    };
 
+    const deletedRecord = await prisma[tableName].delete({
+      where: compositeKey,
+    });
+
+    return deletedRecord;
+  } catch (error) {
+    throw new Error(`Error al eliminar el registro de ${tableName} con ${key1Name} = ${key1Value} y ${key2Name} = ${key2Value}: ${error.message}`);
+  }
+}
 
 //-------------------------------------
 
@@ -182,5 +200,43 @@ export async function readAllWhere(tableName, id, field) {
     return record
   } catch (error) {
     throw new Error('Error al buscar los elementos en la BD');
+  }
+}
+
+// Obtener varios registros donde un campo X sea igual a Y
+export async function getByField(tableName, fieldName, fieldValue, includeRelations = []) {
+  try {
+    const whereFilter = { [fieldName]: fieldValue };
+    const includeObj = {};
+
+    function processInclude(include, targetObj) {
+      if (typeof include === "string") {
+        targetObj[include] = true;
+      } else if (typeof include === "object") {
+        for (const relationName in include) {
+          const nestedIncludes = include[relationName];
+          if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
+            const nestedIncludeObj = {};
+            for (const nestedInclude of nestedIncludes) {
+              processInclude(nestedInclude, nestedIncludeObj);
+            }
+            targetObj[relationName] = { include: nestedIncludeObj };
+          }
+        }
+      }
+    }
+
+    for (const relation of includeRelations) {
+      processInclude(relation, includeObj);
+    }
+
+    const data = await prisma[tableName].findMany({
+      where: whereFilter,
+      include: includeObj,
+    });
+
+    return data;
+  } catch (error) {
+    throw new Error(`Error al obtener registros de ${tableName} donde ${fieldName} es ${fieldValue}: ${error.message}`);
   }
 }

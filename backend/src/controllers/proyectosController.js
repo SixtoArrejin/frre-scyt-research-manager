@@ -13,7 +13,9 @@ import {
   createVinculacionSinFinanciamientoService,
   createPidService,
   createProyectoExternoService,
-  updateProyectoExternoService
+  updateProyectoExternoService,
+  createPersonaParticipaProyectoService,
+  delPersonaParticipaProyectoService,
 } from "../services/proyectosService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -228,6 +230,48 @@ export async function crearVinculaciones(req, res) {
       });
 
   } catch (error) {
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function addInvestigador(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const dataInvestigador = req.body;
+  console.log("id: ", idProyecto)
+  console.log("data: ", dataInvestigador)
+  try {
+    const newParticipa = await createPersonaParticipaProyectoService(idProyecto, dataInvestigador);
+    res
+      .status(200)
+      .json({
+        message: `Integrante agregado.`,
+        success: true,
+        vinculacion: newParticipa,
+      });
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function delInvestigador(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const idInvestigador = parseInt(req.params.idInvestigador, 10);
+  console.log("idProyecto: ", idProyecto)
+  console.log("idInvestigador: ", idInvestigador)
+  try {
+    const delParticipa = await delPersonaParticipaProyectoService(idProyecto, idInvestigador);
+    res
+      .status(200)
+      .json({
+        message: `Integrante eliminado.`,
+        success: true,
+        vinculacion: delParticipa,
+      });
+
+  } catch (error) {
+    console.log(error.message)
     res.status(500).json({ message: error.message, success: false });
   }
 }
