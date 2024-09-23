@@ -131,11 +131,11 @@ export default function AgregarGrupo() {
                 columnas={['Grupo', 'Eliminar']}
                 datos={dataProyecto?.proyecto?.tiene?.map((item, index) => {
                   return [
-                    <div>{item.gruposinvestigacion.siglas}</div>,
+                    <div>{item?.gruposinvestigacion?.siglas}</div>,
                     <DeleteIcon
                       cursor={'pointer'}
                       onClick={() => {
-                        mutateDelGrupo(item.gruposinvestigacion.idGrupoInvestigacion);
+                        mutateDelGrupo(item?.gruposinvestigacion?.idGrupoInvestigacion);
                       }}
                     />,
                   ];
