@@ -19,11 +19,13 @@ export default function DetalleProyectoPid() {
   const { data, isLoading, error } = useQuery(['proyecto', idProyecto], () => getProyectoById(Number(idProyecto)));
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
+  const [regionales, setRegionales] = useState(data?.proyecto?.regionalesAsociadas);
   const [esPid, setEsPId] = useState(false);
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
+    setRegionales(data?.proyecto?.regionalesAsociadas)
     if (data?.proyecto?.codPid) {
       setEsPId(true);
     }
@@ -260,6 +262,33 @@ export default function DetalleProyectoPid() {
                 <Link to={`agregar-grupo`}>
                   <Button colorScheme='blue' variant='outline'>
                     Agregar Grupo
+                  </Button>
+                </Link>
+              </Box>
+            </CardBody>
+          </Card>
+
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize='md'>Regionales</Text>
+              <br />
+
+              {regionales?.length > 0 ? (
+                <Tabla
+                  columnas={['Nombre']}
+                  datos={regionales?.map((item) => [
+                    item.nombreRegional,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='Este proyecto aún no tiene regionales.' />
+              )}
+              <br />
+              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                <Link to={`agregar-regional`}>
+                  <Button colorScheme='blue' variant='outline'>
+                    Agregar Regional
                   </Button>
                 </Link>
               </Box>
