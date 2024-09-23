@@ -110,7 +110,7 @@ export default function AgregarGrupo() {
                 <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
                   <GenericSelect
                     placeholder='Grupos...'
-                    options={dataGrupos.grupos?.map((item) => ({
+                    options={dataGrupos?.grupos?.map((item) => ({
                       value: item.idGrupoInvestigacion,
                       label: item.siglas,
                     }))}
