@@ -108,14 +108,14 @@ export default function DetalleProyectoPid() {
                     <GenericInput
                       label='Fecha Inicio'
                       width={{ base: '100%', md: '30%' }}
-                      value={formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaInicio)}
+                      value={data?.proyecto?.fechaInicio ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaInicio) : 'No cargado'}
                       isDisabled
                       mb='5vh'
                     />
                     <GenericInput
                       label='Fecha Fin'
                       width={{ base: '100%', md: '30%' }}
-                      value={formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)}
+                      value={data?.proyecto?.fechaFin ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin) : 'No cargado'}
                       isDisabled
                       mb='5vh'
                     />

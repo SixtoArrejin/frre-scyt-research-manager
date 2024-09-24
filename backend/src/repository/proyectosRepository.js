@@ -30,13 +30,13 @@ export async function getProyectoById(idProyecto) { //SACAR CODIRECTOR
 export async function createProyecto(proyectoData) {
   try {
     const proyectoPayload = {
-      fechaInicio: proyectoData.fechaInicio,
-      fechaFin: proyectoData.fechaFin,
       denominacion: proyectoData.denominacion,
       regional: proyectoData.regional,
       convocatoria: proyectoData.convocatoria,
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
+      ...(proyectoData.fechaInicio && { fechaInicio: convertToISOString(dataProyecto.fechaInicio) }),
+      ...(proyectoData.fechaFin && { fechaFin: convertToISOString(dataProyecto.fechaFin) })
     };
 
     // Director y Codirector podría no estar

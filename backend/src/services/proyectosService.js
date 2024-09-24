@@ -97,8 +97,6 @@ export async function createProyectoService(proyectoData) {
   try {
 
     const { grupos, investigadores, regionales, ...dataProyecto } = proyectoData;
-    dataProyecto.fechaInicio = convertToISOString(dataProyecto.fechaInicio);
-    dataProyecto.fechaFin = convertToISOString(dataProyecto.fechaFin);
 
     const newProyecto = await createProyecto(dataProyecto);
     newProyecto.grupos = [];
@@ -200,8 +198,8 @@ export async function updatePidService(idProyecto, data) {
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
       if (data) {
         const dataProyecto = {
-          fechaInicio: convertToISOString(data.fechaInicio),
-          fechaFin: convertToISOString(data.fechaFin),
+          ...(data.fechaInicio && { fechaInicio: convertToISOString(data.fechaInicio) }),
+          ...(data.fechaFin && { fechaFin: convertToISOString(data.fechaFin) }),
           denominacion: data.denominacion,
           regional: data.regional,
           convocatoria: data.convocatoria,
@@ -233,7 +231,7 @@ export async function updatePidService(idProyecto, data) {
     // return updatedPid;
     return projectUpdate
   } catch (error) {
-    console.log('maleta')
+    console.log('maleta', error.message)
     throw new Error(error.message);
   }
 }
@@ -245,8 +243,8 @@ export async function updateProyectoExternoService(idProyecto, data) {
     if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
       if (data) {
         const dataProyecto = {
-          fechaInicio: convertToISOString(data.fechaInicio),
-          fechaFin: convertToISOString(data.fechaFin),
+          ...(data.fechaInicio && { fechaInicio: convertToISOString(data.fechaInicio) }),
+          ...(data.fechaFin && { fechaFin: convertToISOString(data.fechaFin) }),
           denominacion: data.denominacion,
           regional: data.regional,
           convocatoria: data.convocatoria,
