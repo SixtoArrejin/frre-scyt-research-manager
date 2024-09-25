@@ -17,7 +17,6 @@ import {
   Stack,
   Spinner,
 } from '@chakra-ui/react';
-import { Input } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getDesembolsoById, putDesembolsoById } from '../../utils/api/vinculacionesApi';
@@ -298,7 +297,7 @@ export default function DetalleDesembolso() {
                   </Box>
 
                   <Box display='flex' width='100%' alignItems='center'>
-                    <Box width='80%'>
+                    <Box width='75%'>
                       {!dataDesembolso?.desembolso?.montoRendido && (
                         <Button colorScheme='blue' variant='outline' onClick={openModalRendicion}>
                           Ingresar Fecha Rendición
@@ -391,7 +390,7 @@ export default function DetalleDesembolso() {
                         </ModalContent>
                       </Modal>{' '}
                     </Box>
-                    <Box display='flex' width='20%' justifyContent='flex-end'>
+                    <Box display='flex' width='25%' justifyContent='space-between'>
                       <Button
                         colorScheme='blue'
                         variant='outline'
@@ -400,6 +399,15 @@ export default function DetalleDesembolso() {
                         }}
                       >
                         Volver
+                      </Button>
+                      <Button
+                        colorScheme='blue'
+                        variant='outline'
+                        onClick={() => {
+                          navigate('modificar');
+                        }}
+                      >
+                        Modificar
                       </Button>
                     </Box>
                   </Box>

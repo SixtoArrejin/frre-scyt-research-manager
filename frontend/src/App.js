@@ -35,6 +35,7 @@ import DetalleDesembolso from "./pages/desembolsos/DetalleDesembolso";
 import Home from "./pages/Home";
 import AgregarInvestigador2 from "./pages/proyectos/AgregarInvestigador2";
 import AgregarRegional from "./pages/proyectos/AgregarRegional";
+import ModificarDesembolso from "./pages/desembolsos/ModificarDesembolso";
 
 
 const queryClient = new QueryClient();
@@ -68,6 +69,8 @@ const routes = [
   { path: "/vinculaciones/nuevo", element: <NuevaVinculacion /> },
   { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion /> },
   { path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso", element: <DetalleDesembolso /> },
+  { path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso/modificar", element: <ModificarDesembolso /> },
+  { path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar", element: <ModificarDesembolso /> },
   { path: "/", element: <Home /> },
 ];
 

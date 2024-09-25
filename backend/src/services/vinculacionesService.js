@@ -50,15 +50,28 @@ export async function getDesembolsoByIdService(idDesembolso) {
 export async function updateDesembolsoService(idDesembolso, desembolsoData) {
   try {
     const filter = { idDesembolso };
-    if (desembolsoData.fechaDeRendicionReal){
+    if (desembolsoData.fechaDeRendicionReal === '') {
+      desembolsoData.fechaDeRendicionReal = null;
+    } else if (desembolsoData.fechaDeRendicionReal) {
       desembolsoData.fechaDeRendicionReal = convertToISOString(desembolsoData.fechaDeRendicionReal);
     }
-    if (desembolsoData.fechaAprobado) {
-      desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado)
+
+    if (desembolsoData.fechaAprobado === '') {
+      desembolsoData.fechaAprobado = null;
+    } else if (desembolsoData.fechaAprobado) {
+      desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado);
     }
+
+    if (desembolsoData.fechaDesembolso === '') {
+      desembolsoData.fechaDesembolso = null;
+    } else if (desembolsoData.fechaDesembolso) {
+      desembolsoData.fechaDesembolso = convertToISOString(desembolsoData.fechaDesembolso);
+    }
+    console.log('pepe', desembolsoData)
     const updatedDesembolso = await update('desembolsos', filter, desembolsoData);
     return updatedDesembolso;
   } catch (error) {
+    console.log(error.message)
     throw new Error(error.message);
   }
 }
