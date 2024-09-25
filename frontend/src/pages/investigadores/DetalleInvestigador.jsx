@@ -46,10 +46,17 @@ export default function DetalleInvestigador() {
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
-  const { data: dataProyectos } = useQuery(['proyectos'], () => getProyectosByPersonaId(idPersona));
+  const { data: dataProyectos } = useQuery(['proyectos', idPersona], () => getProyectosByPersonaId(idPersona));
   const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
   const toast = useToast();
+
+  useEffect(() => {
+    if (dataProyectos){
+      console.log(dataProyectos)
+    }
+
+  }, [dataProyectos])
 
   const categoriasUTN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'utn');
   const categoriasMIN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'ministerio');
@@ -244,7 +251,7 @@ export default function DetalleInvestigador() {
             <CardBody>
               <Text fontSize='md'>Proyectos</Text>
               <br />
-              {dataProyectos?.length > 0 ? (
+              {(dataProyectos?.proyectos?.length > 0) ? (
                 <Tabla
                   columnas={['Fec. Inicio', 'Fec. Fin', 'Denominación', 'Tipo Act.', 'Estado', 'Ing. al proyecto', 'Rol', 'Más']}
                   datos={dataProyectos?.proyectos?.map((item) => [
