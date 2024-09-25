@@ -35,8 +35,8 @@ export async function createProyecto(proyectoData) {
       convocatoria: proyectoData.convocatoria,
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
-      ...(proyectoData.fechaInicio && { fechaInicio: convertToISOString(dataProyecto.fechaInicio) }),
-      ...(proyectoData.fechaFin && { fechaFin: convertToISOString(dataProyecto.fechaFin) })
+      ...(proyectoData.fechaInicio && { fechaInicio: convertToISOString(proyectoData.fechaInicio) }),
+      ...(proyectoData.fechaFin && { fechaFin: convertToISOString(proyectoData.fechaFin) })
     };
 
     // Director y Codirector podría no estar
