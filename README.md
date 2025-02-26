@@ -6,7 +6,7 @@ Aplicación web para la Secretaria de Ciencia y Tecnología de la UTN Facultad R
 
 NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen valores placeholders o defaults.
 
-1. Clonar el repositorio:
+1. Clonar el repositorio: 
 
 ```
 git clone https://github.com/SixtoArrejin/Beca-Secretaria-CyT
