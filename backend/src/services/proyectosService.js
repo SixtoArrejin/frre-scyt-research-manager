@@ -213,6 +213,8 @@ export async function updatePidService(idProyecto, data) {
           estado: data.estado,
           disposicion: data.disposicion,
           prorrogado: data.prorrogado,
+          ...(data.prorrogado && { nuevaDisposicion: data.nuevaDisposicion }),
+          ...(data.prorrogado && { nuevaFechaFin: convertToISOString(data.nuevaFechaFin) })
         }
         let filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
