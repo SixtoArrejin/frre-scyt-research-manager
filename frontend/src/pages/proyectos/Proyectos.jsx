@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, Spinner, Tooltip } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
@@ -124,6 +126,7 @@ export default function ProyectosPid() {
                 );
                 const fechaInicio = item?.fechaInicio ? formatoFechaISOaDDMMAAAA(item.fechaInicio) : "-";
               return [
+                externo,
                 externo,
                 item.codPid ? item.codPid : '-',
                 fechaInicio,
