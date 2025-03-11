@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getProyectos } from '../../utils/api/proyectosApi';
@@ -108,20 +109,24 @@ export default function ProyectosPid() {
 
           <br />
           {proyectos?.length > 0 ? (<Tabla
-            columnas={['Cod. PID', 'Fecha Inicio', 'Denominación', 'Regional', 'Estado', 'Ver Más']}
+            columnas={['Externo','Cod. PID', 'Fecha Inicio', 'Denominación', 'Estado', 'Ver Más']}
             datos={proyectos?.map((item) => {
               const denominacion =
                 item?.denominacion === item?.denominacion.substring(0, 40) ? item?.denominacion : item?.denominacion.substring(0, 40) + '...';
-              var regional = item?.regional;
-              if (item?.regional.startsWith('Facultad Regional')) {
-                var regional = 'F.R.' + regional.substring('Facultad Regional'.length);
-              }
-
+                const externo = item.codPid ? (
+                  <Tooltip openDelay={100} hasArrow label="Proyecto externo" bg="red.500" color="white">
+                    <CloseIcon color="red.500" />
+                  </Tooltip>
+                ) : (
+                  <Tooltip openDelay={100} hasArrow label="Proyecto PID" bg="green.500" color="white">
+                    <CheckIcon color="green.500" />
+                  </Tooltip>
+                );
               return [
+                externo,
                 item.codPid ? item.codPid : '-',
                 formatoFechaISOaDDMMAAAA(item?.fechaInicio),
                 denominacion,
-                regional,
                 item?.estado ? item?.estado.charAt(0).toUpperCase() + item?.estado.toLowerCase().substring(1) : '-',
                 <Link to={`/proyectos/${item.idProyecto}`}>
                   <PlusSquareIcon />
