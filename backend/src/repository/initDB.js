@@ -33,7 +33,7 @@ const regionalesData = [
   'Facultad Regional Venado Tuerto',
   'Facultad Regional Villa María',
   'Instituto Nacional Superior de Profesorado Técnico',
-  'Rectorado'
+  // 'Rectorado'
 ];
 
 const tiposProyectosData = [

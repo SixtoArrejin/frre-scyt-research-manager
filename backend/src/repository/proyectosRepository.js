@@ -63,7 +63,9 @@ export async function createProyectoPID(proyectoPIDData) {
       completo: proyectoPIDData.completo,
       estado: proyectoPIDData.estado,
       disposicion: proyectoPIDData.disposicion,
-      prorrogado: proyectoPIDData.prorrogado
+      prorrogado: proyectoPIDData.prorrogado,
+      ...(proyectoPIDData.prorrogado && { nuevaDisposicion: proyectoPIDData.nuevaDisposicion }),
+      ...(proyectoPIDData.prorrogado && { nuevaFechaFin: convertToISOString(proyectoPIDData.nuevaFechaFin) })
     };
 
     const newProyectoPID = await create('pids', proyectoPayload);
