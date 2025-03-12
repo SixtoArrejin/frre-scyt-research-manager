@@ -139,11 +139,15 @@ export default function DetalleGrupo() {
                     return [
                       formatoFechaISOaDDMMAAAA(item.fechaInicio),
                       item.tipoActividad,
-                      item.personas_proyectos_idDirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idDirectorTopersonas?.nombre,
-                      item.personas_proyectos_idCodirectorTopersonas?.apellido + ' ' + item.personas_proyectos_idCodirectorTopersonas?.nombre,
+                      item.director
+                        ? `${item.director.apellido} ${item.director.nombre}`
+                        : "No asignado",
+                      item.codirector
+                        ? `${item.codirector.apellido} ${item.codirector.nombre}`
+                        : "No asignado",
                       item.denominacion,
                       item.estado,
-                      <Link to={`/investigadores/${item.idPersona}`}>
+                      <Link to={`/proyectos/${item.idProyecto}`}>
                         <PlusSquareIcon />
                       </Link>,
                     ];
