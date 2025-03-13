@@ -98,6 +98,19 @@ export async function createProyectoService(proyectoData) {
 
     const { grupos, investigadores, regionales, ...dataProyecto } = proyectoData;
 
+    const directores = investigadores?.filter((inv) => inv.rol === 'Director') || []
+    const codirector = investigadores?.find((inv) => inv.rol === 'CoDirector');
+
+    if (directores.length === 0) {
+      throw new Error('El Director es obligatorio');
+    }
+    if (directores.length > 1) {
+      throw new Error('El Director debe ser único');
+    }
+    const director = directores[0];
+    dataProyecto.idDirector = director.idPersona;
+    dataProyecto.idCodirector = codirector ? codirector.idPersona : null;
+
     const newProyecto = await createProyecto(dataProyecto);
     newProyecto.grupos = [];
     newProyecto.integrantes = [];

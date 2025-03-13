@@ -51,7 +51,7 @@ export default function NuevoPid() {
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
-    error: errorTiposProyectos,
+    //error: errorTiposProyectos,
   } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const grupos = data?.grupos;
@@ -88,10 +88,10 @@ export default function NuevoPid() {
 
   const {
     control,
-    watch,
+    //watch,
     register,
     handleSubmit,
-    setValue,
+    //setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -122,20 +122,20 @@ export default function NuevoPid() {
   });
 
   const {
-    fields: fieldsGrupos,
+    //fields: fieldsGrupos,
     append: appendG,
     remove: removeG,
-    update: updateG,
+    //update: updateG,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: 'grupos', // Nombre del campo de formulario que es un arreglo
   });
 
   const {
-    fields: fieldsRegionales,
+    //fields: fieldsRegionales,
     append: appendR,
     remove: removeR,
-    update: updateR,
+    //update: updateR,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: 'regionales', // Nombre del campo de formulario que es un arreglo
@@ -162,6 +162,7 @@ export default function NuevoPid() {
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
+  const [rolSelected, setRolSelected] = useState();
 
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
@@ -181,7 +182,8 @@ export default function NuevoPid() {
 
     const objetoAgregar = {
       idPersona: objetoBuscado.idPersona,
-      rol: '',
+      rol: rolSelected,
+      persona: objetoBuscado,
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
@@ -279,7 +281,7 @@ export default function NuevoPid() {
       <CardBody>
         <form
           style={{ width: '100%' }}
-          // onSubmit={handleSubmit((values) => onSub(values))}
+        // onSubmit={handleSubmit((values) => onSub(values))}
         >
           <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
             <Heading as='h2' size='xl' textAlign='center'>
@@ -544,6 +546,18 @@ export default function NuevoPid() {
                         onChange={(e) => {
                           setSelectedOptions(e.target.value);
                         }}
+                        width='47.5%'
+                      />
+                      <GenericSelect
+                        placeholder='Rol...'
+                        options={roles.map((rol) => ({
+                          value: rol,
+                          label: rol,
+                        }))}
+                        onChange={(e) => {
+                          setRolSelected(e.target.value);
+                        }}
+                        width='47.5%'
                       />
                     </Box>
                     <Box display='flex' justifyContent='flex-end' width='55%'>
@@ -556,25 +570,10 @@ export default function NuevoPid() {
 
                   <Tabla
                     columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Eliminar']}
-                    datos={investigadoresSeleccionados?.map((item, index) => [
-                      <div {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
-                      item.gruposinvestigacion.siglas,
-                      <GenericSelect
-                        placeholder='Rol...'
-                        options={roles.map((rol) => ({
-                          value: rol,
-                          label: rol,
-                        }))}
-                        onChange={(e) => {
-                          update(index, { rol: e.target.value });
-                          if (e.target.value === 'CoDirector') {
-                            setValue('idCodirector', Number(item.idPersona));
-                          }
-                          if (e.target.value === 'Director') {
-                            setValue('idDirector', Number(item.idPersona));
-                          }
-                        }}
-                      />,
+                    datos={fields?.map((item, index) => [
+                      <div>{item.persona.apellido} {item.persona.nombre}</div>,
+                      <div>{item.persona.gruposinvestigacion.siglas}</div>,
+                      <div>{item.rol}</div>,
                       <DeleteIcon
                         cursor={'pointer'}
                         onClick={() => {
@@ -649,6 +648,7 @@ export default function NuevoPid() {
               guardar={true}
               title='Guardar nuevo PID'
               content='Se guardara el nuevo Proyecto'
+              //onSave={handleSubmit((values) => console.log(values))}
               onSave={handleSubmit((values) => onSubmit(values))}
             />
           </Box>

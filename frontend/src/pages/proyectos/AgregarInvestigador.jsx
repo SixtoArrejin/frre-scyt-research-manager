@@ -12,7 +12,7 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
 
 const roles = ['Director', 'CoDirector', 'Investigador', 'Becario', 'Asesor Cientifico', 'Técnico de Apoyo'];
-
+//NO ESTA EN USO ESTA PÁGINA, LA QUE VA ES AgregarInvestigador2.jsx
 export default function AgregarInvestigador() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
