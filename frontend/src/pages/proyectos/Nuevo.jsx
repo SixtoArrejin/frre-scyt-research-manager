@@ -14,6 +14,7 @@ import GenericInput from '../../components/formControls/GenericInput.jsx';
 import GenericSelect from '../../components/formControls/GenericSelect.jsx';
 import GenericRadio from '../../components/formControls/GenericRadio.jsx';
 import Tabla from '../../components/Tabla.jsx';
+import { formatoFechaISOaDDMMAAAA } from '../../utils/general.jsx';
 
 const tipoActividad = ['Desarrollo Experimental', 'Investigación Aplicada', 'Investigación Básica'];
 
@@ -163,6 +164,7 @@ export default function NuevoPid() {
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
   const [rolSelected, setRolSelected] = useState();
+  const [fechaSelected, setFechaSelected] = useState();
 
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
@@ -184,6 +186,7 @@ export default function NuevoPid() {
       idPersona: objetoBuscado.idPersona,
       rol: rolSelected,
       persona: objetoBuscado,
+      fechaInicio: fechaSelected,
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
@@ -535,7 +538,7 @@ export default function NuevoPid() {
                 <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                   <br />
                   <Box display='flex' width='100%'>
-                    <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                    <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
                       <GenericSelect
                         placeholder='Integrantes...'
                         isSearchable={true}
@@ -546,7 +549,7 @@ export default function NuevoPid() {
                         onChange={(e) => {
                           setSelectedOptions(e.target.value);
                         }}
-                        width='47.5%'
+                        width='30%'
                       />
                       <GenericSelect
                         placeholder='Rol...'
@@ -557,10 +560,19 @@ export default function NuevoPid() {
                         onChange={(e) => {
                           setRolSelected(e.target.value);
                         }}
-                        width='47.5%'
+                        width='30%'
+                      />
+                      <GenericInput
+                        name='fechaInicio'
+                        label='Fecha ingreso'
+                        placeholder='Fecha de ingreso'
+                        type='date'
+                        width='30%'
+                        onChange={(e) => setFechaSelected(e.target.value)}
+                        value={fechaSelected}
                       />
                     </Box>
-                    <Box display='flex' justifyContent='flex-end' width='55%'>
+                    <Box display='flex' justifyContent='flex-end' width='25%'>
                       <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarInvestigador}>
                         Agregar
                       </Button>
@@ -569,11 +581,12 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Eliminar']}
+                    columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Fecha de Inicio', 'Eliminar']}
                     datos={fields?.map((item, index) => [
                       <div>{item.persona.apellido} {item.persona.nombre}</div>,
                       <div>{item.persona.gruposinvestigacion.siglas}</div>,
                       <div>{item.rol}</div>,
+                      <div>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
                       <DeleteIcon
                         cursor={'pointer'}
                         onClick={() => {

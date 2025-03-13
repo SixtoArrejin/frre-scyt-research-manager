@@ -134,7 +134,7 @@ export async function createProyectoService(proyectoData) {
             idProyecto: newProyecto.idProyecto,
             idPersona: investigador.idPersona,
             rol: investigador.rol,
-            fechaInicio: new Date()
+            fechaInicio: convertToISOString(investigador.fechaInicio)
           });
           newProyecto.integrantes.push(newInvestigador);
         }
