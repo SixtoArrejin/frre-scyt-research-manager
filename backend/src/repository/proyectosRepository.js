@@ -188,7 +188,7 @@ export async function createPersonaParticipaProyecto(idProyecto, dataPersona) {
     idProyecto: parseInt(idProyecto),
     idPersona: parseInt(dataPersona.idInvestigador),
     rol: dataPersona.rol,
-    fechaInicio: new Date(),
+    fechaInicio: convertToISOString(dataPersona.fechaInicio),
   }
   console.log(participaData)
   try {

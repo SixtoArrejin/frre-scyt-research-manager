@@ -10,6 +10,8 @@ import { getProyectoById } from '../../utils/api/proyectosApi';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
 import { getAllGrupos } from '../../utils/api/gruposApi';
+import GenericInput from '../../components/formControls/GenericInput';
+import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 
 const roles = ['Director', 'CoDirector', 'Investigador', 'Becario', 'Asesor Cientifico', 'Técnico de Apoyo'];
 
@@ -47,7 +49,7 @@ export default function AgregarInvestigador2() {
   const isLoadingInvestigadores = investigadoresQueries.some((query) => query.isLoading);
 
   const { mutate: mutateInvestigador, isLoading: isLoadingInvestigador } = useMutation({
-    mutationFn: () => addInvestigador(Number(idPid), { idInvestigador: selectedOptions, rol: rolSelectedOptions }),
+    mutationFn: () => addInvestigador(Number(idPid), { idInvestigador: selectedOptions, rol: rolSelectedOptions, fechaInicio: fechaSelected }),
     onSuccess: () => {
       toast({
         title: 'Agregar investigador',
@@ -95,6 +97,7 @@ export default function AgregarInvestigador2() {
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
   const [rolSelectedOptions, setRolSelectedOptions] = useState();
+  const [fechaSelected, setFechaSelected] = useState();
 
   const { data: dataGruposInvestigacion } = useQuery('grupos', () => getAllGrupos());
   const { data: dataPersonas } = useQuery('personas', () => getAllPersonas());
@@ -135,7 +138,7 @@ export default function AgregarInvestigador2() {
             <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
               <br />
               <Box display='flex' width='100%'>
-                <Box display='flex' justifyContent='space-between' width='50%' marginLeft='2%'>
+                <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
                   <GenericSelect
                     placeholder='Integrantes...'
                     options={investigadoresGrupos.map((item) => ({
@@ -145,7 +148,7 @@ export default function AgregarInvestigador2() {
                     onChange={(e) => {
                       setSelectedOptions(e.target.value);
                     }}
-                    width='47.5%'
+                    width='30%'
                   />
                   <GenericSelect
                     placeholder='Rol...'
@@ -156,10 +159,19 @@ export default function AgregarInvestigador2() {
                     onChange={(e) => {
                       setRolSelectedOptions(e.target.value);
                     }}
-                    width='47.5%'
+                    width='30%'
+                  />
+                  <GenericInput
+                    name='fechaInicio'
+                    label='Fecha ingreso'
+                    placeholder='Fecha de ingreso'
+                    type='date'
+                    width='30%'
+                    onChange={(e) => setFechaSelected(e.target.value)}
+                    value={fechaSelected}
                   />
                 </Box>
-                <Box display='flex' justifyContent='flex-end' width='50%'>
+                <Box display='flex' justifyContent='flex-end' width='25%'>
                   <Button colorScheme='blue' variant='outline' mr='5' onClick={() => mutateInvestigador()}>
                     Agregar
                   </Button>
@@ -168,12 +180,13 @@ export default function AgregarInvestigador2() {
               <br />
 
               <Tabla
-                columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Eliminar']}
+                columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Fecha de inicio', 'Eliminar']}
                 datos={dataProyecto?.proyecto?.participa?.map((item, index) => {
                   return [
                     <div>{item.personas.apellido + ', ' + item.personas.nombre}</div>,
                     calcularGrupo(item.personas.idGrupoInvestigacion), //Buscar manera de indicar las siglas no el id del grupo
                     item.rol,
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
                     <DeleteIcon
                       cursor={'pointer'}
                       // onClick={() => {
@@ -199,8 +212,8 @@ export default function AgregarInvestigador2() {
                 guardar={true}
                 title='Guardar nuevo PID'
                 content='Se guardara el nuevo PID'
-                // onSave={handleSubmit((values) => mutate(values))}
-                // onSave={() => mutateInvestigador()}
+              // onSave={handleSubmit((values) => mutate(values))}
+              // onSave={() => mutateInvestigador()}
               />
             </Box>
           </CardBody>
