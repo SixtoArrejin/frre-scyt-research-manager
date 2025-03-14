@@ -38,3 +38,9 @@ export function convertirFechaDDMMAAAAaDate(fechaStr) {
   const [dia, mes, año] = fechaStr.split("/").map(Number);
   return new Date(año, mes - 1, dia);
 }
+
+export function sumarMeses(fecha, meses) {
+  const fechaInicio = new Date(fecha); // Convertir la fecha ISO en objeto Date
+  fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
+  return fechaInicio;
+}

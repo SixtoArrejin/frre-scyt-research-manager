@@ -13,6 +13,7 @@ export default function GenericInput(props) {
     onChange,
     disabled,
     textArea = false,
+    textColor,
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
@@ -28,6 +29,7 @@ export default function GenericInput(props) {
     isDisabled,
     disabled,
     onChange,
+    color: textColor || "black",
   };
 
   // Filtra las propiedades undefined
@@ -35,7 +37,17 @@ export default function GenericInput(props) {
 
   return (
     <FormControl variant='floating' {...rest}>
-      {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps}/> : <Input {...inputProps} />}
+      {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps} x={{
+        _disabled: {
+          color: textColor,
+          opacity: "0.75"
+        }
+      }} /> : <Input sx={{
+        _disabled: {
+          color: textColor,
+          opacity: "0.75"
+        }
+      }} {...inputProps} />}
       {/* <Input {...inputProps} /> */}
       <FormLabel>{props.label ? props.label : ''}</FormLabel>
       <Text fontSize='sm' color='red'>
