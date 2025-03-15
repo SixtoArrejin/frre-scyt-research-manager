@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
-import { convertirFechaDDMMAAAAaDate, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
+import { convertirFechaDDMMAAAAaDate, formatoFechaISOaAAAAMMDD, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
 import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
@@ -12,7 +12,7 @@ import NoData from '../../img/no-data.png';
 import NoData1 from '../../img/no-data-2.png';
 import NuevoConvenioModal from './NuevoConvenioModal';
 
-export default function DetalleVinculacion() {
+export default function ModificarVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
 
   const [isOpenModalConvenio, setIsOpenModalConvenio] = useState(false);
@@ -28,7 +28,7 @@ export default function DetalleVinculacion() {
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
+  const { data, isLoading, error } = useQuery(['vinculacion', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -38,7 +38,6 @@ export default function DetalleVinculacion() {
     }
   }, [data]);
 
-  //PARA LA PÁGINA DE MODIFICAR SE VA
   const onDeleted = async (idConvenio) => {
     await deleteConvenioById(Number(idConvenio));
     queryClient.invalidateQueries(['vinculacion', idVinculacion]);
@@ -58,7 +57,7 @@ export default function DetalleVinculacion() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <Heading as='h2' size='xl' textAlign='center'>
-            Detalles de vinculación
+            Modificar datos de la vinculación
           </Heading>
           <br />
           <Card width='100%'>
@@ -70,13 +69,11 @@ export default function DetalleVinculacion() {
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
                       label='Empresa/Institución'
-                      width={{ base: '100%', md: '30%' }}
-                      value={data?.vinculacion?.empresaInstitucion}
-                      isDisabled
+                      width={{ base: '100%', md: '65%' }}
+                      defaultValue={data?.vinculacion?.empresaInstitucion}
                       mb='5vh'
                     />
-                    <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} value={data?.vinculacion?.numeroMarco} isDisabled mb='5vh' />
-                    <GenericInput label='Proyecto' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.proyectos?.denominacion} isDisabled mb='5vh' />
+                    <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.numeroMarco} mb='5vh' />
                   </Box>
                   {Financiamiento && (
                     <Box width='100%'>
@@ -90,15 +87,13 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Título'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
                           mb='5vh'
                         />
                         <GenericInput
                           label='Nombre del beneficiario'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
                           mb='5vh'
                         />
                       </Box>
@@ -112,15 +107,15 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Monto'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
+                          type='number'
                           mb='5vh'
                         />
                         <GenericInput
                           label='Cantidad de desembolsos'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
+                          type='number'
                           mb='5vh'
                         />
                       </Box>
@@ -134,15 +129,15 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Fecha de presentación'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
-                          isDisabled
+                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
+                          type='date'
                           mb='5vh'
                         />
                         <GenericInput
                           label='Fecha de adjudicación'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
-                          isDisabled
+                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
+                          type='date'
                           mb='5vh'
                         />
                       </Box>
@@ -156,10 +151,11 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Plazo de ejecución (meses)'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
+                          type='number'
                           mb='5vh'
                         />
+                        {/* La línea probablemente desaparezca de la vinculación (La borramos) */}
                         <GenericInput
                           label='Línea'
                           width={{ base: '100%', md: '47.5%' }}
@@ -178,15 +174,14 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Estado'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
                           mb='5vh'
                         />
+                        {/* Pensar en si esto debe condicionarse o no. Cargar cuando el estado sea "Desistido" nomás? */}
                         <GenericInput
                           label='Motivo desistido'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
                           mb='5vh'
                         />
                       </Box>{' '}
