@@ -14,6 +14,10 @@ export async function getVinculacionById(idVinculacion) {
   return get(`/api/vinculaciones/${idVinculacion}`);
 }
 
+export async function updateVinculacion(idVinculacion, dataVinculacion) {
+  return get(`/api/vinculaciones/${idVinculacion}`, dataVinculacion);
+}
+
 export async function deleteConvenioById(idConvenio) {
   return del(`/api/convenios/${idConvenio}`)
 }

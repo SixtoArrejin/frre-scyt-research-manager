@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast } from '@chakra-ui/react';
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from 'react-query';
-import { convertirFechaDDMMAAAAaDate, formatoFechaISOaAAAAMMDD, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
-import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
+import { getVinculacionById, updateVinculacion } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
-import Tabla from '../../components/Tabla';
-import ImgDefault from '../../components/ImgDefault';
-import NoData from '../../img/no-data.png';
-import NoData1 from '../../img/no-data-2.png';
-import NuevoConvenioModal from './NuevoConvenioModal';
+import { useForm } from 'react-hook-form';
+import CustomModal from '../../components/CustomModal';
 
 export default function ModificarVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
 
-  const [isOpenModalConvenio, setIsOpenModalConvenio] = useState(false);
+  const [isOpenModalVinculacion, setIsOpenModalVinculacion] = useState(false);
 
   const openModal = () => {
-    setIsOpenModalConvenio(true);
+    setIsOpenModalVinculacion(true);
   };
 
   const closeModal = () => {
-    setIsOpenModalConvenio(false);
+    setIsOpenModalVinculacion(false);
   };
+
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
@@ -38,11 +38,57 @@ export default function ModificarVinculacion() {
     }
   }, [data]);
 
-  const onDeleted = async (idConvenio) => {
-    await deleteConvenioById(Number(idConvenio));
-    queryClient.invalidateQueries(['vinculacion', idVinculacion]);
-    queryClient.refetchQueries(['vinculacion', idVinculacion]);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    defaultValues: {
+      //Vinculacion en general
+      empresaInstitucion: data?.vinculacion?.empresaInstitucion,
+      numeroMarco: data?.vinculacion?.numeroMarco,
+      //Vinculación con Financiamiento
+      conFinanciamiento: {
+        titulo: data?.vinculacion?.vinculacionesconfinanciamiento?.titulo,
+        nombreBeneficiario: data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario,
+        monto: data?.vinculacion?.vinculacionesconfinanciamiento?.monto,
+        cantidadDesembolsos: data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos,
+        fechaPresentacion: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion),
+        fechaAdjudicacion: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion),
+        plazoEjecucion: data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion,
+        estado: data?.vinculacion?.vinculacionesconfinanciamiento?.estado,
+        motivoEstado: data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado,
+      },
+      sinFinanciamiento: {
+        fechaInicio: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio),
+        fechaCierre: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre),
+        descripcion: data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion,
+      }
+    }
+  });
+
+  const { mutate, isLoading: isLoadingMutation } = useMutation({
+    mutationFn: (formData) => updateVinculacion(idVinculacion, formData),
+    onSuccess: () => {
+      toast({
+        title: 'Modificar vinculación',
+        description: `Se ha modificado el grupo exitosamente`,
+        status: 'success',
+        isClosable: true,
+      });
+      navigate(-1);
+    },
+    onError: () => {
+      toast({
+        title: 'Error al modificar los datos de la vinculación',
+        description: `Intente de nuevo.`,
+        status: 'error',
+        isClosable: true,
+      });
+    },
+  });
+
 
   if (isLoading) {
     return (
@@ -68,12 +114,23 @@ export default function ModificarVinculacion() {
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
+                      name='empresaInstitucion'
                       label='Empresa/Institución'
+                      register={register}
+                      errors={errors}
                       width={{ base: '100%', md: '65%' }}
                       defaultValue={data?.vinculacion?.empresaInstitucion}
                       mb='5vh'
                     />
-                    <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.numeroMarco} mb='5vh' />
+                    <GenericInput
+                      register={register}
+                      errors={errors}
+                      name='numeroMarco'
+                      label='Nro Marco'
+                      width={{ base: '100%', md: '30%' }}
+                      defaultValue={data?.vinculacion?.numeroMarco}
+                      mb='5vh'
+                    />
                   </Box>
                   {Financiamiento && (
                     <Box width='100%'>
@@ -86,12 +143,18 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Título'
+                          name='conFinanciamiento.titulo'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
                           mb='5vh'
                         />
                         <GenericInput
                           label='Nombre del beneficiario'
+                          name='conFinanciamiento.nombreBeneficiario'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
                           mb='5vh'
@@ -106,6 +169,9 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Monto'
+                          name='conFinanciamiento.monto'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
                           type='number'
@@ -113,6 +179,9 @@ export default function ModificarVinculacion() {
                         />
                         <GenericInput
                           label='Cantidad de desembolsos'
+                          name='conFinanciamiento.cantidadDesembolsos'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
                           type='number'
@@ -128,6 +197,9 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Fecha de presentación'
+                          name='conFinanciamiento.fechaPresentacion'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
                           type='date'
@@ -135,6 +207,9 @@ export default function ModificarVinculacion() {
                         />
                         <GenericInput
                           label='Fecha de adjudicación'
+                          name='conFinanciamiento.fechaAdjudicacion'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
                           type='date'
@@ -150,6 +225,9 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Plazo de ejecución (meses)'
+                          name='conFinanciamiento.plazoEjecucion'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
                           type='number'
@@ -173,6 +251,9 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Estado'
+                          name='conFinanciamiento.estado'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
                           mb='5vh'
@@ -180,6 +261,9 @@ export default function ModificarVinculacion() {
                         {/* Pensar en si esto debe condicionarse o no. Cargar cuando el estado sea "Desistido" nomás? */}
                         <GenericInput
                           label='Motivo desistido'
+                          name='conFinanciamiento.motivoEstado'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
                           defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
                           mb='5vh'
@@ -198,16 +282,22 @@ export default function ModificarVinculacion() {
                       >
                         <GenericInput
                           label='Fecha de inicio'
+                          name='sinFinanciamiento.fechaInicio'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)}
-                          isDisabled
+                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)}
+                          type='date'
                           mb='5vh'
                         />
                         <GenericInput
                           label='Fecha de cierre'
+                          name='sinFinanciamiento.fechaCierre'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)}
-                          isDisabled
+                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)}
+                          type='date'
                           mb='5vh'
                         />
                       </Box>
@@ -221,134 +311,37 @@ export default function ModificarVinculacion() {
                         <GenericInput
                           textArea
                           label='Descripción'
+                          name='sinFinanciamiento.descripcion'
+                          register={register}
+                          errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
-                          isDisabled
+                          defaultValue={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
                           mb='5vh'
                         />
                       </Box>
                     </Box>
                   )}
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                    <Link to={`modificar`}>
-                      <Button colorScheme='blue' variant='outline'>
-                        Modificar
-                      </Button>
-                    </Link>
+                    <Button colorScheme='gray' variant='outline' mr='3%' onClick={() => navigate(-1)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={openModal} isLoading={isLoadingMutation} colorScheme='blue' variant='outline'>
+                      Guardar
+                    </Button>
+                    <CustomModal
+                      isOpen={isOpenModalVinculacion}
+                      onClose={closeModal}
+                      guardar={true}
+                      title='Guardar datos'
+                      content='Se guardara los nuevos datos del convenio'
+                      onSave={handleSubmit((values) => console.log(values))}
+                    //onSave={handleSubmit((values) => mutate(values))}
+                    />
                   </Box>
                 </Box>
               </Box>
             </CardBody>
           </Card>
-
-          <br />
-          <Card width='100%'>
-            <CardBody>
-              <Text fontSize='md'>Convenio</Text>
-              <br />
-              {data?.vinculacion?.convenios?.length > 0 ? (
-                <Tabla
-                  columnas={['Tipo', 'Número', 'Eliminar']}
-                  datos={data?.vinculacion?.convenios?.map((convenio) => {
-                    return [
-                      convenio.tipo,
-                      convenio.numero,
-                      <Link>
-                        <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
-                      </Link>,
-                    ];
-                  })}
-                  paginado={false}
-                />
-              ) : (
-                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay convenios para mostrar.' />
-              )}
-              <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <Link>
-                  <Button colorScheme='blue' variant='outline' onClick={() => openModal()}>
-                    Agregar Convenio
-                  </Button>
-                </Link>
-                <NuevoConvenioModal
-                  // key={item.idCategoria}
-                  isOpen={isOpenModalConvenio}
-                  onClose={closeModal}
-                  guardar={true}
-                  title='Nuevo Convenio'
-                />
-              </Box>
-              <br />
-            </CardBody>
-          </Card>
-
-          <br />
-          {Financiamiento && (
-            <Card width='100%'>
-              <CardBody>
-                <Text fontSize='md'>Desembolsos</Text>
-                <br />
-                {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
-                  <Tabla
-                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
-                    datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
-
-                      const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
-                      const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(item.fechaDesembolso, item.plazoEtapa));
-
-                      return [
-                        index + 1,
-                        formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
-                        item.montoDesembolsado,
-                        item.montoRendido ? item.montoRendido : '-',
-                        convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
-                          ? item.estado == 'En ejecución'
-                            ? 'En ejecución - Fuera de plazo'
-                            : item.estado || '-'
-                          : item.estado || '-',
-                        <Link to={`desembolso/${item.idDesembolso}`}>
-                          <PlusSquareIcon />
-                        </Link>,
-                      ];
-                    })}
-                    paginado={false}
-                  />
-                ) : (
-                  <ImgDefault src={NoData1} alt='No Data' width='30%' text='Aún no hay desembolsos para mostrar.' />
-                )}
-                <Box
-                  display='flex'
-                  width='100%'
-                  alignItems='center'
-                  justifyContent='space-between' // Cambiado de "flex-end" a "space-between"
-                >
-                  <GenericInput
-                    label='Saldo ($)'
-                    width={{ base: '100%', md: '47.5%' }}
-                    value={
-                      data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
-                      data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.reduce(
-                        (total, desembolso) => total + (desembolso.montoRendido || 0),
-                        0
-                      )
-                    }
-                    isDisabled
-                    mb='5vh'
-                    mt='9'
-                  />
-                  {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
-                    data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (
-                      <Link to={`nuevo-desembolso`}>
-                        <Button colorScheme='blue' variant='outline'>
-                          Agregar Desembolso
-                        </Button>
-                      </Link>
-                    )}
-                </Box>
-                <br />
-              </CardBody>
-            </Card>
-          )}
         </Box>
       </CardBody>
     </Card>
