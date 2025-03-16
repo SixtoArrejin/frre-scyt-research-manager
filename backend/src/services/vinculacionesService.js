@@ -4,6 +4,7 @@ import {
   getVinculacionById,
   createDesembolso,
   getDesembolsoById,
+  getDesembolsosByIdVinculacion,
 } from "../repository/vinculacionesRepository.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -44,6 +45,15 @@ export async function getDesembolsoByIdService(idDesembolso) {
   try {
     const desembolso = await getDesembolsoById(idDesembolso);
     return desembolso;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getDesembolsosByIdVinculacionService(idVinculacion) {
+  try {
+    const desembolsos = await getDesembolsosByIdVinculacion(idVinculacion);
+    return desembolsos;
   } catch (error) {
     throw new Error(error.message);
   }
