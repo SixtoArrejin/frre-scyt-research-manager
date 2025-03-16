@@ -28,7 +28,7 @@ export default function ModificarVinculacion() {
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['vinculacion', idVinculacion], () => getVinculacionById(idVinculacion));
+  const { data, isLoading, error } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -79,10 +79,11 @@ export default function ModificarVinculacion() {
       });
       navigate(-1);
     },
-    onError: () => {
+    onError: (error) => {
+      const errorMessage = error?.message;
       toast({
         title: 'Error al modificar los datos de la vinculación',
-        description: `Intente de nuevo.`,
+        description: `${errorMessage || 'Intente nuevamente'}`,
         status: 'error',
         isClosable: true,
       });
@@ -129,6 +130,7 @@ export default function ModificarVinculacion() {
                       label='Nro Marco'
                       width={{ base: '100%', md: '30%' }}
                       defaultValue={data?.vinculacion?.numeroMarco}
+                      type='number'
                       mb='5vh'
                     />
                   </Box>
@@ -334,8 +336,8 @@ export default function ModificarVinculacion() {
                       guardar={true}
                       title='Guardar datos'
                       content='Se guardara los nuevos datos del convenio'
-                      onSave={handleSubmit((values) => console.log(values))}
-                    //onSave={handleSubmit((values) => mutate(values))}
+                      //onSave={handleSubmit((values) => console.log(values))}
+                      onSave={handleSubmit((values) => mutate(values))}
                     />
                   </Box>
                 </Box>

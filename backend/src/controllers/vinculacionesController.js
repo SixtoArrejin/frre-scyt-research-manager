@@ -4,6 +4,7 @@ import {
   createDesembolsoService,
   getDesembolsoByIdService,
   updateDesembolsoService,
+  updateVinculacionService,
 } from "../services/vinculacionesService.js";
 import convertToISOString from "../utils/funciones.js";
 
@@ -79,6 +80,19 @@ export async function updateDesembolso(req, res) {
   try {
     const updateDesembolso = await updateDesembolsoService(idDesembolso, desembolsoData);
     return res.status(200).json({ message: 'Desembolso actualizado exitosamente', success: true, updateDesembolso });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function updateVinculacion(req, res) {
+  const idVinculacion = parseInt(req.params.idVinculacion, 10);
+  const vinculacionData = req.body;
+  //grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion); 
+
+  try {
+    const updatedVinculacion = await updateVinculacionService(idVinculacion, vinculacionData);
+    return res.status(200).json({ message: 'Vinculacion actualizada exitosamente', success: true, updatedVinculacion });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }

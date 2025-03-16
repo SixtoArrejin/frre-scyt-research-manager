@@ -15,7 +15,7 @@ export async function getVinculacionById(idVinculacion) {
 }
 
 export async function updateVinculacion(idVinculacion, dataVinculacion) {
-  return get(`/api/vinculaciones/${idVinculacion}`, dataVinculacion);
+  return put(`/api/vinculaciones/${idVinculacion}`, dataVinculacion);
 }
 
 export async function deleteConvenioById(idConvenio) {
