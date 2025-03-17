@@ -53,7 +53,7 @@ export default function Home() {
     let contadorMinisterio = 0;
     let contadorUTN = 0;
 
-    personasActivas.forEach((persona) => {
+    personasActivas?.forEach((persona) => {
       const tieneMinisterio = persona.categorias.some(
         (categoria) => categoria.tipo === "ministerio"
       );
