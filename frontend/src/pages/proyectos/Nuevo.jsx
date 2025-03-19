@@ -1,34 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from 'react-query';
-import { getAllGrupos } from '../../utils/api/gruposApi';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
-import { getAllPersonas } from '../../utils/api/personasApi';
-import { createProyecto } from '../../utils/api/proyectosApi';
-import CustomModal from '../../components/CustomModal';
-import { getAllRegionales } from '../../utils/api/regionalesApi';
-import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
-import GenericInput from '../../components/formControls/GenericInput.jsx';
-import GenericSelect from '../../components/formControls/GenericSelect.jsx';
-import GenericRadio from '../../components/formControls/GenericRadio.jsx';
-import Tabla from '../../components/Tabla.jsx';
-import { formatoFechaISOaDDMMAAAA } from '../../utils/general.jsx';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  Text,
+  Heading,
+  Box,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "react-query";
+import { getAllGrupos } from "../../utils/api/gruposApi";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { getAllPersonas } from "../../utils/api/personasApi";
+import { createProyecto } from "../../utils/api/proyectosApi";
+import CustomModal from "../../components/CustomModal";
+import { getAllRegionales } from "../../utils/api/regionalesApi";
+import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
+import GenericInput from "../../components/formControls/GenericInput.jsx";
+import GenericSelect from "../../components/formControls/GenericSelect.jsx";
+import GenericRadio from "../../components/formControls/GenericRadio.jsx";
+import Tabla from "../../components/Tabla.jsx";
 
-const tipoActividad = ['Desarrollo Experimental', 'Investigación Aplicada', 'Investigación Básica'];
-
-const estadoProyecto = [
-  'EN TRÁMITE',
-  'HOMOLOGADO',
-  'REFORMULAR POR EVALUACIÓN EXTERNA',
-  'REFORMULAR POR CONSEJO DE PROGRAMAS',
-  'DENEGADO POR EVALUACIÓN EXTERNA',
-  'DENEGADO POR CONSEJO DE PROGRAMAS',
-  'CANCELADO',
+const tipoActividad = [
+  "Desarrollo Experimental",
+  "Investigación Aplicada",
+  "Investigación Básica",
 ];
 
-const roles = ['Director', 'CoDirector', 'Investigador', 'Becario', 'Asesor Cientifico', 'Técnico de Apoyo'];
+const estadoProyecto = [
+  "EN TRÁMITE",
+  "HOMOLOGADO",
+  "REFORMULAR POR EVALUACIÓN EXTERNA",
+  "REFORMULAR POR CONSEJO DE PROGRAMAS",
+  "DENEGADO POR EVALUACIÓN EXTERNA",
+  "DENEGADO POR CONSEJO DE PROGRAMAS",
+  "CANCELADO",
+];
+
+const roles = [
+  "Director",
+  "CoDirector",
+  "Investigador",
+  "Becario",
+  "Asesor Cientifico",
+  "Técnico de Apoyo",
+];
 
 export default function NuevoPid() {
   /* Usestate para el modal */
@@ -45,21 +63,31 @@ export default function NuevoPid() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const { data, isLoading: isLoadingGetGrupos, error } = useQuery('grupos', () => getAllGrupos());
+  const {
+    data,
+    isLoading: isLoadingGetGrupos,
+    error,
+  } = useQuery("grupos", () => getAllGrupos());
 
-  const { data: dataRegionales, isLoading: isLoadingGetRegionales, error: errorRegionales } = useQuery(['regionales'], () => getAllRegionales());
+  const {
+    data: dataRegionales,
+    isLoading: isLoadingGetRegionales,
+    error: errorRegionales,
+  } = useQuery(["regionales"], () => getAllRegionales());
 
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
-    //error: errorTiposProyectos,
-  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
+    error: errorTiposProyectos,
+  } = useQuery(["tiposProyectos"], () => getAllTiposProyectos());
 
   const grupos = data?.grupos;
 
   const [investigadores, setInvestigadores] = useState([]);
 
-  const { data: dataInvestigadores } = useQuery(['investigadoresNewPID'], () => getAllPersonas());
+  const { data: dataInvestigadores } = useQuery(["investigadoresNewPID"], () =>
+    getAllPersonas()
+  );
 
   useEffect(() => {
     setInvestigadores(dataInvestigadores?.personas);
@@ -69,9 +97,9 @@ export default function NuevoPid() {
     mutationFn: (formData) => createProyecto(formData),
     onSuccess: () => {
       toast({
-        title: 'Nuevo Proyecto',
+        title: "Nuevo Proyecto",
         description: `Se ha creado el nuevo proyecto exitosamente`,
-        status: 'success',
+        status: "success",
         isClosable: true,
       });
       navigate(-1);
@@ -79,9 +107,9 @@ export default function NuevoPid() {
     onError: (error) => {
       const errorMessage = error?.message;
       toast({
-        title: 'Error al crear el proyecto',
-        description: `${errorMessage || 'Intente nuevamente'}`,
-        status: 'error',
+        title: "Error al crear el proyecto",
+        description: `${errorMessage || "Intente nuevamente"}`,
+        status: "error",
         isClosable: true,
       });
     },
@@ -89,70 +117,70 @@ export default function NuevoPid() {
 
   const {
     control,
-    //watch,
+    watch,
     register,
     handleSubmit,
-    //setValue,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      tipoActividad: '',
-      fechaInicio: '',
-      fechaFin: '',
-      denominacion: '',
+      tipoActividad: "",
+      fechaInicio: "",
+      fechaFin: "",
+      denominacion: "",
       completo: false,
-      regional: 'Facultad Regional Resistencia',
-      convocatoria: '',
-      estado: '',
+      regional: "Facultad Regional Resistencia",
+      convocatoria: "",
+      estado: "",
       idDirector: undefined,
       idCodirector: undefined,
-      tipoProyecto: '',
-      prorrogado: 'false',
-      codPid: '',
-      programa: '',
-      disposicion: '',
-      tipo: 'pid',
-      empresaInstitucion: '',
+      tipoProyecto: "",
+      prorrogado: "false",
+      codPid: "",
+      programa: "",
+      disposicion: "",
+      tipo: "pid",
+      empresaInstitucion: "",
       regionales: [],
     },
   });
 
   const { fields, append, remove, update } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: 'investigadores', // Nombre del campo de formulario que es un arreglo
+    name: "investigadores", // Nombre del campo de formulario que es un arreglo
   });
 
   const {
-    //fields: fieldsGrupos,
+    fields: fieldsGrupos,
     append: appendG,
     remove: removeG,
-    //update: updateG,
+    update: updateG,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: 'grupos', // Nombre del campo de formulario que es un arreglo
+    name: "grupos", // Nombre del campo de formulario que es un arreglo
   });
 
   const {
-    //fields: fieldsRegionales,
+    fields: fieldsRegionales,
     append: appendR,
     remove: removeR,
-    //update: updateR,
+    update: updateR,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: 'regionales', // Nombre del campo de formulario que es un arreglo
+    name: "regionales", // Nombre del campo de formulario que es un arreglo
   });
 
   const tipoProyectosConRegionales = [
-    'Integrador Asociado (PID IA) con Incentivo',
-    'Integrador Asociado (PID IA) sin Incentivo',
-    'Inter-institucional (PIC IN) con Incentivos',
-    'Inter-institucional (PIC IN) sin Incentivos',
-    'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
-    'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
-    'Tutorado con Incentivo',
-    'Tutorado sin Incentivo',
+    "Integrador Asociado (PID IA) con Incentivo",
+    "Integrador Asociado (PID IA) sin Incentivo",
+    "Inter-institucional (PIC IN) con Incentivos",
+    "Inter-institucional (PIC IN) sin Incentivos",
+    "PID Tecnología Educativa Multifacultad con Incentivos (PIDA)",
+    "PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)",
+    "Tutorado con Incentivo",
+    "Tutorado sin Incentivo",
   ];
-  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
+  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState("");
 
   const handleTipoProyectoChange = (e) => {
     const value = e.target.value;
@@ -163,11 +191,10 @@ export default function NuevoPid() {
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
-  const [rolSelected, setRolSelected] = useState();
-  const [fechaSelected, setFechaSelected] = useState();
 
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
-  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
+  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
+    useState([]);
   const [regionalesSeleccionados, setRegionalesSeleccionados] = useState([]);
   const [investigadoresDelGrupo, setInvestigadoresDelGrupo] = useState([]);
 
@@ -180,43 +207,59 @@ export default function NuevoPid() {
   const agregarInvestigador = () => {
     console.log(sortedInvestigadores);
     console.log(selectedOptions);
-    const objetoBuscado = sortedInvestigadores.find((item) => item.idPersona == selectedOptions);
+    const objetoBuscado = sortedInvestigadores.find(
+      (item) => item.idPersona == selectedOptions
+    );
 
     const objetoAgregar = {
       idPersona: objetoBuscado.idPersona,
-      rol: rolSelected,
-      persona: objetoBuscado,
-      fechaInicio: fechaSelected,
+      rol: "",
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
-    const objetoYaAgregado = investigadoresSeleccionados.find((item) => item.idPersona == selectedOptions);
+    const objetoYaAgregado = investigadoresSeleccionados.find(
+      (item) => item.idPersona == selectedOptions
+    );
 
     if (!objetoYaAgregado) {
       append(objetoAgregar);
-      setInvestigadoresSeleccionados([...investigadoresSeleccionados, objetoBuscado]);
+      setInvestigadoresSeleccionados([
+        ...investigadoresSeleccionados,
+        objetoBuscado,
+      ]);
     }
   };
 
   const agregarGrupo = () => {
     // console.log(sortedInvestigadores);
     console.log(selectedOptionsGrupos);
-    const objetoBuscado = grupos.find((item) => item.idGrupoInvestigacion == selectedOptionsGrupos);
+    const objetoBuscado = grupos.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
 
     const objetoAgregar = {
       idGrupoInvestigacion: objetoBuscado.idGrupoInvestigacion,
     };
 
     // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
-    const objetoYaAgregado = gruposSeleccionados.find((item) => item.idGrupoInvestigacion == selectedOptionsGrupos);
+    const objetoYaAgregado = gruposSeleccionados.find(
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+    );
 
     if (!objetoYaAgregado) {
       appendG(objetoAgregar);
       setGruposSeleccionados([...gruposSeleccionados, objetoBuscado]);
-      const investigadoresGrupo = investigadores.filter((investigador) => investigador.idGrupoInvestigacion === objetoBuscado.idGrupoInvestigacion);
+      const investigadoresGrupo = investigadores.filter(
+        (investigador) =>
+          investigador.idGrupoInvestigacion ===
+          objetoBuscado.idGrupoInvestigacion
+      );
 
       // Actualizar la lista de investigadores seleccionados
-      setInvestigadoresDelGrupo([...investigadoresDelGrupo, ...investigadoresGrupo]);
+      setInvestigadoresDelGrupo([
+        ...investigadoresDelGrupo,
+        ...investigadoresGrupo,
+      ]);
 
       console.log(investigadoresDelGrupo);
     }
@@ -224,17 +267,24 @@ export default function NuevoPid() {
 
   const agregarRegional = () => {
     // Verificar si el objeto ya está en regionalesSeleccionadas antes de agregarlo
-    const objetoYaAgregado = regionalesSeleccionados.find((item) => item == selectedOptionsRegionales);
+    const objetoYaAgregado = regionalesSeleccionados.find(
+      (item) => item == selectedOptionsRegionales
+    );
 
     if (!objetoYaAgregado) {
       appendR(selectedOptionsRegionales);
-      setRegionalesSeleccionados([...regionalesSeleccionados, selectedOptionsRegionales]);
+      setRegionalesSeleccionados([
+        ...regionalesSeleccionados,
+        selectedOptionsRegionales,
+      ]);
     }
   };
 
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevosInvestigadores = investigadoresSeleccionados.filter((item) => item.idPersona !== idAEliminar);
+    const nuevosInvestigadores = investigadoresSeleccionados.filter(
+      (item) => item.idPersona !== idAEliminar
+    );
 
     remove(index);
 
@@ -244,10 +294,14 @@ export default function NuevoPid() {
 
   const eliminarGrupo = (idAEliminar, index) => {
     // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevosGrupos = gruposSeleccionados.filter((item) => item.idGrupoInvestigacion !== idAEliminar);
+    const nuevosGrupos = gruposSeleccionados.filter(
+      (item) => item.idGrupoInvestigacion !== idAEliminar
+    );
 
     // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
-    const investigadoresRestantes = investigadoresDelGrupo.filter((investigador) => investigador.idGrupoInvestigacion !== idAEliminar);
+    const investigadoresRestantes = investigadoresDelGrupo.filter(
+      (investigador) => investigador.idGrupoInvestigacion !== idAEliminar
+    );
 
     removeG(index);
 
@@ -259,7 +313,9 @@ export default function NuevoPid() {
 
   const eliminarRegional = (itemEliminar, index) => {
     // Filtrar las regionales y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevasRegionales = regionalesSeleccionados.filter((item) => item !== itemEliminar);
+    const nuevasRegionales = regionalesSeleccionados.filter(
+      (item) => item !== itemEliminar
+    );
 
     removeR(index);
 
@@ -270,114 +326,172 @@ export default function NuevoPid() {
     // Convierte el valor de 'prorroga' a booleano antes de enviar
     const modifiedValues = {
       ...values,
-      prorrogado: values.prorrogado === 'true',
+      prorrogado: values.prorrogado === "true",
     };
     console.log(modifiedValues);
     mutate(modifiedValues);
   };
 
-  const PidExterno = useWatch({ control, name: 'tipo' });
-  const [estado, setEstado] = useState('');
+  const PidExterno = useWatch({ control, name: "tipo" });
+  const Prorrogado = useWatch({ control, name: "prorrogado" });
+  const [estado, setEstado] = useState("");
 
   return (
     <Card>
       <CardBody>
         <form
-          style={{ width: '100%' }}
-        // onSubmit={handleSubmit((values) => onSub(values))}
+          style={{ width: "100%" }}
+          // onSubmit={handleSubmit((values) => onSub(values))}
         >
-          <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-            <Heading as='h2' size='xl' textAlign='center'>
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Heading as="h2" size="xl" textAlign="center">
               Nuevo Proyecto
             </Heading>
             <br />
-            <Card width='100%'>
+            <Card width="100%">
               <CardBody>
-                <Text fontSize='md'>Ingrese los datos del proyecto: </Text>
+                <Text fontSize="md">Ingrese los datos del proyecto: </Text>
                 <br />
-                <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                  <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <Box width={{ base: '100%', md: '20%' }} display='flex' justifyContent='center' mt='15px'>
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="column"
+                >
+                  <Box
+                    display="flex"
+                    width="70%"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                  >
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box
+                        width={{ base: "100%", md: "20%" }}
+                        display="flex"
+                        justifyContent="center"
+                        mt="15px"
+                      >
                         <GenericRadio
-                          name='tipo'
-                          direction='row'
+                          name="tipo"
+                          direction="row"
                           options={[
-                            { value: 'pid', label: 'PID' },
-                            { value: 'externo', label: 'Externo' },
+                            { value: "pid", label: "PID" },
+                            { value: "externo", label: "Externo" },
                           ]}
                           register={register}
-                          defaultValue='pid'
-                          mb='5vh'
-                          width={'100%'}
+                          defaultValue="pid"
+                          mb="5vh"
+                          width={"100%"}
                         />
                       </Box>
-                      {PidExterno === 'pid' && (
+                      {PidExterno === "pid" && (
                         <GenericInput
-                          name='codPid'
-                          placeholder='Código PID'
+                          name="codPid"
+                          placeholder="Código PID"
                           register={register}
-                          label='Código PID'
-                          width={{ base: '100%', md: '80%' }}
-                          mb='5vh'
+                          label="Código PID"
+                          width={{ base: "100%", md: "80%" }}
+                          mb="5vh"
                           isRequired
                         />
                       )}
                     </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
                       <GenericInput
                         textArea
-                        name='denominacion'
-                        placeholder='Denominación'
+                        name="denominacion"
+                        placeholder="Denominación"
                         register={register}
-                        label='Denominación'
-                        width={{ base: '100%', md: '100%' }}
-                        mb='5vh'
+                        label="Denominación"
+                        width={{ base: "100%", md: "100%" }}
+                        mb="5vh"
                         isRequired
                       />
                     </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
                       <GenericInput
-                        name='fechaInicio'
-                        type='date'
+                        name="fechaInicio"
+                        type="date"
                         register={register}
-                        label='Fecha Inicio'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
+                        label="Fecha Inicio"
+                        width={{ base: "100%", md: "30%" }}
+                        mb="5vh"
                       />
 
-                      <GenericInput name='fechaFin' type='date' register={register} label='Fecha Fin' width={{ base: '100%', md: '30%' }} mb='5vh' />
+                      <GenericInput
+                        name="fechaFin"
+                        type="date"
+                        register={register}
+                        label="Fecha Fin"
+                        width={{ base: "100%", md: "30%" }}
+                        mb="5vh"
+                      />
 
                       <GenericInput
-                        type='number'
-                        name='convocatoria'
-                        placeholder='Convocatoria'
+                        type="number"
+                        name="convocatoria"
+                        placeholder="Convocatoria"
                         register={register}
-                        label='Convocatoria'
-                        width={{ base: '100%', md: '30%' }}
-                        mb='5vh'
+                        label="Convocatoria"
+                        width={{ base: "100%", md: "30%" }}
+                        mb="5vh"
                         isRequired
                       />
                     </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
                       <GenericInput
-                        name='programa'
-                        placeholder='Programa'
+                        name="programa"
+                        placeholder="Programa"
                         register={register}
-                        label='Programa'
-                        width={{ base: '100%', md: '47.5%' }}
-                        mb='5vh'
+                        label="Programa"
+                        width={{ base: "100%", md: "47.5%" }}
+                        mb="5vh"
                         isRequired
                       />
 
                       <GenericSelect
-                        name='tipoProyecto'
-                        label='Tipo de proyecto'
-                        placeholder='Tipo de proyecto...'
-                        width={{ base: '100%', md: '47.5%' }}
-                        mb='5vh'
+                        name="tipoProyecto"
+                        label="Tipo de proyecto"
+                        placeholder="Tipo de proyecto..."
+                        width={{ base: "100%", md: "47.5%" }}
+                        mb="5vh"
                         register={register}
-                        options={(isLoadingGetTiposProyectos ? ['Cargando...'] : dataTiposProyectos?.tiposProyectos).map((tipo) => ({
+                        options={(isLoadingGetTiposProyectos
+                          ? ["Cargando..."]
+                          : dataTiposProyectos?.tiposProyectos
+                        ).map((tipo) => ({
                           value: tipo,
                           label: tipo,
                         }))}
@@ -385,20 +499,20 @@ export default function NuevoPid() {
                         onChange={handleTipoProyectoChange}
                       />
                     </Box>
-                    {PidExterno === 'pid' && (
+                    {PidExterno === "pid" && (
                       <Box
-                        display='flex'
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        width='100%'
-                        alignItems='center'
-                        justifyContent='space-between'
+                        display="flex"
+                        flexDirection={{ base: "column", md: "row" }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
                       >
                         <GenericSelect
-                          name='tipoActividad'
-                          label='Tipo de actividad'
-                          placeholder='Tipo de actividad...'
-                          width={{ base: '100%', md: '30%' }}
-                          mb='5vh'
+                          name="tipoActividad"
+                          label="Tipo de actividad"
+                          placeholder="Tipo de actividad..."
+                          width={{ base: "100%", md: "30%" }}
+                          mb="5vh"
                           isRequired
                           register={register}
                           options={tipoActividad.map((actividad) => ({
@@ -409,11 +523,14 @@ export default function NuevoPid() {
                         />
 
                         <GenericSelect
-                          name='estado'
-                          label='Estado'
-                          placeholder='Estado...'
-                          width={{ base: '100%', md: estado === 'HOMOLOGADO' ? '30%' : '65%' }}
-                          mb='5vh'
+                          name="estado"
+                          label="Estado"
+                          placeholder="Estado..."
+                          width={{
+                            base: "100%",
+                            md: estado === "HOMOLOGADO" ? "30%" : "65%",
+                          }}
+                          mb="5vh"
                           isRequired
                           register={register}
                           options={estadoProyecto.map((estado) => ({
@@ -424,53 +541,87 @@ export default function NuevoPid() {
                           onChange={(e) => setEstado(e.target.value)}
                         />
 
-                        {estado === 'HOMOLOGADO' && (
+                        {estado === "HOMOLOGADO" && (
                           <GenericInput
-                            name='disposicion'
-                            placeholder='Disposición'
+                            name="disposicion"
+                            placeholder="Disposición"
                             register={register}
-                            label='Disposición'
-                            width={{ base: '100%', md: '30%' }}
-                            mb='5vh'
-                            isRequired={estado === 'HOMOLOGADO'}
+                            label="Disposición"
+                            width={{ base: "100%", md: "30%" }}
+                            mb="5vh"
+                            isRequired={estado === "HOMOLOGADO"}
                           />
                         )}
                       </Box>
                     )}
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      {PidExterno !== 'pid' && (
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: "column", md: "row" }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      {PidExterno !== "pid" && (
                         <GenericInput
-                          name='empresaInstitucion'
-                          placeholder='Empresa/Institución'
+                          name="empresaInstitucion"
+                          placeholder="Empresa/Institución"
                           register={register}
-                          label='Empresa/Institución'
-                          width={{ base: '100%', md: '47.5%' }}
-                          mb='5vh'
+                          label="Empresa/Institución"
+                          width={{ base: "100%", md: "47.5%" }}
+                          mb="5vh"
                         />
                       )}
-                      {PidExterno === 'pid' && (
+                      {PidExterno === "pid" && (
                         <Box
-                          width={{ base: '100%', md: '47.5%' }}
-                          display='flex'
-                          justifyContent='flex-start'
-                          alignItems='flex-start'
-                          height='100%'
-                          mb='5%'
-                          ml='1%'
+                          width={{ base: "100%", md: "47.5%" }}
+                          display="flex"
+                          justifyContent="flex-start"
+                          alignItems="flex-start"
+                          height="100%"
+                          mb="5%"
+                          ml="1%"
                         >
-                          <Text mr='2%' as='b'>
+                          <Text mr="2%" as="b">
                             Prorroga:
                           </Text>
                           <GenericRadio
-                            name='prorrogado'
-                            direction='row'
+                            name="prorrogado"
+                            direction="row"
                             options={[
-                              { value: 'true', label: 'Si' },
-                              { value: 'false', label: 'No' },
+                              { value: "true", label: "Si" },
+                              { value: "false", label: "No" },
                             ]}
                             register={register}
-                            defaultValue='false'
+                            defaultValue={Prorrogado}
                             errors={errors}
+                          />
+                        </Box>
+                      )}
+                      {PidExterno === "pid" && Prorrogado === "true" && (
+                        <Box
+                          display="flex"
+                          flexDirection={{ base: "column", md: "row" }}
+                          width="100%"
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <GenericInput
+                            name="nuevaFechaFinalizacion"
+                            type="date"
+                            register={register}
+                            label="Nueva Fecha Finalización"
+                            width={{ base: "100%", md: "47.5%" }}
+                            mb="5vh"
+                          />
+
+                          <GenericInput
+                            name="nuevaDisposicion"
+                            placeholder="Nueva Disposición"
+                            register={register}
+                            label="Nueva Disposición"
+                            width={{ base: "100%", md: "47.5%" }}
+                            mb="5vh"
+                            isRequired={estado === "HOMOLOGADO"}
                           />
                         </Box>
                       )}
@@ -484,16 +635,29 @@ export default function NuevoPid() {
           {/* ACA SE AGREGA LA TABLA DE GRUPOS */}
           <br />
           <br />
-          <Card width='100%'>
+          <Card width="100%">
             <CardBody>
-              <Text fontSize='md'>Agregar los grupos asociados al proyecto</Text>
+              <Text fontSize="md">
+                Agregar los grupos asociados al proyecto
+              </Text>
               <br />
-              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+              <Box
+                display="flex"
+                flexDirection="column"
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+              >
                 <br />
-                <Box display='flex' width='100%'>
-                  <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                <Box display="flex" width="100%">
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="45%"
+                    marginLeft="2%"
+                  >
                     <GenericSelect
-                      placeholder='Grupos...'
+                      placeholder="Grupos..."
                       isSearchable={true}
                       options={grupos?.map((grupo) => ({
                         value: grupo.idGrupoInvestigacion,
@@ -504,19 +668,24 @@ export default function NuevoPid() {
                       }}
                     />
                   </Box>
-                  <Box display='flex' justifyContent='flex-end' width='55%'>
-                    <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarGrupo}>
+                  <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Button
+                      colorScheme="blue"
+                      variant="outline"
+                      mr="5"
+                      onClick={agregarGrupo}
+                    >
                       Agregar
                     </Button>
                   </Box>
                 </Box>
                 <br />
                 <Tabla
-                  columnas={['Grupo', 'Eliminar']}
+                  columnas={["Grupo", "Eliminar"]}
                   datos={gruposSeleccionados?.map((item, index) => [
                     item.siglas,
                     <DeleteIcon
-                      cursor={'pointer'}
+                      cursor={"pointer"}
                       onClick={() => {
                         eliminarGrupo(item.idGrupoInvestigacion, index);
                       }}
@@ -531,49 +700,47 @@ export default function NuevoPid() {
           {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
           <br />
           {gruposSeleccionados.length > 0 && (
-            <Card width='100%'>
+            <Card width="100%">
               <CardBody>
-                <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
+                <Text fontSize="md">
+                  Agregar los investigadores al proyecto
+                </Text>
                 <br />
-                <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <br />
-                  <Box display='flex' width='100%'>
-                    <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
+                  <Box display="flex" width="100%">
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      width="45%"
+                      marginLeft="2%"
+                    >
                       <GenericSelect
-                        placeholder='Integrantes...'
+                        placeholder="Integrantes..."
                         isSearchable={true}
                         options={sortedInvestigadores?.map((investigador) => ({
                           value: investigador.idPersona,
-                          label: investigador.apellido + ', ' + investigador.nombre,
+                          label:
+                            investigador.apellido + ", " + investigador.nombre,
                         }))}
                         onChange={(e) => {
                           setSelectedOptions(e.target.value);
                         }}
-                        width='30%'
-                      />
-                      <GenericSelect
-                        placeholder='Rol...'
-                        options={roles.map((rol) => ({
-                          value: rol,
-                          label: rol,
-                        }))}
-                        onChange={(e) => {
-                          setRolSelected(e.target.value);
-                        }}
-                        width='30%'
-                      />
-                      <GenericInput
-                        name='fechaInicio'
-                        label='Fecha ingreso'
-                        placeholder='Fecha de ingreso'
-                        type='date'
-                        width='30%'
-                        onChange={(e) => setFechaSelected(e.target.value)}
-                        value={fechaSelected}
                       />
                     </Box>
-                    <Box display='flex' justifyContent='flex-end' width='25%'>
-                      <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarInvestigador}>
+                    <Box display="flex" justifyContent="flex-end" width="55%">
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
+                        mr="5"
+                        onClick={agregarInvestigador}
+                      >
                         Agregar
                       </Button>
                     </Box>
@@ -581,14 +748,34 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={['Apellido y Nombre', 'Grupo', 'Rol', 'Fecha de Inicio', 'Eliminar']}
-                    datos={fields?.map((item, index) => [
-                      <div>{item.persona.apellido} {item.persona.nombre}</div>,
-                      <div>{item.persona.gruposinvestigacion.siglas}</div>,
-                      <div>{item.rol}</div>,
-                      <div>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
+                    columnas={["Apellido y Nombre", "Grupo", "Rol", "Eliminar"]}
+                    datos={investigadoresSeleccionados?.map((item, index) => [
+                      <div
+                        {...register(`investigadores[${index}].idPersona`, {
+                          value: item.idPersona,
+                        })}
+                      >
+                        {item.apellido + ", " + item.nombre}
+                      </div>,
+                      item.gruposinvestigacion.siglas,
+                      <GenericSelect
+                        placeholder="Rol..."
+                        options={roles.map((rol) => ({
+                          value: rol,
+                          label: rol,
+                        }))}
+                        onChange={(e) => {
+                          update(index, { rol: e.target.value });
+                          if (e.target.value === "CoDirector") {
+                            setValue("idCodirector", Number(item.idPersona));
+                          }
+                          if (e.target.value === "Director") {
+                            setValue("idDirector", Number(item.idPersona));
+                          }
+                        }}
+                      />,
                       <DeleteIcon
-                        cursor={'pointer'}
+                        cursor={"pointer"}
                         onClick={() => {
                           eliminarInvestigador(item.idPersona, index);
                         }}
@@ -602,28 +789,46 @@ export default function NuevoPid() {
             </Card>
           )}
           {tipoProyectosConRegionales?.includes(selectedTipoProyecto) && (
-            <Card width='100%'>
+            <Card width="100%">
               <CardBody>
-                <Text fontSize='md'>Agregar las regionales asociadas</Text>
+                <Text fontSize="md">Agregar las regionales asociadas</Text>
                 <br />
-                <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <br />
-                  <Box display='flex' width='100%'>
-                    <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
+                  <Box display="flex" width="100%">
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      width="45%"
+                      marginLeft="2%"
+                    >
                       <GenericSelect
-                        placeholder='Regionales...'
+                        placeholder="Regionales..."
                         isSearchable={true}
-                        options={dataRegionales?.regionales?.map((regional) => ({
-                          value: regional,
-                          label: regional,
-                        }))}
+                        options={dataRegionales?.regionales?.map(
+                          (regional) => ({
+                            value: regional,
+                            label: regional,
+                          })
+                        )}
                         onChange={(e) => {
                           setSelectedOptionsRegionales(e.target.value);
                         }}
                       />
                     </Box>
-                    <Box display='flex' justifyContent='flex-end' width='55%'>
-                      <Button colorScheme='blue' variant='outline' mr='5' onClick={agregarRegional}>
+                    <Box display="flex" justifyContent="flex-end" width="55%">
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
+                        mr="5"
+                        onClick={agregarRegional}
+                      >
                         Agregar
                       </Button>
                     </Box>
@@ -631,11 +836,11 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={['Regional', 'Eliminar']}
+                    columnas={["Regional", "Eliminar"]}
                     datos={regionalesSeleccionados?.map((item, index) => [
                       item,
                       <DeleteIcon
-                        cursor={'pointer'}
+                        cursor={"pointer"}
                         onClick={() => {
                           eliminarRegional(item, index);
                         }}
@@ -648,20 +853,36 @@ export default function NuevoPid() {
               </CardBody>
             </Card>
           )}
-          <Box display='flex' width='100%' alignItems='center' justifyContent='center' mt='2%'>
-            <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
+          <Box
+            display="flex"
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            mt="2%"
+          >
+            <Button
+              colorScheme="gray"
+              variant="outline"
+              onClick={() => navigate(-1)}
+              mr="5%"
+            >
               Cancelar
             </Button>
-            <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline' ml='5%'>
+            <Button
+              onClick={openModal}
+              isLoading={isLoading}
+              colorScheme="blue"
+              variant="outline"
+              ml="5%"
+            >
               Guardar
             </Button>
             <CustomModal
               isOpen={isOpen}
               onClose={closeModal}
               guardar={true}
-              title='Guardar nuevo PID'
-              content='Se guardara el nuevo Proyecto'
-              //onSave={handleSubmit((values) => console.log(values))}
+              title="Guardar nuevo PID"
+              content="Se guardara el nuevo Proyecto"
               onSave={handleSubmit((values) => onSubmit(values))}
             />
           </Box>
