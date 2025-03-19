@@ -73,7 +73,7 @@ model proyectos {
   programa            String?               @db.VarChar(256)
   participa           participa[]
   regionales          regionales?           @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
-  director            personas?              @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
+  director            personas?             @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
   codirector          personas?             @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
   tiposproyectos      tiposproyectos?       @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
   tiene               tiene[]
@@ -89,14 +89,16 @@ model proyectos {
 }
 
 model pids {
-  idPid         Int       @id @unique
-  codPid        String    @unique
-  tipoActividad String?   @db.VarChar(256)
-  completo      Boolean?
-  estado        String?   @db.VarChar(256)
-  disposicion   String?   @db.VarChar(256)
-  prorrogado    Boolean?
-  proyecto      proyectos @relation("proyectos_pids", fields: [idPid], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
+  idPid            Int       @id @unique
+  codPid           String    @unique
+  tipoActividad    String?   @db.VarChar(256)
+  completo         Boolean?
+  estado           String?   @db.VarChar(256)
+  disposicion      String?   @db.VarChar(256)
+  prorrogado       Boolean?
+  nuevaDisposicion String?   @db.VarChar(256)
+  nuevaFechaFin    DateTime? @db.Date
+  proyecto         proyectos @relation("proyectos_pids", fields: [idPid], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model proyectosExternos {

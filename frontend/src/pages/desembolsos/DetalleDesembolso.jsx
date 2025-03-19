@@ -16,11 +16,12 @@ import {
   ModalCloseButton,
   Stack,
   Spinner,
+  Input,
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getDesembolsoById, putDesembolsoById } from '../../utils/api/vinculacionesApi';
-import { formatoFechaISOaDDMMAAAA, convertirFechaDDMMAAAAaDate } from '../../utils/general';
+import { formatoFechaISOaDDMMAAAA, convertirFechaDDMMAAAAaDate, sumarMeses } from '../../utils/general';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -65,11 +66,6 @@ export default function DetalleDesembolso() {
 
   const { data: dataDesembolso, isLoading } = useQuery(['desembolso', idDesembolso], () => getDesembolsoById(idDesembolso));
   // Función para sumar meses a una fecha
-  function sumarMeses(fecha, meses) {
-    const fechaInicio = new Date(fecha); // Convertir la fecha ISO en objeto Date
-    fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
-    return fechaInicio;
-  }
 
   const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
   const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(dataDesembolso?.desembolso?.fechaDesembolso, dataDesembolso?.desembolso?.plazoEtapa));
@@ -278,11 +274,16 @@ export default function DetalleDesembolso() {
                         convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
                           ? dataDesembolso?.desembolso?.estado == 'En ejecución'
                             ? 'En ejecución - Fuera de plazo'
-                            : dataDesembolso?.desembolso?.estado
+                            : dataDesembolso?.desembolso?.estado || '-'
                           : dataDesembolso?.desembolso?.estado || '-'
                       }
                       isDisabled
                       mb='5vh'
+                      textColor={convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
+                        ? dataDesembolso?.desembolso?.estado == 'En ejecución'
+                          ? 'red'
+                          : 'inherit'
+                        : 'inherit'}
                     />
                     {dataDesembolso?.desembolso?.motivoEstado && (
                       <GenericInput

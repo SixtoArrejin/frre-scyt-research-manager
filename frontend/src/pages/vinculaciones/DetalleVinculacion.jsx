@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
-import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
+import { convertirFechaDDMMAAAAaDate, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
 import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
@@ -28,7 +28,7 @@ export default function DetalleVinculacion() {
   const { idVinculacion } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['vinculacion', idVinculacion], () => getVinculacionById(idVinculacion));
+  const { data, isLoading, error } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -38,6 +38,7 @@ export default function DetalleVinculacion() {
     }
   }, [data]);
 
+  //PARA LA PÁGINA DE MODIFICAR SE VA
   const onDeleted = async (idConvenio) => {
     await deleteConvenioById(Number(idConvenio));
     queryClient.invalidateQueries(['vinculacion', idVinculacion]);
@@ -69,12 +70,13 @@ export default function DetalleVinculacion() {
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
                       label='Empresa/Institución'
-                      width={{ base: '100%', md: '65%' }}
+                      width={{ base: '100%', md: '30%' }}
                       value={data?.vinculacion?.empresaInstitucion}
                       isDisabled
                       mb='5vh'
                     />
                     <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} value={data?.vinculacion?.numeroMarco} isDisabled mb='5vh' />
+                    <GenericInput label='Proyecto' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.proyectos?.denominacion} isDisabled mb='5vh' />
                   </Box>
                   {Financiamiento && (
                     <Box width='100%'>
@@ -295,12 +297,20 @@ export default function DetalleVinculacion() {
                   <Tabla
                     columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
                     datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
+
+                      const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
+                      const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(item.fechaDesembolso, item.plazoEtapa));
+
                       return [
                         index + 1,
                         formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
                         item.montoDesembolsado,
-                        item.montoRendido ? item.montoRendido : '-'  ,
-                        item.estado || '-',
+                        item.montoRendido ? item.montoRendido : '-',
+                        convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
+                          ? item.estado == 'En ejecución'
+                            ? 'En ejecución - Fuera de plazo'
+                            : item.estado || '-'
+                          : item.estado || '-',
                         <Link to={`desembolso/${item.idDesembolso}`}>
                           <PlusSquareIcon />
                         </Link>,
@@ -333,12 +343,12 @@ export default function DetalleVinculacion() {
                   />
                   {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
                     data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (
-                    <Link to={`nuevo-desembolso`}>
-                      <Button colorScheme='blue' variant='outline'>
-                        Agregar Desembolso
-                      </Button>
-                    </Link>
-                  )}
+                      <Link to={`nuevo-desembolso`}>
+                        <Button colorScheme='blue' variant='outline'>
+                          Agregar Desembolso
+                        </Button>
+                      </Link>
+                    )}
                 </Box>
                 <br />
               </CardBody>

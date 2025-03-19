@@ -268,6 +268,7 @@ export default function DetalleProyectoPid() {
             </CardBody>
           </Card>
 
+          <br />
           <Card width='100%'>
             <CardBody>
               <Text fontSize='md'>Regionales</Text>

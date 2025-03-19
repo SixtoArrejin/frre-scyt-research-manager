@@ -98,6 +98,19 @@ export async function createProyectoService(proyectoData) {
 
     const { grupos, investigadores, regionales, ...dataProyecto } = proyectoData;
 
+    const directores = investigadores?.filter((inv) => inv.rol === 'Director') || []
+    const codirector = investigadores?.find((inv) => inv.rol === 'CoDirector');
+
+    if (directores.length === 0) {
+      throw new Error('El Director es obligatorio');
+    }
+    if (directores.length > 1) {
+      throw new Error('El Director debe ser único');
+    }
+    const director = directores[0];
+    dataProyecto.idDirector = director.idPersona;
+    dataProyecto.idCodirector = codirector ? codirector.idPersona : null;
+
     const newProyecto = await createProyecto(dataProyecto);
     newProyecto.grupos = [];
     newProyecto.integrantes = [];
@@ -121,7 +134,7 @@ export async function createProyectoService(proyectoData) {
             idProyecto: newProyecto.idProyecto,
             idPersona: investigador.idPersona,
             rol: investigador.rol,
-            fechaInicio: new Date()
+            fechaInicio: convertToISOString(investigador.fechaInicio)
           });
           newProyecto.integrantes.push(newInvestigador);
         }
@@ -213,6 +226,8 @@ export async function updatePidService(idProyecto, data) {
           estado: data.estado,
           disposicion: data.disposicion,
           prorrogado: data.prorrogado,
+          ...(data.prorrogado && { nuevaDisposicion: data.nuevaDisposicion }),
+          ...(data.prorrogado && { nuevaFechaFin: convertToISOString(data.nuevaFechaFin) })
         }
         let filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);

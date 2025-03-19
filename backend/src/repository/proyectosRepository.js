@@ -63,7 +63,9 @@ export async function createProyectoPID(proyectoPIDData) {
       completo: proyectoPIDData.completo,
       estado: proyectoPIDData.estado,
       disposicion: proyectoPIDData.disposicion,
-      prorrogado: proyectoPIDData.prorrogado
+      prorrogado: proyectoPIDData.prorrogado,
+      ...(proyectoPIDData.prorrogado && { nuevaDisposicion: proyectoPIDData.nuevaDisposicion }),
+      ...(proyectoPIDData.prorrogado && { nuevaFechaFin: convertToISOString(proyectoPIDData.nuevaFechaFin) })
     };
 
     const newProyectoPID = await create('pids', proyectoPayload);
@@ -186,7 +188,7 @@ export async function createPersonaParticipaProyecto(idProyecto, dataPersona) {
     idProyecto: parseInt(idProyecto),
     idPersona: parseInt(dataPersona.idInvestigador),
     rol: dataPersona.rol,
-    fechaInicio: new Date(),
+    fechaInicio: convertToISOString(dataPersona.fechaInicio),
   }
   console.log(participaData)
   try {
