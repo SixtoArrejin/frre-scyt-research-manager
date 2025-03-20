@@ -22,6 +22,7 @@ import GenericInput from "../../components/formControls/GenericInput.jsx";
 import GenericSelect from "../../components/formControls/GenericSelect.jsx";
 import GenericRadio from "../../components/formControls/GenericRadio.jsx";
 import Tabla from "../../components/Tabla.jsx";
+import { formatoFechaISOaDDMMAAAA } from "../../utils/general.jsx";
 
 const tipoActividad = [
   "Desarrollo Experimental",
@@ -78,7 +79,7 @@ export default function NuevoPid() {
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
-    error: errorTiposProyectos,
+    //error: errorTiposProyectos,
   } = useQuery(["tiposProyectos"], () => getAllTiposProyectos());
 
   const grupos = data?.grupos;
@@ -120,7 +121,7 @@ export default function NuevoPid() {
     watch,
     register,
     handleSubmit,
-    setValue,
+    //setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -153,20 +154,20 @@ export default function NuevoPid() {
   });
 
   const {
-    fields: fieldsGrupos,
+    //fields: fieldsGrupos,
     append: appendG,
     remove: removeG,
-    update: updateG,
+    //update: updateG,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: "grupos", // Nombre del campo de formulario que es un arreglo
   });
 
   const {
-    fields: fieldsRegionales,
+    //fields: fieldsRegionales,
     append: appendR,
     remove: removeR,
-    update: updateR,
+    //update: updateR,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: "regionales", // Nombre del campo de formulario que es un arreglo
@@ -193,6 +194,8 @@ export default function NuevoPid() {
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
   const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
+  const [rolSelected, setRolSelected] = useState();
+  const [fechaSelected, setFechaSelected] = useState();
 
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
@@ -215,7 +218,9 @@ export default function NuevoPid() {
 
     const objetoAgregar = {
       idPersona: objetoBuscado.idPersona,
-      rol: "",
+      rol: rolSelected,
+      persona: objetoBuscado,
+      fechaInicio: fechaSelected,
     };
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
@@ -325,7 +330,6 @@ export default function NuevoPid() {
   };
 
   const onSubmit = (values) => {
-    console.log(values)
     // Convierte el valor de 'prorroga' a booleano antes de enviar
     const modifiedValues = {
       ...values,
@@ -336,7 +340,6 @@ export default function NuevoPid() {
   };
 
   const PidExterno = useWatch({ control, name: "tipo" });
-  const Prorrogado = useWatch({ control, name: "prorrogado" });
   const [estado, setEstado] = useState("");
 
   return (
@@ -595,50 +598,52 @@ export default function NuevoPid() {
                               { value: "false", label: "No" },
                             ]}
                             register={register}
-                            defaultValue={Prorrogado}
+                            defaultValue={watch("prorrogado")}
                             errors={errors}
                           />
                         </Box>
                       )}
-                      {PidExterno === "pid" && Prorrogado === "true" && (
-                        <Box
-                          display="flex"
-                          flexDirection={{ base: "column", md: "row" }}
-                          width="100%"
-                          alignItems="center"
-                          justifyContent="space-between"
-                        >
-                          <GenericInput
-                            name="nuevaFechaFin"
-                            type="date"
-                            register={register}
-                            label="Nueva Fecha Finalización"
-                            width={{
-                              base: "100%",
-                              md: estado === "HOMOLOGADO" ? "46.25%" : "100%",
-                            }}
-                            mb="5vh"
-                            isRequired={
-                              PidExterno === "pid" && Prorrogado === "true"
-                            }
-                          />
-                          {estado === "HOMOLOGADO" && (
+                      {PidExterno === "pid" &&
+                        watch("prorrogado") === "true" && (
+                          <Box
+                            display="flex"
+                            flexDirection={{ base: "column", md: "row" }}
+                            width="100%"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
                             <GenericInput
-                              name="nuevaDisposicion"
-                              placeholder="Nueva Disposición"
+                              name="nuevaFechaFin"
+                              type="date"
                               register={register}
-                              label="Nueva Disposición"
-                              width={{ base: "100%", md: "46.25%" }}
+                              label="Nueva Fecha Finalización"
+                              width={{
+                                base: "100%",
+                                md: estado === "HOMOLOGADO" ? "46.25%" : "100%",
+                              }}
                               mb="5vh"
                               isRequired={
-                                estado === "HOMOLOGADO" &&
                                 PidExterno === "pid" &&
-                                Prorrogado === "true"
+                                watch("prorrogado") === "true"
                               }
                             />
-                          )}
-                        </Box>
-                      )}
+                            {estado === "HOMOLOGADO" && (
+                              <GenericInput
+                                name="nuevaDisposicion"
+                                placeholder="Nueva Disposición"
+                                register={register}
+                                label="Nueva Disposición"
+                                width={{ base: "100%", md: "46.25%" }}
+                                mb="5vh"
+                                isRequired={
+                                  estado === "HOMOLOGADO" &&
+                                  PidExterno === "pid" &&
+                                  watch("prorrogado") === "true"
+                                }
+                              />
+                            )}
+                          </Box>
+                        )}
                     </Box>
                   </Box>
                 </Box>
@@ -732,7 +737,7 @@ export default function NuevoPid() {
                     <Box
                       display="flex"
                       justifyContent="space-between"
-                      width="45%"
+                      width="75%"
                       marginLeft="2%"
                     >
                       <GenericSelect
@@ -746,9 +751,30 @@ export default function NuevoPid() {
                         onChange={(e) => {
                           setSelectedOptions(e.target.value);
                         }}
+                        width="30%"
+                      />
+                      <GenericSelect
+                        placeholder="Rol..."
+                        options={roles.map((rol) => ({
+                          value: rol,
+                          label: rol,
+                        }))}
+                        onChange={(e) => {
+                          setRolSelected(e.target.value);
+                        }}
+                        width="30%"
+                      />
+                      <GenericInput
+                        name="fechaInicio"
+                        label="Fecha ingreso"
+                        placeholder="Fecha de ingreso"
+                        type="date"
+                        width="30%"
+                        onChange={(e) => setFechaSelected(e.target.value)}
+                        value={fechaSelected}
                       />
                     </Box>
-                    <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Box display="flex" justifyContent="flex-end" width="25%">
                       <Button
                         colorScheme="blue"
                         variant="outline"
@@ -762,32 +788,20 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={["Apellido y Nombre", "Grupo", "Rol", "Eliminar"]}
-                    datos={investigadoresSeleccionados?.map((item, index) => [
-                      <div
-                        {...register(`investigadores[${index}].idPersona`, {
-                          value: item.idPersona,
-                        })}
-                      >
-                        {item.apellido + ", " + item.nombre}
+                    columnas={[
+                      "Apellido y Nombre",
+                      "Grupo",
+                      "Rol",
+                      "Fecha de Inicio",
+                      "Eliminar",
+                    ]}
+                    datos={fields?.map((item, index) => [
+                      <div>
+                        {item.persona.apellido} {item.persona.nombre}
                       </div>,
-                      item.gruposinvestigacion.siglas,
-                      <GenericSelect
-                        placeholder="Rol..."
-                        options={roles.map((rol) => ({
-                          value: rol,
-                          label: rol,
-                        }))}
-                        onChange={(e) => {
-                          update(index, { rol: e.target.value });
-                          if (e.target.value === "CoDirector") {
-                            setValue("idCodirector", Number(item.idPersona));
-                          }
-                          if (e.target.value === "Director") {
-                            setValue("idDirector", Number(item.idPersona));
-                          }
-                        }}
-                      />,
+                      <div>{item.persona.gruposinvestigacion.siglas}</div>,
+                      <div>{item.rol}</div>,
+                      <div>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
                       <DeleteIcon
                         cursor={"pointer"}
                         onClick={() => {
@@ -897,6 +911,7 @@ export default function NuevoPid() {
               guardar={true}
               title="Guardar nuevo PID"
               content="Se guardara el nuevo Proyecto"
+              //onSave={handleSubmit((values) => console.log(values))}
               onSave={handleSubmit((values) => onSubmit(values))}
             />
           </Box>
