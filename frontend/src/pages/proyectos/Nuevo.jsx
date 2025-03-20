@@ -136,6 +136,8 @@ export default function NuevoPid() {
       idCodirector: undefined,
       tipoProyecto: "",
       prorrogado: "false",
+      nuevaFechaFin: "",
+      nuevaDisposicion: "",
       codPid: "",
       programa: "",
       disposicion: "",
@@ -323,6 +325,7 @@ export default function NuevoPid() {
   };
 
   const onSubmit = (values) => {
+    console.log(values)
     // Convierte el valor de 'prorroga' a booleano antes de enviar
     const modifiedValues = {
       ...values,
@@ -573,7 +576,7 @@ export default function NuevoPid() {
                       )}
                       {PidExterno === "pid" && (
                         <Box
-                          width={{ base: "100%", md: "47.5%" }}
+                          width={{ base: "100%", md: "52.5%" }}
                           display="flex"
                           justifyContent="flex-start"
                           alignItems="flex-start"
@@ -606,23 +609,34 @@ export default function NuevoPid() {
                           justifyContent="space-between"
                         >
                           <GenericInput
-                            name="nuevaFechaFinalizacion"
+                            name="nuevaFechaFin"
                             type="date"
                             register={register}
                             label="Nueva Fecha Finalización"
-                            width={{ base: "100%", md: "47.5%" }}
+                            width={{
+                              base: "100%",
+                              md: estado === "HOMOLOGADO" ? "46.25%" : "100%",
+                            }}
                             mb="5vh"
+                            isRequired={
+                              PidExterno === "pid" && Prorrogado === "true"
+                            }
                           />
-
-                          <GenericInput
-                            name="nuevaDisposicion"
-                            placeholder="Nueva Disposición"
-                            register={register}
-                            label="Nueva Disposición"
-                            width={{ base: "100%", md: "47.5%" }}
-                            mb="5vh"
-                            isRequired={estado === "HOMOLOGADO"}
-                          />
+                          {estado === "HOMOLOGADO" && (
+                            <GenericInput
+                              name="nuevaDisposicion"
+                              placeholder="Nueva Disposición"
+                              register={register}
+                              label="Nueva Disposición"
+                              width={{ base: "100%", md: "46.25%" }}
+                              mb="5vh"
+                              isRequired={
+                                estado === "HOMOLOGADO" &&
+                                PidExterno === "pid" &&
+                                Prorrogado === "true"
+                              }
+                            />
+                          )}
                         </Box>
                       )}
                     </Box>
