@@ -132,9 +132,8 @@ export async function createProyectoService(proyectoData) {
         for (const investigador of investigadores || []) {
           const newInvestigador = await createParticipaService({
             idProyecto: newProyecto.idProyecto,
-            idPersona: investigador.idPersona,
             rol: investigador.rol,
-            fechaInicio: convertToISOString(investigador.fechaInicio)
+            fechaInicio: convertToISOString(investigador.fechaInicio) //ACA ESTA EL ERROR SIXTO
           });
           newProyecto.integrantes.push(newInvestigador);
         }
@@ -161,6 +160,7 @@ export async function createProyectoService(proyectoData) {
 
 export async function createPidService(proyectoPidData) {
   try {
+    console.log(proyectoPidData)
     const newProyectoPID = await createProyectoPID(proyectoPidData);
     return newProyectoPID;
   } catch (error) {
