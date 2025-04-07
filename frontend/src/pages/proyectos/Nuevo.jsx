@@ -23,6 +23,55 @@ import GenericSelect from "../../components/formControls/GenericSelect.jsx";
 import GenericRadio from "../../components/formControls/GenericRadio.jsx";
 import Tabla from "../../components/Tabla.jsx";
 import { formatoFechaISOaDDMMAAAA } from "../../utils/general.jsx";
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object({
+  codPid: yup.mixed().when("tipo", {
+    is: val => val === "pid",
+    then: () => yup.string().required("El código PID es requerido"),
+    otherwise: () => yup.string().nullable(),
+  }),
+  denominacion: yup.string().required('La denominación es requerida'),
+  convocatoria: yup
+    .number()
+    .required("La convocatoria es requerida")
+    .typeError("Ingrese un número válido")
+    .test("is-valid-number", "Ingrese un número válido", (value) => {
+      return typeof value === "number" && !isNaN(value);
+    }),
+  programa: yup.string().required('El programa es requerido'),
+  tipoProyecto: yup.string().required('El tipo de proyecto es requerido'),
+  tipoActividad: yup.mixed().when("tipo", {
+    is: val => val === "pid",
+    then: () => yup.string().required("El tipo de actividad es requerido"),
+    otherwise: () => yup.string().nullable(),
+  }),
+  estado: yup.mixed().when("tipo", {
+    is: val => val === "pid",
+    then: () => yup.string().required("El estado es requerido"),
+    otherwise: () => yup.string().nullable(),
+  }),
+  disposicion: yup.mixed().when(["tipo", "estado"], {
+    is: (tipo, estado) =>
+      tipo === "pid" && estado === "HOMOLOGADO",
+    then: () => yup.string().required("La disposición es requerida").matches(/^\d+\/\d+$/, "El formato de la disposición debe ser '###/###'"),
+    otherwise: () => yup.string().nullable(),
+  }),
+  nuevaFechaFin: yup.mixed().when(["tipo", "prorrogado"], {
+    is: (tipo, prorrogado) =>
+      tipo === "pid" && prorrogado === "true",
+    then: () => yup.string().required("La nueva fecha de finalización es requerida"),
+    otherwise: () => yup.string().nullable(),
+  }),
+  nuevaDisposicion: yup.mixed().when(["tipo", "prorrogado"], {
+    is: (tipo, prorrogado) =>
+      tipo === "pid" && prorrogado === "true",
+    then: () => yup.string().required("La nueva disposición es requerida").matches(/^\d+\/\d+$/, "El formato de la disposición debe ser '###/###'"),
+    otherwise: () => yup.string().nullable(),
+  }),
+});
+
 
 const tipoActividad = [
   "Desarrollo Experimental",
@@ -126,26 +175,27 @@ export default function NuevoPid() {
   } = useForm({
     defaultValues: {
       tipoActividad: "",
-      fechaInicio: "",
-      fechaFin: "",
+      fechaInicio: undefined,
+      fechaFin: undefined,
       denominacion: "",
       completo: false,
       regional: "Facultad Regional Resistencia",
-      convocatoria: "",
-      estado: "",
+      convocatoria: undefined,
+      estado: undefined,
       idDirector: undefined,
       idCodirector: undefined,
       tipoProyecto: "",
       prorrogado: "false",
-      nuevaFechaFin: "",
-      nuevaDisposicion: "",
+      nuevaFechaFin: undefined,
+      nuevaDisposicion: undefined,
       codPid: "",
       programa: "",
-      disposicion: "",
+      disposicion: undefined,
       tipo: "pid",
       empresaInstitucion: "",
       regionales: [],
     },
+    resolver: yupResolver(schema)
   });
 
   const { fields, append, remove, update } = useFieldArray({
@@ -347,7 +397,7 @@ export default function NuevoPid() {
       <CardBody>
         <form
           style={{ width: "100%" }}
-          // onSubmit={handleSubmit((values) => onSub(values))}
+        // onSubmit={handleSubmit((values) => onSub(values))}
         >
           <Box
             display="flex"
@@ -409,6 +459,7 @@ export default function NuevoPid() {
                           name="codPid"
                           placeholder="Código PID"
                           register={register}
+                          errors={errors}
                           label="Código PID"
                           width={{ base: "100%", md: "80%" }}
                           mb="5vh"
@@ -428,6 +479,7 @@ export default function NuevoPid() {
                         name="denominacion"
                         placeholder="Denominación"
                         register={register}
+                        errors={errors}
                         label="Denominación"
                         width={{ base: "100%", md: "100%" }}
                         mb="5vh"
@@ -464,6 +516,7 @@ export default function NuevoPid() {
                         name="convocatoria"
                         placeholder="Convocatoria"
                         register={register}
+                        errors={errors}
                         label="Convocatoria"
                         width={{ base: "100%", md: "30%" }}
                         mb="5vh"
@@ -481,6 +534,7 @@ export default function NuevoPid() {
                         name="programa"
                         placeholder="Programa"
                         register={register}
+                        errors={errors}
                         label="Programa"
                         width={{ base: "100%", md: "47.5%" }}
                         mb="5vh"
@@ -503,6 +557,7 @@ export default function NuevoPid() {
                         }))}
                         errors={errors}
                         onChange={handleTipoProyectoChange}
+                        isRequired
                       />
                     </Box>
                     {PidExterno === "pid" && (
@@ -556,6 +611,7 @@ export default function NuevoPid() {
                             width={{ base: "100%", md: "30%" }}
                             mb="5vh"
                             isRequired={estado === "HOMOLOGADO"}
+                            errors={errors}
                           />
                         )}
                       </Box>
@@ -616,6 +672,7 @@ export default function NuevoPid() {
                               name="nuevaFechaFin"
                               type="date"
                               register={register}
+                              errors={errors}
                               label="Nueva Fecha Finalización"
                               width={{
                                 base: "100%",
@@ -632,6 +689,7 @@ export default function NuevoPid() {
                                 name="nuevaDisposicion"
                                 placeholder="Nueva Disposición"
                                 register={register}
+                                errors={errors}
                                 label="Nueva Disposición"
                                 width={{ base: "100%", md: "46.25%" }}
                                 mb="5vh"

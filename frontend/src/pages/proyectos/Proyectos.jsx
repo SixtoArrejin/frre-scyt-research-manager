@@ -8,6 +8,7 @@ import {
   Button,
   Spinner,
   Tooltip,
+  Badge,
 } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
@@ -41,19 +42,19 @@ export default function ProyectosPid() {
         filteredProyectos = filteredProyectos.filter((item) => {
           const matchesCodPID = codPID
             ? item.codPid &&
-              item.codPid.toLowerCase().includes(codPID.toLowerCase())
+            item.codPid.toLowerCase().includes(codPID.toLowerCase())
             : true;
           const matchesDenominacion = denominacion
             ? item.denominacion
-                .toLowerCase()
-                .includes(denominacion.toLowerCase())
+              .toLowerCase()
+              .includes(denominacion.toLowerCase())
             : true;
           const matchesPIDExterno =
             pidExterno === "pid"
               ? item.codPid
               : pidExterno === "externos"
-              ? !item.codPid
-              : true;
+                ? !item.codPid
+                : true;
           return matchesCodPID && matchesDenominacion && matchesPIDExterno;
         });
         setFiltro(true);
@@ -154,7 +155,7 @@ export default function ProyectosPid() {
           {proyectos?.length > 0 ? (
             <Tabla
               columnas={[
-                "Externo",
+                "Tipo",
                 "Cod. PID",
                 "Fecha Inicio",
                 "Denominación",
@@ -170,21 +171,25 @@ export default function ProyectosPid() {
                   <Tooltip
                     openDelay={100}
                     hasArrow
-                    label="Proyecto externo"
-                    bg="red.500"
+                    label="Proyecto PID"
+                    bg="green.500"
                     color="white"
                   >
-                    <CloseIcon color="red.500" />
+                    <Badge colorScheme="green" fontSize="md" px={2} py={1} borderRadius="md">
+                      PID
+                    </Badge>
                   </Tooltip>
                 ) : (
                   <Tooltip
                     openDelay={100}
                     hasArrow
-                    label="Proyecto PID"
-                    bg="green.500"
+                    label="Proyecto Externo"
+                    bg="blue.500"
                     color="white"
                   >
-                    <CheckIcon color="green.500" />
+                    <Badge colorScheme="purple" fontSize="md" px={2} py={1} borderRadius="md">
+                      EXTERNO
+                    </Badge>
                   </Tooltip>
                 );
                 const fechaInicio = item?.fechaInicio
@@ -197,7 +202,7 @@ export default function ProyectosPid() {
                   denominacion,
                   item?.estado
                     ? item?.estado.charAt(0).toUpperCase() +
-                      item?.estado.toLowerCase().substring(1)
+                    item?.estado.toLowerCase().substring(1)
                     : "-",
                   <Link to={`/proyectos/${item.idProyecto}`}>
                     <PlusSquareIcon />
