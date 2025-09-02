@@ -393,7 +393,7 @@ export default function DetalleDesembolso() {
                     </Box>
                     <Box display='flex' width='25%' justifyContent='space-between'>
                       <Button
-                        colorScheme='blue'
+                        colorScheme='gray'
                         variant='outline'
                         onClick={() => {
                           navigate(-1);

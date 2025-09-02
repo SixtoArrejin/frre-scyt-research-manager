@@ -110,7 +110,7 @@ export default function DetalleVinculacion() {
                         justifyContent='space-between'
                       >
                         <GenericInput
-                          label='Monto'
+                          label='Monto ($)'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
                           isDisabled
@@ -163,7 +163,7 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Línea'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea || "-"}
                           isDisabled
                           mb='5vh'
                         />
@@ -185,7 +185,7 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Motivo desistido'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado || "-"}
                           isDisabled
                           mb='5vh'
                         />
