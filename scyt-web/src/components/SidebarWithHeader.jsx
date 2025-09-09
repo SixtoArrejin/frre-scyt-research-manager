@@ -145,6 +145,32 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
 
 const MobileNav = ({ onOpen, ...rest }) => {
   const { logout, currentUser } = useContext(UserContext);
+  
+  // Función para obtener las iniciales del usuario
+  const getInitials = (user) => {
+    if (!user) return '';
+    
+    if (typeof user === 'string') {
+      return user.charAt(0).toUpperCase();
+    }
+    
+    if (typeof user === 'object') {
+      const nombre = user.nombre || '';
+      const apellido = user.apellido || '';
+      const usuario = user.usuario || '';
+      
+      if (nombre && apellido) {
+        return (nombre.charAt(0) + apellido.charAt(0)).toUpperCase();
+      } else if (nombre) {
+        return nombre.charAt(0).toUpperCase();
+      } else if (usuario) {
+        return usuario.charAt(0).toUpperCase();
+      }
+    }
+    
+    return '';
+  };
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -177,8 +203,11 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 <Avatar
                   size={"sm"}
                   src={
-                    "https://www.pngplay.com/wp-content/uploads/12/User-Avatar-Profile-PNG-Pic-Clip-Art-Background.png"
+                    currentUser?.avatar || ""
                   }
+                  name={getInitials(currentUser)}
+                  bg={(!currentUser?.avatar) ? "blue.500" : undefined}
+                  color={(!currentUser?.avatar) ? "white" : undefined}
                 />
                 <VStack
                   display={{ base: "none", md: "flex" }}
