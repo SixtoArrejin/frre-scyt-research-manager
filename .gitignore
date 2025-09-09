@@ -29,9 +29,6 @@ out/
 scyt-web/build/
 scyt-web/dist/
 scyt-web/.vite/
-vite-base-js+swc/build/
-vite-base-js+swc/dist/
-vite-base-js+swc/.vite/
 
 # Logs
 logs

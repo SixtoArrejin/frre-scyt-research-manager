@@ -1,15 +1,14 @@
-# Beca-Secretaria-CyT
+# FRRE SCyT Research Manager
 
-Aplicación web para la Secretaría de Ciencia y Tecnología (SCyT) de la UTN Facultad Regional de Resistencia. Trabajo realizado como parte de la Beca Manuel Belgrano 2023.
+Sistema de gestión de investigadores y proyectos para la Secretaría de Ciencia y Tecnología (SCyT) de la UTN Facultad Regional de Resistencia. Desarrollado como parte de la Beca Manuel Belgrano 2023.
 
 ## Estructura del proyecto
 
 ```
-📁 Beca-Secretaria-CyT/
+📁 frre-scyt-research-manager/
 ├── 📁 scyt-api/           # Backend (Node.js + Express + Prisma)
 ├── 📁 scyt-web/           # Frontend (React + Vite)
-├── 📁 database/           # Scripts SQL para la base de datos
-└── 📁 vite-base-js+swc/   # Proyecto base de referencia para Vite
+└── 📁 database/           # Scripts SQL para la base de datos
 ```
 
 ## Levantar la app en entorno local
@@ -19,7 +18,7 @@ NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen v
 1. Clonar el repositorio:
 
 ```
-git clone https://github.com/SixtoArrejin/Beca-Secretaria-CyT
+git clone https://github.com/SixtoArrejin/frre-scyt-research-manager
 ```
 
 ### Crear la base de datos sql
