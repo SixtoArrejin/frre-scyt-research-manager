@@ -1,0 +1,42 @@
+[
+    {
+      "fechaInicio": "99/99/9999",
+      "fechaFin": "99/99/9999",
+      "denominacion": "XXXX",
+      "tipo": "YYYY",
+      "regional": "XXXX",
+      "estado": "YYYY",
+      "fecInicioActividad": "99/99/9999",
+      "rol": "XXXX"
+    },
+    {
+      "fechaInicio": "99/99/9999",
+      "fechaFin": "99/99/9999",
+      "denominacion": "XXXX",
+      "tipo": "YYYY",
+      "regional": "XXXX",
+      "estado": "YYYY",
+      "fecInicioActividad": "99/99/9999",
+      "rol": "XXXX"
+    },
+    {
+      "fechaInicio": "99/99/9999",
+      "fechaFin": "99/99/9999",
+      "denominacion": "XXXX",
+      "tipo": "YYYY",
+      "regional": "XXXX",
+      "estado": "YYYY",
+      "fecInicioActividad": "99/99/9999",
+      "rol": "XXXX"
+    },
+    {
+      "fechaInicio": "99/99/9999",
+      "fechaFin": "99/99/9999",
+      "denominacion": "XXXX",
+      "tipo": "YYYY",
+      "regional": "XXXX",
+      "estado": "YYYY",
+      "fecInicioActividad": "99/99/9999",
+      "rol": "XXXX"
+    }
+  ]

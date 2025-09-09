@@ -1,0 +1,161 @@
+import {
+  BrowserRouter as Router,
+  HashRouter,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import SidebarWithHeader from "./components/SidebarWithHeader";
+import DetalleInvestigador from "./pages/investigadores/DetalleInvestigador";
+import ListaInvestigadores from "./pages/investigadores/ListaInvestigadores";
+import NuevaCategoria from "./pages/investigadores/NuevaCategoria";
+import NuevoInvestigador from "./pages/investigadores/NuevoInvestigador";
+import ListaGrupos from "./pages/grupos/ListaGrupos";
+import DetalleGrupo from "./pages/grupos/DetalleGrupo";
+import ModificarInvestigador from "./pages/investigadores/ModificarInvestigador";
+import ModificarGrupo from "./pages/grupos/ModificarGrupo";
+import NuevoGrupo from "./pages/grupos/NuevoGrupo";
+import AgregarInvestigador from "./pages/proyectos/AgregarInvestigador";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import LogIn from "./pages/LogIn";
+import { useContext } from "react";
+import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
+import { ChakraToastProvider } from "./context/ChakraToastContext";
+import Proyectos from "./pages/proyectos/Proyectos";
+import DetalleProyecto from "./pages/proyectos/DetalleProyecto";
+import Nuevo from "./pages/proyectos/Nuevo";
+import Modificar from "./pages/proyectos/Modificar";
+import AgregarGrupo from "./pages/proyectos/AgregarGrupo";
+import DetalleVinculacion from "./pages/vinculaciones/DetalleVinculacion";
+import NuevaVinculacion from "./pages/vinculaciones/Nueva";
+import NuevoDesembolso from "./pages/desembolsos/Nuevo";
+import ListaVinculaciones from "./pages/vinculaciones/ListaVinculaciones";
+import DetalleDesembolso from "./pages/desembolsos/DetalleDesembolso";
+import Home from "./pages/Home";
+import AgregarInvestigador2 from "./pages/proyectos/AgregarInvestigador2";
+import AgregarRegional from "./pages/proyectos/AgregarRegional";
+import ModificarDesembolso from "./pages/desembolsos/ModificarDesembolso";
+import ModificarVinculacion from "./pages/vinculaciones/ModificarVinculacion";
+
+const queryClient = new QueryClient();
+
+const routes = [
+  // { path: "/", element: <Navigate to="/home" /> },
+  { path: "/investigadores", element: <ListaInvestigadores /> },
+  { path: "/investigadores/nuevo", element: <NuevoInvestigador /> },
+  { path: "/investigadores/:idPersona", element: <DetalleInvestigador /> },
+  {
+    path: "/investigadores/:idPersona/modificar",
+    element: <ModificarInvestigador />,
+  },
+  {
+    path: "/investigadores/:idPersona/nueva-categoria",
+    element: <NuevaCategoria />,
+  },
+  { path: "/grupos-investigacion", element: <ListaGrupos /> },
+  { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo /> },
+  {
+    path: "/grupos-investigacion/:idGrupoInvestigacion",
+    element: <DetalleGrupo />,
+  },
+  {
+    path: "/grupos-investigacion/:idGrupoInvestigacion/modificar",
+    element: <ModificarGrupo />,
+  },
+  { path: "/proyectos", element: <Proyectos /> },
+  {
+    path: "/proyectos/:idPid/vinculacion/:idVinculacion",
+    element: <DetalleVinculacion />,
+  },
+  {
+    path: "/proyectos/:idPid/vinculacion/:idVinculacion/modificar",
+    element: <ModificarVinculacion />,
+  },
+  {
+    path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso",
+    element: <DetalleDesembolso />,
+  },
+  {
+    path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso",
+    element: <NuevoDesembolso />,
+  },
+  { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
+  { path: "/proyectos/nuevo", element: <Nuevo /> },
+  { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
+  {
+    path: "/proyectos/:idPid/agregar-investigador-old",
+    element: <AgregarInvestigador />,
+  },
+  {
+    path: "/proyectos/:idPid/agregar-investigador",
+    element: <AgregarInvestigador2 />,
+  },
+  { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo /> },
+  { path: "/proyectos/:idPid/agregar-regional", element: <AgregarRegional /> },
+  {
+    path: "/proyectos/:idPid/nueva-vinculacion",
+    element: <NuevaVinculacion />,
+  },
+  { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
+  {
+    path: "/vinculaciones/:idVinculacion/nuevo-desembolso",
+    element: <NuevoDesembolso />,
+  },
+  { path: "/vinculaciones", element: <ListaVinculaciones /> },
+  { path: "/vinculaciones/nuevo", element: <NuevaVinculacion /> },
+  { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion /> },
+  {
+    path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso",
+    element: <DetalleDesembolso />,
+  },
+  {
+    path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso/modificar",
+    element: <ModificarDesembolso />,
+  },
+  {
+    path: "/vinculaciones/:idVinculacion/modificar",
+    element: <ModificarVinculacion />,
+  },
+  {
+    path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar",
+    element: <ModificarDesembolso />,
+  },
+  { path: "/", element: <Home /> },
+];
+
+function App() {
+  const { isLoggedIn } = useContext(UserContext); // Reemplaza "UserContext" con el nombre de tu contexto de usuario
+
+  return (
+    <ChakraToastProvider>
+      <QueryClientProvider client={queryClient}>
+        {/* <Router> */}
+        <HashRouter>
+          {isLoggedIn ? (
+            <SidebarWithHeader>
+              <Routes>
+                {routes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={route.element}
+                  />
+                ))}
+              </Routes>
+            </SidebarWithHeader>
+          ) : (
+            <Routes>
+              <Route path="/login" element={<LogIn />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          )}
+        </HashRouter>
+        {/* </Router> */}
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </QueryClientProvider>
+    </ChakraToastProvider>
+  );
+}
+
+export default App;
