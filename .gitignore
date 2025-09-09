@@ -26,12 +26,9 @@ out/
 .parcel-cache/
 
 # Frontend specific (React/Vite)
-frontend/build/
-frontend/dist/
-frontend/.vite/
-frontend-vite/build/
-frontend-vite/dist/
-frontend-vite/.vite/
+scyt-web/build/
+scyt-web/dist/
+scyt-web/.vite/
 vite-base-js+swc/build/
 vite-base-js+swc/dist/
 vite-base-js+swc/.vite/
@@ -92,10 +89,10 @@ database/*.sqlite
 database/*.sqlite3
 
 # Prisma
-backend/prisma/dev.db
-backend/prisma/test.db
-backend/prisma/*.db
-backend/prisma/*.sqlite
+scyt-api/prisma/dev.db
+scyt-api/prisma/test.db
+scyt-api/prisma/*.db
+scyt-api/prisma/*.sqlite
 
 # Operating System
 .DS_Store
