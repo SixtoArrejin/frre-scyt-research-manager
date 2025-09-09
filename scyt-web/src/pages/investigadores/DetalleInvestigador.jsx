@@ -102,7 +102,7 @@ export default function DetalleInvestigador() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <Heading as='h2' size='xl' textAlign='center'>
-            DETALLES INVESTIGADOR
+            Detalles del Investigador
           </Heading>
 
           <br />
