@@ -13,8 +13,6 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
-  FlexProps,
   Menu,
   MenuButton,
   MenuDivider,
@@ -205,7 +203,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               {/*<MenuItem>Profile</MenuItem>*/}
               <MenuItem>Configuración</MenuItem>
               {/*<MenuItem>Billing</MenuItem>*/}
-              <MenuDivider /> 
+              <MenuDivider />
               <Link onClick={logout} to={'/login'}><MenuItem>Salir</MenuItem></Link>
             </MenuList>
           </Menu>

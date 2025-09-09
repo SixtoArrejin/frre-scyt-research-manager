@@ -1,15 +1,24 @@
-# Beca-Secretaria-CyT
+# FRRE SCyT Research Manager
 
-Aplicación web para la Secretaria de Ciencia y Tecnología de la UTN Facultad Regional de Resistencia. Trabajo realizado como parte de la Beca Manuel Belgrano 2023.
+Sistema de gestión de investigadores y proyectos para la Secretaría de Ciencia y Tecnología (SCyT) de la UTN Facultad Regional de Resistencia. Desarrollado como parte de la Beca Manuel Belgrano 2023.
+
+## Estructura del proyecto
+
+```
+📁 frre-scyt-research-manager/
+├── 📁 scyt-api/           # Backend (Node.js + Express + Prisma)
+├── 📁 scyt-web/           # Frontend (React + Vite)
+└── 📁 database/           # Scripts SQL para la base de datos
+```
 
 ## Levantar la app en entorno local
 
 NOTA: Tener en cuenta que las variables de entorno que se muestran acá tienen valores placeholders o defaults.
 
-1. Clonar el repositorio: 
+1. Clonar el repositorio:
 
 ```
-git clone https://github.com/SixtoArrejin/Beca-Secretaria-CyT
+git clone https://github.com/SixtoArrejin/frre-scyt-research-manager
 ```
 
 ### Crear la base de datos sql
@@ -20,16 +29,18 @@ La aplicación se debe conectar a una base de datos MySQL. Conviene además tene
 
 ### Iniciar el back end
 
-3. Crear en la carpeta `backend/` un archivo `.env` con las siguientes variables de entorno:
+3. Crear en la carpeta `scyt-api/` un archivo `.env` con las siguientes variables de entorno:
 
 ```shell
 DATABASE_URL="mysql://user:password@localhost:3306/database_name?schema=public"
 ```
 
+### Iniciar el backend (scyt-api)
+
 4. Obtener las dependencias:
 
 ```
-cd backend
+cd scyt-api
 npm install
 npx prisma generate
 ```
@@ -40,19 +51,19 @@ npx prisma generate
 npm start
 ```
 
-### Iniciar el front end
+### Iniciar el frontend (scyt-web)
 
 6. Obtener las dependencias:
 
 ```javascript
-cd frontend
+cd scyt-web
 npm install
 ```
 
 7. Levantar el servidor:
 
 ```
-npm start
+npm run dev
 ```
 
 ### Crear usuario
@@ -65,7 +76,7 @@ Para acceder al sistema es necesario que se cree un usuario y contraseña. No se
 http://localhost:8000/api/usuarios
 ```
 
-Y en el body se debe incluir el usuario y contraseña en este formato: 
+Y en el body se debe incluir el usuario y contraseña en este formato:
 
 ```javascript
 {
