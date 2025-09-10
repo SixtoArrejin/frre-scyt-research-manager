@@ -127,8 +127,12 @@ model regionalesProyectos {
 }
 
 model usuarios {
-  usuario    String  @id @db.VarChar(20)
-  contrasena String? @db.VarChar(255)
+  usuario    String   @id @db.VarChar(20)
+  contrasena String?  @db.VarChar(255)
+  rol        String   @default("viewer") @db.VarChar(20)
+  activo     Boolean  @default(true)
+  creadoEn   DateTime @default(now())
+  creadoPor  String?  @db.VarChar(20)
 }
 
 model regionales {
