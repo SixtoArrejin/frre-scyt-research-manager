@@ -145,30 +145,31 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
 
 const MobileNav = ({ onOpen, ...rest }) => {
   const { logout, currentUser } = useContext(UserContext);
-  
+
   // Función para obtener las iniciales del usuario
   const getInitials = (user) => {
-    if (!user) return '';
-    
+    if (!user) return 'U';
+
     if (typeof user === 'string') {
       return user.charAt(0).toUpperCase();
     }
-    
+
     if (typeof user === 'object') {
+      // Primero intentamos con nombre y apellido
       const nombre = user.nombre || '';
       const apellido = user.apellido || '';
-      const usuario = user.usuario || '';
-      
+
       if (nombre && apellido) {
         return (nombre.charAt(0) + apellido.charAt(0)).toUpperCase();
       } else if (nombre) {
         return nombre.charAt(0).toUpperCase();
-      } else if (usuario) {
-        return usuario.charAt(0).toUpperCase();
+      } else if (user.usuario && typeof user.usuario === 'string') {
+        // Si no hay nombre, usamos el usuario (verificamos que sea string)
+        return user.usuario.charAt(0).toUpperCase();
       }
     }
-    
-    return '';
+
+    return 'U'; // Fallback
   };
 
   return (
@@ -215,9 +216,19 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">{currentUser}</Text>
+                  <Text fontSize="sm">
+                    {typeof currentUser === 'string' 
+                      ? currentUser 
+                      : (currentUser && typeof currentUser.usuario === 'string') 
+                        ? currentUser.usuario 
+                        : 'Usuario'
+                    }
+                  </Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    {(currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string') 
+                      ? currentUser.rol.toUpperCase() 
+                      : 'Admin'
+                    }
                   </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
@@ -230,7 +241,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
               {/*<MenuItem>Profile</MenuItem>*/}
-              <Link to={'/perfil'}> 
+              <Link to={'/perfil'}>
                 <MenuItem>Perfil</MenuItem>
               </Link>
               {/*<MenuItem>Billing</MenuItem>*/}

@@ -69,13 +69,11 @@ export async function updateUsuario(req, res) {
     }
 
     const updatedUser = await updateUsuarioService(usuario, userData);
-    return res
-      .status(200)
-      .json({
-        message: "Usuario actualizado exitosamente",
-        success: true,
-        updatedUser,
-      });
+    return res.status(200).json({
+      message: "Usuario actualizado exitosamente",
+      success: true,
+      updatedUser,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
@@ -119,12 +117,10 @@ export async function login(req, res) {
     const usuarioData = await getByUsername(usuario);
 
     if (!usuario || !contrasena) {
-      return res
-        .status(400)
-        .json({
-          message: "Se requiere usuario y contraseña en el body",
-          success: false,
-        });
+      return res.status(400).json({
+        message: "Se requiere usuario y contraseña en el body",
+        success: false,
+      });
     }
 
     if (!usuarioData) {
@@ -161,14 +157,17 @@ export async function login(req, res) {
       { expiresIn: "1h" }
     );
 
+    const { contrasena: contrasenaExcluir, ...usuarioDataSinContrasena } =
+      usuarioData; // Excluir la contraseña del objeto de usuario
+    console.log(usuarioDataSinContrasena);
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       success: true,
-      usuario: usuarioData.usuario,
-      rol: usuarioData.rol,
+      usuario: usuarioDataSinContrasena,
       token,
     });
   } catch (error) {
+    console.error("Error durante el inicio de sesión:", error);
     return res.status(500).json({ message: error.message, success: false });
   }
 }

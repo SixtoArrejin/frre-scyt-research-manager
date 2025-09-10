@@ -157,7 +157,7 @@ function App() {
           )}
         </HashRouter>
         {/* </Router> */}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraToastProvider>
   );
