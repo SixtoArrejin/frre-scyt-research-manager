@@ -31,19 +31,32 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { BiNetworkChart, BiTask } from "react-icons/bi";
+import { MdAdminPanelSettings } from "react-icons/md";
 import Logo from "../../src/img/Logo2-SinFondo.png";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-const LinkItems = [
-  { name: 'Home', icon: FiHome, route: '/' },
-  { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
-  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
-  { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
-  { name: 'Vinculaciones', icon: BiTask, route: '/vinculaciones' },
-  // { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
-];
+const getNavItems = (userRole) => {
+  const baseItems = [
+    { name: 'Home', icon: FiHome, route: '/' },
+    { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
+    { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
+    { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
+    { name: 'Vinculaciones', icon: BiTask, route: '/vinculaciones' },
+  ];
+
+  // Solo agregar administración de usuarios si es admin
+  if (userRole === 'admin') {
+    baseItems.push({
+      name: 'Administración de Usuarios',
+      icon: MdAdminPanelSettings,
+      route: '/usuarios'
+    });
+  }
+
+  return baseItems;
+};
 
 export default function SidebarWithHeader({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -76,6 +89,10 @@ export default function SidebarWithHeader({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
+  const { currentUser } = useContext(UserContext);
+  const userRole = currentUser?.rol || 'viewer';
+  const navItems = getNavItems(userRole);
+
   return (
     <Box
       transition="3s ease"
@@ -92,7 +109,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
+      {navItems.map((link) => (
         <NavItem
           key={link.name}
           icon={link.icon}
@@ -217,16 +234,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   ml="2"
                 >
                   <Text fontSize="sm">
-                    {typeof currentUser === 'string' 
-                      ? currentUser 
-                      : (currentUser && typeof currentUser.usuario === 'string') 
-                        ? currentUser.usuario 
+                    {typeof currentUser === 'string'
+                      ? currentUser
+                      : (currentUser && typeof currentUser.usuario === 'string')
+                        ? currentUser.usuario
                         : 'Usuario'
                     }
                   </Text>
                   <Text fontSize="xs" color="gray.600">
-                    {(currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string') 
-                      ? currentUser.rol.toUpperCase() 
+                    {(currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string')
+                      ? currentUser.rol.toUpperCase()
                       : 'Admin'
                     }
                   </Text>

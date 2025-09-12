@@ -38,6 +38,9 @@ import AgregarRegional from "./pages/proyectos/AgregarRegional";
 import ModificarDesembolso from "./pages/desembolsos/ModificarDesembolso";
 import ModificarVinculacion from "./pages/vinculaciones/ModificarVinculacion";
 import Perfil from "./pages/perfil/Perfil";
+import ListaUsuarios from "./pages/usuarios/ListaUsuarios";
+import NuevoUsuario from "./pages/usuarios/NuevoUsuario";
+import ModificarUsuario from "./pages/usuarios/ModificarUsuario";
 
 const queryClient = new QueryClient();
 
@@ -126,6 +129,9 @@ const routes = [
     path: "/perfil",
     element: <Perfil />,
   },
+  { path: "/usuarios", element: <ListaUsuarios /> },
+  { path: "/usuarios/nuevo", element: <NuevoUsuario /> },
+  { path: "/usuarios/:usuario/modificar", element: <ModificarUsuario /> },
   { path: "/", element: <Home /> },
 ];
 
