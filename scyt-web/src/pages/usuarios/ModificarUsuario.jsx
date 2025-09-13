@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -95,6 +95,7 @@ export default function ModificarUsuario() {
   const onSubmit = (data) => {
     // No incluir contraseña vacía en la actualización
     const updateData = { ...data };
+
     if (!updateData.contrasena || updateData.contrasena.trim() === '') {
       delete updateData.contrasena;
     } else if (updateData.contrasena.length < 6) {
@@ -200,7 +201,7 @@ export default function ModificarUsuario() {
                   <FormLabel>Estado del Usuario</FormLabel>
                   <Switch
                     {...register('activo')}
-                    defaultChecked={usuarioToEdit.activo}
+                    isChecked={watch('activo')}
                     colorScheme='green'
                     size='lg'
                     isDisabled={usuarioParam === currentUser.usuario}
