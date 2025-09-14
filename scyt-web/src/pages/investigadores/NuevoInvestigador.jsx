@@ -44,7 +44,7 @@ export default function NuevoInvestigador() {
     onSuccess: () => {
       toast({
         title: 'Nuevo investigador',
-        description: `Se ha creado el nuevo investigador exitosamente`,
+        description: 'Se ha creado el nuevo investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -54,7 +54,7 @@ export default function NuevoInvestigador() {
     onError: () => {
       toast({
         title: 'Error al cargar el investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

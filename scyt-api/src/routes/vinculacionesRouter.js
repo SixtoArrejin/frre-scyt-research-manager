@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getAllVinculaciones,
   getVinculacionesByProyectoId,
@@ -7,12 +7,12 @@ import {
   getDesembolsoById,
   updateDesembolso,
   updateVinculacion,
-} from "../controllers/vinculacionesController.js";
+} from '../controllers/vinculacionesController.js';
 import {
   validateToken,
   requirePermission,
-} from "../middleware/authMiddleware.js";
-import { RESOURCES, ACTIONS } from "../config/roles.js";
+} from '../middleware/authMiddleware.js';
+import { RESOURCES, ACTIONS } from '../config/roles.js';
 
 const router = Router();
 
@@ -21,41 +21,41 @@ router.use(validateToken);
 
 // Rutas de lectura - todos los roles autenticados pueden ver vinculaciones
 router.get(
-  "/",
+  '/',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.READ),
-  getAllVinculaciones
+  getAllVinculaciones,
 );
 router.get(
-  "/:idVinculacion",
+  '/:idVinculacion',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.READ),
-  getVinculacionById
+  getVinculacionById,
 );
 router.get(
-  "/proyecto/:idProyecto",
+  '/proyecto/:idProyecto',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.READ),
-  getVinculacionesByProyectoId
+  getVinculacionesByProyectoId,
 );
 router.get(
-  "/desembolsos/:idDesembolso",
+  '/desembolsos/:idDesembolso',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.READ),
-  getDesembolsoById
+  getDesembolsoById,
 );
 
 // Rutas de escritura - solo ADMIN y UVT pueden crear/modificar vinculaciones
 router.put(
-  "/:idVinculacion",
+  '/:idVinculacion',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.UPDATE),
-  updateVinculacion
+  updateVinculacion,
 );
 router.post(
-  "/desembolsos",
+  '/desembolsos',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.CREATE),
-  createDesembolso
+  createDesembolso,
 );
 router.put(
-  "/desembolsos/:idDesembolso",
+  '/desembolsos/:idDesembolso',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.UPDATE),
-  updateDesembolso
+  updateDesembolso,
 );
 
 export default router;

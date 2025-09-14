@@ -1,30 +1,30 @@
 // Definición de roles y permisos del sistema
 export const ROLES = {
-  ADMIN: "admin",
-  PID: "pid",
-  RRHH: "rrhh",
-  UVT: "uvt",
-  VIEWER: "viewer",
+  ADMIN: 'admin',
+  PID: 'pid',
+  RRHH: 'rrhh',
+  UVT: 'uvt',
+  VIEWER: 'viewer',
 };
 
 // Definición de recursos y acciones
 export const RESOURCES = {
-  PROYECTOS: "proyectos",
-  PERSONAS: "personas",
-  VINCULACIONES: "vinculaciones",
-  USUARIOS: "usuarios",
-  GRUPOS: "grupos",
-  CATEGORIAS: "categorias",
-  REGIONALES: "regionales",
-  TIPOS_PROYECTOS: "tiposProyectos",
-  CONVENIOS: "convenios",
+  PROYECTOS: 'proyectos',
+  PERSONAS: 'personas',
+  VINCULACIONES: 'vinculaciones',
+  USUARIOS: 'usuarios',
+  GRUPOS: 'grupos',
+  CATEGORIAS: 'categorias',
+  REGIONALES: 'regionales',
+  TIPOS_PROYECTOS: 'tiposProyectos',
+  CONVENIOS: 'convenios',
 };
 
 export const ACTIONS = {
-  CREATE: "create",
-  READ: "read",
-  UPDATE: "update",
-  DELETE: "delete",
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 };
 
 // Matriz de permisos: rol -> recurso -> acciones permitidas

@@ -1,16 +1,16 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getPersonas,
   createPersona,
   updatePersonaController,
   getPersonasById,
   getPersonasByGroup,
-} from "../controllers/personasController.js";
+} from '../controllers/personasController.js';
 import {
   validateToken,
   requirePermission,
-} from "../middleware/authMiddleware.js";
-import { RESOURCES, ACTIONS } from "../config/roles.js";
+} from '../middleware/authMiddleware.js';
+import { RESOURCES, ACTIONS } from '../config/roles.js';
 
 const router = Router();
 
@@ -19,31 +19,31 @@ router.use(validateToken);
 
 // Rutas de lectura - todos los roles autenticados pueden ver personas
 router.get(
-  "/",
+  '/',
   requirePermission(RESOURCES.PERSONAS, ACTIONS.READ),
-  getPersonas
+  getPersonas,
 );
 router.get(
-  "/:idPersona",
+  '/:idPersona',
   requirePermission(RESOURCES.PERSONAS, ACTIONS.READ),
-  getPersonasById
+  getPersonasById,
 );
 router.get(
-  "/grupo/:idGrupo",
+  '/grupo/:idGrupo',
   requirePermission(RESOURCES.PERSONAS, ACTIONS.READ),
-  getPersonasByGroup
+  getPersonasByGroup,
 );
 
 // Rutas de escritura - solo ADMIN y RRHH pueden crear/modificar personas
 router.post(
-  "/",
+  '/',
   requirePermission(RESOURCES.PERSONAS, ACTIONS.CREATE),
-  createPersona
+  createPersona,
 );
 router.put(
-  "/:idPersona",
+  '/:idPersona',
   requirePermission(RESOURCES.PERSONAS, ACTIONS.UPDATE),
-  updatePersonaController
+  updatePersonaController,
 );
 
 export default router;

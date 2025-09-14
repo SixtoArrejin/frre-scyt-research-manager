@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner, Image } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getGrupoById } from '../../utils/api/gruposApi';
@@ -89,7 +89,7 @@ export default function DetalleGrupo() {
                   />
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
-                  <Link to={`modificar`}>
+                  <Link to={'modificar'}>
                     <Button colorScheme='blue' variant='outline'>
                       Modificar
                     </Button>
@@ -141,10 +141,10 @@ export default function DetalleGrupo() {
                       item.tipoActividad,
                       item.director
                         ? `${item.director.apellido} ${item.director.nombre}`
-                        : "No asignado",
+                        : 'No asignado',
                       item.codirector
                         ? `${item.codirector.apellido} ${item.codirector.nombre}`
-                        : "No asignado",
+                        : 'No asignado',
                       item.denominacion,
                       item.estado,
                       <Link to={`/proyectos/${item.idProyecto}`}>

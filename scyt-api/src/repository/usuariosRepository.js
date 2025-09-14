@@ -1,13 +1,13 @@
-import { getAll, create } from "./baseRepository.js";
-import { prisma } from "../db.js";
+import { getAll, create } from './baseRepository.js';
+import { prisma } from '../db.js';
 
 export async function getAllUsuarios() {
-  return await getAll("usuarios");
+  return await getAll('usuarios');
 }
 
 export async function createUsuario(personaData) {
   try {
-    const newPersona = await create("usuarios", personaData);
+    const newPersona = await create('usuarios', personaData);
     return newPersona;
   } catch (error) {
     throw new Error(error.message);

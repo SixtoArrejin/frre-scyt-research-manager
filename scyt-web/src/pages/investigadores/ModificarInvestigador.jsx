@@ -76,7 +76,7 @@ export default function ModificarInvestigador() {
     onSuccess: () => {
       toast({
         title: 'Modificar investigador',
-        description: `Se ha modificado el investigador exitosamente`,
+        description: 'Se ha modificado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -85,7 +85,7 @@ export default function ModificarInvestigador() {
     onError: () => {
       toast({
         title: 'Error al modificar los datos del investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

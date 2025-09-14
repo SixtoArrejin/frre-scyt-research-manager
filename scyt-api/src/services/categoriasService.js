@@ -23,7 +23,7 @@ export async function deleteCategoriaService(idCategoria) {
 export async function getCategoriaByIdService(idCategoria) {
   try {
     const categoria = await getCategoriaById(idCategoria);
-    return categoria
+    return categoria;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -33,11 +33,11 @@ export async function updateCategoriaService(idCategoria, categoriaData) {
   try {
     const filter = { idCategoria };
     if (categoriaData.fecha) {
-      categoriaData.fecha = convertToISOString(categoriaData.fecha)
+      categoriaData.fecha = convertToISOString(categoriaData.fecha);
     }
-    console.log(categoriaData)
+    console.log(categoriaData);
     const updatedCategoria = await update('categorias', filter, categoriaData);
-    return updatedCategoria
+    return updatedCategoria;
   } catch (error) {
     throw new Error(error.message);
   }

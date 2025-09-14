@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, Tbody, Td, HStack, IconButton, Input } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useState } from 'react';

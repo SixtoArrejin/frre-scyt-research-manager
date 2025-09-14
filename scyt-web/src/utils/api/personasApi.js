@@ -1,20 +1,20 @@
-import { get, post, put, del } from "./baseApi";
+import { get, post, put, del } from './baseApi';
 
 // personasServices
 export async function getAllPersonas() {
-  return get('/api/personas')
+  return get('/api/personas');
 }
 
 export async function getPersonaById(idPersona) {
-  return get(`/api/personas/${idPersona}`)
+  return get(`/api/personas/${idPersona}`);
 }
 
 export async function getPersonasByGroup(idGrupo) {
-  return get(`/api/personas/grupo/${idGrupo}`)
+  return get(`/api/personas/grupo/${idGrupo}`);
 }
 
 export async function createPersona(data) {
-  return post(`/api/personas`, data);
+  return post('/api/personas', data);
 }
 
 export async function updatePersona(id, data) {

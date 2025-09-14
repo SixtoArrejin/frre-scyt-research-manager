@@ -1,15 +1,15 @@
 export function formatoFechaISOaDDMMAAAA(fechaISO) {
   const fechaObjeto = new Date(fechaISO);
-  const dia = String(fechaObjeto.getUTCDate()).padStart(2, "0");
-  const mes = String(fechaObjeto.getUTCMonth() + 1).padStart(2, "0");
+  const dia = String(fechaObjeto.getUTCDate()).padStart(2, '0');
+  const mes = String(fechaObjeto.getUTCMonth() + 1).padStart(2, '0');
   const año = fechaObjeto.getUTCFullYear();
   return `${dia}/${mes}/${año}`;
 }
 
 export function formatoFechaISOaAAAAMMDD(fechaISO) {
   const fechaObjeto = new Date(fechaISO);
-  const dia = String(fechaObjeto.getDate() + 1).padStart(2, "0");
-  const mes = String(fechaObjeto.getMonth() + 1).padStart(2, "0");
+  const dia = String(fechaObjeto.getDate() + 1).padStart(2, '0');
+  const mes = String(fechaObjeto.getMonth() + 1).padStart(2, '0');
   const año = fechaObjeto.getFullYear();
   return `${año}-${mes}-${dia}`;
 }
@@ -17,7 +17,7 @@ export function formatoFechaISOaAAAAMMDD(fechaISO) {
 export function getCategoriaMasActual(categorias, tipo) {
   // Filtrar solo las categorías del tipo deseado
   const categoriasFiltradas = categorias.filter(
-    (categoria) => categoria.tipo === tipo
+    (categoria) => categoria.tipo === tipo,
   );
 
   // Encontrar la categoría con la fecha más actual
@@ -35,7 +35,7 @@ export function getCategoriaMasActual(categorias, tipo) {
 }
 
 export function convertirFechaDDMMAAAAaDate(fechaStr) {
-  const [dia, mes, año] = fechaStr.split("/").map(Number);
+  const [dia, mes, año] = fechaStr.split('/').map(Number);
   return new Date(año, mes - 1, dia);
 }
 

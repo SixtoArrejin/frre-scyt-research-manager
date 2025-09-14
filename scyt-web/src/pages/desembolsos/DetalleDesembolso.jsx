@@ -16,7 +16,6 @@ import {
   ModalCloseButton,
   Stack,
   Spinner,
-  Input,
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -114,7 +113,7 @@ export default function DetalleDesembolso() {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Rendición cargada',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -122,7 +121,7 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar la rendición',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -135,7 +134,7 @@ export default function DetalleDesembolso() {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Rendición cargada',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -143,7 +142,7 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar la rendición',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -156,7 +155,7 @@ export default function DetalleDesembolso() {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Motivo cargado',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -164,7 +163,7 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar el motivo de fuera de plazo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -339,10 +338,10 @@ export default function DetalleDesembolso() {
                       {/* No esta andando la comparacion de fechas - AHORA SI */}
                       {convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) &&
                         !dataDesembolso?.desembolso?.motivoEstado && (
-                          <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
+                        <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
                             Motivo de fuera de plazo
-                          </Button>
-                        )}
+                        </Button>
+                      )}
                       <Modal isCentered isOpen={isOpenFueraPlazo} onClose={closeModalFueraPlazo}>
                         <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />
                         <ModalContent>

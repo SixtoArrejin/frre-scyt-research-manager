@@ -1,7 +1,7 @@
 import {
-  create, getById
+  create, getById,
 } from './baseRepository.js';
-import { prisma } from '../db.js'
+import { prisma } from '../db.js';
 
 export async function createCategoria(categoriaData) {
   try {
@@ -13,7 +13,7 @@ export async function createCategoria(categoriaData) {
 }
 
 export async function getCategoriaById(idCategoria) {
-  const includeRelations = ['personas']
+  const includeRelations = ['personas'];
   return await getById('categorias', 'idCategoria', idCategoria, includeRelations);
 }
 

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import { getAllRegionales } from '../../utils/api/regionalesApi';
@@ -27,7 +27,7 @@ export default function AgregarRegional() {
   const { idPid } = useParams();
 
   const { data: dataProyecto, isLoading } = useQuery(['dataProyecto', idPid], () => getProyectoById(Number(idPid)));
-  const { data: dataRegionales} = useQuery(['dataRegionales'], () => getAllRegionales());
+  const { data: dataRegionales } = useQuery(['dataRegionales'], () => getAllRegionales());
 
 
   const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
@@ -106,7 +106,7 @@ export default function AgregarRegional() {
                 <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
                   <GenericSelect
                     placeholder='Regionales...'
-                    options={dataRegionales?.regionales?.map((item, key )=> ({
+                    options={dataRegionales?.regionales?.map((item, key) => ({
                       value: key,
                       label: item,
                     }))}

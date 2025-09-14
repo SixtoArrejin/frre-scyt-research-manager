@@ -3,8 +3,8 @@ import {
   createUsuario,
   updateUsuario,
   deleteUsuario,
-} from "../repository/usuariosRepository.js";
-import bcrypt from "bcrypt";
+} from '../repository/usuariosRepository.js';
+import bcrypt from 'bcrypt';
 
 export async function getAllUsuariosService() {
   try {

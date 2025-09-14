@@ -11,7 +11,7 @@ import {
   FormControl,
   FormLabel,
   Switch,
-  Spinner
+  Spinner,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -32,8 +32,8 @@ export default function ModificarUsuario() {
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
     defaultValues: {
       activo: true,
-      rol: 'viewer'
-    }
+      rol: 'viewer',
+    },
   });
 
   // Obtener datos del usuario actual
@@ -62,8 +62,8 @@ export default function ModificarUsuario() {
           duration: 3000,
           isClosable: true,
         });
-      }
-    }
+      },
+    },
   );
 
   // Encontrar el usuario a editar
@@ -114,7 +114,7 @@ export default function ModificarUsuario() {
 
   const rolesOptions = rolesData?.roles?.map(role => ({
     value: role,
-    label: role.toUpperCase()
+    label: role.toUpperCase(),
   })) || [];
 
   if (loadingUsuarios) {

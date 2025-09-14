@@ -11,25 +11,25 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-} from "@chakra-ui/react";
-import { Flex } from "@chakra-ui/react";
-import { getAllPersonas } from "../utils/api/personasApi";
-import { getAllGrupos } from "../utils/api/gruposApi";
-import { getProyectos } from "../utils/api/proyectosApi";
-import { getVinculaciones } from "../utils/api/vinculacionesApi";
-import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+} from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
+import { getAllPersonas } from '../utils/api/personasApi';
+import { getAllGrupos } from '../utils/api/gruposApi';
+import { getProyectos } from '../utils/api/proyectosApi';
+import { getVinculaciones } from '../utils/api/vinculacionesApi';
+import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const {
     data: dataPersonas,
     isLoading,
     error,
-  } = useQuery("personas", () => getAllPersonas());
-  const { data: dataGrupos } = useQuery("grupos", () => getAllGrupos());
-  const { data: dataProyectos } = useQuery("proyectos", () => getProyectos());
-  const { data: dataVinculaciones } = useQuery("vinculaciones", () =>
-    getVinculaciones()
+  } = useQuery('personas', () => getAllPersonas());
+  const { data: dataGrupos } = useQuery('grupos', () => getAllGrupos());
+  const { data: dataProyectos } = useQuery('proyectos', () => getProyectos());
+  const { data: dataVinculaciones } = useQuery('vinculaciones', () =>
+    getVinculaciones(),
   );
 
   // Número total de personas
@@ -37,17 +37,17 @@ export default function Home() {
 
   // Personas activas
   const personasActivas = dataPersonas?.personas?.filter(
-    (persona) => persona.activo
-  )
+    (persona) => persona.activo,
+  );
 
   // Número de personas activas
   const personasActivasLength = dataPersonas?.personas?.filter(
-    (persona) => persona.activo
+    (persona) => persona.activo,
   ).length;
 
   // Número de personas con ciertas categorias
-  const [personasCategoriaUTN, setPersonasCategoriaUTN]= useState(0)
-  const [personasCategoriaMinisterio, setPersonasCategoriaMinisterio]= useState(0)
+  const [personasCategoriaUTN, setPersonasCategoriaUTN] = useState(0);
+  const [personasCategoriaMinisterio, setPersonasCategoriaMinisterio] = useState(0);
 
   useEffect(() => {
     let contadorMinisterio = 0;
@@ -55,10 +55,10 @@ export default function Home() {
 
     personasActivas?.forEach((persona) => {
       const tieneMinisterio = persona.categorias.some(
-        (categoria) => categoria.tipo === "ministerio"
+        (categoria) => categoria.tipo === 'ministerio',
       );
       const tieneUTN = persona.categorias.some(
-        (categoria) => categoria.tipo === "utn"
+        (categoria) => categoria.tipo === 'utn',
       );
 
       if (tieneMinisterio) {
@@ -68,8 +68,8 @@ export default function Home() {
       if (tieneUTN) {
         contadorUTN++;
       }
-    })
-    setPersonasCategoriaMinisterio(contadorMinisterio)
+    });
+    setPersonasCategoriaMinisterio(contadorMinisterio);
     setPersonasCategoriaUTN(contadorUTN);
   }, [dataPersonas]);
 
@@ -81,7 +81,7 @@ export default function Home() {
 
   // Número de proyectos no completos
   const proyectosPID = dataProyectos?.proyectos?.filter(
-    (proyecto) => proyecto.codPid
+    (proyecto) => proyecto.codPid,
   ).length;
 
   // Número total de vinculaciones
@@ -90,7 +90,7 @@ export default function Home() {
   // Número de vinculaciones externes
   const vinculacionesConFinanciamiento =
     dataVinculaciones?.vinculaciones?.filter(
-      (vinculacion) => vinculacion.vinculacionessinfinanciamiento === null
+      (vinculacion) => vinculacion.vinculacionessinfinanciamiento === null,
     ).length;
 
   if (isLoading) {

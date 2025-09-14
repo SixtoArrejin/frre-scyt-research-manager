@@ -1,5 +1,5 @@
 // Utilidades para verificar permisos en el frontend
-import { ROLES, RESOURCES, ACTIONS, hasPermission } from "./roles.js";
+import { ROLES, RESOURCES, ACTIONS, hasPermission } from './roles.js';
 
 // Función para verificar si el usuario actual puede realizar una acción
 export function canUserPerform(userRole, resource, action) {
@@ -74,47 +74,47 @@ export function isViewer(userRole) {
 // Función para obtener un mensaje descriptivo del rol
 export function getRoleDescription(role) {
   const descriptions = {
-    [ROLES.ADMIN]: "Administrador del sistema",
-    [ROLES.PID]: "Especialista en Proyectos de I+D",
-    [ROLES.RRHH]: "Especialista en Recursos Humanos",
-    [ROLES.UVT]: "Especialista en Vinculación Tecnológica",
-    [ROLES.VIEWER]: "Usuario con permisos de solo lectura",
+    [ROLES.ADMIN]: 'Administrador del sistema',
+    [ROLES.PID]: 'Especialista en Proyectos de I+D',
+    [ROLES.RRHH]: 'Especialista en Recursos Humanos',
+    [ROLES.UVT]: 'Especialista en Vinculación Tecnológica',
+    [ROLES.VIEWER]: 'Usuario con permisos de solo lectura',
   };
 
-  return descriptions[role] || "Rol desconocido";
+  return descriptions[role] || 'Rol desconocido';
 }
 
 // Función para obtener las capacidades de un rol en formato legible
 export function getRoleCapabilities(role) {
   const capabilities = {
     [ROLES.ADMIN]: [
-      "Gestión completa del sistema",
-      "Crear y administrar usuarios",
-      "Acceso total a todos los módulos",
+      'Gestión completa del sistema',
+      'Crear y administrar usuarios',
+      'Acceso total a todos los módulos',
     ],
     [ROLES.PID]: [
-      "Crear y modificar proyectos",
-      "Gestionar tipos de proyectos y regionales",
-      "Ver información de personas y vinculaciones",
+      'Crear y modificar proyectos',
+      'Gestionar tipos de proyectos y regionales',
+      'Ver información de personas y vinculaciones',
     ],
     [ROLES.RRHH]: [
-      "Gestionar personas e investigadores",
-      "Administrar grupos de investigación",
-      "Gestionar categorías de personal",
-      "Ver proyectos y vinculaciones",
+      'Gestionar personas e investigadores',
+      'Administrar grupos de investigación',
+      'Gestionar categorías de personal',
+      'Ver proyectos y vinculaciones',
     ],
     [ROLES.UVT]: [
-      "Gestionar vinculaciones tecnológicas",
-      "Administrar convenios",
-      "Gestionar desembolsos",
-      "Ver proyectos y personal",
+      'Gestionar vinculaciones tecnológicas',
+      'Administrar convenios',
+      'Gestionar desembolsos',
+      'Ver proyectos y personal',
     ],
     [ROLES.VIEWER]: [
-      "Solo lectura de la información",
-      "No puede modificar datos",
-      "Acceso limitado a usuarios",
+      'Solo lectura de la información',
+      'No puede modificar datos',
+      'Acceso limitado a usuarios',
     ],
   };
 
-  return capabilities[role] || ["Capacidades no definidas"];
+  return capabilities[role] || ['Capacidades no definidas'];
 }

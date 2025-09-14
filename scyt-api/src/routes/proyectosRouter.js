@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getProyectos,
   getProyectosDeGrupo,
@@ -11,12 +11,12 @@ import {
   delInvestigador,
   addGrupo,
   delGrupo,
-} from "../controllers/proyectosController.js";
+} from '../controllers/proyectosController.js';
 import {
   validateToken,
   requirePermission,
-} from "../middleware/authMiddleware.js";
-import { RESOURCES, ACTIONS } from "../config/roles.js";
+} from '../middleware/authMiddleware.js';
+import { RESOURCES, ACTIONS } from '../config/roles.js';
 
 const router = Router();
 
@@ -25,63 +25,63 @@ router.use(validateToken);
 
 // Rutas de lectura - todos los roles autenticados pueden ver proyectos
 router.get(
-  "/",
+  '/',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.READ),
-  getProyectos
+  getProyectos,
 );
 router.get(
-  "/grupo/:idGrupo",
+  '/grupo/:idGrupo',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.READ),
-  getProyectosDeGrupo
+  getProyectosDeGrupo,
 );
 router.get(
-  "/persona/:personaId",
+  '/persona/:personaId',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.READ),
-  getProyectosDePersona
+  getProyectosDePersona,
 );
 router.get(
-  "/:idProyecto",
+  '/:idProyecto',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.READ),
-  getProyectoPorId
+  getProyectoPorId,
 );
 
 // Rutas de escritura - solo ADMIN y PID pueden crear/modificar proyectos
 router.post(
-  "/",
+  '/',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.CREATE),
-  crearProyectos
+  crearProyectos,
 );
 router.put(
-  "/:idProyecto",
+  '/:idProyecto',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
-  updateProyectoController
+  updateProyectoController,
 );
 router.post(
-  "/:idProyecto/investigador",
+  '/:idProyecto/investigador',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
-  addInvestigador
+  addInvestigador,
 );
 router.delete(
-  "/:idProyecto/investigador/:idInvestigador",
+  '/:idProyecto/investigador/:idInvestigador',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
-  delInvestigador
+  delInvestigador,
 );
 router.post(
-  "/:idProyecto/grupo",
+  '/:idProyecto/grupo',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
-  addGrupo
+  addGrupo,
 );
 router.delete(
-  "/:idProyecto/grupo/:idGrupo",
+  '/:idProyecto/grupo/:idGrupo',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
-  delGrupo
+  delGrupo,
 );
 
 // Vinculaciones son manejadas por UVT
 router.post(
-  "/:idProyecto/vinculaciones",
+  '/:idProyecto/vinculaciones',
   requirePermission(RESOURCES.VINCULACIONES, ACTIONS.CREATE),
-  crearVinculaciones
+  crearVinculaciones,
 );
 
 export default router;

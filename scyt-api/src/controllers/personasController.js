@@ -24,7 +24,7 @@ export async function getPersonasById(req, res) {
 export async function getPersonasByGroup(req, res) {
   try {
     const { idGrupo } = req.params;
-    const idgrupo = parseInt(idGrupo)
+    const idgrupo = parseInt(idGrupo);
     const personasGrupo = await getPersonaByGroupService(idgrupo);
     return res.status(200).json({ message: 'Personas encontradas', success: true, personasGrupo });
   } catch (error) {
@@ -45,7 +45,7 @@ export async function createPersona(req, res) {
     const newPersona = await createPersonaService(personaData);
     return res.status(201).json({ message: 'Persona creada exitosamente', success: true, newPersona });
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     return res.status(500).json({ message: error.message, success: false });
   }
 }

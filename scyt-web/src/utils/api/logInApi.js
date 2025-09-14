@@ -1,5 +1,5 @@
-import { get, post, put, del } from "./baseApi";
+import { post } from './baseApi';
 
 export async function logInUser(data) {
-  return post(`/api/usuarios/login/`, data);
+  return post('/api/usuarios/login/', data);
 }

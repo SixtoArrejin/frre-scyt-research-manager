@@ -10,7 +10,7 @@ import {
   useToast,
   FormControl,
   FormLabel,
-  Switch
+  Switch,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,8 +28,8 @@ export default function NuevoUsuario() {
   const { register, handleSubmit, formState: { errors }, watch } = useForm({
     defaultValues: {
       activo: true,
-      rol: 'viewer'
-    }
+      rol: 'viewer',
+    },
   });
 
   // Obtener roles disponibles
@@ -54,7 +54,7 @@ export default function NuevoUsuario() {
         duration: 3000,
         isClosable: true,
       });
-    }
+    },
   });
 
   const onSubmit = (data) => {
@@ -86,7 +86,7 @@ export default function NuevoUsuario() {
 
   const rolesOptions = rolesData?.roles?.map(role => ({
     value: role,
-    label: role.toUpperCase()
+    label: role.toUpperCase(),
   })) || [];
 
   // Verificar si el usuario es admin

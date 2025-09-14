@@ -39,7 +39,7 @@ export default function DetalleVinculacion() {
   }, [data]);
 
   //PARA LA PÁGINA DE MODIFICAR SE VA
-  const onDeleted = async (idConvenio) => {
+  const onDeleted = async(idConvenio) => {
     await deleteConvenioById(Number(idConvenio));
     queryClient.invalidateQueries(['vinculacion', idVinculacion]);
     queryClient.refetchQueries(['vinculacion', idVinculacion]);
@@ -163,7 +163,7 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Línea'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea || "-"}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea || '-'}
                           isDisabled
                           mb='5vh'
                         />
@@ -185,7 +185,7 @@ export default function DetalleVinculacion() {
                         <GenericInput
                           label='Motivo desistido'
                           width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado || "-"}
+                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado || '-'}
                           isDisabled
                           mb='5vh'
                         />
@@ -235,7 +235,7 @@ export default function DetalleVinculacion() {
                     </Box>
                   )}
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                    <Link to={`modificar`}>
+                    <Link to={'modificar'}>
                       <Button colorScheme='blue' variant='outline'>
                         Modificar
                       </Button>
@@ -334,7 +334,7 @@ export default function DetalleVinculacion() {
                       data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
                       data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.reduce(
                         (total, desembolso) => total + (desembolso.montoRendido || 0),
-                        0
+                        0,
                       )
                     }
                     isDisabled
@@ -343,12 +343,12 @@ export default function DetalleVinculacion() {
                   />
                   {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
                     data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (
-                      <Link to={`nuevo-desembolso`}>
-                        <Button colorScheme='blue' variant='outline'>
+                    <Link to={'nuevo-desembolso'}>
+                      <Button colorScheme='blue' variant='outline'>
                           Agregar Desembolso
-                        </Button>
-                      </Link>
-                    )}
+                      </Button>
+                    </Link>
+                  )}
                 </Box>
                 <br />
               </CardBody>

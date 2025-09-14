@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { getAllTiposProyectos } from '../controllers/tiposProyectosController.js';
 
-const router = Router()
+const router = Router();
 
-router.get('/', getAllTiposProyectos)
+router.get('/', getAllTiposProyectos);
 
-export default router
+export default router;

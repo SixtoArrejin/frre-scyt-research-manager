@@ -15,7 +15,7 @@ const schema = yup.object({
   resolucion: yup
     .string()
     .required('La resolución es requerida')
-    .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
+    .matches(/^\d+\/\d+$/, 'El formato de la resolución debe ser \'###/###\''),
   fechaCreacion: yup.string().required('La fecha es requerida'),
   siglas: yup.string().required('Las siglas son requeridas'),
 });
@@ -54,7 +54,7 @@ export default function NuevoGrupo() {
     onSuccess: () => {
       toast({
         title: 'Crear grupo',
-        description: `Se ha creado exitosamente`,
+        description: 'Se ha creado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -63,7 +63,7 @@ export default function NuevoGrupo() {
     onError: () => {
       toast({
         title: 'Error al crear el grupo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

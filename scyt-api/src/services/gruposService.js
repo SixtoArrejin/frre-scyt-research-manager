@@ -2,12 +2,12 @@
 import { getAllGrupos, getGrupoById, createGrupo } from '../repository/gruposRepository.js';
 import { update } from '../repository/baseRepository.js';
 import convertToISOString from '../utils/funciones.js';
-
+import { getAll } from '../repository/baseRepository.js';
 
 export async function getAllGruposService() {
   try {
     const grupos = await getAllGrupos();
-    return grupos
+    return grupos;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -16,7 +16,7 @@ export async function getAllGruposService() {
 export async function getGrupoByIdService(idGrupoInvestigacion) {
   try {
     const grupo = await getGrupoById(idGrupoInvestigacion);
-    return grupo
+    return grupo;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -34,9 +34,9 @@ export async function updateGrupoService(idGrupoInvestigacion, grupoData) {
 
 export async function createGrupoService(grupoData) {
   try {
-    console.log(grupoData.fechaCreacion)
+    console.log(grupoData.fechaCreacion);
     grupoData.fechaCreacion = convertToISOString(grupoData.fechaCreacion);
-    console.log(grupoData.fechaCreacion)
+    console.log(grupoData.fechaCreacion);
     const newGrupo = await createGrupo(grupoData);
     return newGrupo;
   } catch (error) {

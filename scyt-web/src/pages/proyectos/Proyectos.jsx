@@ -1,35 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardBody,
-  Text,
   Heading,
   Box,
   Button,
   Spinner,
   Tooltip,
   Badge,
-} from "@chakra-ui/react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import { getProyectos } from "../../utils/api/proyectosApi";
-import Tabla from "../../components/Tabla";
-import { formatoFechaISOaDDMMAAAA } from "../../utils/general";
-import GenericInput from "../../components/formControls/GenericInput";
-import GenericSelect from "../../components/formControls/GenericSelect";
-import ImgDefault from "../../components/ImgDefault";
-import NoData from "../../img/no-data-2.png";
+} from '@chakra-ui/react';
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { getProyectos } from '../../utils/api/proyectosApi';
+import Tabla from '../../components/Tabla';
+import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
+import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data-2.png';
 
 export default function ProyectosPid() {
-  const [codPID, setCodPID] = useState("");
-  const [denominacion, setDenominacion] = useState("");
+  const [codPID, setCodPID] = useState('');
+  const [denominacion, setDenominacion] = useState('');
   const [filtro, setFiltro] = useState(false);
-  const [pidExterno, setPidExterno] = useState("todos");
+  const [pidExterno, setPidExterno] = useState('todos');
 
-  const { data, isLoading, error } = useQuery("proyectos", () =>
-    getProyectos()
+  const { data, isLoading, error } = useQuery('proyectos', () =>
+    getProyectos(),
   );
   const [proyectos, setProyectos] = useState([]);
 
@@ -38,7 +36,7 @@ export default function ProyectosPid() {
       let filteredProyectos = [...data.proyectos];
 
       // Aplicar filtros
-      if (codPID || denominacion || pidExterno !== "todos") {
+      if (codPID || denominacion || pidExterno !== 'todos') {
         filteredProyectos = filteredProyectos.filter((item) => {
           const matchesCodPID = codPID
             ? item.codPid &&
@@ -50,9 +48,9 @@ export default function ProyectosPid() {
               .includes(denominacion.toLowerCase())
             : true;
           const matchesPIDExterno =
-            pidExterno === "pid"
+            pidExterno === 'pid'
               ? item.codPid
-              : pidExterno === "externos"
+              : pidExterno === 'externos'
                 ? !item.codPid
                 : true;
           return matchesCodPID && matchesDenominacion && matchesPIDExterno;
@@ -134,16 +132,16 @@ export default function ProyectosPid() {
                 name="pidExterno"
                 width="15vw"
                 options={[
-                  { value: "todos", label: "Todos" },
-                  { value: "pid", label: "PID" },
-                  { value: "externos", label: "Externos" },
+                  { value: 'todos', label: 'Todos' },
+                  { value: 'pid', label: 'PID' },
+                  { value: 'externos', label: 'Externos' },
                 ]}
                 value={pidExterno}
                 onChange={(event) => setPidExterno(event.target.value)}
               />
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
-              <Link to={"nuevo"}>
+              <Link to={'nuevo'}>
                 <Button colorScheme="blue" variant="outline" mr="5">
                   Proyecto +
                 </Button>
@@ -155,18 +153,18 @@ export default function ProyectosPid() {
           {proyectos?.length > 0 ? (
             <Tabla
               columnas={[
-                "Tipo",
-                "Cod. PID",
-                "Fecha Inicio",
-                "Denominación",
-                "Estado",
-                "Ver Más",
+                'Tipo',
+                'Cod. PID',
+                'Fecha Inicio',
+                'Denominación',
+                'Estado',
+                'Ver Más',
               ]}
               datos={proyectos?.map((item) => {
                 const denominacion =
                   item?.denominacion === item?.denominacion.substring(0, 40)
                     ? item?.denominacion
-                    : item?.denominacion.substring(0, 40) + "...";
+                    : item?.denominacion.substring(0, 40) + '...';
                 const externo = item?.codPid ? (
                   <Tooltip
                     openDelay={100}
@@ -194,16 +192,16 @@ export default function ProyectosPid() {
                 );
                 const fechaInicio = item?.fechaInicio
                   ? formatoFechaISOaDDMMAAAA(item.fechaInicio)
-                  : "-";
+                  : '-';
                 return [
                   externo,
-                  item.codPid ? item.codPid : "-",
+                  item.codPid ? item.codPid : '-',
                   fechaInicio,
                   denominacion,
                   item?.estado
                     ? item?.estado.charAt(0).toUpperCase() +
                     item?.estado.toLowerCase().substring(1)
-                    : "-",
+                    : '-',
                   <Link to={`/proyectos/${item.idProyecto}`}>
                     <PlusSquareIcon />
                   </Link>,

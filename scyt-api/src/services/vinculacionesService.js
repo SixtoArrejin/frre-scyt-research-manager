@@ -1,12 +1,12 @@
-import { update } from "../repository/baseRepository.js";
+import { update } from '../repository/baseRepository.js';
 import {
   getAllVinculaciones,
   getVinculacionById,
   createDesembolso,
   getDesembolsoById,
   getDesembolsosByIdVinculacion,
-} from "../repository/vinculacionesRepository.js";
-import convertToISOString from "../utils/funciones.js";
+} from '../repository/vinculacionesRepository.js';
+import convertToISOString from '../utils/funciones.js';
 
 export async function getAllVinculacionesService() {
   try {
@@ -29,10 +29,10 @@ export async function getVinculacionByIdService(idVinculacion) {
 export async function createDesembolsoService(desembolsoData) {
   try {
     desembolsoData.fechaDesembolso = convertToISOString(
-      desembolsoData.fechaDesembolso
+      desembolsoData.fechaDesembolso,
     );
     // desembolsoData.fechaAprobado = convertToISOString(desembolsoData.fechaAprobado);
-    desembolsoData.estado = "En ejecución";
+    desembolsoData.estado = 'En ejecución';
     console.log(desembolsoData.fechaDesembolso);
     const newDesembolso = await createDesembolso(desembolsoData);
     return newDesembolso;
@@ -62,34 +62,34 @@ export async function getDesembolsosByIdVinculacionService(idVinculacion) {
 export async function updateDesembolsoService(idDesembolso, desembolsoData) {
   try {
     const filter = { idDesembolso };
-    if (desembolsoData.fechaDeRendicionReal === "") {
+    if (desembolsoData.fechaDeRendicionReal === '') {
       desembolsoData.fechaDeRendicionReal = null;
     } else if (desembolsoData.fechaDeRendicionReal) {
       desembolsoData.fechaDeRendicionReal = convertToISOString(
-        desembolsoData.fechaDeRendicionReal
+        desembolsoData.fechaDeRendicionReal,
       );
     }
 
-    if (desembolsoData.fechaAprobado === "") {
+    if (desembolsoData.fechaAprobado === '') {
       desembolsoData.fechaAprobado = null;
     } else if (desembolsoData.fechaAprobado) {
       desembolsoData.fechaAprobado = convertToISOString(
-        desembolsoData.fechaAprobado
+        desembolsoData.fechaAprobado,
       );
     }
 
-    if (desembolsoData.fechaDesembolso === "") {
+    if (desembolsoData.fechaDesembolso === '') {
       desembolsoData.fechaDesembolso = null;
     } else if (desembolsoData.fechaDesembolso) {
       desembolsoData.fechaDesembolso = convertToISOString(
-        desembolsoData.fechaDesembolso
+        desembolsoData.fechaDesembolso,
       );
     }
-    console.log("pepe", desembolsoData);
+    console.log('pepe', desembolsoData);
     const updatedDesembolso = await update(
-      "desembolsos",
+      'desembolsos',
       filter,
-      desembolsoData
+      desembolsoData,
     );
     return updatedDesembolso;
   } catch (error) {
@@ -112,9 +112,9 @@ export async function updateVinculacionService(idVinculacion, vinculacionData) {
       };
 
       vinculacionUpdate = await update(
-        "vinculaciones",
+        'vinculaciones',
         filter,
-        datosVinculacion
+        datosVinculacion,
       );
 
       if (vinculacionUpdate) {
@@ -129,10 +129,10 @@ export async function updateVinculacionService(idVinculacion, vinculacionData) {
             cantidadDesembolsos:
               vinculacionData.conFinanciamiento?.cantidadDesembolsos,
             fechaPresentacion: convertToISOString(
-              vinculacionData.conFinanciamiento?.fechaPresentacion
+              vinculacionData.conFinanciamiento?.fechaPresentacion,
             ),
             fechaAdjudicacion: convertToISOString(
-              vinculacionData.conFinanciamiento?.fechaAdjudicacion
+              vinculacionData.conFinanciamiento?.fechaAdjudicacion,
             ),
             plazoEjecucion: vinculacionData.conFinanciamiento?.plazoEjecucion,
             estado: vinculacionData.conFinanciamiento?.estado,
@@ -140,27 +140,27 @@ export async function updateVinculacionService(idVinculacion, vinculacionData) {
           };
 
           vinculacionUpdate.conFinanciamiento = await update(
-            "vinculacionesconfinanciamiento",
+            'vinculacionesconfinanciamiento',
             filter,
-            datosVinculacionFinanciamiento
+            datosVinculacionFinanciamiento,
           );
         } else {
           filter = { idSinFinanciamiento: idVinculacion };
 
           const datosVinculacionSinFinanciamiento = {
             fechaInicio: convertToISOString(
-              vinculacionData.sinFinanciamiento?.fechaInicio
+              vinculacionData.sinFinanciamiento?.fechaInicio,
             ),
             fechaCierre: convertToISOString(
-              vinculacionData?.sinFinanciamiento?.fechaCierre
+              vinculacionData?.sinFinanciamiento?.fechaCierre,
             ),
             descripcion: vinculacionData.sinFinanciamiento?.descripcion,
           };
 
           vinculacionUpdate.sinFinanciamiento = await update(
-            "vinculacionessinfinanciamiento",
+            'vinculacionessinfinanciamiento',
             filter,
-            datosVinculacionSinFinanciamiento
+            datosVinculacionSinFinanciamiento,
           );
         }
       }

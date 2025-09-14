@@ -1,15 +1,15 @@
-import { prisma } from "../src/db.js";
-import bcrypt from "bcrypt";
-import { ROLES } from "../src/config/roles.js";
+import { prisma } from '../src/db.js';
+import bcrypt from 'bcrypt';
+import { ROLES } from '../src/config/roles.js';
 
 async function createAdminUser(silent = false) {
   try {
     if (!silent) {
-      console.log("🚀 Creando usuario administrador...");
+      console.log('🚀 Creando usuario administrador...');
     }
 
-    const adminUsername = "admin";
-    const adminPassword = "admin123"; // Cambiar en producción
+    const adminUsername = 'admin';
+    const adminPassword = 'admin123'; // Cambiar en producción
 
     // Verificar si ya existe un usuario admin
     const existingAdmin = await prisma.usuarios.findUnique({
@@ -18,12 +18,12 @@ async function createAdminUser(silent = false) {
 
     if (existingAdmin) {
       if (!silent) {
-        console.log("⚠️  Usuario administrador ya existe.");
+        console.log('⚠️  Usuario administrador ya existe.');
       }
       return { exists: true, created: false };
     } else {
       if (!silent) {
-        console.log("📝 Creando nuevo usuario administrador...");
+        console.log('📝 Creando nuevo usuario administrador...');
       }
 
       const hashedPassword = await bcrypt.hash(adminPassword, 10);
@@ -33,12 +33,12 @@ async function createAdminUser(silent = false) {
           contrasena: hashedPassword,
           rol: ROLES.ADMIN,
           activo: true,
-          creadoPor: "system",
+          creadoPor: 'system',
         },
       });
 
       if (!silent) {
-        console.log("✅ Usuario administrador creado exitosamente");
+        console.log('✅ Usuario administrador creado exitosamente');
         console.log(`
 🔐 Credenciales del administrador:
    Usuario: ${adminUsername}
@@ -47,13 +47,13 @@ async function createAdminUser(silent = false) {
    
 ⚠️  IMPORTANTE: Cambia la contraseña después del primer login`);
       } else {
-        console.log("✅ Usuario administrador inicializado automáticamente");
+        console.log('✅ Usuario administrador inicializado automáticamente');
       }
 
       return { exists: false, created: true };
     }
   } catch (error) {
-    console.error("❌ Error al crear usuario administrador:", error);
+    console.error('❌ Error al crear usuario administrador:', error);
     return { exists: false, created: false, error: error.message };
   }
 }

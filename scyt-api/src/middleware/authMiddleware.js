@@ -1,22 +1,22 @@
-import jwt from "jsonwebtoken";
-import { getByUsername } from "../repository/usuariosRepository.js";
-import { hasPermission, ACTIONS } from "../config/roles.js";
+import jwt from 'jsonwebtoken';
+import { getByUsername } from '../repository/usuariosRepository.js';
+import { hasPermission, ACTIONS } from '../config/roles.js';
 
 // Middleware para proteger las rutas con token
 export function validateToken(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
     return res
       .status(401)
-      .json({ message: "Token no proporcionado", success: false });
+      .json({ message: 'Token no proporcionado', success: false });
   }
 
   try {
-    const decodedToken = jwt.verify(token, "secreto"); //Establecer una clave mas seguro que "secreto" y colocarlo en variables de entorno
+    const decodedToken = jwt.verify(token, 'secreto'); //Establecer una clave mas seguro que "secreto" y colocarlo en variables de entorno
     req.userData = { usuario: decodedToken.usuario, rol: decodedToken.rol };
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Token inválido", success: false });
+    return res.status(401).json({ message: 'Token inválido', success: false });
   }
 }
 
@@ -28,7 +28,7 @@ export function requirePermission(resource, action) {
       if (!req.userData || !req.userData.usuario) {
         return res
           .status(401)
-          .json({ message: "Usuario no autenticado", success: false });
+          .json({ message: 'Usuario no autenticado', success: false });
       }
 
       // Obtener los datos del usuario de la base de datos para asegurar que el rol esté actualizado
@@ -37,7 +37,7 @@ export function requirePermission(resource, action) {
         return res
           .status(401)
           .json({
-            message: "Usuario no encontrado o inactivo",
+            message: 'Usuario no encontrado o inactivo',
             success: false,
           });
       }

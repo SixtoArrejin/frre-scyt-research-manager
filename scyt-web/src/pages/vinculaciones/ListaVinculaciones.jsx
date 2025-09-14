@@ -46,7 +46,7 @@ export default function ListaInvestigadores() {
         (item) =>
           item.empresaInstitucion.toLowerCase().includes(empresainstitucionFiltro.toLowerCase()) &&
           (financiamientoFiltro == (item.vinculacionesconfinanciamiento ? 'Con financiamiento' : 'Sin financiamiento') ||
-            (financiamientoFiltro != 'Con financiamiento' && financiamientoFiltro != 'Sin financiamiento'))
+            (financiamientoFiltro != 'Con financiamiento' && financiamientoFiltro != 'Sin financiamiento')),
       );
       setVinculaciones(filteredVinculaciones);
       setFiltro(true);

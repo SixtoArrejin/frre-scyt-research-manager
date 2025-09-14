@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -7,33 +7,33 @@ import {
   Box,
   Button,
   Spinner,
-} from "@chakra-ui/react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+} from '@chakra-ui/react';
+import { PlusSquareIcon } from '@chakra-ui/icons';
+import { Link, useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import {
   formatoFechaISOaDDMMAAAA,
   getCategoriaMasActual,
-} from "../../utils/general";
-import { getProyectoById } from "../../utils/api/proyectosApi";
-import { getVinculacionByIdProyecto } from "../../utils/api/vinculacionesApi";
-import GenericInput from "../../components/formControls/GenericInput";
-import Tabla from "../../components/Tabla";
-import ImgDefault from "../../components/ImgDefault";
-import NoData from "../../img/no-data.png";
-import NoData2 from "../../img/no-data-2.png";
-import NoData3 from "../../img/no-data-3.png";
+} from '../../utils/general';
+import { getProyectoById } from '../../utils/api/proyectosApi';
+import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
+import GenericInput from '../../components/formControls/GenericInput';
+import Tabla from '../../components/Tabla';
+import ImgDefault from '../../components/ImgDefault';
+import NoData from '../../img/no-data.png';
+import NoData2 from '../../img/no-data-2.png';
+import NoData3 from '../../img/no-data-3.png';
 
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
 
-  const { data, isLoading, error } = useQuery(["proyecto", idProyecto], () =>
-    getProyectoById(Number(idProyecto))
+  const { data, isLoading, error } = useQuery(['proyecto', idProyecto], () =>
+    getProyectoById(Number(idProyecto)),
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
   const [regionales, setRegionales] = useState(
-    data?.proyecto?.regionalesAsociadas
+    data?.proyecto?.regionalesAsociadas,
   );
   const [esPid, setEsPId] = useState(false);
 
@@ -50,11 +50,11 @@ export default function DetalleProyectoPid() {
     data: dataVinculaciones,
     isLoading: isLoadingVinculaciones,
     error: errorVinculaciones,
-  } = useQuery(["vinculaciones", idProyecto], () =>
-    getVinculacionByIdProyecto(Number(idProyecto))
+  } = useQuery(['vinculaciones', idProyecto], () =>
+    getVinculacionByIdProyecto(Number(idProyecto)),
   );
   const [vinculaciones, setVinculaciones] = useState(
-    dataVinculaciones?.vinculaciones
+    dataVinculaciones?.vinculaciones,
   );
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function DetalleProyectoPid() {
                 >
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -125,7 +125,7 @@ export default function DetalleProyectoPid() {
                     {esPid && (
                       <GenericInput
                         label="Código PID"
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         value={data?.proyecto?.codPid}
                         isDisabled
                         mb="5vh"
@@ -134,8 +134,8 @@ export default function DetalleProyectoPid() {
                     <GenericInput
                       label="Regional asociada"
                       width={{
-                        base: "100%",
-                        md: esPid === true ? "65%" : "100%",
+                        base: '100%',
+                        md: esPid === true ? '65%' : '100%',
                       }}
                       value={data?.proyecto?.regional}
                       isDisabled
@@ -144,7 +144,7 @@ export default function DetalleProyectoPid() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -152,7 +152,7 @@ export default function DetalleProyectoPid() {
                     <GenericInput
                       textArea
                       label="Denominación"
-                      width={{ base: "100%", md: "100%" }}
+                      width={{ base: '100%', md: '100%' }}
                       value={data?.proyecto?.denominacion}
                       isDisabled
                       mb="5vh"
@@ -160,17 +160,17 @@ export default function DetalleProyectoPid() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
                   >
                     <GenericInput
                       label="Director"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={
                         data?.proyecto?.director?.apellido +
-                        ", " +
+                        ', ' +
                         data?.proyecto?.director?.nombre
                       }
                       isDisabled
@@ -178,13 +178,13 @@ export default function DetalleProyectoPid() {
                     />
                     <GenericInput
                       label="Codirector"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={
                         data?.proyecto?.codirector
                           ? data?.proyecto?.codirector?.apellido +
-                            ", " +
+                            ', ' +
                             data?.proyecto?.codirector?.nombre
-                          : "-"
+                          : '-'
                       }
                       isDisabled
                       mb="5vh"
@@ -192,31 +192,31 @@ export default function DetalleProyectoPid() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
                   >
                     <GenericInput
                       label="Fecha Inicio"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={
                         data?.proyecto?.fechaInicio
                           ? formatoFechaISOaDDMMAAAA(
-                              data?.proyecto?.fechaInicio
-                            )
-                          : "No cargado"
+                            data?.proyecto?.fechaInicio,
+                          )
+                          : 'No cargado'
                       }
                       isDisabled
                       mb="5vh"
                     />
                     <GenericInput
                       label="Fecha Fin"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={
                         data?.proyecto?.fechaFin
                           ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)
-                          : "No cargado"
+                          : 'No cargado'
                       }
                       isDisabled
                       mb="5vh"
@@ -224,21 +224,21 @@ export default function DetalleProyectoPid() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
                   >
                     <GenericInput
                       label="Programa"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.programa}
                       isDisabled
                       mb="5vh"
                     />
                     <GenericInput
                       label="Tipo de proyecto"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.tipoProyecto}
                       isDisabled
                       mb="5vh"
@@ -247,14 +247,14 @@ export default function DetalleProyectoPid() {
                   {esPid && (
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
                     >
                       <GenericInput
                         label="Tipo Actividad"
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         value={data?.proyecto?.tipoActividad}
                         isDisabled
                         mb="5vh"
@@ -262,20 +262,20 @@ export default function DetalleProyectoPid() {
                       <GenericInput
                         label="Estado"
                         width={{
-                          base: "100%",
+                          base: '100%',
                           md:
-                            data?.proyecto?.estado === "HOMOLOGADO"
-                              ? "30%"
-                              : "65%",
+                            data?.proyecto?.estado === 'HOMOLOGADO'
+                              ? '30%'
+                              : '65%',
                         }}
                         value={data?.proyecto?.estado}
                         isDisabled
                         mb="5vh"
                       />
-                      {data?.proyecto?.estado === "HOMOLOGADO" && (
+                      {data?.proyecto?.estado === 'HOMOLOGADO' && (
                         <GenericInput
                           label="Disposición"
-                          width={{ base: "100%", md: "30%" }}
+                          width={{ base: '100%', md: '30%' }}
                           value={data?.proyecto?.disposicion}
                           isDisabled
                           mb="5vh"
@@ -285,14 +285,14 @@ export default function DetalleProyectoPid() {
                   )}
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
                   >
                     <GenericInput
                       label="Convocatoria"
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.convocatoria}
                       isDisabled
                       mb="5vh"
@@ -300,8 +300,8 @@ export default function DetalleProyectoPid() {
                     {esPid && (
                       <GenericInput
                         label="Prorroga"
-                        width={{ base: "100%", md: "47.5%" }}
-                        value={data?.proyecto?.prorrogado ? "Si" : "No"}
+                        width={{ base: '100%', md: '47.5%' }}
+                        value={data?.proyecto?.prorrogado ? 'Si' : 'No'}
                         isDisabled
                         mb="5vh"
                       />
@@ -309,7 +309,7 @@ export default function DetalleProyectoPid() {
                     {!esPid && (
                       <GenericInput
                         label="Empresa/Institución"
-                        width={{ base: "100%", md: "47.5%" }}
+                        width={{ base: '100%', md: '47.5%' }}
                         value={data?.proyecto?.empresaInstitucion}
                         isDisabled
                         mb="5vh"
@@ -319,22 +319,22 @@ export default function DetalleProyectoPid() {
                   {esPid && data?.proyecto?.prorrogado && (
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
                     >
                       <GenericInput
                         label="Nueva Fecha Fin"
-                        width={{ base: "100%", md: "47.5%" }}
+                        width={{ base: '100%', md: '47.5%' }}
                         value={formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)}
                         isDisabled
                         mb="5vh"
                       />
-                      {data?.proyecto?.estado === "HOMOLOGADO" && (
+                      {data?.proyecto?.estado === 'HOMOLOGADO' && (
                         <GenericInput
                           label="Disposición"
-                          width={{ base: "100%", md: "47.5%" }}
+                          width={{ base: '100%', md: '47.5%' }}
                           value={data?.proyecto?.disposicion}
                           isDisabled
                           mb="5vh"
@@ -348,7 +348,7 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="flex-end"
                   >
-                    <Link to={`modificar`}>
+                    <Link to={'modificar'}>
                       <Button colorScheme="blue" variant="outline">
                         Modificar
                       </Button>
@@ -368,36 +368,36 @@ export default function DetalleProyectoPid() {
               {integrantes?.length > 0 ? (
                 <Tabla
                   columnas={[
-                    "Rol",
-                    "Apellido y Nombre",
-                    "Estado",
-                    "Fecha Ingreso",
-                    "Cat. UTN",
-                    "Cat. MIN.",
-                    "Más",
+                    'Rol',
+                    'Apellido y Nombre',
+                    'Estado',
+                    'Fecha Ingreso',
+                    'Cat. UTN',
+                    'Cat. MIN.',
+                    'Más',
                   ]}
                   datos={integrantes?.map((item, index) => {
                     const ayn =
-                      item?.personas.apellido + " " + item?.personas.nombre;
+                      item?.personas.apellido + ' ' + item?.personas.nombre;
                     const catUTN = getCategoriaMasActual(
                       item?.personas.categorias,
-                      "utn"
+                      'utn',
                     );
                     const catMIN = getCategoriaMasActual(
                       item?.personas.categorias,
-                      "ministerio"
+                      'ministerio',
                     );
                     return [
                       item.rol,
                       ayn,
-                      item.personas.activo ? "Activo" : "Inactivo",
+                      item.personas.activo ? 'Activo' : 'Inactivo',
                       data?.proyecto?.participa[index]?.fechaInicio
                         ? formatoFechaISOaDDMMAAAA(
-                            data.proyecto.participa[index].fechaInicio
-                          )
-                        : "-",
-                      catUTN ? catUTN.categoria : "-",
-                      catMIN ? catMIN.categoria : "-",
+                          data.proyecto.participa[index].fechaInicio,
+                        )
+                        : '-',
+                      catUTN ? catUTN.categoria : '-',
+                      catMIN ? catMIN.categoria : '-',
                       <Link to={`/investigadores/${item.idPersona}`}>
                         <PlusSquareIcon />
                       </Link>,
@@ -420,7 +420,7 @@ export default function DetalleProyectoPid() {
                 alignItems="center"
                 justifyContent="flex-end"
               >
-                <Link to={`agregar-investigador`}>
+                <Link to={'agregar-investigador'}>
                   <Button colorScheme="blue" variant="outline">
                     Agregar Investigador
                   </Button>
@@ -438,16 +438,16 @@ export default function DetalleProyectoPid() {
               {grupos?.length > 0 ? (
                 <Tabla
                   columnas={[
-                    "Grupo",
-                    "Resolución",
-                    "Fecha de creación",
-                    "Ver más",
+                    'Grupo',
+                    'Resolución',
+                    'Fecha de creación',
+                    'Ver más',
                   ]}
                   datos={grupos?.map((item) => [
                     item.gruposinvestigacion?.siglas,
                     item.gruposinvestigacion?.resolucion,
                     formatoFechaISOaDDMMAAAA(
-                      item.gruposinvestigacion?.fechaCreacion
+                      item.gruposinvestigacion?.fechaCreacion,
                     ),
                     <Link
                       to={`/grupos-investigacion/${item.gruposinvestigacion?.idGrupoInvestigacion}`}
@@ -472,7 +472,7 @@ export default function DetalleProyectoPid() {
                 alignItems="center"
                 justifyContent="flex-end"
               >
-                <Link to={`agregar-grupo`}>
+                <Link to={'agregar-grupo'}>
                   <Button colorScheme="blue" variant="outline">
                     Agregar Grupo
                   </Button>
@@ -489,7 +489,7 @@ export default function DetalleProyectoPid() {
 
               {regionales?.length > 0 ? (
                 <Tabla
-                  columnas={["Nombre"]}
+                  columnas={['Nombre']}
                   datos={regionales?.map((item) => [item.nombreRegional])}
                   paginado={false}
                 />
@@ -508,7 +508,7 @@ export default function DetalleProyectoPid() {
                 alignItems="center"
                 justifyContent="flex-end"
               >
-                <Link to={`agregar-regional`}>
+                <Link to={'agregar-regional'}>
                   <Button colorScheme="blue" variant="outline">
                     Agregar Regional
                   </Button>
@@ -525,14 +525,14 @@ export default function DetalleProyectoPid() {
               {vinculaciones?.length > 0 ? (
                 <Tabla
                   columnas={[
-                    "Empresa/Institución",
-                    "Financiamiento",
-                    "Marco",
-                    "Ver más",
+                    'Empresa/Institución',
+                    'Financiamiento',
+                    'Marco',
+                    'Ver más',
                   ]}
                   datos={vinculaciones?.map((item) => [
                     item.empresaInstitucion,
-                    item.vinculacionesconfinanciamiento ? "Si" : "No",
+                    item.vinculacionesconfinanciamiento ? 'Si' : 'No',
                     item.numeroMarco,
                     <Link to={`vinculacion/${item.idVinculacion}`}>
                       <PlusSquareIcon />
@@ -555,7 +555,7 @@ export default function DetalleProyectoPid() {
                 alignItems="center"
                 justifyContent="flex-end"
               >
-                <Link to={`nueva-vinculacion`}>
+                <Link to={'nueva-vinculacion'}>
                   <Button colorScheme="blue" variant="outline">
                     Nueva vinculación
                   </Button>
@@ -574,7 +574,7 @@ export default function DetalleProyectoPid() {
               colorScheme="blue"
               variant="outline"
               onClick={() =>
-                alert("Generar un reporte con los detalles del proyecto")
+                alert('Generar un reporte con los detalles del proyecto')
               }
             >
               Generar Reporte

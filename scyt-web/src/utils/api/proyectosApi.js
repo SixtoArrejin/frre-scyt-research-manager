@@ -1,9 +1,9 @@
-import { get, post, put, del } from "./baseApi";
+import { get, post, put, del } from './baseApi';
 
 // personasServices
 export async function getProyectos() {
   return get(
-    `/api/proyectos`
+    '/api/proyectos',
   );
 }
 
@@ -20,7 +20,7 @@ export async function getProyectoById(idProyecto) {
 }
 
 export async function createProyecto(data) {
-  return post(`/api/proyectos/`, data);
+  return post('/api/proyectos/', data);
 }
 
 export async function updatePID(id, data) {
@@ -36,21 +36,21 @@ export async function createVinculacion(id, data) {
 }
 
 export async function addInvestigador(idProyecto, data) {
-  console.log("info: ", idProyecto, data)
+  console.log('info: ', idProyecto, data);
   return post(`/api/proyectos/${idProyecto}/investigador`, data);
 }
 
 export async function delInvestigador(idProyecto, idInvestigador) {
-  console.log("info: ", idProyecto, idInvestigador)
+  console.log('info: ', idProyecto, idInvestigador);
   return del(`/api/proyectos/${idProyecto}/investigador/${idInvestigador}`);
 }
 
 export async function addGrupo(idProyecto, idGrupo) {
-  console.log("info: ", idProyecto, idGrupo)
-  return post(`/api/proyectos/${idProyecto}/grupo`, {idGrupo});
+  console.log('info: ', idProyecto, idGrupo);
+  return post(`/api/proyectos/${idProyecto}/grupo`, { idGrupo });
 }
 
 export async function delGrupo(idProyecto, idGrupo) {
-  console.log("info: ", idProyecto, idGrupo)
+  console.log('info: ', idProyecto, idGrupo);
   return del(`/api/proyectos/${idProyecto}/grupo/${idGrupo}`);
 }

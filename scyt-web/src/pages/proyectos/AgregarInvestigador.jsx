@@ -52,7 +52,7 @@ export default function AgregarInvestigador() {
     onSuccess: () => {
       toast({
         title: 'Agregar investigador',
-        description: `Se ha agregado el investigador exitosamente`,
+        description: 'Se ha agregado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -62,7 +62,7 @@ export default function AgregarInvestigador() {
     onError: () => {
       toast({
         title: 'Error al agregar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

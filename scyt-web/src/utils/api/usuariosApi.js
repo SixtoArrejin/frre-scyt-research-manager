@@ -1,13 +1,13 @@
-import { get, post, put, del } from "./baseApi";
+import { get, post, put, del } from './baseApi';
 
 // Obtener todos los usuarios
 export function getAllUsuarios() {
-  return get("/api/usuarios");
+  return get('/api/usuarios');
 }
 
 // Crear un nuevo usuario
 export function createUsuario(usuarioData) {
-  return post("/api/usuarios", usuarioData);
+  return post('/api/usuarios', usuarioData);
 }
 
 // Actualizar un usuario existente
@@ -22,10 +22,10 @@ export function deleteUsuario(usuario) {
 
 // Obtener roles disponibles
 export function getRoles() {
-  return get("/api/usuarios/roles");
+  return get('/api/usuarios/roles');
 }
 
 // Obtener perfil del usuario actual
 export function getProfile() {
-  return get("/api/usuarios/profile");
+  return get('/api/usuarios/profile');
 }

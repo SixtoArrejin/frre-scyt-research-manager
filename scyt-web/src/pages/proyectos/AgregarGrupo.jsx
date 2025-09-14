@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import investigadores from '../../utils/data/investigadores.json';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { getAllGrupos } from '../../utils/api/gruposApi';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { addGrupo, delGrupo, updatePID } from '../../utils/api/proyectosApi';
+import { addGrupo, delGrupo } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import GenericSelect from '../../components/formControls/GenericSelect';
@@ -33,7 +31,7 @@ export default function AgregarGrupo() {
   const { idPid } = useParams();
 
   const { data: dataProyecto, isLoading } = useQuery(['dataProyecto', idPid], () => getProyectoById(Number(idPid)));
-  
+
   const { data: dataGrupos } = useQuery(['allGrupos'], () => getAllGrupos());
 
   const { mutate: mutateAddGrupo, isLoading: isLoadingMutation } = useMutation({
@@ -41,7 +39,7 @@ export default function AgregarGrupo() {
     onSuccess: () => {
       toast({
         title: 'Agregar grupo',
-        description: `Se ha agregado el grupo exitosamente`,
+        description: 'Se ha agregado el grupo exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -50,7 +48,7 @@ export default function AgregarGrupo() {
     onError: () => {
       toast({
         title: 'Error al agregar el grupo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -62,7 +60,7 @@ export default function AgregarGrupo() {
     onSuccess: () => {
       toast({
         title: 'Eliminar grupo',
-        description: `Se ha eliminado el grupo exitosamente`,
+        description: 'Se ha eliminado el grupo exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -73,7 +71,7 @@ export default function AgregarGrupo() {
     onError: () => {
       toast({
         title: 'Error al eliminar el grupo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

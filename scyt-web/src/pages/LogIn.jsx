@@ -3,7 +3,6 @@ import {
   Button,
   Checkbox,
   Container,
-  Divider,
   FormControl,
   FormLabel,
   Heading,
@@ -11,20 +10,16 @@ import {
   VStack,
   Image,
   Input,
-  Link,
   Stack,
   Text,
-  useCounter,
   useToast,
 } from '@chakra-ui/react';
 import Logo from '../img/SCyT-SinFondo.png';
 import { UserContext } from '../context/UserContext';
 import { useContext } from 'react';
-import { useEffect } from 'react';
 import { logInUser } from '../utils/api/logInApi';
 import { useMutation } from 'react-query';
-import { useState } from 'react';
-import { Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 //   import { OAuthButtonGroup } from './OAuthButtonGroup'
 //   import { PasswordField } from './PasswordField'
@@ -62,7 +57,7 @@ export default function LogIn() {
       }
       toast({
         title: 'Inicio de sesión',
-        description: `Ha iniciado sesión exitosamente.`,
+        description: 'Ha iniciado sesión exitosamente.',
         status: 'success',
         isClosable: true,
       });
@@ -72,7 +67,7 @@ export default function LogIn() {
       console.log('Ocurrio un error intente nuevamente', data);
       toast({
         title: 'Inicio de sesión',
-        description: `Usuario o contraseña incorrectos.`,
+        description: 'Usuario o contraseña incorrectos.',
         status: 'error',
         isClosable: true,
       });

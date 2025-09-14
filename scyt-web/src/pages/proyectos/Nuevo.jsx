@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -7,95 +7,95 @@ import {
   Box,
   Button,
   useToast,
-} from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "react-query";
-import { getAllGrupos } from "../../utils/api/gruposApi";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
-import { getAllPersonas } from "../../utils/api/personasApi";
-import { createProyecto } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
-import { getAllRegionales } from "../../utils/api/regionalesApi";
-import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
-import GenericInput from "../../components/formControls/GenericInput.jsx";
-import GenericSelect from "../../components/formControls/GenericSelect.jsx";
-import GenericRadio from "../../components/formControls/GenericRadio.jsx";
-import Tabla from "../../components/Tabla.jsx";
-import { formatoFechaISOaDDMMAAAA } from "../../utils/general.jsx";
+} from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
+import { getAllGrupos } from '../../utils/api/gruposApi';
+import { useFieldArray, useForm, useWatch } from 'react-hook-form';
+import { getAllPersonas } from '../../utils/api/personasApi';
+import { createProyecto } from '../../utils/api/proyectosApi';
+import CustomModal from '../../components/CustomModal';
+import { getAllRegionales } from '../../utils/api/regionalesApi';
+import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
+import GenericInput from '../../components/formControls/GenericInput.jsx';
+import GenericSelect from '../../components/formControls/GenericSelect.jsx';
+import GenericRadio from '../../components/formControls/GenericRadio.jsx';
+import Tabla from '../../components/Tabla.jsx';
+import { formatoFechaISOaDDMMAAAA } from '../../utils/general.jsx';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const schema = yup.object({
-  codPid: yup.mixed().when("tipo", {
-    is: val => val === "pid",
-    then: () => yup.string().required("El código PID es requerido"),
+  codPid: yup.mixed().when('tipo', {
+    is: val => val === 'pid',
+    then: () => yup.string().required('El código PID es requerido'),
     otherwise: () => yup.string().nullable(),
   }),
   denominacion: yup.string().required('La denominación es requerida'),
   convocatoria: yup
     .number()
-    .required("La convocatoria es requerida")
-    .typeError("Ingrese un número válido")
-    .test("is-valid-number", "Ingrese un número válido", (value) => {
-      return typeof value === "number" && !isNaN(value);
+    .required('La convocatoria es requerida')
+    .typeError('Ingrese un número válido')
+    .test('is-valid-number', 'Ingrese un número válido', (value) => {
+      return typeof value === 'number' && !isNaN(value);
     }),
   programa: yup.string().required('El programa es requerido'),
   tipoProyecto: yup.string().required('El tipo de proyecto es requerido'),
-  tipoActividad: yup.mixed().when("tipo", {
-    is: val => val === "pid",
-    then: () => yup.string().required("El tipo de actividad es requerido"),
+  tipoActividad: yup.mixed().when('tipo', {
+    is: val => val === 'pid',
+    then: () => yup.string().required('El tipo de actividad es requerido'),
     otherwise: () => yup.string().nullable(),
   }),
-  estado: yup.mixed().when("tipo", {
-    is: val => val === "pid",
-    then: () => yup.string().required("El estado es requerido"),
+  estado: yup.mixed().when('tipo', {
+    is: val => val === 'pid',
+    then: () => yup.string().required('El estado es requerido'),
     otherwise: () => yup.string().nullable(),
   }),
-  disposicion: yup.mixed().when(["tipo", "estado"], {
+  disposicion: yup.mixed().when(['tipo', 'estado'], {
     is: (tipo, estado) =>
-      tipo === "pid" && estado === "HOMOLOGADO",
-    then: () => yup.string().required("La disposición es requerida").matches(/^\d+\/\d+$/, "El formato de la disposición debe ser '###/###'"),
+      tipo === 'pid' && estado === 'HOMOLOGADO',
+    then: () => yup.string().required('La disposición es requerida').matches(/^\d+\/\d+$/, 'El formato de la disposición debe ser \'###/###\''),
     otherwise: () => yup.string().nullable(),
   }),
-  nuevaFechaFin: yup.mixed().when(["tipo", "prorrogado"], {
+  nuevaFechaFin: yup.mixed().when(['tipo', 'prorrogado'], {
     is: (tipo, prorrogado) =>
-      tipo === "pid" && prorrogado === "true",
-    then: () => yup.string().required("La nueva fecha de finalización es requerida"),
+      tipo === 'pid' && prorrogado === 'true',
+    then: () => yup.string().required('La nueva fecha de finalización es requerida'),
     otherwise: () => yup.string().nullable(),
   }),
-  nuevaDisposicion: yup.mixed().when(["tipo", "prorrogado"], {
+  nuevaDisposicion: yup.mixed().when(['tipo', 'prorrogado'], {
     is: (tipo, prorrogado) =>
-      tipo === "pid" && prorrogado === "true",
-    then: () => yup.string().required("La nueva disposición es requerida").matches(/^\d+\/\d+$/, "El formato de la disposición debe ser '###/###'"),
+      tipo === 'pid' && prorrogado === 'true',
+    then: () => yup.string().required('La nueva disposición es requerida').matches(/^\d+\/\d+$/, 'El formato de la disposición debe ser \'###/###\''),
     otherwise: () => yup.string().nullable(),
   }),
 });
 
 
 const tipoActividad = [
-  "Desarrollo Experimental",
-  "Investigación Aplicada",
-  "Investigación Básica",
+  'Desarrollo Experimental',
+  'Investigación Aplicada',
+  'Investigación Básica',
 ];
 
 const estadoProyecto = [
-  "EN TRÁMITE",
-  "HOMOLOGADO",
-  "REFORMULAR POR EVALUACIÓN EXTERNA",
-  "REFORMULAR POR CONSEJO DE PROGRAMAS",
-  "DENEGADO POR EVALUACIÓN EXTERNA",
-  "DENEGADO POR CONSEJO DE PROGRAMAS",
-  "CANCELADO",
+  'EN TRÁMITE',
+  'HOMOLOGADO',
+  'REFORMULAR POR EVALUACIÓN EXTERNA',
+  'REFORMULAR POR CONSEJO DE PROGRAMAS',
+  'DENEGADO POR EVALUACIÓN EXTERNA',
+  'DENEGADO POR CONSEJO DE PROGRAMAS',
+  'CANCELADO',
 ];
 
 const roles = [
-  "Director",
-  "CoDirector",
-  "Investigador",
-  "Becario",
-  "Asesor Cientifico",
-  "Técnico de Apoyo",
+  'Director',
+  'CoDirector',
+  'Investigador',
+  'Becario',
+  'Asesor Cientifico',
+  'Técnico de Apoyo',
 ];
 
 export default function NuevoPid() {
@@ -117,26 +117,26 @@ export default function NuevoPid() {
     data,
     isLoading: isLoadingGetGrupos,
     error,
-  } = useQuery("grupos", () => getAllGrupos());
+  } = useQuery('grupos', () => getAllGrupos());
 
   const {
     data: dataRegionales,
     isLoading: isLoadingGetRegionales,
     error: errorRegionales,
-  } = useQuery(["regionales"], () => getAllRegionales());
+  } = useQuery(['regionales'], () => getAllRegionales());
 
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
     //error: errorTiposProyectos,
-  } = useQuery(["tiposProyectos"], () => getAllTiposProyectos());
+  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const grupos = data?.grupos;
 
   const [investigadores, setInvestigadores] = useState([]);
 
-  const { data: dataInvestigadores } = useQuery(["investigadoresNewPID"], () =>
-    getAllPersonas()
+  const { data: dataInvestigadores } = useQuery(['investigadoresNewPID'], () =>
+    getAllPersonas(),
   );
 
   useEffect(() => {
@@ -147,9 +147,9 @@ export default function NuevoPid() {
     mutationFn: (formData) => createProyecto(formData),
     onSuccess: () => {
       toast({
-        title: "Nuevo Proyecto",
-        description: `Se ha creado el nuevo proyecto exitosamente`,
-        status: "success",
+        title: 'Nuevo Proyecto',
+        description: 'Se ha creado el nuevo proyecto exitosamente',
+        status: 'success',
         isClosable: true,
       });
       navigate(-1);
@@ -157,9 +157,9 @@ export default function NuevoPid() {
     onError: (error) => {
       const errorMessage = error?.message;
       toast({
-        title: "Error al crear el proyecto",
-        description: `${errorMessage || "Intente nuevamente"}`,
-        status: "error",
+        title: 'Error al crear el proyecto',
+        description: `${errorMessage || 'Intente nuevamente'}`,
+        status: 'error',
         isClosable: true,
       });
     },
@@ -174,33 +174,33 @@ export default function NuevoPid() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      tipoActividad: "",
+      tipoActividad: '',
       fechaInicio: undefined,
       fechaFin: undefined,
-      denominacion: "",
+      denominacion: '',
       completo: false,
-      regional: "Facultad Regional Resistencia",
+      regional: 'Facultad Regional Resistencia',
       convocatoria: undefined,
       estado: undefined,
       idDirector: undefined,
       idCodirector: undefined,
-      tipoProyecto: "",
-      prorrogado: "false",
+      tipoProyecto: '',
+      prorrogado: 'false',
       nuevaFechaFin: undefined,
       nuevaDisposicion: undefined,
-      codPid: "",
-      programa: "",
+      codPid: '',
+      programa: '',
       disposicion: undefined,
-      tipo: "pid",
-      empresaInstitucion: "",
+      tipo: 'pid',
+      empresaInstitucion: '',
       regionales: [],
     },
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
 
   const { fields, append, remove, update } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "investigadores", // Nombre del campo de formulario que es un arreglo
+    name: 'investigadores', // Nombre del campo de formulario que es un arreglo
   });
 
   const {
@@ -210,7 +210,7 @@ export default function NuevoPid() {
     //update: updateG,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "grupos", // Nombre del campo de formulario que es un arreglo
+    name: 'grupos', // Nombre del campo de formulario que es un arreglo
   });
 
   const {
@@ -220,20 +220,20 @@ export default function NuevoPid() {
     //update: updateR,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
-    name: "regionales", // Nombre del campo de formulario que es un arreglo
+    name: 'regionales', // Nombre del campo de formulario que es un arreglo
   });
 
   const tipoProyectosConRegionales = [
-    "Integrador Asociado (PID IA) con Incentivo",
-    "Integrador Asociado (PID IA) sin Incentivo",
-    "Inter-institucional (PIC IN) con Incentivos",
-    "Inter-institucional (PIC IN) sin Incentivos",
-    "PID Tecnología Educativa Multifacultad con Incentivos (PIDA)",
-    "PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)",
-    "Tutorado con Incentivo",
-    "Tutorado sin Incentivo",
+    'Integrador Asociado (PID IA) con Incentivo',
+    'Integrador Asociado (PID IA) sin Incentivo',
+    'Inter-institucional (PIC IN) con Incentivos',
+    'Inter-institucional (PIC IN) sin Incentivos',
+    'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
+    'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
+    'Tutorado con Incentivo',
+    'Tutorado sin Incentivo',
   ];
-  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState("");
+  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
 
   const handleTipoProyectoChange = (e) => {
     const value = e.target.value;
@@ -263,7 +263,7 @@ export default function NuevoPid() {
     console.log(sortedInvestigadores);
     console.log(selectedOptions);
     const objetoBuscado = sortedInvestigadores.find(
-      (item) => item.idPersona == selectedOptions
+      (item) => item.idPersona == selectedOptions,
     );
 
     const objetoAgregar = {
@@ -275,7 +275,7 @@ export default function NuevoPid() {
 
     // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
     const objetoYaAgregado = investigadoresSeleccionados.find(
-      (item) => item.idPersona == selectedOptions
+      (item) => item.idPersona == selectedOptions,
     );
 
     if (!objetoYaAgregado) {
@@ -291,7 +291,7 @@ export default function NuevoPid() {
     // console.log(sortedInvestigadores);
     console.log(selectedOptionsGrupos);
     const objetoBuscado = grupos.find(
-      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos,
     );
 
     const objetoAgregar = {
@@ -300,7 +300,7 @@ export default function NuevoPid() {
 
     // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
     const objetoYaAgregado = gruposSeleccionados.find(
-      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos
+      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos,
     );
 
     if (!objetoYaAgregado) {
@@ -309,7 +309,7 @@ export default function NuevoPid() {
       const investigadoresGrupo = investigadores.filter(
         (investigador) =>
           investigador.idGrupoInvestigacion ===
-          objetoBuscado.idGrupoInvestigacion
+          objetoBuscado.idGrupoInvestigacion,
       );
 
       // Actualizar la lista de investigadores seleccionados
@@ -325,7 +325,7 @@ export default function NuevoPid() {
   const agregarRegional = () => {
     // Verificar si el objeto ya está en regionalesSeleccionadas antes de agregarlo
     const objetoYaAgregado = regionalesSeleccionados.find(
-      (item) => item == selectedOptionsRegionales
+      (item) => item == selectedOptionsRegionales,
     );
 
     if (!objetoYaAgregado) {
@@ -340,7 +340,7 @@ export default function NuevoPid() {
   const eliminarInvestigador = (idAEliminar, index) => {
     // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosInvestigadores = investigadoresSeleccionados.filter(
-      (item) => item.idPersona !== idAEliminar
+      (item) => item.idPersona !== idAEliminar,
     );
 
     remove(index);
@@ -352,12 +352,12 @@ export default function NuevoPid() {
   const eliminarGrupo = (idAEliminar, index) => {
     // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
     const nuevosGrupos = gruposSeleccionados.filter(
-      (item) => item.idGrupoInvestigacion !== idAEliminar
+      (item) => item.idGrupoInvestigacion !== idAEliminar,
     );
 
     // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
     const investigadoresRestantes = investigadoresDelGrupo.filter(
-      (investigador) => investigador.idGrupoInvestigacion !== idAEliminar
+      (investigador) => investigador.idGrupoInvestigacion !== idAEliminar,
     );
 
     removeG(index);
@@ -371,7 +371,7 @@ export default function NuevoPid() {
   const eliminarRegional = (itemEliminar, index) => {
     // Filtrar las regionales y crear un nuevo arreglo sin el objeto a eliminar
     const nuevasRegionales = regionalesSeleccionados.filter(
-      (item) => item !== itemEliminar
+      (item) => item !== itemEliminar,
     );
 
     removeR(index);
@@ -383,20 +383,20 @@ export default function NuevoPid() {
     // Convierte el valor de 'prorroga' a booleano antes de enviar
     const modifiedValues = {
       ...values,
-      prorrogado: values.prorrogado === "true",
+      prorrogado: values.prorrogado === 'true',
     };
     console.log(modifiedValues);
     mutate(modifiedValues);
   };
 
-  const PidExterno = useWatch({ control, name: "tipo" });
-  const [estado, setEstado] = useState("");
+  const PidExterno = useWatch({ control, name: 'tipo' });
+  const [estado, setEstado] = useState('');
 
   return (
     <Card>
       <CardBody>
         <form
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
         // onSubmit={handleSubmit((values) => onSub(values))}
         >
           <Box
@@ -430,13 +430,13 @@ export default function NuevoPid() {
                   >
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
                     >
                       <Box
-                        width={{ base: "100%", md: "20%" }}
+                        width={{ base: '100%', md: '20%' }}
                         display="flex"
                         justifyContent="center"
                         mt="15px"
@@ -445,23 +445,23 @@ export default function NuevoPid() {
                           name="tipo"
                           direction="row"
                           options={[
-                            { value: "pid", label: "PID" },
-                            { value: "externo", label: "Externo" },
+                            { value: 'pid', label: 'PID' },
+                            { value: 'externo', label: 'Externo' },
                           ]}
                           register={register}
                           defaultValue="pid"
                           mb="5vh"
-                          width={"100%"}
+                          width={'100%'}
                         />
                       </Box>
-                      {PidExterno === "pid" && (
+                      {PidExterno === 'pid' && (
                         <GenericInput
                           name="codPid"
                           placeholder="Código PID"
                           register={register}
                           errors={errors}
                           label="Código PID"
-                          width={{ base: "100%", md: "80%" }}
+                          width={{ base: '100%', md: '80%' }}
                           mb="5vh"
                           isRequired
                         />
@@ -469,7 +469,7 @@ export default function NuevoPid() {
                     </Box>
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
@@ -481,14 +481,14 @@ export default function NuevoPid() {
                         register={register}
                         errors={errors}
                         label="Denominación"
-                        width={{ base: "100%", md: "100%" }}
+                        width={{ base: '100%', md: '100%' }}
                         mb="5vh"
                         isRequired
                       />
                     </Box>
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
@@ -498,7 +498,7 @@ export default function NuevoPid() {
                         type="date"
                         register={register}
                         label="Fecha Inicio"
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         mb="5vh"
                       />
 
@@ -507,7 +507,7 @@ export default function NuevoPid() {
                         type="date"
                         register={register}
                         label="Fecha Fin"
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         mb="5vh"
                       />
 
@@ -518,14 +518,14 @@ export default function NuevoPid() {
                         register={register}
                         errors={errors}
                         label="Convocatoria"
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         mb="5vh"
                         isRequired
                       />
                     </Box>
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
@@ -536,7 +536,7 @@ export default function NuevoPid() {
                         register={register}
                         errors={errors}
                         label="Programa"
-                        width={{ base: "100%", md: "47.5%" }}
+                        width={{ base: '100%', md: '47.5%' }}
                         mb="5vh"
                         isRequired
                       />
@@ -545,11 +545,11 @@ export default function NuevoPid() {
                         name="tipoProyecto"
                         label="Tipo de proyecto"
                         placeholder="Tipo de proyecto..."
-                        width={{ base: "100%", md: "47.5%" }}
+                        width={{ base: '100%', md: '47.5%' }}
                         mb="5vh"
                         register={register}
                         options={(isLoadingGetTiposProyectos
-                          ? ["Cargando..."]
+                          ? ['Cargando...']
                           : dataTiposProyectos?.tiposProyectos
                         ).map((tipo) => ({
                           value: tipo,
@@ -560,10 +560,10 @@ export default function NuevoPid() {
                         isRequired
                       />
                     </Box>
-                    {PidExterno === "pid" && (
+                    {PidExterno === 'pid' && (
                       <Box
                         display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
+                        flexDirection={{ base: 'column', md: 'row' }}
                         width="100%"
                         alignItems="center"
                         justifyContent="space-between"
@@ -572,7 +572,7 @@ export default function NuevoPid() {
                           name="tipoActividad"
                           label="Tipo de actividad"
                           placeholder="Tipo de actividad..."
-                          width={{ base: "100%", md: "30%" }}
+                          width={{ base: '100%', md: '30%' }}
                           mb="5vh"
                           isRequired
                           register={register}
@@ -588,8 +588,8 @@ export default function NuevoPid() {
                           label="Estado"
                           placeholder="Estado..."
                           width={{
-                            base: "100%",
-                            md: estado === "HOMOLOGADO" ? "30%" : "65%",
+                            base: '100%',
+                            md: estado === 'HOMOLOGADO' ? '30%' : '65%',
                           }}
                           mb="5vh"
                           isRequired
@@ -602,15 +602,15 @@ export default function NuevoPid() {
                           onChange={(e) => setEstado(e.target.value)}
                         />
 
-                        {estado === "HOMOLOGADO" && (
+                        {estado === 'HOMOLOGADO' && (
                           <GenericInput
                             name="disposicion"
                             placeholder="Disposición"
                             register={register}
                             label="Disposición"
-                            width={{ base: "100%", md: "30%" }}
+                            width={{ base: '100%', md: '30%' }}
                             mb="5vh"
-                            isRequired={estado === "HOMOLOGADO"}
+                            isRequired={estado === 'HOMOLOGADO'}
                             errors={errors}
                           />
                         )}
@@ -618,24 +618,24 @@ export default function NuevoPid() {
                     )}
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
                     >
-                      {PidExterno !== "pid" && (
+                      {PidExterno !== 'pid' && (
                         <GenericInput
                           name="empresaInstitucion"
                           placeholder="Empresa/Institución"
                           register={register}
                           label="Empresa/Institución"
-                          width={{ base: "100%", md: "47.5%" }}
+                          width={{ base: '100%', md: '47.5%' }}
                           mb="5vh"
                         />
                       )}
-                      {PidExterno === "pid" && (
+                      {PidExterno === 'pid' && (
                         <Box
-                          width={{ base: "100%", md: "52.5%" }}
+                          width={{ base: '100%', md: '52.5%' }}
                           display="flex"
                           justifyContent="flex-start"
                           alignItems="flex-start"
@@ -650,58 +650,58 @@ export default function NuevoPid() {
                             name="prorrogado"
                             direction="row"
                             options={[
-                              { value: "true", label: "Si" },
-                              { value: "false", label: "No" },
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
                             ]}
                             register={register}
-                            defaultValue={watch("prorrogado")}
+                            defaultValue={watch('prorrogado')}
                             errors={errors}
                           />
                         </Box>
                       )}
-                      {PidExterno === "pid" &&
-                        watch("prorrogado") === "true" && (
-                          <Box
-                            display="flex"
-                            flexDirection={{ base: "column", md: "row" }}
-                            width="100%"
-                            alignItems="center"
-                            justifyContent="space-between"
-                          >
+                      {PidExterno === 'pid' &&
+                        watch('prorrogado') === 'true' && (
+                        <Box
+                          display="flex"
+                          flexDirection={{ base: 'column', md: 'row' }}
+                          width="100%"
+                          alignItems="center"
+                          justifyContent="space-between"
+                        >
+                          <GenericInput
+                            name="nuevaFechaFin"
+                            type="date"
+                            register={register}
+                            errors={errors}
+                            label="Nueva Fecha Finalización"
+                            width={{
+                              base: '100%',
+                              md: estado === 'HOMOLOGADO' ? '46.25%' : '100%',
+                            }}
+                            mb="5vh"
+                            isRequired={
+                              PidExterno === 'pid' &&
+                                watch('prorrogado') === 'true'
+                            }
+                          />
+                          {estado === 'HOMOLOGADO' && (
                             <GenericInput
-                              name="nuevaFechaFin"
-                              type="date"
+                              name="nuevaDisposicion"
+                              placeholder="Nueva Disposición"
                               register={register}
                               errors={errors}
-                              label="Nueva Fecha Finalización"
-                              width={{
-                                base: "100%",
-                                md: estado === "HOMOLOGADO" ? "46.25%" : "100%",
-                              }}
+                              label="Nueva Disposición"
+                              width={{ base: '100%', md: '46.25%' }}
                               mb="5vh"
                               isRequired={
-                                PidExterno === "pid" &&
-                                watch("prorrogado") === "true"
+                                estado === 'HOMOLOGADO' &&
+                                  PidExterno === 'pid' &&
+                                  watch('prorrogado') === 'true'
                               }
                             />
-                            {estado === "HOMOLOGADO" && (
-                              <GenericInput
-                                name="nuevaDisposicion"
-                                placeholder="Nueva Disposición"
-                                register={register}
-                                errors={errors}
-                                label="Nueva Disposición"
-                                width={{ base: "100%", md: "46.25%" }}
-                                mb="5vh"
-                                isRequired={
-                                  estado === "HOMOLOGADO" &&
-                                  PidExterno === "pid" &&
-                                  watch("prorrogado") === "true"
-                                }
-                              />
-                            )}
-                          </Box>
-                        )}
+                          )}
+                        </Box>
+                      )}
                     </Box>
                   </Box>
                 </Box>
@@ -758,11 +758,11 @@ export default function NuevoPid() {
                 </Box>
                 <br />
                 <Tabla
-                  columnas={["Grupo", "Eliminar"]}
+                  columnas={['Grupo', 'Eliminar']}
                   datos={gruposSeleccionados?.map((item, index) => [
                     item.siglas,
                     <DeleteIcon
-                      cursor={"pointer"}
+                      cursor={'pointer'}
                       onClick={() => {
                         eliminarGrupo(item.idGrupoInvestigacion, index);
                       }}
@@ -804,7 +804,7 @@ export default function NuevoPid() {
                         options={sortedInvestigadores?.map((investigador) => ({
                           value: investigador.idPersona,
                           label:
-                            investigador.apellido + ", " + investigador.nombre,
+                            investigador.apellido + ', ' + investigador.nombre,
                         }))}
                         onChange={(e) => {
                           setSelectedOptions(e.target.value);
@@ -847,11 +847,11 @@ export default function NuevoPid() {
 
                   <Tabla
                     columnas={[
-                      "Apellido y Nombre",
-                      "Grupo",
-                      "Rol",
-                      "Fecha de Inicio",
-                      "Eliminar",
+                      'Apellido y Nombre',
+                      'Grupo',
+                      'Rol',
+                      'Fecha de Inicio',
+                      'Eliminar',
                     ]}
                     datos={fields?.map((item, index) => [
                       <div>
@@ -861,7 +861,7 @@ export default function NuevoPid() {
                       <div>{item.rol}</div>,
                       <div>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
                       <DeleteIcon
-                        cursor={"pointer"}
+                        cursor={'pointer'}
                         onClick={() => {
                           eliminarInvestigador(item.idPersona, index);
                         }}
@@ -901,7 +901,7 @@ export default function NuevoPid() {
                           (regional) => ({
                             value: regional,
                             label: regional,
-                          })
+                          }),
                         )}
                         onChange={(e) => {
                           setSelectedOptionsRegionales(e.target.value);
@@ -922,11 +922,11 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={["Regional", "Eliminar"]}
+                    columnas={['Regional', 'Eliminar']}
                     datos={regionalesSeleccionados?.map((item, index) => [
                       item,
                       <DeleteIcon
-                        cursor={"pointer"}
+                        cursor={'pointer'}
                         onClick={() => {
                           eliminarRegional(item, index);
                         }}

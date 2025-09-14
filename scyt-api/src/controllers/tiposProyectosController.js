@@ -1,6 +1,6 @@
 import {
-    getAllTiposProyectosService
-  } from "../services/tiposProyectosService.js";
+    getAllTiposProyectosService,
+  } from '../services/tiposProyectosService.js';
   
   export async function getAllTiposProyectos(req, res) {
     try {

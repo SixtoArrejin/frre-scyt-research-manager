@@ -52,11 +52,11 @@ export default function DetalleInvestigador() {
   const toast = useToast();
 
   useEffect(() => {
-    if (dataProyectos){
-      console.log(dataProyectos)
+    if (dataProyectos) {
+      console.log(dataProyectos);
     }
 
-  }, [dataProyectos])
+  }, [dataProyectos]);
 
   const categoriasUTN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'utn');
   const categoriasMIN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'ministerio');
@@ -68,7 +68,7 @@ export default function DetalleInvestigador() {
     onSuccess: () => {
       toast({
         title: 'Eliminar categoria',
-        description: `Se ha eliminado la categoria exitosamente`,
+        description: 'Se ha eliminado la categoria exitosamente',
         status: 'info',
         isClosable: true,
       });
@@ -77,7 +77,7 @@ export default function DetalleInvestigador() {
     onError: () => {
       toast({
         title: 'Eliminar categoria',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -135,7 +135,7 @@ export default function DetalleInvestigador() {
                   />
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
-                  <Link to={`modificar`}>
+                  <Link to={'modificar'}>
                     <Button colorScheme='blue' variant='outline'>
                       Modificar
                     </Button>
@@ -237,7 +237,7 @@ export default function DetalleInvestigador() {
               )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <Link to={`nueva-categoria`}>
+                <Link to={'nueva-categoria'}>
                   <Button colorScheme='blue' variant='outline'>
                     Nueva Categoría
                   </Button>

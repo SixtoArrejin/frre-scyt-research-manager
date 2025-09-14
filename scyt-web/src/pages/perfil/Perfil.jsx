@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -7,7 +7,6 @@ import {
   Avatar,
   Text,
   Button,
-  HStack,
   VStack,
   Spinner,
 } from '@chakra-ui/react';
@@ -98,8 +97,8 @@ export default function Perfil() {
                     size="2xl"
                     src={form?.avatar || ''}
                     name={getInitials(form)}
-                    bg={!form?.avatar ? "blue.500" : undefined}
-                    color={!form?.avatar ? "white" : undefined}
+                    bg={!form?.avatar ? 'blue.500' : undefined}
+                    color={!form?.avatar ? 'white' : undefined}
                   />
                 </VStack>
 

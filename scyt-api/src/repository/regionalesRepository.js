@@ -2,11 +2,11 @@ import {
     getAll,
     create,
     update,
-    getById
+    getById,
   } from './baseRepository.js';
-  import { prisma } from '../db.js'
+  import { prisma } from '../db.js';
   
   export async function getAllRegionales() {
-    const includeRelations = []
+    const includeRelations = [];
     return await getAll('regionales', includeRelations);
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardBody,
@@ -8,33 +8,33 @@ import {
   Button,
   useToast,
   Spinner,
-} from "@chakra-ui/react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "react-query";
-import { formatoFechaISOaAAAAMMDD } from "../../utils/general";
-import { getProyectoById, updateProyecto } from "../../utils/api/proyectosApi";
-import CustomModal from "../../components/CustomModal";
-import { useForm } from "react-hook-form";
-import { getAllTiposProyectos } from "../../utils/api/tiposProyectosApi";
-import { getAllRegionales } from "../../utils/api/regionalesApi";
-import GenericInput from "../../components/formControls/GenericInput";
-import GenericSelect from "../../components/formControls/GenericSelect";
-import GenericRadio from "../../components/formControls/GenericRadio";
+} from '@chakra-ui/react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
+import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
+import { getProyectoById, updateProyecto } from '../../utils/api/proyectosApi';
+import CustomModal from '../../components/CustomModal';
+import { useForm } from 'react-hook-form';
+import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
+import { getAllRegionales } from '../../utils/api/regionalesApi';
+import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
+import GenericRadio from '../../components/formControls/GenericRadio';
 
 const tipoActividad = [
-  "Desarrollo Experimental",
-  "Investigación Aplicada",
-  "Investigación Básica",
+  'Desarrollo Experimental',
+  'Investigación Aplicada',
+  'Investigación Básica',
 ];
 
 const estadoProyecto = [
-  "EN TRÁMITE",
-  "HOMOLOGADO",
-  "REFORMULAR POR EVALUACIÓN EXTERNA",
-  "REFORMULAR POR CONSEJO DE PROGRAMAS",
-  "DENEGADO POR EVALUACIÓN EXTERNA",
-  "DENEGADO POR CONSEJO DE PROGRAMAS",
-  "CANCELADO",
+  'EN TRÁMITE',
+  'HOMOLOGADO',
+  'REFORMULAR POR EVALUACIÓN EXTERNA',
+  'REFORMULAR POR CONSEJO DE PROGRAMAS',
+  'DENEGADO POR EVALUACIÓN EXTERNA',
+  'DENEGADO POR CONSEJO DE PROGRAMAS',
+  'CANCELADO',
 ];
 
 export default function ModificarPIDs() {
@@ -52,38 +52,38 @@ export default function ModificarPIDs() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(["proyecto", idPid], () =>
-    getProyectoById(Number(idPid))
+  const { data, isLoading, error } = useQuery(['proyecto', idPid], () =>
+    getProyectoById(Number(idPid)),
   );
 
   const {
     data: dataRegionales,
     isLoading: isLoadingGetRegionales,
     error: errorRegionales,
-  } = useQuery(["regionales"], () => getAllRegionales());
+  } = useQuery(['regionales'], () => getAllRegionales());
 
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
     error: errorTiposProyectos,
-  } = useQuery(["tiposProyectos"], () => getAllTiposProyectos());
+  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updateProyecto(Number(idPid), formData),
     onSuccess: () => {
       toast({
-        title: "Modificar PID",
-        description: `Se ha modificado el PID exitosamente`,
-        status: "success",
+        title: 'Modificar PID',
+        description: 'Se ha modificado el PID exitosamente',
+        status: 'success',
         isClosable: true,
       });
       navigate(-1);
     },
     onError: () => {
       toast({
-        title: "Error al modificar los datos del PID",
-        description: `Intente de nuevo.`,
-        status: "error",
+        title: 'Error al modificar los datos del PID',
+        description: 'Intente de nuevo.',
+        status: 'error',
         isClosable: true,
       });
     },
@@ -112,12 +112,12 @@ export default function ModificarPIDs() {
             fechaFin: formatoFechaISOaAAAAMMDD(data.proyecto.fechaFin),
           }),
           denominacion: data.proyecto.denominacion,
-          completo: data.proyecto.completo ? "true" : "false",
+          completo: data.proyecto.completo ? 'true' : 'false',
           regional: data.proyecto.regional,
           convocatoria: data.proyecto.convocatoria,
           estado: data.proyecto.estado,
-          prorrogado: data.proyecto.prorrogado ? "true" : "false",
-          tipo: data.proyecto.codPid ? "pid" : "externo",
+          prorrogado: data.proyecto.prorrogado ? 'true' : 'false',
+          tipo: data.proyecto.codPid ? 'pid' : 'externo',
           empresaInstitucion: data.proyecto.empresaInstitucion,
           nuevaFechaFin: formatoFechaISOaAAAAMMDD(data.proyecto.nuevaFechaFin),
           nuevaDisposicion: data.proyecto.nuevaDisposicion,
@@ -130,8 +130,8 @@ export default function ModificarPIDs() {
   const onSubmit = (values) => {
     const modifiedValues = {
       ...values.proyecto,
-      prorrogado: values.proyecto.prorrogado === "true",
-      completo: values.proyecto.completo === "true",
+      prorrogado: values.proyecto.prorrogado === 'true',
+      completo: values.proyecto.completo === 'true',
     };
     const proyecto = {
       proyecto: modifiedValues,
@@ -141,7 +141,7 @@ export default function ModificarPIDs() {
     mutate(proyecto);
   };
 
-  const [estado, setEstado] = useState(data?.proyecto?.estado || "");
+  const [estado, setEstado] = useState(data?.proyecto?.estado || '');
 
   if (isLoading) {
     return (
@@ -197,7 +197,7 @@ export default function ModificarPIDs() {
                 >
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -209,7 +209,7 @@ export default function ModificarPIDs() {
                         placeholder="Código PID"
                         register={register}
                         errors={errors}
-                        width={{ base: "100%", md: "30%" }}
+                        width={{ base: '100%', md: '30%' }}
                         isRequired
                         mb="5vh"
                       />
@@ -221,14 +221,14 @@ export default function ModificarPIDs() {
                       placeholder="Regional..."
                       width={
                         data?.proyecto?.codPid
-                          ? { base: "100%", md: "65%" }
-                          : "100%"
+                          ? { base: '100%', md: '65%' }
+                          : '100%'
                       }
                       mb="5vh"
                       isRequired
                       register={register}
                       options={(isLoadingGetRegionales
-                        ? ["Cargando..."]
+                        ? ['Cargando...']
                         : dataRegionales.regionales
                       ).map((regional) => ({
                         value: regional,
@@ -239,7 +239,7 @@ export default function ModificarPIDs() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -258,7 +258,7 @@ export default function ModificarPIDs() {
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -269,7 +269,7 @@ export default function ModificarPIDs() {
                       label="Fecha Inicio"
                       register={register}
                       errors={errors}
-                      width={{ base: "100%", md: "30%" }}
+                      width={{ base: '100%', md: '30%' }}
                       isRequired
                       mb="5vh"
                     />
@@ -279,7 +279,7 @@ export default function ModificarPIDs() {
                       label="Fecha Fin"
                       register={register}
                       errors={errors}
-                      width={{ base: "100%", md: "30%" }}
+                      width={{ base: '100%', md: '30%' }}
                       isRequired
                       mb="5vh"
                     />
@@ -291,14 +291,14 @@ export default function ModificarPIDs() {
                       placeholder="Convocatoria"
                       register={register}
                       errors={errors}
-                      width={{ base: "100%", md: "30%" }}
+                      width={{ base: '100%', md: '30%' }}
                       isRequired
                       mb="5vh"
                     />
                   </Box>
                   <Box
                     display="flex"
-                    flexDirection={{ base: "column", md: "row" }}
+                    flexDirection={{ base: 'column', md: 'row' }}
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
@@ -309,7 +309,7 @@ export default function ModificarPIDs() {
                       placeholder="Programa"
                       register={register}
                       errors={errors}
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       isRequired
                       mb="5vh"
                     />
@@ -318,12 +318,12 @@ export default function ModificarPIDs() {
                       name="proyecto.tipoProyecto"
                       label="Tipo de proyecto"
                       placeholder="Tipo de proyecto..."
-                      width={{ base: "100%", md: "47.5%" }}
+                      width={{ base: '100%', md: '47.5%' }}
                       mb="5vh"
                       isRequired
                       register={register}
                       options={(isLoadingGetTiposProyectos
-                        ? ["Cargando..."]
+                        ? ['Cargando...']
                         : dataTiposProyectos?.tiposProyectos
                       ).map((tipo) => ({
                         value: tipo,
@@ -335,7 +335,7 @@ export default function ModificarPIDs() {
                   {!data?.proyecto?.codPid && (
                     <Box
                       display="flex"
-                      flexDirection={{ base: "column", md: "row" }}
+                      flexDirection={{ base: 'column', md: 'row' }}
                       width="100%"
                       alignItems="center"
                       justifyContent="space-between"
@@ -346,7 +346,7 @@ export default function ModificarPIDs() {
                         placeholder="Empresa/Institución"
                         register={register}
                         errors={errors}
-                        width={{ base: "100%", md: "50%" }}
+                        width={{ base: '100%', md: '50%' }}
                         isRequired
                         mb="5vh"
                       />
@@ -356,7 +356,7 @@ export default function ModificarPIDs() {
                     <>
                       <Box
                         display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
+                        flexDirection={{ base: 'column', md: 'row' }}
                         width="100%"
                         alignItems="center"
                         justifyContent="space-between"
@@ -365,7 +365,7 @@ export default function ModificarPIDs() {
                           name="proyecto.tipoActividad"
                           label="Tipo de actividad"
                           placeholder="Tipo de actividad..."
-                          width={{ base: "100%", md: "30%" }}
+                          width={{ base: '100%', md: '30%' }}
                           mb="5vh"
                           isRequired
                           register={register}
@@ -380,8 +380,8 @@ export default function ModificarPIDs() {
                           label="Estado"
                           placeholder="Estado..."
                           width={{
-                            base: "100%",
-                            md: estado === "HOMOLOGADO" ? "30%" : "65%",
+                            base: '100%',
+                            md: estado === 'HOMOLOGADO' ? '30%' : '65%',
                           }}
                           mb="5vh"
                           isRequired
@@ -394,15 +394,15 @@ export default function ModificarPIDs() {
                           onChange={(e) => setEstado(e.target.value)}
                         />
 
-                        {estado === "HOMOLOGADO" && (
+                        {estado === 'HOMOLOGADO' && (
                           <GenericInput
                             name="proyecto.disposicion"
                             label="Disposición"
                             placeholder="Disposición"
                             register={register}
                             errors={errors}
-                            width={{ base: "100%", md: "30%" }}
-                            isRequired={estado === "HOMOLOGADO"}
+                            width={{ base: '100%', md: '30%' }}
+                            isRequired={estado === 'HOMOLOGADO'}
                             mb="5vh"
                           />
                         )}
@@ -410,13 +410,13 @@ export default function ModificarPIDs() {
 
                       <Box
                         display="flex"
-                        flexDirection={{ base: "column", md: "row" }}
+                        flexDirection={{ base: 'column', md: 'row' }}
                         width="100%"
                         alignItems="center"
                         justifyContent="space-between"
                       >
                         <Box
-                          width={{ base: "100%", md: "50%" }}
+                          width={{ base: '100%', md: '50%' }}
                           display="flex"
                           justifyContent="center"
                         >
@@ -425,12 +425,12 @@ export default function ModificarPIDs() {
                             label="Prorroga:"
                             direction="row"
                             options={[
-                              { value: "true", label: "Si" },
-                              { value: "false", label: "No" },
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
                             ]}
                             register={register}
                             defaultValue={
-                              data?.proyecto?.prorrogado ? "true" : "false"
+                              data?.proyecto?.prorrogado ? 'true' : 'false'
                             }
                             errors={errors}
                             mb="5vh"
@@ -438,7 +438,7 @@ export default function ModificarPIDs() {
                         </Box>
 
                         <Box
-                          width={{ base: "100%", md: "50%" }}
+                          width={{ base: '100%', md: '50%' }}
                           display="flex"
                           justifyContent="center"
                         >
@@ -447,22 +447,22 @@ export default function ModificarPIDs() {
                             label="Completo:"
                             direction="row"
                             options={[
-                              { value: "true", label: "Si" },
-                              { value: "false", label: "No" },
+                              { value: 'true', label: 'Si' },
+                              { value: 'false', label: 'No' },
                             ]}
                             register={register}
                             defaultValue={
-                              data?.proyecto?.completo ? "true" : "false"
+                              data?.proyecto?.completo ? 'true' : 'false'
                             }
                             errors={errors}
                             mb="5vh"
                           />
                         </Box>
                       </Box>
-                      {watch("proyecto.prorrogado") === "true" && (
+                      {watch('proyecto.prorrogado') === 'true' && (
                         <Box
                           display="flex"
-                          flexDirection={{ base: "column", md: "row" }}
+                          flexDirection={{ base: 'column', md: 'row' }}
                           width="100%"
                           alignItems="center"
                           justifyContent="space-between"
@@ -474,23 +474,23 @@ export default function ModificarPIDs() {
                             placeholder="Nueva Fecha Finalización"
                             label="Nueva Fecha Finalización"
                             width={{
-                              base: "100%",
-                              md: estado === "HOMOLOGADO" ? "47.5%" : "100%",
+                              base: '100%',
+                              md: estado === 'HOMOLOGADO' ? '47.5%' : '100%',
                             }}
                             mb="5vh"
-                            isRequired={watch("prorrogado") === "true"}
+                            isRequired={watch('prorrogado') === 'true'}
                           />
-                          {estado === "HOMOLOGADO" && (
+                          {estado === 'HOMOLOGADO' && (
                             <GenericInput
                               name="proyecto.nuevaDisposicion"
                               placeholder="Nueva Disposición"
                               register={register}
                               label="Nueva Disposición"
-                              width={{ base: "100%", md: "46.25%" }}
+                              width={{ base: '100%', md: '46.25%' }}
                               mb="5vh"
                               isRequired={
-                                estado === "HOMOLOGADO" &&
-                                watch("prorrogado") === "true"
+                                estado === 'HOMOLOGADO' &&
+                                watch('prorrogado') === 'true'
                               }
                             />
                           )}

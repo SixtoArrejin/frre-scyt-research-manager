@@ -15,7 +15,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
-  HStack
+  HStack,
 } from '@chakra-ui/react';
 import { PlusSquareIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -74,7 +74,7 @@ export default function ListaUsuarios() {
     onOpen();
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = async() => {
     try {
       await deleteUsuario(usuarioToDelete);
       // Actualizar el estado local inmediatamente
@@ -107,7 +107,7 @@ export default function ListaUsuarios() {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -117,7 +117,7 @@ export default function ListaUsuarios() {
       pid: 'blue',
       rrhh: 'green',
       uvt: 'purple',
-      viewer: 'gray'
+      viewer: 'gray',
     };
     return colors[role] || 'gray';
   };
@@ -151,7 +151,7 @@ export default function ListaUsuarios() {
       >
         Eliminar
       </Button>
-    </HStack>
+    </HStack>,
   ]) || [];
 
   if (isLoading) {

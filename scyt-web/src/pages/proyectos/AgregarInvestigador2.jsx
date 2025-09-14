@@ -42,7 +42,7 @@ export default function AgregarInvestigador2() {
       queryKey: ['personasGrupo', grupo.idGrupoInvestigacion],
       queryFn: () => getPersonasByGroup(grupo.idGrupoInvestigacion),
       enabled: !!grupo.idGrupoInvestigacion, // Habilitar solo cuando el idGrupoInvestigacion esté disponible
-    }))
+    })),
   );
   const investigadoresGrupos = investigadoresQueries.flatMap((query) => query?.data?.personasGrupo ?? []);
   // Revisamos si alguno de los queries de investigadores está cargando
@@ -53,7 +53,7 @@ export default function AgregarInvestigador2() {
     onSuccess: () => {
       toast({
         title: 'Agregar investigador',
-        description: `Se ha agregado el investigador exitosamente`,
+        description: 'Se ha agregado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -64,7 +64,7 @@ export default function AgregarInvestigador2() {
     onError: () => {
       toast({
         title: 'Error al agregar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -76,7 +76,7 @@ export default function AgregarInvestigador2() {
     onSuccess: () => {
       toast({
         title: 'Eliminar investigador',
-        description: `Se ha eliminado el investigador exitosamente`,
+        description: 'Se ha eliminado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -87,7 +87,7 @@ export default function AgregarInvestigador2() {
     onError: () => {
       toast({
         title: 'Error al eliminar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

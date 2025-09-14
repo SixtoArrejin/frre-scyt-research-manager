@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Button } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllGrupos } from '../../utils/api/gruposApi';

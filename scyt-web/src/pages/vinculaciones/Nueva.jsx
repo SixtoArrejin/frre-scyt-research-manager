@@ -35,7 +35,7 @@ export default function NuevaVinculacion() {
     onSuccess: () => {
       toast({
         title: 'Nueva Vinculación',
-        description: `Se ha creado la nueva vinculación exitosamente`,
+        description: 'Se ha creado la nueva vinculación exitosamente',
         status: 'success',
         isClosable: true,
       });

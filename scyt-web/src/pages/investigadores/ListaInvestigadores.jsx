@@ -54,7 +54,7 @@ export default function ListaInvestigadores() {
         (item) =>
           ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(nombre.toLowerCase()) ||
             (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(nombre.toLowerCase())) &&
-          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
+          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase()),
       );
       setInvestigadores(filteredInvestigadores);
       setFiltro(true);
