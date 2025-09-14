@@ -17,8 +17,8 @@ import {
   useDisclosure,
   HStack,
 } from '@chakra-ui/react';
-import { PlusSquareIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { Link } from 'react-router-dom';
 import { getAllUsuarios, deleteUsuario } from '../../utils/api/usuariosApi';
 import { useQuery, useQueryClient } from 'react-query';
 import Tabla from '../../components/Tabla';
@@ -33,7 +33,6 @@ export default function ListaUsuarios() {
   const { currentUser } = useContext(UserContext);
   const [usuarioToDelete, setUsuarioToDelete] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useQuery('usuarios', () => getAllUsuarios());
@@ -128,18 +127,16 @@ export default function ListaUsuarios() {
         to={`/usuarios/${usuario.usuario}/modificar`}
         size="sm"
         colorScheme="blue"
-        leftIcon={<EditIcon />}
       >
-        Editar
+        <EditIcon />
       </Button>
       <Button
         size="sm"
         colorScheme="red"
-        leftIcon={<DeleteIcon />}
         onClick={() => handleDeleteClick(usuario.usuario)}
         isDisabled={usuario.usuario === currentUser.usuario}
       >
-        Eliminar
+        <DeleteIcon />
       </Button>
     </HStack>,
   ]) || [];
@@ -177,11 +174,20 @@ export default function ListaUsuarios() {
 
             <br />
 
-            <Box display='flex' width='100%' justifyContent='end' mb={4}>
+            {/* <Box display='flex' width='100%' justifyContent='end' mb={4}>
               <Button as={Link} to='/usuarios/nuevo' colorScheme='blue' leftIcon={<PlusSquareIcon />}>
                 Nuevo Usuario
               </Button>
+            </Box> */}
+            <Box display='flex' justifyContent='flex-end' width='100%'>
+              <Link to={'/usuarios/nuevo'}>
+                <Button colorScheme='blue' variant='outline' mr='5'>
+                  Nuevo Usuario +
+                </Button>
+              </Link>
             </Box>
+
+            <br />
 
             {filas.length === 0 ? (
               <ImgDefault

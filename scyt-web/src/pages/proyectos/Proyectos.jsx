@@ -26,7 +26,7 @@ export default function ProyectosPid() {
   const [filtro, setFiltro] = useState(false);
   const [pidExterno, setPidExterno] = useState('todos');
 
-  const { data, isLoading, error } = useQuery('proyectos', () =>
+  const { data, isLoading } = useQuery('proyectos', () =>
     getProyectos(),
   );
   const [proyectos, setProyectos] = useState([]);
@@ -202,7 +202,7 @@ export default function ProyectosPid() {
                     ? item?.estado.charAt(0).toUpperCase() +
                     item?.estado.toLowerCase().substring(1)
                     : '-',
-                  <Link to={`/proyectos/${item.idProyecto}`}>
+                  <Link key={item.idProyecto} to={`/proyectos/${item.idProyecto}`}>
                     <PlusSquareIcon />
                   </Link>,
                 ];
