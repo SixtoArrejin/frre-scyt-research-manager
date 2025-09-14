@@ -25,6 +25,7 @@ import Tabla from '../../components/Tabla';
 import { UserContext } from '../../context/UserContext';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
+import { formatDate } from '../../utils/general';
 
 const columnas = ['Usuario', 'Rol', 'Estado', 'Fecha Creación', 'Creado Por', 'Acciones'];
 
@@ -98,17 +99,6 @@ export default function ListaUsuarios() {
         isClosable: true,
       });
     }
-  };
-
-  const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   const getRoleBadgeColor = (role) => {

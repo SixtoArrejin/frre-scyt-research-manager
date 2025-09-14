@@ -44,3 +44,14 @@ export function sumarMeses(fecha, meses) {
   fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
   return fechaInicio;
 }
+
+export const formatDate = (dateString) => {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
