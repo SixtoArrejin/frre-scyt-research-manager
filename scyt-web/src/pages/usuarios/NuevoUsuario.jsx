@@ -25,7 +25,7 @@ export default function NuevoUsuario() {
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
   const toast = useToast();
-  const { register, handleSubmit, formState: { errors }, watch } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     defaultValues: {
       activo: true,
       rol: 'viewer',

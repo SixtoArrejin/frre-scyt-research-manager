@@ -144,8 +144,8 @@ export default function ModificarUsuario() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <HStack width='100%' justifyContent='space-between' mb={6}>
-            <Button as={Link} to='/usuarios' leftIcon={<ArrowBackIcon />} variant='outline'>
-              Volver a Lista
+            <Button as={Link} to='/usuarios' variant='outline'>
+              <ArrowBackIcon />
             </Button>
             <Heading as='h2' size='xl' textAlign='center'>
               Modificar Usuario: {usuarioParam}
