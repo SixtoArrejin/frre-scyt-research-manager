@@ -109,8 +109,8 @@ export default function NuevoUsuario() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <HStack width='100%' justifyContent='space-between' mb={6}>
-            <Button as={Link} to='/usuarios' leftIcon={<ArrowBackIcon />} variant='outline'>
-              Volver a Lista
+            <Button as={Link} to='/usuarios' variant='outline'>
+              <ArrowBackIcon />
             </Button>
             <Heading as='h2' size='xl' textAlign='center'>
               Nuevo Usuario
@@ -125,7 +125,7 @@ export default function NuevoUsuario() {
                 {/* Usuario */}
                 <GenericInput
                   name='usuario'
-                  placeholder='Nombre de usuario'
+                  placeholder='Usuario'
                   type='text'
                   register={register}
                   isRequired
@@ -170,28 +170,33 @@ export default function NuevoUsuario() {
                 </FormControl>
 
                 {/* Botones */}
-                <HStack spacing={4} pt={4}>
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  mt="2%"
+                >
                   <Button
                     as={Link}
                     to='/usuarios'
-                    variant='outline'
-                    size='lg'
-                    flex={1}
+                    colorScheme="gray"
+                    variant="outline"
+                    mr="5%"
                   >
                     Cancelar
                   </Button>
                   <Button
                     type='submit'
-                    colorScheme='blue'
-                    size='lg'
-                    flex={1}
+                    colorScheme="blue"
+                    variant="outline"
+                    ml="5%"
                     isLoading={createUsuarioMutation.isLoading}
                     loadingText='Creando...'
                   >
                     Crear Usuario
                   </Button>
-                </HStack>
-
+                </Box>
               </VStack>
             </form>
           </Box>

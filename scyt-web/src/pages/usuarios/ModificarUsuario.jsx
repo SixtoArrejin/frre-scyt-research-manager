@@ -29,7 +29,7 @@ export default function ModificarUsuario() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
+  const { register, handleSubmit, watch, setValue } = useForm({
     defaultValues: {
       activo: true,
       rol: 'viewer',
@@ -43,7 +43,7 @@ export default function ModificarUsuario() {
   const updateUsuarioMutation = useMutation(
     (data) => updateUsuario(usuarioParam, data),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries('usuarios');
         toast({
           title: 'Usuario actualizado',
@@ -223,28 +223,33 @@ export default function ModificarUsuario() {
                 </Box>
 
                 {/* Botones */}
-                <HStack spacing={4} pt={4}>
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  mt="2%"
+                >
                   <Button
                     as={Link}
                     to='/usuarios'
-                    variant='outline'
-                    size='lg'
-                    flex={1}
+                    colorScheme="gray"
+                    variant="outline"
+                    mr="5%"
                   >
                     Cancelar
                   </Button>
                   <Button
                     type='submit'
-                    colorScheme='blue'
-                    size='lg'
-                    flex={1}
+                    colorScheme="blue"
+                    variant="outline"
+                    ml="5%"
                     isLoading={updateUsuarioMutation.isLoading}
                     loadingText='Actualizando...'
                   >
-                    Actualizar Usuario
+                    Actualizar
                   </Button>
-                </HStack>
-
+                </Box>
               </VStack>
             </form>
           </Box>
