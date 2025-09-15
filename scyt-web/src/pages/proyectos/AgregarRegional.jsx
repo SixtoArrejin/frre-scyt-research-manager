@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import { getAllRegionales } from '../../utils/api/regionalesApi';
@@ -10,19 +10,13 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
 
 export default function AgregarRegional() {
-  const queryClient = useQueryClient();
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
 
   const closeModal = () => {
     setIsOpen(false);
   };
 
-  const toast = useToast();
   const navigate = useNavigate();
   const { idPid } = useParams();
 
@@ -30,7 +24,7 @@ export default function AgregarRegional() {
   const { data: dataRegionales } = useQuery(['dataRegionales'], () => getAllRegionales());
 
 
-  const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
+  // const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
 
   /* const { mutate: mutateAddRegional, isLoading: isLoadingMutation } = useMutation({
     mutationFn: () => addRegional(Number(idPid), Number(selectedOptionsRegionales)),
@@ -110,9 +104,9 @@ export default function AgregarRegional() {
                       value: key,
                       label: item,
                     }))}
-                    onChange={(e) => {
-                      setSelectedOptionsRegionales(e.target.value);
-                    }}
+                    // onChange={(e) => {
+                    //   setSelectedOptionsRegionales(e.target.value);
+                    // }}
                   />
                 </Box>
                 <Box display='flex' justifyContent='flex-end' width='55%'>
@@ -127,8 +121,9 @@ export default function AgregarRegional() {
                 columnas={['Regional', 'Eliminar']}
                 datos={dataProyecto?.proyecto?.regionalesAsociadas?.map((item, key) => {
                   return [
-                    <div>{item.nombreRegional}</div>,
+                    <div key={`regional-${key}`}>{item.nombreRegional}</div>,
                     <DeleteIcon
+                      key={`delete-${key}`}
                       cursor={'pointer'}
                       /* onClick={() => {
                         mutateDelRegional(key);

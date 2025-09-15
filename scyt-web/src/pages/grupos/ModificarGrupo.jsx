@@ -37,14 +37,14 @@ export default function ModificarGrupo() {
 
   const { idGrupoInvestigacion } = useParams();
 
-  const { data, isLoading, error: errorGrupo } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
+  const { data, isLoading } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
 
   useEffect(() => {
     setValue('nombre', data?.grupo.nombre);
     setValue('resolucion', data?.grupo.resolucion);
     setValue('fechaCreacion', formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion));
     setValue('siglas', data?.grupo.siglas);
-  }, [data]);
+  }, [data, setValue]);
 
   const {
     register,

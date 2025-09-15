@@ -16,7 +16,7 @@ export default function ListaGrupos() {
   const [siglas, setSiglas] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery('grupos', () => getAllGrupos());
+  const { data, isLoading } = useQuery('grupos', () => getAllGrupos());
   const [grupos, setGrupos] = useState(data?.grupos || []);
 
   //Esto ya pertenece a lo de grupos

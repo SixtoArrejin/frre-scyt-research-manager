@@ -24,7 +24,6 @@ export default function Home() {
   const {
     data: dataPersonas,
     isLoading,
-    error,
   } = useQuery('personas', () => getAllPersonas());
   const { data: dataGrupos } = useQuery('grupos', () => getAllGrupos());
   const { data: dataProyectos } = useQuery('proyectos', () => getProyectos());
@@ -71,7 +70,7 @@ export default function Home() {
     });
     setPersonasCategoriaMinisterio(contadorMinisterio);
     setPersonasCategoriaUTN(contadorUTN);
-  }, [dataPersonas]);
+  }, [dataPersonas, personasActivas]);
 
   // Número total de grupos
   const totalGrupos = dataGrupos?.grupos?.length;

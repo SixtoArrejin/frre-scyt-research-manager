@@ -64,7 +64,7 @@ export default function DetalleInvestigador() {
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (idCategoria) => deleteCategoriaById(idCategoria),
     onSuccess: () => {
       toast({

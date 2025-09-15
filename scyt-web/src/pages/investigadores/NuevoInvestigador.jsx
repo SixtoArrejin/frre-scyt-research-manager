@@ -37,7 +37,7 @@ export default function NuevoInvestigador() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const { data, isLoading: isLoadingGetGrupos, error } = useQuery('grupos', () => getAllGrupos());
+  const { data } = useQuery('grupos', () => getAllGrupos());
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createPersona(formData),
@@ -76,11 +76,11 @@ export default function NuevoInvestigador() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (dataForm, event) => {
-    console.log(dataForm);
-    event.preventDefault();
-    mutate(dataForm);
-  };
+  // const onSubmit = (dataForm, event) => {
+  //   console.log(dataForm);
+  //   event.preventDefault();
+  //   mutate(dataForm);
+  // };
 
   return (
     <Card>

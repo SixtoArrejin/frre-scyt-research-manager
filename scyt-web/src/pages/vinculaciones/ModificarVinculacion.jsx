@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 import { getVinculacionById, updateVinculacion } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
@@ -25,9 +25,8 @@ export default function ModificarVinculacion() {
   const toast = useToast();
 
   const { idVinculacion } = useParams();
-  const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
+  const { data, isLoading } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -41,7 +40,6 @@ export default function ModificarVinculacion() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm({
     defaultValues: {
       //Vinculacion en general

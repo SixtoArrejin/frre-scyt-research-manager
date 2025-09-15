@@ -6,7 +6,7 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import { useParams } from 'react-router-dom';
 import { createConvenio } from '../../utils/api/vinculacionesApi';
 
-export default function NuevoConvenioModal({ isOpen, onClose, title, onSave, categoria = null }) {
+export default function NuevoConvenioModal({ isOpen, onClose, title, categoria = null }) {
   const { idVinculacion } = useParams();
   const {
     register,

@@ -18,19 +18,19 @@ export default function ListaInvestigadores() {
   const [financiamientoFiltro, setFinanciamientoFiltro] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data: dataVinculaciones, isLoading, error } = useQuery('vinculaciones', () => getVinculaciones());
+  const { data: dataVinculaciones, isLoading } = useQuery('vinculaciones', () => getVinculaciones());
   const [vinculaciones, setVinculaciones] = useState(dataVinculaciones?.vinculaciones);
   useEffect(() => {
     setVinculaciones(dataVinculaciones?.vinculaciones);
   }, [dataVinculaciones]);
 
-  const filas = vinculaciones?.map((item, index) => {
+  const filas = vinculaciones?.map((item) => {
     return [
       item.empresaInstitucion,
       item.numeroMarco,
       // item.financiamiento,
       item.vinculacionesconfinanciamiento ? 'Con financiamiento' : 'Sin financiamiento',
-      <Link to={`${item.idVinculacion}`}>
+      <Link key={item.idVinculacion} to={`${item.idVinculacion}`}>
         <PlusSquareIcon />
       </Link>,
     ];
@@ -51,7 +51,7 @@ export default function ListaInvestigadores() {
       setVinculaciones(filteredVinculaciones);
       setFiltro(true);
     }
-  }, [empresainstitucionFiltro, financiamientoFiltro]);
+  }, [empresainstitucionFiltro, financiamientoFiltro, dataVinculaciones]);
 
   if (isLoading) {
     return (

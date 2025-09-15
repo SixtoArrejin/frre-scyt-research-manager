@@ -52,20 +52,18 @@ export default function ModificarPIDs() {
     setIsOpen(false);
   };
 
-  const { data, isLoading, error } = useQuery(['proyecto', idPid], () =>
+  const { data, isLoading } = useQuery(['proyecto', idPid], () =>
     getProyectoById(Number(idPid)),
   );
 
   const {
     data: dataRegionales,
     isLoading: isLoadingGetRegionales,
-    error: errorRegionales,
   } = useQuery(['regionales'], () => getAllRegionales());
 
   const {
     data: dataTiposProyectos,
     isLoading: isLoadingGetTiposProyectos,
-    error: errorTiposProyectos,
   } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
@@ -324,7 +322,7 @@ export default function ModificarPIDs() {
                       register={register}
                       options={(isLoadingGetTiposProyectos
                         ? ['Cargando...']
-                        : dataTiposProyectos?.tiposProyectos
+                        : (dataTiposProyectos?.tiposProyectos || [])
                       ).map((tipo) => ({
                         value: tipo,
                         label: tipo,

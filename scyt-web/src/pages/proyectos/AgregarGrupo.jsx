@@ -15,10 +15,6 @@ export default function AgregarGrupo() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -34,7 +30,7 @@ export default function AgregarGrupo() {
 
   const { data: dataGrupos } = useQuery(['allGrupos'], () => getAllGrupos());
 
-  const { mutate: mutateAddGrupo, isLoading: isLoadingMutation } = useMutation({
+  const { mutate: mutateAddGrupo } = useMutation({
     mutationFn: () => addGrupo(Number(idPid), Number(selectedOptionsGrupos)),
     onSuccess: () => {
       toast({
@@ -55,7 +51,7 @@ export default function AgregarGrupo() {
     },
   });
 
-  const { mutate: mutateDelGrupo, isLoading: isLoadingMutationDel } = useMutation({
+  const { mutate: mutateDelGrupo } = useMutation({
     mutationFn: (idGrupo) => delGrupo(Number(idPid), Number(idGrupo)),
     onSuccess: () => {
       toast({
@@ -127,10 +123,11 @@ export default function AgregarGrupo() {
 
               <Tabla
                 columnas={['Grupo', 'Eliminar']}
-                datos={dataProyecto?.proyecto?.tiene?.map((item, index) => {
+                datos={dataProyecto?.proyecto?.tiene?.map((item) => {
                   return [
-                    <div>{item?.gruposinvestigacion?.siglas}</div>,
+                    <div key={`grupo-${item?.gruposinvestigacion?.idGrupoInvestigacion}`}>{item?.gruposinvestigacion?.siglas}</div>,
                     <DeleteIcon
+                      key={`delete-${item?.gruposinvestigacion?.idGrupoInvestigacion}`}
                       cursor={'pointer'}
                       onClick={() => {
                         mutateDelGrupo(item?.gruposinvestigacion?.idGrupoInvestigacion);

@@ -115,14 +115,10 @@ export default function NuevoPid() {
 
   const {
     data,
-    isLoading: isLoadingGetGrupos,
-    error,
   } = useQuery('grupos', () => getAllGrupos());
 
   const {
     data: dataRegionales,
-    isLoading: isLoadingGetRegionales,
-    error: errorRegionales,
   } = useQuery(['regionales'], () => getAllRegionales());
 
   const {
@@ -198,7 +194,7 @@ export default function NuevoPid() {
     resolver: yupResolver(schema),
   });
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: 'investigadores', // Nombre del campo de formulario que es un arreglo
   });
@@ -550,7 +546,7 @@ export default function NuevoPid() {
                         register={register}
                         options={(isLoadingGetTiposProyectos
                           ? ['Cargando...']
-                          : dataTiposProyectos?.tiposProyectos
+                          : (dataTiposProyectos?.tiposProyectos || [])
                         ).map((tipo) => ({
                           value: tipo,
                           label: tipo,
@@ -762,6 +758,7 @@ export default function NuevoPid() {
                   datos={gruposSeleccionados?.map((item, index) => [
                     item.siglas,
                     <DeleteIcon
+                      key={item.idGrupoInvestigacion}
                       cursor={'pointer'}
                       onClick={() => {
                         eliminarGrupo(item.idGrupoInvestigacion, index);
@@ -854,13 +851,14 @@ export default function NuevoPid() {
                       'Eliminar',
                     ]}
                     datos={fields?.map((item, index) => [
-                      <div>
+                      <div key={`nombre-${item.idPersona}`}>
                         {item.persona.apellido} {item.persona.nombre}
                       </div>,
-                      <div>{item.persona.gruposinvestigacion.siglas}</div>,
-                      <div>{item.rol}</div>,
-                      <div>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
+                      <div key={`grupo-${item.persona.gruposinvestigacion.siglas}`}>{item.persona.gruposinvestigacion.siglas}</div>,
+                      <div key={`rol-${item.idPersona}`}>{item.rol}</div>,
+                      <div key={`fecha-${item.idPersona}`}>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
                       <DeleteIcon
+                        key={`delete-${item.idPersona}`}
                         cursor={'pointer'}
                         onClick={() => {
                           eliminarInvestigador(item.idPersona, index);
@@ -926,6 +924,7 @@ export default function NuevoPid() {
                     datos={regionalesSeleccionados?.map((item, index) => [
                       item,
                       <DeleteIcon
+                        key={`delete-regional-${item}-${index}`}
                         cursor={'pointer'}
                         onClick={() => {
                           eliminarRegional(item, index);

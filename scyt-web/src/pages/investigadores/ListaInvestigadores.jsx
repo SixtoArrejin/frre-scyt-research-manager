@@ -20,7 +20,7 @@ export default function ListaInvestigadores() {
   const [grupo, setGrupo] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
+  const { data, isLoading } = useQuery('personas', () => getAllPersonas());
   const { data: dataGrupos } = useQuery(['grupoFiltro'], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
 

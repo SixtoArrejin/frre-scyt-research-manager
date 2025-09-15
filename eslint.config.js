@@ -81,7 +81,7 @@ export default [
       quotes: ['error', 'single'],
       'comma-dangle': ['error', 'always-multiline'],
       semi: ['error', 'always'],
-      'no-console': 'warn',
+      'no-console': 'off',
       
       // Reglas de espaciado y formato
       'object-curly-spacing': ['error', 'always'], // { foo } en lugar de {foo}

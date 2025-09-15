@@ -73,7 +73,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerRendicion,
     handleSubmit: handleSubmitRendicion,
-    formState: { errors: errorsRendicion },
   } = useForm({
     defaultValues: {
       // idDesembolso: parseInt(idDesembolso),
@@ -87,7 +86,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerAprobado,
     handleSubmit: handleSubmitAprobado,
-    formState: { errors: errorsAprobado },
   } = useForm({
     defaultValues: {
       fechaAprobado: new Date().toISOString().split('T')[0],
@@ -99,7 +97,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerMotivo,
     handleSubmit: handleSubmitMotivo,
-    formState: { errors: errorsMotivo },
   } = useForm({
     defaultValues: {
       motivoEstado: '',
@@ -107,7 +104,7 @@ export default function DetalleDesembolso() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
+  const { mutate: mutateRendicion } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
@@ -128,7 +125,7 @@ export default function DetalleDesembolso() {
     },
   });
 
-  const { mutate: mutateAprobado, isLoading: isLoadingMutationAprobado } = useMutation({
+  const { mutate: mutateAprobado } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
@@ -149,7 +146,7 @@ export default function DetalleDesembolso() {
     },
   });
 
-  const { mutate: mutateMotivo, isLoading: isLoadingMutationMotivo } = useMutation({
+  const { mutate: mutateMotivo } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);

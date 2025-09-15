@@ -115,7 +115,7 @@ export default function DetalleGrupo() {
                       item.activo ? 'Activo' : 'Inactivo',
                       formatoFechaISOaDDMMAAAA(item.fechaIngreso),
                       categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
-                      <Link to={`/investigadores/${item.idPersona}`}>
+                      <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
                         <PlusSquareIcon />
                       </Link>,
                     ];
@@ -135,7 +135,7 @@ export default function DetalleGrupo() {
               {proyectos?.length > 0 ? (
                 <Tabla
                   columnas={['Fecha Inicio', 'Tipo Act.', 'Director', 'Codirector', 'Denom.', 'Estado', 'Ver Más']}
-                  datos={proyectos?.map((item, index) => {
+                  datos={proyectos?.map((item) => {
                     return [
                       formatoFechaISOaDDMMAAAA(item.fechaInicio),
                       item.tipoActividad,
@@ -147,7 +147,7 @@ export default function DetalleGrupo() {
                         : 'No asignado',
                       item.denominacion,
                       item.estado,
-                      <Link to={`/proyectos/${item.idProyecto}`}>
+                      <Link key={item.idProyecto} to={`/proyectos/${item.idProyecto}`}>
                         <PlusSquareIcon />
                       </Link>,
                     ];

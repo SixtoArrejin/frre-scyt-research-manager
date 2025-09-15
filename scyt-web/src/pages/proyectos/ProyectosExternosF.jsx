@@ -20,7 +20,7 @@ export default function ProyectosExternosF() {
   const [denominacion, setDenominacion] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery('proyectos', () => getProyectos('externo', 'financiamiento'));
+  const { data } = useQuery('proyectos', () => getProyectos('externo', 'financiamiento'));
   const [proyectos, setProyectos] = useState(data?.proyectos || []);
 
   useEffect(() => {
@@ -88,7 +88,11 @@ export default function ProyectosExternosF() {
                 item.proyectosexternos?.proyectos?.regional,
                 item.proyectosexternos?.proyectos?.estado,
                 /* <Link to={`/proyectos-pid/${item.idProyectoPid}`} > */
-                <PlusSquareIcon _hover={{ cursor: 'pointer' }} onClick={() => alert(`Detalle del proyecto ${item.proyectosexternos.proyectos.denominacion}`)} />,
+                <PlusSquareIcon
+                  key={`plus-icon-${index}`}
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={() => alert(`Detalle del proyecto ${item.proyectosexternos.proyectos.denominacion}`)}
+                />,
                 /* </Link> */
               ];
             })}

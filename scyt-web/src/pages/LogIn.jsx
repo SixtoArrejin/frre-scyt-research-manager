@@ -46,7 +46,7 @@ export default function LogIn() {
     resolver: yupResolver(schema),
   });
 
-  const { login, currentUser } = useContext(UserContext);
+  const { login } = useContext(UserContext);
 
   const { mutate, isLoading } = useMutation((formData) => logInUser(formData), {
     // onSuccess se ejecutará cuando la llamada sea exitosa

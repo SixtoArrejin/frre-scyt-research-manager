@@ -48,8 +48,6 @@ export default function DetalleProyectoPid() {
 
   const {
     data: dataVinculaciones,
-    isLoading: isLoadingVinculaciones,
-    error: errorVinculaciones,
   } = useQuery(['vinculaciones', idProyecto], () =>
     getVinculacionByIdProyecto(Number(idProyecto)),
   );
