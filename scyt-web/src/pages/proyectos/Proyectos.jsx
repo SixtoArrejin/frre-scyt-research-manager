@@ -19,6 +19,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data-2.png';
+import PermissionGate from '../../components/PermissionGate';
 
 export default function ProyectosPid() {
   const [codPID, setCodPID] = useState('');
@@ -141,11 +142,13 @@ export default function ProyectosPid() {
               />
             </Box>
             <Box display="flex" justifyContent="flex-end" width="55%">
-              <Link to={'nuevo'}>
-                <Button colorScheme="blue" variant="outline" mr="5">
-                  Proyecto +
-                </Button>
-              </Link>
+              <PermissionGate module='proyectos' action='create'>
+                <Link to={'nuevo'}>
+                  <Button colorScheme="blue" variant="outline" mr="5">
+                    Proyecto +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
           </Box>
 
@@ -202,9 +205,11 @@ export default function ProyectosPid() {
                     ? item?.estado.charAt(0).toUpperCase() +
                     item?.estado.toLowerCase().substring(1)
                     : '-',
-                  <Link key={item.idProyecto} to={`/proyectos/${item.idProyecto}`}>
-                    <PlusSquareIcon />
-                  </Link>,
+                  <PermissionGate key={item.idProyecto} module='proyectos' action='view'>
+                    <Link to={`/proyectos/${item.idProyecto}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  </PermissionGate>,
                 ];
               })}
               filtro={filtro}

@@ -23,8 +23,8 @@ router.get('/roles', getRoles); // Para que el frontend pueda conocer los roles 
 // Rutas protegidas
 router.get(
   '/',
-  // validateToken,
-  // requirePermission(RESOURCES.USUARIOS, ACTIONS.READ),
+  validateToken,
+  requirePermission(RESOURCES.USUARIOS, ACTIONS.READ),
   getUsuarios,
 );
 router.post(

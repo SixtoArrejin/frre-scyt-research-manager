@@ -10,6 +10,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import { Spinner } from '@chakra-ui/react';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data-3.png';
+import PermissionGate from '../../components/PermissionGate';
 
 export default function ListaGrupos() {
   const [siglas, setSiglas] = useState('');
@@ -61,11 +62,13 @@ export default function ListaGrupos() {
               <GenericInput label='Siglas' placeholder='Siglas' width='15vw' value={siglas} onChange={(event) => setSiglas(event.target.value)} />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
-              <Link to={'nuevo'}>
-                <Button colorScheme='blue' variant='outline' mr='5'>
-                  Grupo +
-                </Button>
-              </Link>
+              <PermissionGate module='grupos' action='create'>
+                <Link to={'nuevo'}>
+                  <Button colorScheme='blue' variant='outline' mr='5'>
+                    Grupo +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
           </Box>
 
@@ -79,9 +82,11 @@ export default function ListaGrupos() {
                   item.siglas,
                   item.resolucion,
                   formatoFechaISOaDDMMAAAA(item.fechaCreacion),
-                  <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}>
-                    <PlusSquareIcon />
-                  </Link>,
+                  <PermissionGate key={item.idGrupoInvestigacion} module='grupos' action='view'>
+                    <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  </PermissionGate>,
                 ];
               })}
               filtro={filtro}

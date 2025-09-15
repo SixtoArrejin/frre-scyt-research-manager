@@ -27,7 +27,7 @@ import NoData3 from '../../img/no-data-3.png';
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
 
-  const { data, isLoading, error } = useQuery(['proyecto', idProyecto], () =>
+  const { data, isLoading } = useQuery(['proyecto', idProyecto], () =>
     getProyectoById(Number(idProyecto)),
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
@@ -398,7 +398,7 @@ export default function DetalleProyectoPid() {
                         : '-',
                       catUTN ? catUTN.categoria : '-',
                       catMIN ? catMIN.categoria : '-',
-                      <Link to={`/investigadores/${item.idPersona}`}>
+                      <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
                         <PlusSquareIcon />
                       </Link>,
                     ];
@@ -450,6 +450,7 @@ export default function DetalleProyectoPid() {
                       item.gruposinvestigacion?.fechaCreacion,
                     ),
                     <Link
+                      key={item.gruposinvestigacion?.idGrupoInvestigacion}
                       to={`/grupos-investigacion/${item.gruposinvestigacion?.idGrupoInvestigacion}`}
                     >
                       <PlusSquareIcon />
@@ -534,7 +535,7 @@ export default function DetalleProyectoPid() {
                     item.empresaInstitucion,
                     item.vinculacionesconfinanciamiento ? 'Si' : 'No',
                     item.numeroMarco,
-                    <Link to={`vinculacion/${item.idVinculacion}`}>
+                    <Link key={item.idVinculacion} to={`vinculacion/${item.idVinculacion}`}>
                       <PlusSquareIcon />
                     </Link>,
                   ])}
@@ -557,7 +558,7 @@ export default function DetalleProyectoPid() {
               >
                 <Link to={'nueva-vinculacion'}>
                   <Button colorScheme="blue" variant="outline">
-                    Nueva vinculación
+                      Nueva vinculación
                   </Button>
                 </Link>
               </Box>

@@ -26,6 +26,7 @@ import { UserContext } from '../../context/UserContext';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
 import { formatDate } from '../../utils/general';
+import PermissionGate from '../../components/PermissionGate';
 
 const columnas = ['Usuario', 'Rol', 'Estado', 'Fecha Creación', 'Creado Por', 'Acciones'];
 
@@ -174,17 +175,14 @@ export default function ListaUsuarios() {
 
             <br />
 
-            {/* <Box display='flex' width='100%' justifyContent='end' mb={4}>
-              <Button as={Link} to='/usuarios/nuevo' colorScheme='blue' leftIcon={<PlusSquareIcon />}>
-                Nuevo Usuario
-              </Button>
-            </Box> */}
             <Box display='flex' justifyContent='flex-end' width='100%'>
-              <Link to={'/usuarios/nuevo'}>
-                <Button colorScheme='blue' variant='outline' mr='5'>
-                  Nuevo Usuario +
-                </Button>
-              </Link>
+              <PermissionGate module='usuarios' action='create'>
+                <Link to={'/usuarios/nuevo'}>
+                  <Button colorScheme='blue' variant='outline' mr='5'>
+                    Nuevo Usuario +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
 
             <br />

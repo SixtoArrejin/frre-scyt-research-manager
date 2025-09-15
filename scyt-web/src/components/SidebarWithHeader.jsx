@@ -24,6 +24,7 @@ import {
   FiMenu,
   FiChevronDown,
   FiUsers,
+  FiLink,
 } from 'react-icons/fi';
 import { BiNetworkChart, BiTask } from 'react-icons/bi';
 import { MdAdminPanelSettings } from 'react-icons/md';
@@ -36,9 +37,9 @@ const getNavItems = (userRole) => {
   const baseItems = [
     { name: 'Home', icon: FiHome, route: '/' },
     { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
-    { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
+    { name: 'Grupos de Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
     { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
-    { name: 'Vinculaciones', icon: BiTask, route: '/vinculaciones' },
+    { name: 'Vinculaciones', icon: FiLink, route: '/vinculaciones' },
   ];
 
   // Solo agregar administración de usuarios si es admin
