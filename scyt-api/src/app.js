@@ -11,7 +11,7 @@ import TiposProyectos from './routes/tiposProyectosRouter.js';
 import Vinculaciones from './routes/vinculacionesRouter.js';
 import Convenios from './routes/conveniosRouter.js';
 import { initDatabase } from './repository/initDB.js';
-import { createAdminUser } from '../scripts/createAdminUser.js';
+import { createDefaultUsers } from '../scripts/createDefaultUsers.js';
 
 //importamos nuestro enrutador
 const app = express();
@@ -26,8 +26,8 @@ async function initializeApp() {
     // Inicializar base de datos
     await initDatabase();
 
-    // Crear usuario administrador automáticamente
-    await createAdminUser(true); // true = modo silencioso
+    // Crear usuarios por defecto automáticamente
+    await createDefaultUsers(true); // true = modo silencioso
 
     console.log('🚀 Aplicación inicializada correctamente');
   } catch (error) {

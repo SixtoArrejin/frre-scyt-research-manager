@@ -65,10 +65,7 @@ export async function initDatabase() {
         await prisma.regionales.create({
           data: { nombre },
         });
-        console.log(`Regional "${nombre}" ha sido insertada.`);
-      } else {
-        console.log(`Regional "${nombre}" ya existe.`);
-      }
+      } 
     }
 
     for (const tipoProyecto of tiposProyectosData) {
@@ -80,9 +77,6 @@ export async function initDatabase() {
         await prisma.tiposproyectos.create({
           data: { tipoProyecto },
         });
-        console.log(`Tipo de Proyecto "${tipoProyecto}" ha sido insertado.`);
-      } else {
-        console.log(`Tipo de Proyecto "${tipoProyecto}" ya existe.`);
       }
     }
   } catch (error) {
