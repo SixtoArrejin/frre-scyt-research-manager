@@ -1,4 +1,4 @@
-import { prisma } from '../db.js'
+import { prisma } from '../db.js';
 
 const regionalesData = [
   'Centro Tecnológico De Desarrollo Regional Los Reyunos',
@@ -51,7 +51,7 @@ const tiposProyectosData = [
   'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
   'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
   'Tutorado con Incentivo',
-  'Tutorado sin Incentivo'
+  'Tutorado sin Incentivo',
 ];
 
 export async function initDatabase() {
@@ -65,10 +65,7 @@ export async function initDatabase() {
         await prisma.regionales.create({
           data: { nombre },
         });
-        console.log(`Regional "${nombre}" ha sido insertada.`);
-      } else {
-        console.log(`Regional "${nombre}" ya existe.`);
-      }
+      } 
     }
 
     for (const tipoProyecto of tiposProyectosData) {
@@ -80,9 +77,6 @@ export async function initDatabase() {
         await prisma.tiposproyectos.create({
           data: { tipoProyecto },
         });
-        console.log(`Tipo de Proyecto "${tipoProyecto}" ha sido insertado.`);
-      } else {
-        console.log(`Tipo de Proyecto "${tipoProyecto}" ya existe.`);
       }
     }
   } catch (error) {

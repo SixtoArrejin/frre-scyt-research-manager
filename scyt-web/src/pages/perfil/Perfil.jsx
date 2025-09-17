@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -7,7 +7,6 @@ import {
   Avatar,
   Text,
   Button,
-  HStack,
   VStack,
   Spinner,
 } from '@chakra-ui/react';
@@ -23,16 +22,16 @@ export default function Perfil() {
   // Función para obtener las iniciales del usuario
   const getInitials = (user) => {
     if (!user) return '';
-    
+
     if (typeof user === 'string') {
       return user.charAt(0).toUpperCase();
     }
-    
+
     if (typeof user === 'object') {
       const nombre = user.nombre || '';
       const apellido = user.apellido || '';
       const usuario = user.usuario || '';
-      
+
       if (nombre && apellido) {
         return (nombre.charAt(0) + apellido.charAt(0)).toUpperCase();
       } else if (nombre) {
@@ -41,7 +40,7 @@ export default function Perfil() {
         return usuario.charAt(0).toUpperCase();
       }
     }
-    
+
     return '';
   };
 
@@ -91,51 +90,51 @@ export default function Perfil() {
           <Card width="100%">
             <CardBody>
               <Text fontSize="md" mb={4}>Datos del perfil</Text>
-              
+
               <Box display="flex" width="100%" alignItems="center" justifyContent="center" flexDirection="column">
                 <VStack spacing={6} width="100%" mb={6}>
-                  <Avatar 
-                    size="2xl" 
-                    src={form?.avatar || ''} 
+                  <Avatar
+                    size="2xl"
+                    src={form?.avatar || ''}
                     name={getInitials(form)}
-                    bg={!form?.avatar ? "blue.500" : undefined}
-                    color={!form?.avatar ? "white" : undefined}
+                    bg={!form?.avatar ? 'blue.500' : undefined}
+                    color={!form?.avatar ? 'white' : undefined}
                   />
                 </VStack>
 
                 <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" width="100%" gap={4}>
-                  <GenericInput 
-                    label="Nombre" 
-                    width={{ base: '100%', md: '30%' }} 
-                    value={form?.nombre || form?.usuario || '-'} 
-                    disabled 
-                    mb="5vh" 
+                  <GenericInput
+                    label="Nombre"
+                    width={{ base: '100%', md: '30%' }}
+                    value={form?.nombre || form?.usuario || '-'}
+                    disabled
+                    mb="5vh"
                   />
 
-                  <GenericInput 
-                    label="Apellido" 
-                    width={{ base: '100%', md: '30%' }} 
-                    value={form?.apellido || '-'} 
-                    disabled 
-                    mb="5vh" 
+                  <GenericInput
+                    label="Apellido"
+                    width={{ base: '100%', md: '30%' }}
+                    value={form?.apellido || '-'}
+                    disabled
+                    mb="5vh"
                   />
 
-                  <GenericInput 
-                    label="Email" 
-                    width={{ base: '100%', md: '30%' }} 
-                    value={form?.email || '-'} 
-                    disabled 
-                    mb="5vh" 
+                  <GenericInput
+                    label="Email"
+                    width={{ base: '100%', md: '30%' }}
+                    value={form?.email || '-'}
+                    disabled
+                    mb="5vh"
                   />
                 </Box>
 
                 <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" width="100%" gap={4}>
-                  <GenericInput 
-                    label="Rol / Observación" 
-                    width={{ base: '100%', md: '48%' }} 
-                    value={form?.rol || form?.cargo || 'Admin'} 
-                    disabled 
-                    mb="5vh" 
+                  <GenericInput
+                    label="Rol / Observación"
+                    width={{ base: '100%', md: '48%' }}
+                    value={currentUser?.rol.charAt(0).toUpperCase() + currentUser?.rol.slice(1) || '-'}
+                    disabled
+                    mb="5vh"
                   />
                 </Box>
 

@@ -15,7 +15,7 @@ const schema = yup.object({
   resolucion: yup
     .string()
     .required('La resolución es requerida')
-    .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
+    .matches(/^\d+\/\d+$/, 'El formato de la resolución debe ser \'###/###\''),
   fechaCreacion: yup.string().required('La fecha es requerida'),
   siglas: yup.string().required('Las siglas son requeridas'),
 });
@@ -37,14 +37,14 @@ export default function ModificarGrupo() {
 
   const { idGrupoInvestigacion } = useParams();
 
-  const { data, isLoading, error: errorGrupo } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
+  const { data, isLoading } = useQuery(['grupo'], () => getGrupoById(idGrupoInvestigacion));
 
   useEffect(() => {
     setValue('nombre', data?.grupo.nombre);
     setValue('resolucion', data?.grupo.resolucion);
     setValue('fechaCreacion', formatoFechaISOaAAAAMMDD(data?.grupo.fechaCreacion));
     setValue('siglas', data?.grupo.siglas);
-  }, [data]);
+  }, [data, setValue]);
 
   const {
     register,
@@ -66,7 +66,7 @@ export default function ModificarGrupo() {
     onSuccess: () => {
       toast({
         title: 'Modificar grupo',
-        description: `Se ha modificado el grupo exitosamente`,
+        description: 'Se ha modificado el grupo exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -75,7 +75,7 @@ export default function ModificarGrupo() {
     onError: () => {
       toast({
         title: 'Error al modificar los datos del grupo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

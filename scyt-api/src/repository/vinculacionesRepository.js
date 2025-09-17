@@ -1,40 +1,40 @@
-import { prisma } from "../db.js";
+import { prisma } from '../db.js';
 import {
   create,
   getAll,
   getByField,
   getById,
   update,
-} from "./baseRepository.js";
+} from './baseRepository.js';
 
 export async function getAllVinculaciones() {
   const includeRelations = [
-    "proyectos",
-    "vinculacionesconfinanciamiento",
-    "vinculacionessinfinanciamiento",
-    "convenios",
+    'proyectos',
+    'vinculacionesconfinanciamiento',
+    'vinculacionessinfinanciamiento',
+    'convenios',
   ];
-  return await getAll("vinculaciones", includeRelations);
+  return await getAll('vinculaciones', includeRelations);
 }
 
 export async function getVinculacionById(idVinculacion) {
   const includeRelations = [
-    "proyectos",
-    { vinculacionesconfinanciamiento: ["desembolsos"] },
-    "vinculacionessinfinanciamiento",
-    "convenios",
+    'proyectos',
+    { vinculacionesconfinanciamiento: ['desembolsos'] },
+    'vinculacionessinfinanciamiento',
+    'convenios',
   ];
   return await getById(
-    "vinculaciones",
-    "idVinculacion",
+    'vinculaciones',
+    'idVinculacion',
     idVinculacion,
-    includeRelations
+    includeRelations,
   );
 }
 
 export async function createDesembolso(desembolsoData) {
   try {
-    const newDesembolso = await create("desembolsos", desembolsoData);
+    const newDesembolso = await create('desembolsos', desembolsoData);
     const { idDesembolso, idConFinanciamiento } = newDesembolso;
 
     const desembolsoPrevio = await prisma.desembolsos.findFirst({
@@ -46,7 +46,7 @@ export async function createDesembolso(desembolsoData) {
     });
     
     if (desembolsoPrevio && desembolsoPrevio.idDesembolso) {
-      await update("desembolsos", { idDesembolso: desembolsoPrevio.idDesembolso }, { estado: "Aprobado" });
+      await update('desembolsos', { idDesembolso: desembolsoPrevio.idDesembolso }, { estado: 'Aprobado' });
     }
 
     return newDesembolso;
@@ -57,9 +57,9 @@ export async function createDesembolso(desembolsoData) {
 }
 
 export async function getDesembolsoById(idDesembolso) {
-  return await getById("desembolsos", "idDesembolso", idDesembolso);
+  return await getById('desembolsos', 'idDesembolso', idDesembolso);
 }
 
 export async function getDesembolsosByIdVinculacion(idVinculacion) {
-  return await getByField("desembolsos", "idConFinanciamiento", idVinculacion);
+  return await getByField('desembolsos', 'idConFinanciamiento', idVinculacion);
 }

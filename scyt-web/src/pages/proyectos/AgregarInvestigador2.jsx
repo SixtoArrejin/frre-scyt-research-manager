@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueries, useQueryClient } from 'react-query';
-import { getAllPersonas, getPersonasByGroup } from '../../utils/api/personasApi';
+import { getPersonasByGroup } from '../../utils/api/personasApi';
 import { addInvestigador, delInvestigador } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
@@ -19,10 +19,6 @@ export default function AgregarInvestigador2() {
   /* Usestate para el modal */
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
 
   const closeModal = () => {
     setIsOpen(false);
@@ -42,18 +38,16 @@ export default function AgregarInvestigador2() {
       queryKey: ['personasGrupo', grupo.idGrupoInvestigacion],
       queryFn: () => getPersonasByGroup(grupo.idGrupoInvestigacion),
       enabled: !!grupo.idGrupoInvestigacion, // Habilitar solo cuando el idGrupoInvestigacion esté disponible
-    }))
+    })),
   );
   const investigadoresGrupos = investigadoresQueries.flatMap((query) => query?.data?.personasGrupo ?? []);
-  // Revisamos si alguno de los queries de investigadores está cargando
-  const isLoadingInvestigadores = investigadoresQueries.some((query) => query.isLoading);
 
-  const { mutate: mutateInvestigador, isLoading: isLoadingInvestigador } = useMutation({
+  const { mutate: mutateInvestigador } = useMutation({
     mutationFn: () => addInvestigador(Number(idPid), { idInvestigador: selectedOptions, rol: rolSelectedOptions, fechaInicio: fechaSelected }),
     onSuccess: () => {
       toast({
         title: 'Agregar investigador',
-        description: `Se ha agregado el investigador exitosamente`,
+        description: 'Se ha agregado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -64,19 +58,19 @@ export default function AgregarInvestigador2() {
     onError: () => {
       toast({
         title: 'Error al agregar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
     },
   });
 
-  const { mutate: mutateDelInvestigador, isLoading: isLoadingDelInvestigador } = useMutation({
+  const { mutate: mutateDelInvestigador } = useMutation({
     mutationFn: (idInvestigador) => delInvestigador(Number(idPid), Number(idInvestigador)),
     onSuccess: () => {
       toast({
         title: 'Eliminar investigador',
-        description: `Se ha eliminado el investigador exitosamente`,
+        description: 'Se ha eliminado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -87,7 +81,7 @@ export default function AgregarInvestigador2() {
     onError: () => {
       toast({
         title: 'Error al eliminar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -100,7 +94,6 @@ export default function AgregarInvestigador2() {
   const [fechaSelected, setFechaSelected] = useState();
 
   const { data: dataGruposInvestigacion } = useQuery('grupos', () => getAllGrupos());
-  const { data: dataPersonas } = useQuery('personas', () => getAllPersonas());
 
   const calcularGrupo = (idGrupo) => {
     if (!dataGruposInvestigacion) {
@@ -181,13 +174,14 @@ export default function AgregarInvestigador2() {
 
               <Tabla
                 columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Fecha de inicio', 'Eliminar']}
-                datos={dataProyecto?.proyecto?.participa?.map((item, index) => {
+                datos={dataProyecto?.proyecto?.participa?.map((item) => {
                   return [
-                    <div>{item.personas.apellido + ', ' + item.personas.nombre}</div>,
+                    <div key={`nombre-${item.personas.idPersona}`}>{item.personas.apellido + ', ' + item.personas.nombre}</div>,
                     calcularGrupo(item.personas.idGrupoInvestigacion), //Buscar manera de indicar las siglas no el id del grupo
                     item.rol,
                     formatoFechaISOaDDMMAAAA(item.fechaInicio),
                     <DeleteIcon
+                      key={`delete-${item.personas.idPersona}`}
                       cursor={'pointer'}
                       // onClick={() => {
                       //   eliminarInvestigador(item.idPersona, index);

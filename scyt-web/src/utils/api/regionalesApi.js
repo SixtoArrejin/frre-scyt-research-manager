@@ -1,5 +1,5 @@
-import { get, post, put, del } from "./baseApi";
+import { get } from './baseApi';
 
 export async function getAllRegionales() {
-  return get('/api/regionales')
+  return get('/api/regionales');
 }

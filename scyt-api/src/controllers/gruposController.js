@@ -1,5 +1,5 @@
 import { getAllGruposService, getGrupoByIdService, updateGrupoService, createGrupoService } from '../services/gruposService.js';
-import convertToISOString from '../utils/funciones.js'
+import convertToISOString from '../utils/funciones.js';
 
 export async function getGrupos(req, res) {
   try {

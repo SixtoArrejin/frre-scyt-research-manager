@@ -101,8 +101,7 @@ ehthumbs.db
 Thumbs.db
 *~
 
-# IDE and Editor files
-.vscode/
+# IDE and Editor files  
 .idea/
 *.swp
 *.swo

@@ -1,6 +1,6 @@
 import {
-  getAllRegionalesService
-} from "../services/regionalesService.js";
+  getAllRegionalesService,
+} from '../services/regionalesService.js';
 
 export async function getAllRegionales(req, res) {
   try {

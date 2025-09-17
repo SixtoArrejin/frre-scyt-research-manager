@@ -3,7 +3,6 @@ import {
   Button,
   Checkbox,
   Container,
-  Divider,
   FormControl,
   FormLabel,
   Heading,
@@ -11,20 +10,16 @@ import {
   VStack,
   Image,
   Input,
-  Link,
   Stack,
   Text,
-  useCounter,
   useToast,
 } from '@chakra-ui/react';
 import Logo from '../img/SCyT-SinFondo.png';
 import { UserContext } from '../context/UserContext';
-import { useContext } from 'react';
-import { useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { logInUser } from '../utils/api/logInApi';
 import { useMutation } from 'react-query';
-import { useState } from 'react';
-import { Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 //   import { OAuthButtonGroup } from './OAuthButtonGroup'
 //   import { PasswordField } from './PasswordField'
@@ -36,12 +31,19 @@ const schema = yup.object({
   contrasena: yup.string().required('Contraseña requerida').min(8, 'La contraseña debe tener al menos 8 caracteres'),
 });
 
+// Claves para localStorage
+const REMEMBER_USER_KEY = 'scyt_remember_user';
+const REMEMBERED_USERNAME_KEY = 'scyt_remembered_username';
+
 export default function LogIn() {
   const toast = useToast();
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -51,7 +53,18 @@ export default function LogIn() {
     resolver: yupResolver(schema),
   });
 
-  const { login, currentUser } = useContext(UserContext);
+  // Cargar usuario recordado al montar el componente
+  useEffect(() => {
+    const shouldRemember = localStorage.getItem(REMEMBER_USER_KEY) === 'true';
+    const rememberedUsername = localStorage.getItem(REMEMBERED_USERNAME_KEY);
+
+    if (shouldRemember && rememberedUsername) {
+      setRememberMe(true);
+      setValue('usuario', rememberedUsername);
+    }
+  }, [setValue]);
+
+  const { login } = useContext(UserContext);
 
   const { mutate, isLoading } = useMutation((formData) => logInUser(formData), {
     // onSuccess se ejecutará cuando la llamada sea exitosa
@@ -59,10 +72,19 @@ export default function LogIn() {
       console.log('Respuesta de la solicitud:', data);
       if (data.token && data.usuario) {
         login(data.token, data.usuario);
+
+        // Manejar funcionalidad "Recuérdame"
+        if (rememberMe) {
+          localStorage.setItem(REMEMBER_USER_KEY, 'true');
+          localStorage.setItem(REMEMBERED_USERNAME_KEY, data.usuario.usuario);
+        } else {
+          localStorage.removeItem(REMEMBER_USER_KEY);
+          localStorage.removeItem(REMEMBERED_USERNAME_KEY);
+        }
       }
       toast({
         title: 'Inicio de sesión',
-        description: `Ha iniciado sesión exitosamente.`,
+        description: 'Ha iniciado sesión exitosamente.',
         status: 'success',
         isClosable: true,
       });
@@ -72,7 +94,7 @@ export default function LogIn() {
       console.log('Ocurrio un error intente nuevamente', data);
       toast({
         title: 'Inicio de sesión',
-        description: `Usuario o contraseña incorrectos.`,
+        description: 'Usuario o contraseña incorrectos.',
         status: 'error',
         isClosable: true,
       });
@@ -163,7 +185,12 @@ export default function LogIn() {
                 {/* <PasswordField /> */}
               </Stack>
               <HStack justify='space-between'>
-                <Checkbox defaultChecked>Recuerdame</Checkbox>
+                <Checkbox
+                  isChecked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                >
+                  Recuérdame
+                </Checkbox>
                 <Button variant='text' size='sm'>
                   ¿Olvidaste tu contraseña?
                 </Button>

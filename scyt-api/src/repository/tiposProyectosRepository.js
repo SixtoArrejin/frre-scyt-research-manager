@@ -2,11 +2,11 @@ import {
   getAll,
   create,
   update,
-  getById
+  getById,
 } from './baseRepository.js';
-import { prisma } from '../db.js'
+import { prisma } from '../db.js';
 
 export async function getAllTiposProyectos() {
-  const includeRelations = []
+  const includeRelations = [];
   return await getAll('tiposproyectos', includeRelations);
 }

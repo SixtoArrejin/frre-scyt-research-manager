@@ -15,6 +15,7 @@ import NoData2 from '../../img/no-data-2.png';
 import NoData3 from '../../img/no-data-3.png';
 import ImgDefault from '../../components/ImgDefault';
 import EditCategoriaModal from './EditCategoriaModal';
+import PermissionGate from '../../components/PermissionGate';
 
 export default function DetalleInvestigador() {
   /* Usestate para el modal */
@@ -45,30 +46,30 @@ export default function DetalleInvestigador() {
   const { idPersona } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['persona'], () => getPersonaById(idPersona));
+  const { data, isLoading } = useQuery(['persona'], () => getPersonaById(idPersona));
   const { data: dataProyectos } = useQuery(['proyectos', idPersona], () => getProyectosByPersonaId(idPersona));
   const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
   const toast = useToast();
 
   useEffect(() => {
-    if (dataProyectos){
-      console.log(dataProyectos)
+    if (dataProyectos) {
+      console.log(dataProyectos);
     }
 
-  }, [dataProyectos])
+  }, [dataProyectos]);
 
   const categoriasUTN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'utn');
   const categoriasMIN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'ministerio');
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (idCategoria) => deleteCategoriaById(idCategoria),
     onSuccess: () => {
       toast({
         title: 'Eliminar categoria',
-        description: `Se ha eliminado la categoria exitosamente`,
+        description: 'Se ha eliminado la categoria exitosamente',
         status: 'info',
         isClosable: true,
       });
@@ -77,7 +78,7 @@ export default function DetalleInvestigador() {
     onError: () => {
       toast({
         title: 'Eliminar categoria',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -135,11 +136,13 @@ export default function DetalleInvestigador() {
                   />
                 </Box>
                 <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
-                  <Link to={`modificar`}>
-                    <Button colorScheme='blue' variant='outline'>
-                      Modificar
-                    </Button>
-                  </Link>
+                  <PermissionGate module='investigadores' action='edit'>
+                    <Link to={'modificar'}>
+                      <Button colorScheme='blue' variant='outline'>
+                        Modificar
+                      </Button>
+                    </Link>
+                  </PermissionGate>
                 </Box>
               </Box>
             </CardBody>
@@ -158,32 +161,36 @@ export default function DetalleInvestigador() {
                     item.categoria,
                     item.normativa,
                     item.comision,
-                    <Link key={item.idCategoria}>
-                      <DeleteIcon onClick={() => openModal(item)} />
-                      <CustomModal
-                        isOpen={isOpen}
-                        onClose={closeModal}
-                        eliminar={true}
-                        title='Eliminar categoria'
-                        content='Se eliminara la categoria UTN'
-                        onSave={() => {
-                          if (selectedCategoria) {
-                            mutate(selectedCategoria.idCategoria);
-                          }
-                        }}
-                      />
-                    </Link>,
-                    <Link key={item.idCategoria}>
-                      <EditIcon onClick={() => openModalEdit(item)} />
-                      <EditCategoriaModal
-                        key={item.idCategoria}
-                        categoria={selectedCategoria}
-                        isOpen={isOpenEdit}
-                        onClose={closeModalEdit}
-                        guardar={true}
-                        title='Editar categoria'
-                      />
-                    </Link>,
+                    <PermissionGate key={`delete-min-${item.idCategoria}`} module='investigadores' action='delete'>
+                      <Link>
+                        <DeleteIcon onClick={() => openModal(item)} />
+                        <CustomModal
+                          isOpen={isOpen}
+                          onClose={closeModal}
+                          eliminar={true}
+                          title='Eliminar categoria'
+                          content='Se eliminara la categoria UTN'
+                          onSave={() => {
+                            if (selectedCategoria) {
+                              mutate(selectedCategoria.idCategoria);
+                            }
+                          }}
+                        />
+                      </Link>
+                    </PermissionGate>,
+                    <PermissionGate key={`edit-min-${item.idCategoria}`} module='investigadores' action='edit'>
+                      <Link>
+                        <EditIcon onClick={() => openModalEdit(item)} />
+                        <EditCategoriaModal
+                          key={item.idCategoria}
+                          categoria={selectedCategoria}
+                          isOpen={isOpenEdit}
+                          onClose={closeModalEdit}
+                          guardar={true}
+                          title='Editar categoria'
+                        />
+                      </Link>
+                    </PermissionGate>,
                   ])}
                   paginado={false}
                 />
@@ -203,32 +210,36 @@ export default function DetalleInvestigador() {
                     item.normativa,
                     item.equiparacion ? 'SI' : 'NO',
                     item.comision,
-                    <Link key={item.idCategoria}>
-                      <DeleteIcon onClick={() => openModal(item)} />
-                      <CustomModal
-                        isOpen={isOpen}
-                        onClose={closeModal}
-                        eliminar={true}
-                        title='Eliminar categoria'
-                        content='Se eliminara la categoria UTN'
-                        onSave={() => {
-                          if (selectedCategoria) {
-                            mutate(selectedCategoria.idCategoria);
-                          }
-                        }}
-                      />
-                    </Link>,
-                    <Link key={item.idCategoria}>
-                      <EditIcon onClick={() => openModalEdit(item)} />
-                      <EditCategoriaModal
-                        key={item.idCategoria}
-                        categoria={selectedCategoria}
-                        isOpen={isOpenEdit}
-                        onClose={closeModalEdit}
-                        guardar={true}
-                        title='Editar categoria'
-                      />
-                    </Link>,
+                    <PermissionGate key={`delete-utn-${item.idCategoria}`} module='investigadores' action='delete'>
+                      <Link>
+                        <DeleteIcon onClick={() => openModal(item)} />
+                        <CustomModal
+                          isOpen={isOpen}
+                          onClose={closeModal}
+                          eliminar={true}
+                          title='Eliminar categoria'
+                          content='Se eliminara la categoria UTN'
+                          onSave={() => {
+                            if (selectedCategoria) {
+                              mutate(selectedCategoria.idCategoria);
+                            }
+                          }}
+                        />
+                      </Link>
+                    </PermissionGate>,
+                    <PermissionGate key={`edit-utn-${item.idCategoria}`} module='investigadores' action='edit'>
+                      <Link>
+                        <EditIcon onClick={() => openModalEdit(item)} />
+                        <EditCategoriaModal
+                          key={item.idCategoria}
+                          categoria={selectedCategoria}
+                          isOpen={isOpenEdit}
+                          onClose={closeModalEdit}
+                          guardar={true}
+                          title='Editar categoria'
+                        />
+                      </Link>
+                    </PermissionGate>,
                   ])}
                   paginado={false}
                 />
@@ -237,11 +248,13 @@ export default function DetalleInvestigador() {
               )}
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <Link to={`nueva-categoria`}>
-                  <Button colorScheme='blue' variant='outline'>
-                    Nueva Categoría
-                  </Button>
-                </Link>
+                <PermissionGate module='investigadores' action='create'>
+                  <Link to={'nueva-categoria'}>
+                    <Button colorScheme='blue' variant='outline'>
+                      Nueva Categoría
+                    </Button>
+                  </Link>
+                </PermissionGate>
               </Box>
             </CardBody>
           </Card>
@@ -262,7 +275,7 @@ export default function DetalleInvestigador() {
                     item.estado,
                     formatoFechaISOaDDMMAAAA(item.fechaIngreso),
                     item.rol,
-                    <Link to={`/proyectos/${item.idProyecto}`}>
+                    <Link key={`proyecto-link-${item.idProyecto}`} to={`/proyectos/${item.idProyecto}`}>
                       <PlusSquareIcon />
                     </Link>,
                   ])}

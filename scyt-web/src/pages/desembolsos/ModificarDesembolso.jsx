@@ -3,7 +3,7 @@ import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getDesembolsoById, putDesembolsoById } from '../../utils/api/vinculacionesApi';
-import { formatoFechaISOaDDMMAAAA, convertirFechaDDMMAAAAaDate, formatoFechaISOaAAAAMMDD } from '../../utils/general';
+import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,15 +31,6 @@ export default function ModificarDesembolso() {
   };
 
   const { data: dataDesembolso, isLoading } = useQuery(['desembolso', idDesembolso], () => getDesembolsoById(idDesembolso));
-  // Función para sumar meses a una fecha
-  function sumarMeses(fecha, meses) {
-    const fechaInicio = new Date(fecha); // Convertir la fecha ISO en objeto Date
-    fechaInicio.setMonth(fechaInicio.getMonth() + meses); // Sumar los meses
-    return fechaInicio;
-  }
-
-  const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
-  const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(dataDesembolso?.desembolso?.fechaDesembolso, dataDesembolso?.desembolso?.plazoEtapa));
 
   const {
     register,
@@ -63,7 +54,7 @@ export default function ModificarDesembolso() {
         }),
         ...(dataDesembolso.desembolso.montoRendido && { montoRendido: dataDesembolso.desembolso.montoRendido }),
         ...(dataDesembolso.desembolso.estado && { estado: dataDesembolso.desembolso.estado }),
-        ...(dataDesembolso.desembolso.motivoEstado && { motivoEstado: dataDesembolso.desembolso.motivoEstado} )
+        ...(dataDesembolso.desembolso.motivoEstado && { motivoEstado: dataDesembolso.desembolso.motivoEstado }),
       });
     }
   }, [dataDesembolso, reset]);
@@ -74,7 +65,7 @@ export default function ModificarDesembolso() {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Desembolso modificado',
-        description: `Se ha modificado el desembolso exitosamente`,
+        description: 'Se ha modificado el desembolso exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -83,7 +74,7 @@ export default function ModificarDesembolso() {
     onError: () => {
       toast({
         title: 'Error al modificar el desembolso',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

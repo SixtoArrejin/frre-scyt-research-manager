@@ -6,7 +6,7 @@ import {
 export async function getAllTiposProyectosService() {
   try {
     const tipos = await getAllTiposProyectos();
-    return tipos
+    return tipos;
   } catch (error) {
     throw new Error(error.message);
   }

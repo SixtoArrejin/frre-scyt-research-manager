@@ -6,7 +6,7 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import { useParams } from 'react-router-dom';
 import { createConvenio } from '../../utils/api/vinculacionesApi';
 
-export default function NuevoConvenioModal({ isOpen, onClose, title, onSave, categoria = null }) {
+export default function NuevoConvenioModal({ isOpen, onClose, title, categoria = null }) {
   const { idVinculacion } = useParams();
   const {
     register,
@@ -29,7 +29,7 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, onSave, cat
       queryClient.refetchQueries(['vinculacion', idVinculacion]);
       toast({
         title: 'Nuevo Convenio',
-        description: `Se ha agregado el convenio exitosamente.`,
+        description: 'Se ha agregado el convenio exitosamente.',
         status: 'success',
         isClosable: true,
       });
@@ -38,7 +38,7 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, onSave, cat
     onError: () => {
       toast({
         title: 'Error al modificar los datos de la categoria',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

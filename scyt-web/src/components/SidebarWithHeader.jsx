@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from 'react';
 import {
   IconButton,
   Avatar,
@@ -18,40 +18,49 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 import {
   FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
   FiMenu,
-  FiBell,
   FiChevronDown,
   FiUsers,
-} from "react-icons/fi";
-import { BiNetworkChart, BiTask } from "react-icons/bi";
-import Logo from "../../src/img/Logo2-SinFondo.png";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+  FiLink,
+} from 'react-icons/fi';
+import { BiNetworkChart, BiTask } from 'react-icons/bi';
+import { MdAdminPanelSettings } from 'react-icons/md';
+import Logo from '../../src/img/Logo2-SinFondo.png';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
-const LinkItems = [
-  { name: 'Home', icon: FiHome, route: '/' },
-  { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
-  { name: 'Grupos Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
-  { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
-  { name: 'Vinculaciones', icon: BiTask, route: '/vinculaciones' },
-  // { name: 'Configuración', icon: FiSettings, route: '/investigadores' },
-];
+const getNavItems = (userRole) => {
+  const baseItems = [
+    { name: 'Home', icon: FiHome, route: '/' },
+    { name: 'Investigadores', icon: FiUsers, route: '/investigadores' },
+    { name: 'Grupos de Investigación', icon: BiNetworkChart, route: '/grupos-investigacion' },
+    { name: 'Proyectos', icon: BiTask, route: '/proyectos' },
+    { name: 'Vinculaciones', icon: FiLink, route: '/vinculaciones' },
+  ];
+
+  // Solo agregar administración de usuarios si es admin
+  if (userRole === 'admin') {
+    baseItems.push({
+      name: 'Administración de Usuarios',
+      icon: MdAdminPanelSettings,
+      route: '/usuarios',
+    });
+  }
+
+  return baseItems;
+};
 
 export default function SidebarWithHeader({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
+        display={{ base: 'none', md: 'block' }}
       />
       <Drawer
         autoFocus={false}
@@ -76,13 +85,17 @@ export default function SidebarWithHeader({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
+  const { currentUser } = useContext(UserContext);
+  const userRole = currentUser?.rol || 'viewer';
+  const navItems = getNavItems(userRole);
+
   return (
     <Box
       transition="3s ease"
-      bg={useColorModeValue("white", "gray.900")}
+      bg={useColorModeValue('white', 'gray.900')}
       borderRight="1px"
-      borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
+      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+      w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
       {...rest}
@@ -90,9 +103,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <img src={Logo} alt="Logo" />
 
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
+      {navItems.map((link) => (
         <NavItem
           key={link.name}
           icon={link.icon}
@@ -110,8 +123,8 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
   return (
     <Link
       to={route}
-      style={{ textDecoration: "none" }}
-      _focus={{ boxShadow: "none" }}
+      style={{ textDecoration: 'none' }}
+      _focus={{ boxShadow: 'none' }}
     >
       <Flex
         align="center"
@@ -121,8 +134,8 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: "cyan.400",
-          color: "white",
+          bg: 'cyan.400',
+          color: 'white',
         }}
         onClick={onClose}
         {...rest}
@@ -132,7 +145,7 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
             mr="4"
             fontSize="16"
             _groupHover={{
-              color: "white",
+              color: 'white',
             }}
             as={icon}
           />
@@ -145,30 +158,31 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
 
 const MobileNav = ({ onOpen, ...rest }) => {
   const { logout, currentUser } = useContext(UserContext);
-  
+
   // Función para obtener las iniciales del usuario
   const getInitials = (user) => {
-    if (!user) return '';
-    
+    if (!user) return 'U';
+
     if (typeof user === 'string') {
       return user.charAt(0).toUpperCase();
     }
-    
+
     if (typeof user === 'object') {
+      // Primero intentamos con nombre y apellido
       const nombre = user.nombre || '';
       const apellido = user.apellido || '';
-      const usuario = user.usuario || '';
-      
+
       if (nombre && apellido) {
         return (nombre.charAt(0) + apellido.charAt(0)).toUpperCase();
       } else if (nombre) {
         return nombre.charAt(0).toUpperCase();
-      } else if (usuario) {
-        return usuario.charAt(0).toUpperCase();
+      } else if (user.usuario && typeof user.usuario === 'string') {
+        // Si no hay nombre, usamos el usuario (verificamos que sea string)
+        return user.usuario.charAt(0).toUpperCase();
       }
     }
-    
-    return '';
+
+    return 'U'; // Fallback
   };
 
   return (
@@ -177,60 +191,70 @@ const MobileNav = ({ onOpen, ...rest }) => {
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
+      bg={useColorModeValue('white', 'gray.900')}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent={{ base: "space-between", md: "flex-end" }}
+      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+      justifyContent={{ base: 'space-between', md: 'flex-end' }}
       {...rest}
     >
       <IconButton
-        display={{ base: "flex", md: "none" }}
+        display={{ base: 'flex', md: 'none' }}
         onClick={onOpen}
         variant="outline"
         aria-label="open menu"
         icon={<FiMenu />}
       />
 
-      <HStack spacing={{ base: "0", md: "6" }}>
-        <Flex alignItems={"center"}>
+      <HStack spacing={{ base: '0', md: '6' }}>
+        <Flex alignItems={'center'}>
           <Menu>
             <MenuButton
               py={2}
               transition="all 0.3s"
-              _focus={{ boxShadow: "none" }}
+              _focus={{ boxShadow: 'none' }}
             >
               <HStack>
                 <Avatar
-                  size={"sm"}
+                  size={'sm'}
                   src={
-                    currentUser?.avatar || ""
+                    currentUser?.avatar || ''
                   }
                   name={getInitials(currentUser)}
-                  bg={(!currentUser?.avatar) ? "blue.500" : undefined}
-                  color={(!currentUser?.avatar) ? "white" : undefined}
+                  bg={(!currentUser?.avatar) ? 'blue.500' : undefined}
+                  color={(!currentUser?.avatar) ? 'white' : undefined}
                 />
                 <VStack
-                  display={{ base: "none", md: "flex" }}
+                  display={{ base: 'none', md: 'flex' }}
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">{currentUser}</Text>
+                  <Text fontSize="sm">
+                    {typeof currentUser === 'string'
+                      ? currentUser
+                      : (currentUser && typeof currentUser.usuario === 'string')
+                        ? currentUser.usuario
+                        : 'Usuario'
+                    }
+                  </Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    {(currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string')
+                      ? currentUser.rol.toUpperCase()
+                      : 'Admin'
+                    }
                   </Text>
                 </VStack>
-                <Box display={{ base: "none", md: "flex" }}>
+                <Box display={{ base: 'none', md: 'flex' }}>
                   <FiChevronDown />
                 </Box>
               </HStack>
             </MenuButton>
             <MenuList
-              bg={useColorModeValue("white", "gray.900")}
-              borderColor={useColorModeValue("gray.200", "gray.700")}
+              bg={useColorModeValue('white', 'gray.900')}
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
               {/*<MenuItem>Profile</MenuItem>*/}
-              <Link to={'/perfil'}> 
+              <Link to={'/perfil'}>
                 <MenuItem>Perfil</MenuItem>
               </Link>
               {/*<MenuItem>Billing</MenuItem>*/}

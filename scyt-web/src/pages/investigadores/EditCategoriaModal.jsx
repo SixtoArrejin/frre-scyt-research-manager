@@ -62,7 +62,7 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
       queryClient.refetchQueries(['persona']);
       toast({
         title: 'Modificar Cateogria',
-        description: `Se ha modificado la categoria exitosamente.`,
+        description: 'Se ha modificado la categoria exitosamente.',
         status: 'success',
         isClosable: true,
       });
@@ -71,7 +71,7 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
     onError: () => {
       toast({
         title: 'Error al modificar los datos de la categoria',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -84,7 +84,7 @@ export default function EditCategoriaModal({ isOpen, onClose, guardar = false, t
     };
     mutate(modifiedValues);
   };
-  
+
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />

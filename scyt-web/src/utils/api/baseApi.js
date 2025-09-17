@@ -3,14 +3,14 @@ export const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:80
 // baseServices
 
 async function fetchData(url, options = {}) {
-  const token = await localStorage.getItem("token");
+  const token = await localStorage.getItem('token');
   options.headers = {
     ...options.headers,
-    Authorization: token ? `Bearer ${token}` : "",
+    Authorization: token ? `Bearer ${token}` : '',
   };
 
   const response = await fetch(`${API_URL}${url}`, options);
-  
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Error de red');

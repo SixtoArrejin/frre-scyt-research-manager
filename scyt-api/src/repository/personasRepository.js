@@ -3,22 +3,22 @@ import {
   create,
   update,
   getById,
-  getByField
+  getByField,
 } from './baseRepository.js';
-import { prisma } from '../db.js'
+import { prisma } from '../db.js';
 
 export async function getAllPersonas() {
-  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa']
+  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa'];
   return await getAll('personas', includeRelations);
 }
 
 export async function getPersonaById(idPersona) {
-  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa']
+  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa'];
   return await getById('personas', 'idPersona', idPersona, includeRelations);
 }
 
 export async function getPersonasByGroup(idGrupo) {
-  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa']
+  const includeRelations = ['gruposinvestigacion', 'categorias', 'participa'];
   return await getByField('personas', 'idGrupoInvestigacion', idGrupo, includeRelations);
 }
 

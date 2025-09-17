@@ -1,132 +1,137 @@
 import {
-  BrowserRouter as Router,
   HashRouter,
   Route,
   Routes,
   Navigate,
-} from "react-router-dom";
-import SidebarWithHeader from "./components/SidebarWithHeader";
-import DetalleInvestigador from "./pages/investigadores/DetalleInvestigador";
-import ListaInvestigadores from "./pages/investigadores/ListaInvestigadores";
-import NuevaCategoria from "./pages/investigadores/NuevaCategoria";
-import NuevoInvestigador from "./pages/investigadores/NuevoInvestigador";
-import ListaGrupos from "./pages/grupos/ListaGrupos";
-import DetalleGrupo from "./pages/grupos/DetalleGrupo";
-import ModificarInvestigador from "./pages/investigadores/ModificarInvestigador";
-import ModificarGrupo from "./pages/grupos/ModificarGrupo";
-import NuevoGrupo from "./pages/grupos/NuevoGrupo";
-import AgregarInvestigador from "./pages/proyectos/AgregarInvestigador";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import LogIn from "./pages/LogIn";
-import { useContext } from "react";
-import { UserContext } from "./context/UserContext"; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
-import { ChakraToastProvider } from "./context/ChakraToastContext";
-import Proyectos from "./pages/proyectos/Proyectos";
-import DetalleProyecto from "./pages/proyectos/DetalleProyecto";
-import Nuevo from "./pages/proyectos/Nuevo";
-import Modificar from "./pages/proyectos/Modificar";
-import AgregarGrupo from "./pages/proyectos/AgregarGrupo";
-import DetalleVinculacion from "./pages/vinculaciones/DetalleVinculacion";
-import NuevaVinculacion from "./pages/vinculaciones/Nueva";
-import NuevoDesembolso from "./pages/desembolsos/Nuevo";
-import ListaVinculaciones from "./pages/vinculaciones/ListaVinculaciones";
-import DetalleDesembolso from "./pages/desembolsos/DetalleDesembolso";
-import Home from "./pages/Home";
-import AgregarInvestigador2 from "./pages/proyectos/AgregarInvestigador2";
-import AgregarRegional from "./pages/proyectos/AgregarRegional";
-import ModificarDesembolso from "./pages/desembolsos/ModificarDesembolso";
-import ModificarVinculacion from "./pages/vinculaciones/ModificarVinculacion";
-import Perfil from "./pages/perfil/Perfil";
+} from 'react-router-dom';
+import SidebarWithHeader from './components/SidebarWithHeader';
+import DetalleInvestigador from './pages/investigadores/DetalleInvestigador';
+import ListaInvestigadores from './pages/investigadores/ListaInvestigadores';
+import NuevaCategoria from './pages/investigadores/NuevaCategoria';
+import NuevoInvestigador from './pages/investigadores/NuevoInvestigador';
+import ListaGrupos from './pages/grupos/ListaGrupos';
+import DetalleGrupo from './pages/grupos/DetalleGrupo';
+import ModificarInvestigador from './pages/investigadores/ModificarInvestigador';
+import ModificarGrupo from './pages/grupos/ModificarGrupo';
+import NuevoGrupo from './pages/grupos/NuevoGrupo';
+import AgregarInvestigador from './pages/proyectos/AgregarInvestigador';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import LogIn from './pages/LogIn';
+import { useContext } from 'react';
+import { UserContext } from './context/UserContext'; // Reemplaza "UserContext" con el nombre de tu contexto de usuario
+import { ChakraToastProvider } from './context/ChakraToastContext';
+import Proyectos from './pages/proyectos/Proyectos';
+import DetalleProyecto from './pages/proyectos/DetalleProyecto';
+import Nuevo from './pages/proyectos/Nuevo';
+import Modificar from './pages/proyectos/Modificar';
+import AgregarGrupo from './pages/proyectos/AgregarGrupo';
+import DetalleVinculacion from './pages/vinculaciones/DetalleVinculacion';
+import NuevaVinculacion from './pages/vinculaciones/Nueva';
+import NuevoDesembolso from './pages/desembolsos/Nuevo';
+import ListaVinculaciones from './pages/vinculaciones/ListaVinculaciones';
+import DetalleDesembolso from './pages/desembolsos/DetalleDesembolso';
+import Home from './pages/Home';
+import AgregarInvestigador2 from './pages/proyectos/AgregarInvestigador2';
+import AgregarRegional from './pages/proyectos/AgregarRegional';
+import ModificarDesembolso from './pages/desembolsos/ModificarDesembolso';
+import ModificarVinculacion from './pages/vinculaciones/ModificarVinculacion';
+import Perfil from './pages/perfil/Perfil';
+import ListaUsuarios from './pages/usuarios/ListaUsuarios';
+import NuevoUsuario from './pages/usuarios/NuevoUsuario';
+import ModificarUsuario from './pages/usuarios/ModificarUsuario';
 
 const queryClient = new QueryClient();
 
 const routes = [
   // { path: "/", element: <Navigate to="/home" /> },
-  { path: "/investigadores", element: <ListaInvestigadores /> },
-  { path: "/investigadores/nuevo", element: <NuevoInvestigador /> },
-  { path: "/investigadores/:idPersona", element: <DetalleInvestigador /> },
+  { path: '/investigadores', element: <ListaInvestigadores /> },
+  { path: '/investigadores/nuevo', element: <NuevoInvestigador /> },
+  { path: '/investigadores/:idPersona', element: <DetalleInvestigador /> },
   {
-    path: "/investigadores/:idPersona/modificar",
+    path: '/investigadores/:idPersona/modificar',
     element: <ModificarInvestigador />,
   },
   {
-    path: "/investigadores/:idPersona/nueva-categoria",
+    path: '/investigadores/:idPersona/nueva-categoria',
     element: <NuevaCategoria />,
   },
-  { path: "/grupos-investigacion", element: <ListaGrupos /> },
-  { path: "/grupos-investigacion/nuevo", element: <NuevoGrupo /> },
+  { path: '/grupos-investigacion', element: <ListaGrupos /> },
+  { path: '/grupos-investigacion/nuevo', element: <NuevoGrupo /> },
   {
-    path: "/grupos-investigacion/:idGrupoInvestigacion",
+    path: '/grupos-investigacion/:idGrupoInvestigacion',
     element: <DetalleGrupo />,
   },
   {
-    path: "/grupos-investigacion/:idGrupoInvestigacion/modificar",
+    path: '/grupos-investigacion/:idGrupoInvestigacion/modificar',
     element: <ModificarGrupo />,
   },
-  { path: "/proyectos", element: <Proyectos /> },
+  { path: '/proyectos', element: <Proyectos /> },
   {
-    path: "/proyectos/:idPid/vinculacion/:idVinculacion",
+    path: '/proyectos/:idPid/vinculacion/:idVinculacion',
     element: <DetalleVinculacion />,
   },
   {
-    path: "/proyectos/:idPid/vinculacion/:idVinculacion/modificar",
+    path: '/proyectos/:idPid/vinculacion/:idVinculacion/modificar',
     element: <ModificarVinculacion />,
   },
   {
-    path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso",
+    path: '/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso',
     element: <DetalleDesembolso />,
   },
   {
-    path: "/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso",
+    path: '/proyectos/:idPid/vinculacion/:idVinculacion/nuevo-desembolso',
     element: <NuevoDesembolso />,
   },
-  { path: "/proyectos/:idProyecto", element: <DetalleProyecto /> },
-  { path: "/proyectos/nuevo", element: <Nuevo /> },
-  { path: "/proyectos/:idPid/modificar", element: <Modificar /> },
+  { path: '/proyectos/:idProyecto', element: <DetalleProyecto /> },
+  { path: '/proyectos/nuevo', element: <Nuevo /> },
+  { path: '/proyectos/:idPid/modificar', element: <Modificar /> },
   {
-    path: "/proyectos/:idPid/agregar-investigador-old",
+    path: '/proyectos/:idPid/agregar-investigador-old',
     element: <AgregarInvestigador />,
   },
   {
-    path: "/proyectos/:idPid/agregar-investigador",
+    path: '/proyectos/:idPid/agregar-investigador',
     element: <AgregarInvestigador2 />,
   },
-  { path: "/proyectos/:idPid/agregar-grupo", element: <AgregarGrupo /> },
-  { path: "/proyectos/:idPid/agregar-regional", element: <AgregarRegional /> },
+  { path: '/proyectos/:idPid/agregar-grupo', element: <AgregarGrupo /> },
+  { path: '/proyectos/:idPid/agregar-regional', element: <AgregarRegional /> },
   {
-    path: "/proyectos/:idPid/nueva-vinculacion",
+    path: '/proyectos/:idPid/nueva-vinculacion',
     element: <NuevaVinculacion />,
   },
-  { path: "/proyectos/:idPid/nuevo-desembolso", element: <NuevoDesembolso /> },
+  { path: '/proyectos/:idPid/nuevo-desembolso', element: <NuevoDesembolso /> },
   {
-    path: "/vinculaciones/:idVinculacion/nuevo-desembolso",
+    path: '/vinculaciones/:idVinculacion/nuevo-desembolso',
     element: <NuevoDesembolso />,
   },
-  { path: "/vinculaciones", element: <ListaVinculaciones /> },
-  { path: "/vinculaciones/nuevo", element: <NuevaVinculacion /> },
-  { path: "/vinculaciones/:idVinculacion", element: <DetalleVinculacion /> },
+  { path: '/vinculaciones', element: <ListaVinculaciones /> },
+  { path: '/vinculaciones/nuevo', element: <NuevaVinculacion /> },
+  { path: '/vinculaciones/:idVinculacion', element: <DetalleVinculacion /> },
   {
-    path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso",
+    path: '/vinculaciones/:idVinculacion/desembolso/:idDesembolso',
     element: <DetalleDesembolso />,
   },
   {
-    path: "/vinculaciones/:idVinculacion/desembolso/:idDesembolso/modificar",
+    path: '/vinculaciones/:idVinculacion/desembolso/:idDesembolso/modificar',
     element: <ModificarDesembolso />,
   },
   {
-    path: "/vinculaciones/:idVinculacion/modificar",
+    path: '/vinculaciones/:idVinculacion/modificar',
     element: <ModificarVinculacion />,
   },
   {
-    path: "/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar",
+    path: '/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar',
     element: <ModificarDesembolso />,
   },
   {
-    path: "/perfil",
+    path: '/perfil',
     element: <Perfil />,
   },
-  { path: "/", element: <Home /> },
+  { path: '/usuarios', element: <ListaUsuarios /> },
+  { path: '/usuarios/nuevo', element: <NuevoUsuario /> },
+  { path: '/usuarios/:usuario/modificar', element: <ModificarUsuario /> },
+  { path: '/', element: <Home /> },
 ];
 
 function App() {
@@ -157,7 +162,7 @@ function App() {
           )}
         </HashRouter>
         {/* </Router> */}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraToastProvider>
   );

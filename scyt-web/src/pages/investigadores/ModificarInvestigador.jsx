@@ -44,8 +44,8 @@ export default function ModificarInvestigador() {
 
   const { idPersona } = useParams();
 
-  const { data: investigador, isLoading, error: errorInvestigador } = useQuery(['persona'], () => getPersonaById(idPersona));
-  const { data: grupos, isLoading: isLoadingGetGrupos, error: errorGrupos } = useQuery('grupos', () => getAllGrupos());
+  const { data: investigador, isLoading  } = useQuery(['persona'], () => getPersonaById(idPersona));
+  const { data: grupos  } = useQuery('grupos', () => getAllGrupos());
 
   useEffect(() => {
     setValue('activo', investigador?.persona.activo.toString());
@@ -53,7 +53,7 @@ export default function ModificarInvestigador() {
     setValue('apellido', investigador?.persona.apellido);
     setValue('dni', investigador?.persona.dni);
     setValue('idGrupoInvestigacion', investigador?.persona.idGrupoInvestigacion);
-  }, [investigador]);
+  }, [investigador, setValue]);
 
   const {
     register,
@@ -71,12 +71,12 @@ export default function ModificarInvestigador() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
+  const { mutate  } = useMutation({
     mutationFn: (formData) => updatePersona(idPersona, formData),
     onSuccess: () => {
       toast({
         title: 'Modificar investigador',
-        description: `Se ha modificado el investigador exitosamente`,
+        description: 'Se ha modificado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -85,7 +85,7 @@ export default function ModificarInvestigador() {
     onError: () => {
       toast({
         title: 'Error al modificar los datos del investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

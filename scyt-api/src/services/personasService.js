@@ -3,14 +3,14 @@ import {
   getAllPersonas,
   createPersona,
   getPersonaById,
-  getPersonasByGroup
+  getPersonasByGroup,
 } from '../repository/personasRepository.js';
 import { update } from '../repository/baseRepository.js';
 
 export async function getAllPersonasService() {
   try {
     const personas = await getAllPersonas();
-    return personas
+    return personas;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -19,7 +19,7 @@ export async function getAllPersonasService() {
 export async function getPersonaByIdService(idPersona) {
   try {
     const persona = await getPersonaById(idPersona);
-    return persona
+    return persona;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -28,7 +28,7 @@ export async function getPersonaByIdService(idPersona) {
 export async function getPersonaByGroupService(idGrupo) {
   try {
     const personasGrupo = await getPersonasByGroup(idGrupo);
-    return personasGrupo
+    return personasGrupo;
   } catch (error) {
     throw new Error(error.message);
   }

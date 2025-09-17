@@ -46,12 +46,12 @@ export default function NuevoDesembolso() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (formData) => createDesembolsoByIdVinculacion(formData),
     onSuccess: () => {
       toast({
         title: 'Crear desembolso',
-        description: `Se ha creado exitosamente`,
+        description: 'Se ha creado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -60,7 +60,7 @@ export default function NuevoDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar el desembolso',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });

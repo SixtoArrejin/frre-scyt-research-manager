@@ -1,4 +1,4 @@
-import { createConvenioService } from "../services/conveniosService.js";
+import { createConvenioService } from '../services/conveniosService.js';
 import {
   getAllProyectosService,
   getProyectosPidsService,
@@ -18,15 +18,15 @@ import {
   delPersonaParticipaProyectoService,
   createProyectoTieneGrupoService,
   delProyectoTieneGrupoService,
-} from "../services/proyectosService.js";
-import convertToISOString from "../utils/funciones.js";
+} from '../services/proyectosService.js';
+import convertToISOString from '../utils/funciones.js';
 
 export async function getProyectos(req, res) {
   try {
     const proyectos = await getAllProyectosService();
     return res
       .status(200)
-      .json({ message: "Proyectos encontrados", success: true, proyectos });
+      .json({ message: 'Proyectos encontrados', success: true, proyectos });
   } catch (error) {
     return res.status(500).json({ message: error.message, success: false });
   }
@@ -70,7 +70,7 @@ export async function getProyectosDeGrupo(req, res) {
     // Obtener todos los proyectos y luego filtrar por idGrupo
     const proyectos = await getAllProyectosService();
     const proyectosFiltrados = proyectos.filter((proyecto) =>
-      proyecto.tiene.some((item) => item.idGrupoInvestigacion == idGrupo)
+      proyecto.tiene.some((item) => item.idGrupoInvestigacion == idGrupo),
     );
 
     res.status(200).json({
@@ -91,17 +91,15 @@ export async function getProyectosDePersona(req, res) {
     // Obtener todos los proyectos y luego filtrar por idGrupo
     const proyectos = await getAllProyectosService();
     const proyectosFiltrados = proyectos.filter((proyecto) =>
-      proyecto.participa.some((item) => item.idPersona == personaId)
+      proyecto.participa.some((item) => item.idPersona == personaId),
     );
 
     // Mapear los proyectos para mostrar solo el rol correspondiente al ID del proyecto actual
     const proyectosConRoles = proyectosFiltrados.map((proyecto) => {
       const participacion = proyecto.participa.find(
-        (item) => item.idPersona == personaId
+        (item) => item.idPersona == personaId,
       );
       return {
-        idProyecto: proyecto.idProyecto,
-        tipoActividad: proyecto.tipoActividad,
         idProyecto: proyecto.idProyecto,
         tipoActividad: proyecto.tipoActividad,
         fechaInicio: proyecto.fechaInicio,
@@ -112,7 +110,7 @@ export async function getProyectosDePersona(req, res) {
         convocatoria: proyecto.convocatoria,
         estado: proyecto.estado,
         rol: participacion.rol,
-        fechaIngreso: participacion.fechaInicio
+        fechaIngreso: participacion.fechaInicio,
       };
     });
 
@@ -148,7 +146,7 @@ export async function crearProyectos(req, res) {
     const newProyecto = await createProyectoService(dataProyecto);
 
     if (newProyecto) {
-      dataProyecto.idProyecto = newProyecto.idProyecto
+      dataProyecto.idProyecto = newProyecto.idProyecto;
       if (dataProyecto.tipo === 'pid') {
         newProyecto.pid = await createPidService(dataProyecto);
       } else {
@@ -159,13 +157,13 @@ export async function crearProyectos(req, res) {
     res
       .status(200)
       .json({
-        message: `Proyecto creado.`,
+        message: 'Proyecto creado.',
         success: true,
         proyecto: newProyecto,
       });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ message: error.message, success: false });
   }
 }
@@ -175,7 +173,7 @@ export async function updateProyectoController(req, res) {
   const dataP = req.body;
   console.log(dataP);
   try {
-    let updatedP
+    let updatedP;
     if (dataP.proyecto) {
       if (dataP.proyecto.codPid) {
         updatedP = await updatePidService(idProyecto, dataP.proyecto);
@@ -184,15 +182,15 @@ export async function updateProyectoController(req, res) {
       }
     }
     if (dataP.investifadores) {
-      console.log('investigadores')
+      console.log('investigadores');
     }
     if (dataP.grupos) {
-      console.log('grupos')
+      console.log('grupos');
     }
     return res
       .status(200)
       .json({
-        message: "Proyecto actualizado exitosamente",
+        message: 'Proyecto actualizado exitosamente',
         success: true,
         updatedP,
       });
@@ -206,8 +204,8 @@ export async function crearVinculaciones(req, res) {
   try {
     const dataVinculacion = req.body;
     const newVinculacionG = await createVinculacionService(idProyecto, dataVinculacion);
-    var newVinculacion = {}
-    var convenios = []
+    var newVinculacion = {};
+    var convenios = [];
     if (newVinculacionG) {
       const idVinculacion = newVinculacionG.idVinculacion;
       if (dataVinculacion.financiamiento) {
@@ -223,11 +221,11 @@ export async function crearVinculaciones(req, res) {
       }
     }
     console.log(newVinculacionG);
-    console.log(newVinculacion)
+    console.log(newVinculacion);
     res
       .status(200)
       .json({
-        message: `Vinculación creada.`,
+        message: 'Vinculación creada.',
         success: true,
         vinculacion: newVinculacion,
       });
@@ -240,20 +238,20 @@ export async function crearVinculaciones(req, res) {
 export async function addInvestigador(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const dataInvestigador = req.body;
-  console.log("id: ", idProyecto)
-  console.log("data: ", dataInvestigador)
+  console.log('id: ', idProyecto);
+  console.log('data: ', dataInvestigador);
   try {
     const newParticipa = await createPersonaParticipaProyectoService(idProyecto, dataInvestigador);
     res
       .status(200)
       .json({
-        message: `Integrante agregado.`,
+        message: 'Integrante agregado.',
         success: true,
         vinculacion: newParticipa,
       });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ message: error.message, success: false });
   }
 }
@@ -261,20 +259,20 @@ export async function addInvestigador(req, res) {
 export async function delInvestigador(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const idInvestigador = parseInt(req.params.idInvestigador, 10);
-  console.log("idProyecto: ", idProyecto)
-  console.log("idInvestigador: ", idInvestigador)
+  console.log('idProyecto: ', idProyecto);
+  console.log('idInvestigador: ', idInvestigador);
   try {
     const delParticipa = await delPersonaParticipaProyectoService(idProyecto, idInvestigador);
     res
       .status(200)
       .json({
-        message: `Integrante eliminado.`,
+        message: 'Integrante eliminado.',
         success: true,
         vinculacion: delParticipa,
       });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ message: error.message, success: false });
   }
 }
@@ -282,19 +280,19 @@ export async function delInvestigador(req, res) {
 export async function addGrupo(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const {idGrupo} = req.body;
-  console.log("id del grupo a agregar: ", idGrupo)
+  console.log('id del grupo a agregar: ', idGrupo);
   try {
     const newGrupo = await createProyectoTieneGrupoService(idProyecto, idGrupo);
     res
       .status(200)
       .json({
-        message: `Grupo agregado.`,
+        message: 'Grupo agregado.',
         success: true,
         vinculacion: newGrupo,
       });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ message: error.message, success: false });
   }
 }
@@ -302,20 +300,20 @@ export async function addGrupo(req, res) {
 export async function delGrupo(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const idGrupo = parseInt(req.params.idGrupo, 10);
-  console.log("idProyecto: ", idProyecto)
-  console.log("idGrupo: ", idGrupo)
+  console.log('idProyecto: ', idProyecto);
+  console.log('idGrupo: ', idGrupo);
   try {
     const delGrupo = await delProyectoTieneGrupoService(idProyecto, idGrupo);
     res
       .status(200)
       .json({
-        message: `Grupo eliminado.`,
+        message: 'Grupo eliminado.',
         success: true,
         vinculacion: delGrupo,
       });
 
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     res.status(500).json({ message: error.message, success: false });
   }
 }

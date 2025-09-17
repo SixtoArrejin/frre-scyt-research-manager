@@ -6,9 +6,9 @@ export async function createConvenio(idVinculacion, dataConvenio) {
   const convenioData = {
     tipo: dataConvenio.tipoConvenio,
     numero: dataConvenio.nroConvenio,
-    idVinculacion: idVinculacion
-  }
-  console.log(convenioData)
+    idVinculacion: idVinculacion,
+  };
+  console.log(convenioData);
   try {
     const newVinculacion = await create('convenios', convenioData);
     return newVinculacion;

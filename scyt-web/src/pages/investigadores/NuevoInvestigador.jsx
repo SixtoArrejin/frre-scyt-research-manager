@@ -37,14 +37,14 @@ export default function NuevoInvestigador() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const { data, isLoading: isLoadingGetGrupos, error } = useQuery('grupos', () => getAllGrupos());
+  const { data } = useQuery('grupos', () => getAllGrupos());
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createPersona(formData),
     onSuccess: () => {
       toast({
         title: 'Nuevo investigador',
-        description: `Se ha creado el nuevo investigador exitosamente`,
+        description: 'Se ha creado el nuevo investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -54,7 +54,7 @@ export default function NuevoInvestigador() {
     onError: () => {
       toast({
         title: 'Error al cargar el investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -76,11 +76,11 @@ export default function NuevoInvestigador() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (dataForm, event) => {
-    console.log(dataForm);
-    event.preventDefault();
-    mutate(dataForm);
-  };
+  // const onSubmit = (dataForm, event) => {
+  //   console.log(dataForm);
+  //   event.preventDefault();
+  //   mutate(dataForm);
+  // };
 
   return (
     <Card>

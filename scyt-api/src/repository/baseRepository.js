@@ -1,13 +1,13 @@
-import { prisma } from '../db.js'
+import { prisma } from '../db.js';
 
 export async function getAll(tableName, includeRelations = []) {
   try {
     // Construimos el objeto include dinámicamente para las relaciones especificadas
     const includeObj = {};
     function processInclude(include, targetObj) {
-      if (typeof include === "string") {
+      if (typeof include === 'string') {
         targetObj[include] = true;
-      } else if (typeof include === "object") {
+      } else if (typeof include === 'object') {
         for (const relationName in include) {
           const nestedIncludes = include[relationName];
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
@@ -29,7 +29,7 @@ export async function getAll(tableName, includeRelations = []) {
     const data = await prisma[tableName].findMany({
       include: includeObj,
     });
-    return data
+    return data;
   } catch (error) {
     throw new Error(`Error al obtener todos los registros de ${tableName} en la BD: ${error.message}`);
   }
@@ -65,9 +65,9 @@ export async function getById(tableName, idField, idValue, includeRelations = []
     const whereFilter = { [idField]: idValue };
     const includeObj = {};
     function processInclude(include, targetObj) {
-      if (typeof include === "string") {
+      if (typeof include === 'string') {
         targetObj[include] = true;
-      } else if (typeof include === "object") {
+      } else if (typeof include === 'object') {
         for (const relationName in include) {
           const nestedIncludes = include[relationName];
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {
@@ -183,7 +183,7 @@ export async function readRecord(tableName, id) {
         id: parseInt(id),
       },
     });
-    return record
+    return record;
   } catch (error) {
     throw new Error('Error al buscar el elemento en la BD');
   }
@@ -197,7 +197,7 @@ export async function readAllWhere(tableName, id, field) {
         [field]: parseInt(id),
       },
     });
-    return record
+    return record;
   } catch (error) {
     throw new Error('Error al buscar los elementos en la BD');
   }
@@ -210,9 +210,9 @@ export async function getByField(tableName, fieldName, fieldValue, includeRelati
     const includeObj = {};
 
     function processInclude(include, targetObj) {
-      if (typeof include === "string") {
+      if (typeof include === 'string') {
         targetObj[include] = true;
-      } else if (typeof include === "object") {
+      } else if (typeof include === 'object') {
         for (const relationName in include) {
           const nestedIncludes = include[relationName];
           if (Array.isArray(nestedIncludes) && nestedIncludes.length > 0) {

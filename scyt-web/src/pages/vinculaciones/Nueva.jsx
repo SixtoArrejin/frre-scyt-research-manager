@@ -35,7 +35,7 @@ export default function NuevaVinculacion() {
     onSuccess: () => {
       toast({
         title: 'Nueva Vinculación',
-        description: `Se ha creado la nueva vinculación exitosamente`,
+        description: 'Se ha creado la nueva vinculación exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -52,7 +52,7 @@ export default function NuevaVinculacion() {
     },
   });
 
-  const { control, register, handleSubmit, setValue } = useForm({
+  const { control, register, handleSubmit } = useForm({
     defaultValues: {
       adjudicacion: null,
       beneficiario: null,
@@ -71,7 +71,6 @@ export default function NuevaVinculacion() {
     fields: convenios,
     append,
     remove,
-    update,
   } = useFieldArray({
     control, // Debes proporcionar el objeto control de useForm
     name: 'convenios', // Nombre del campo de formulario que es un arreglo
@@ -211,9 +210,10 @@ export default function NuevaVinculacion() {
                   columnas={['Tipo', 'Número', 'Eliminar']}
                   datos={convenios?.map((item, index) => {
                     return [
-                      <div {...register(`convenios[${index}]`, { value: item })}>{item.tipoConvenio}</div>,
-                      item.nroConvenio,
+                      <div key={`tipo-${index}`} {...register(`convenios[${index}]`, { value: item })}>{item.tipoConvenio}</div>,
+                      <span key={`nro-${index}`}>{item.nroConvenio}</span>,
                       <DeleteIcon
+                        key={`delete-${index}`}
                         cursor={'pointer'}
                         onClick={() => {
                           eliminarConvenio(index);

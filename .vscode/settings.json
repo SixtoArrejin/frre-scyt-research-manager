@@ -1,0 +1,42 @@
+{
+  // ESLint configuración
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "jsx"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.useESLintClass": true,
+  "eslint.useFlatConfig": true,
+
+  // Formateo y auto-fix
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Configuración por tipo de archivo
+  "[javascript]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+
+  // Desactivar validación nativa de VS Code para evitar conflictos
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false
+}

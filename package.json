@@ -1,0 +1,35 @@
+{
+  "name": "beca-secretaria-cyt",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de investigadores y proyectos para la Secretaría de Ciencia y Tecnología (SCyT) de la UTN Facultad Regional de Resistencia. Desarrollado como parte de la Beca Manuel Belgrano 2023.",
+  "type": "module",
+  "main": "eslint.config.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:api": "eslint scyt-api/",
+    "lint:web": "eslint scyt-web/src/",
+    "lint:fix:api": "eslint scyt-api/ --fix",
+    "lint:fix:web": "eslint scyt-web/src/ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SixtoArrejin/frre-scyt-research-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SixtoArrejin/frre-scyt-research-manager/issues"
+  },
+  "homepage": "https://github.com/SixtoArrejin/frre-scyt-research-manager#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "eslint": "^9.35.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-unused-imports": "^4.2.0",
+    "globals": "^16.4.0"
+  }
+}

@@ -45,14 +45,14 @@ export default function AgregarInvestigador() {
     });
 
     setInvestigadoresFiltrados(investigadoresGrupo);
-  }, [dataParticipa]);
+  }, [dataParticipa, investigadores1, investigadores]);
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updatePID(Number(idPid), formData),
     onSuccess: () => {
       toast({
         title: 'Agregar investigador',
-        description: `Se ha agregado el investigador exitosamente`,
+        description: 'Se ha agregado el investigador exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -62,7 +62,7 @@ export default function AgregarInvestigador() {
     onError: () => {
       toast({
         title: 'Error al agregar al investigador',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -73,9 +73,6 @@ export default function AgregarInvestigador() {
     control,
     register,
     handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors },
   } = useForm({
     defaultValues: {},
   });
@@ -85,27 +82,26 @@ export default function AgregarInvestigador() {
     name: 'investigadores', // Nombre del campo de formulario que es un arreglo
   });
 
-  const onSubmit = (dataForm, event) => {
-    console.log(dataForm);
-    event.preventDefault();
-    mutate(dataForm);
-  };
+  // const onSubmit = (dataForm, event) => {
+  //   console.log(dataForm);
+  //   event.preventDefault();
+  //   mutate(dataForm);
+  // };
 
-  const onChangeRadioProrroga = (value) => {
-    if (value === 'true') {
-      setValue('pid.prorrogado', true);
-    } else {
-      setValue('pid.prorrogado', false);
-    }
-  };
+  // const onChangeRadioProrroga = (value) => {
+  //   if (value === 'true') {
+  //     setValue('pid.prorrogado', true);
+  //   } else {
+  //     setValue('pid.prorrogado', false);
+  //   }
+  // };
 
   //Aca se agrega lo de la tabla de investigadores
   const [selectedOptions, setSelectedOptions] = useState();
-  const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
-  const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
   const { data: dataPersonas } = useQuery('personas', () => getAllPersonas());
-  const [investigadores, setInvestigadores] = useState(dataPersonas?.personas || []);
+  // const [investigadores, setInvestigadores] = useState(dataPersonas?.personas || []);
+  const [investigadores] = useState(dataPersonas?.personas || []);
 
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
 
@@ -150,7 +146,7 @@ export default function AgregarInvestigador() {
     mutate(values);
   };
   // Obtén los objetos de investigadores que tienen un idPersona en común entre investigadores y investigadores1
-  const obtenerInvestigadoresSeleccionados = () => {
+  const obtenerInvestigadoresSeleccionados = React.useCallback(() => {
     const investigadoresSeleccionados = investigadores.filter((investigador) => {
       return investigadores1.some((investigador1) => {
         return investigador.idPersona === investigador1.idPersona;
@@ -158,12 +154,7 @@ export default function AgregarInvestigador() {
     });
 
     return investigadoresSeleccionados;
-  };
-
-  const [ejemplo, setEjemplo] = useState();
-  useEffect(() => {
-    console.log('pepe');
-  }, [ejemplo]);
+  }, [investigadores, investigadores1]);
 
   useEffect(() => {
     console.log(investigadores1?.length);
@@ -185,7 +176,7 @@ export default function AgregarInvestigador() {
       // Llama a append una sola vez con el nuevo array de datos
       append(nuevosDatos);
     }
-  }, [investigadores1]);
+  }, [investigadores1, append, obtenerInvestigadoresSeleccionados]);
 
   if (isLoading) {
     return (
@@ -241,9 +232,10 @@ export default function AgregarInvestigador() {
                   columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Eliminar']}
                   datos={investigadoresSeleccionados?.map((item, index) => {
                     return [
-                      <div {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
-                      item.gruposinvestigacion.siglas,
+                      <div key={`nombre-${item.idPersona}`} {...register(`investigadores[${index}].idPersona`, { value: item.idPersona })}>{item.apellido + ', ' + item.nombre}</div>,
+                      <span key={`grupo-${item.idPersona}`}>{item.gruposinvestigacion.siglas}</span>,
                       <GenericSelect
+                        key={`rol-${item.idPersona}`}
                         placeholder='Rol...'
                         options={roles.map((role) => ({
                           value: role,
@@ -260,6 +252,7 @@ export default function AgregarInvestigador() {
                         defaultValue={investigadores1[index]?.rol}
                       />,
                       <DeleteIcon
+                        key={`delete-${item.idPersona}`}
                         cursor={'pointer'}
                         onClick={() => {
                           eliminarInvestigador(item.idPersona, index);

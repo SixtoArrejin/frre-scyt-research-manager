@@ -11,6 +11,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
+import PermissionGate from '../../components/PermissionGate';
 
 const columnas = ['Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'];
 
@@ -19,7 +20,7 @@ export default function ListaInvestigadores() {
   const [grupo, setGrupo] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery('personas', () => getAllPersonas());
+  const { data, isLoading } = useQuery('personas', () => getAllPersonas());
   const { data: dataGrupos } = useQuery(['grupoFiltro'], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
 
@@ -38,9 +39,11 @@ export default function ListaInvestigadores() {
       item.gruposinvestigacion.siglas,
       categoriaUTN ? categoriaUTN.categoria : '-',
       categoriaMIN ? categoriaMIN.categoria : '-',
-      <Link to={`/investigadores/${item.idPersona}`}>
-        <PlusSquareIcon />
-      </Link>,
+      <PermissionGate key={item.idPersona} module='investigadores' action='view'>
+        <Link to={`/investigadores/${item.idPersona}`}>
+          <PlusSquareIcon />
+        </Link>
+      </PermissionGate>,
     ];
   });
 
@@ -54,7 +57,7 @@ export default function ListaInvestigadores() {
         (item) =>
           ((item.apellido.toLowerCase() + ' ' + item.nombre.toLowerCase()).includes(nombre.toLowerCase()) ||
             (item.nombre.toLowerCase() + ' ' + item.apellido.toLowerCase()).includes(nombre.toLowerCase())) &&
-          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase())
+          item.gruposinvestigacion.siglas.toLowerCase().includes(grupo?.toLowerCase()),
       );
       setInvestigadores(filteredInvestigadores);
       setFiltro(true);
@@ -94,11 +97,13 @@ export default function ListaInvestigadores() {
               />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
-              <Link to={'nuevo'}>
-                <Button colorScheme='blue' variant='outline' mr='5'>
-                  Investigador +
-                </Button>
-              </Link>
+              <PermissionGate module='investigadores' action='create'>
+                <Link to={'nuevo'}>
+                  <Button colorScheme='blue' variant='outline' mr='5'>
+                    Investigador +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
           </Box>
 

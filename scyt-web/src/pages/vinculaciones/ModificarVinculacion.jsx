@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast } from '@chakra-ui/react';
-import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 import { getVinculacionById, updateVinculacion } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
@@ -26,9 +25,8 @@ export default function ModificarVinculacion() {
   const toast = useToast();
 
   const { idVinculacion } = useParams();
-  const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
+  const { data, isLoading } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -42,7 +40,6 @@ export default function ModificarVinculacion() {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm({
     defaultValues: {
       //Vinculacion en general
@@ -64,8 +61,8 @@ export default function ModificarVinculacion() {
         fechaInicio: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio),
         fechaCierre: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre),
         descripcion: data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion,
-      }
-    }
+      },
+    },
   });
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
@@ -73,7 +70,7 @@ export default function ModificarVinculacion() {
     onSuccess: () => {
       toast({
         title: 'Modificar vinculación',
-        description: `Se ha modificado el grupo exitosamente`,
+        description: 'Se ha modificado el grupo exitosamente',
         status: 'success',
         isClosable: true,
       });

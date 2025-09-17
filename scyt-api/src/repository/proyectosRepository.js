@@ -8,13 +8,13 @@ export async function getAllProyectos() {
 }
 
 export async function getProyectosPids() {
-  const includeRelations = ["proyectos"];
+  const includeRelations = ['proyectos'];
   return await getAll('pids', includeRelations);
 }
 
 export async function getProyectosExternos(subtipo = null) {
   if (subtipo === 'financiamiento') {
-    const includeRelations = [{ proyectosexternos: ["proyectos"] }];
+    const includeRelations = [{ proyectosexternos: ['proyectos'] }];
     return await getAll('proyectosconfinanciamiento', includeRelations);
   };
   //falta el caso en que el subtipo='sinFinanciamiento' pero aún no implementamos esa tabla
@@ -36,7 +36,7 @@ export async function createProyecto(proyectoData) {
       tipoProyecto: proyectoData.tipoProyecto,
       programa: proyectoData.programa,
       ...(proyectoData.fechaInicio && { fechaInicio: convertToISOString(proyectoData.fechaInicio) }),
-      ...(proyectoData.fechaFin && { fechaFin: convertToISOString(proyectoData.fechaFin) })
+      ...(proyectoData.fechaFin && { fechaFin: convertToISOString(proyectoData.fechaFin) }),
     };
 
     // Director y Codirector podría no estar
@@ -65,7 +65,7 @@ export async function createProyectoPID(proyectoPIDData) {
       disposicion: proyectoPIDData.disposicion,
       prorrogado: proyectoPIDData.prorrogado,
       ...(proyectoPIDData.prorrogado && { nuevaDisposicion: proyectoPIDData.nuevaDisposicion }),
-      ...(proyectoPIDData.prorrogado && { nuevaFechaFin: convertToISOString(proyectoPIDData.nuevaFechaFin) })
+      ...(proyectoPIDData.prorrogado && { nuevaFechaFin: convertToISOString(proyectoPIDData.nuevaFechaFin) }),
     };
 
     const newProyectoPID = await create('pids', proyectoPayload);
@@ -79,7 +79,7 @@ export async function createProyectoExterno(proyectoExternoData) {
   try {
     const proyectoPayload = {
       idProyectoExterno: proyectoExternoData.idProyecto,
-      empresaInstitucion: proyectoExternoData.empresaInstitucion
+      empresaInstitucion: proyectoExternoData.empresaInstitucion,
     };
 
     const newProyectoPID = await create('proyectosExternos', proyectoPayload);
@@ -109,7 +109,7 @@ export async function createParticipa(dataParticipa) {
 
 export async function createRegionalesProyectos(dataP) {
   try {
-    console.log(dataP)
+    console.log(dataP);
     const newRP = await create('regionalesProyectos', dataP);
     return newRP;
   } catch (error) {
@@ -132,9 +132,9 @@ export async function createVinculacion(idProyecto, dataVinculacion) {
   const vinculacionData = {
     empresaInstitucion: dataVinculacion.empresaInstitucion,
     numeroMarco: dataVinculacion.nroMarco,
-    idProyecto: idProyecto
-  }
-  console.log(vinculacionData)
+    idProyecto: idProyecto,
+  };
+  console.log(vinculacionData);
   try {
     const newVinculacion = await create('vinculaciones', vinculacionData);
     return newVinculacion;
@@ -151,8 +151,8 @@ export async function createVinculacionSinFinanciamiento(idVinculacion, dataVinc
     fechaInicio: fechaInicioISO,
     fechaCierre: fechaCierreISO,
     descripcion: dataVinculacion.descripcion,
-  }
-  console.log(vinculacionData)
+  };
+  console.log(vinculacionData);
   try {
     const newVinculacion = await create('vinculacionessinfinanciamiento', vinculacionData);
     return newVinculacion;
@@ -165,7 +165,7 @@ export async function createVinculacionConFinanciamiento(idVinculacion, dataVinc
   const vinculacionData = {
     idConFinanciamiento: idVinculacion,
     titulo: dataVinculacion.titulo,
-    estado: "En ejecución",
+    estado: 'En ejecución',
     motivoEstado: null,
     monto: dataVinculacion.monto,
     plazoEjecucion: dataVinculacion.plazoEjecucion,
@@ -173,8 +173,8 @@ export async function createVinculacionConFinanciamiento(idVinculacion, dataVinc
     cantidadDesembolsos: dataVinculacion.desembolsos,
     fechaPresentacion: new Date(dataVinculacion.presentacion).toISOString(),
     fechaAdjudicacion: new Date(dataVinculacion.adjudicacion).toISOString(),
-  }
-  console.log(vinculacionData)
+  };
+  console.log(vinculacionData);
   try {
     const newVinculacion = await create('vinculacionesconfinanciamiento', vinculacionData);
     return newVinculacion;
@@ -189,13 +189,13 @@ export async function createPersonaParticipaProyecto(idProyecto, dataPersona) {
     idPersona: parseInt(dataPersona.idInvestigador),
     rol: dataPersona.rol,
     fechaInicio: convertToISOString(dataPersona.fechaInicio),
-  }
-  console.log(participaData)
+  };
+  console.log(participaData);
   try {
     const newParticipacion = await create('participa', participaData);
     return newParticipacion;
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     throw new Error(error.message);
   }
 }
@@ -205,7 +205,7 @@ export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
     const deletedParticipante = await deleteByCompositeKey('participa', 'idPersona', idPersona, 'idProyecto', idProyecto);
     return deletedParticipante;
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     throw new Error(error.message);
   }
 }
@@ -213,14 +213,14 @@ export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
 export async function createProyectoTieneGrupo(idProyecto, idGrupo) {
   const tieneData = {
     idGrupoInvestigacion: idGrupo,
-    idProyecto: idProyecto
-  }
-  console.log(tieneData)
+    idProyecto: idProyecto,
+  };
+  console.log(tieneData);
   try {
     const newGrupo = await create('tiene', tieneData);
     return newGrupo;
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     throw new Error(error.message);
   }
 }
@@ -230,7 +230,7 @@ export async function delProyectoTieneGrupo(idProyecto, idGrupo) {
     const deletedGrupo = await deleteByCompositeKey('tiene', 'idGrupoInvestigacion', idGrupo, 'idProyecto', idProyecto);
     return deletedGrupo;
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
     throw new Error(error.message);
   }
 }

@@ -3,7 +3,7 @@ export default function convertToISOString(dateString) {
     const isoString = dateObject.toISOString(); // Convierte a formato ISO
   
     // Formatea el resultado para que coincida con el formato deseado
-    const formattedISOString = isoString.slice(0, 19) + ".000Z";
+    const formattedISOString = isoString.slice(0, 19) + '.000Z';
   
     return formattedISOString;
   }

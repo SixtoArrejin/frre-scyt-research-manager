@@ -16,7 +16,6 @@ import {
   ModalCloseButton,
   Stack,
   Spinner,
-  Input,
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -74,7 +73,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerRendicion,
     handleSubmit: handleSubmitRendicion,
-    formState: { errors: errorsRendicion },
   } = useForm({
     defaultValues: {
       // idDesembolso: parseInt(idDesembolso),
@@ -88,7 +86,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerAprobado,
     handleSubmit: handleSubmitAprobado,
-    formState: { errors: errorsAprobado },
   } = useForm({
     defaultValues: {
       fechaAprobado: new Date().toISOString().split('T')[0],
@@ -100,7 +97,6 @@ export default function DetalleDesembolso() {
   const {
     register: registerMotivo,
     handleSubmit: handleSubmitMotivo,
-    formState: { errors: errorsMotivo },
   } = useForm({
     defaultValues: {
       motivoEstado: '',
@@ -108,13 +104,13 @@ export default function DetalleDesembolso() {
     resolver: yupResolver(schema),
   });
 
-  const { mutate: mutateRendicion, isLoading: isLoadingMutation } = useMutation({
+  const { mutate: mutateRendicion } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Rendición cargada',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -122,20 +118,20 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar la rendición',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
     },
   });
 
-  const { mutate: mutateAprobado, isLoading: isLoadingMutationAprobado } = useMutation({
+  const { mutate: mutateAprobado } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Rendición cargada',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -143,20 +139,20 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar la rendición',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
     },
   });
 
-  const { mutate: mutateMotivo, isLoading: isLoadingMutationMotivo } = useMutation({
+  const { mutate: mutateMotivo } = useMutation({
     mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
     onSuccess: () => {
       queryClient.refetchQueries(['desembolso', idDesembolso]);
       toast({
         title: 'Motivo cargado',
-        description: `Se ha cargado exitosamente`,
+        description: 'Se ha cargado exitosamente',
         status: 'success',
         isClosable: true,
       });
@@ -164,7 +160,7 @@ export default function DetalleDesembolso() {
     onError: () => {
       toast({
         title: 'Error al registrar el motivo de fuera de plazo',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -339,10 +335,10 @@ export default function DetalleDesembolso() {
                       {/* No esta andando la comparacion de fechas - AHORA SI */}
                       {convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) &&
                         !dataDesembolso?.desembolso?.motivoEstado && (
-                          <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
+                        <Button colorScheme='blue' variant='outline' onClick={openModalFueraPlazo}>
                             Motivo de fuera de plazo
-                          </Button>
-                        )}
+                        </Button>
+                      )}
                       <Modal isCentered isOpen={isOpenFueraPlazo} onClose={closeModalFueraPlazo}>
                         <ModalOverlay bg='blackAlpha.400' backdropFilter='blur(2px) hue-rotate(90deg)' />
                         <ModalContent>

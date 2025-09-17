@@ -20,7 +20,7 @@ const schema = yup.object({
   normativa: yup
     .string()
     .required('La resolución es requerida')
-    .matches(/^\d+\/\d+$/, "El formato de la resolución debe ser '###/###'"),
+    .matches(/^\d+\/\d+$/, 'El formato de la resolución debe ser \'###/###\''),
   comision: yup.string().required('La comisión es requerida'),
   fecha: yup.string().required('La fecha es requerida'),
 });
@@ -82,7 +82,7 @@ export default function NuevaCategoria() {
     onSuccess: () => {
       toast({
         title: 'Nueva categoria',
-        description: `Categoria creada exitosamente.`,
+        description: 'Categoria creada exitosamente.',
         status: 'success',
         isClosable: true,
       });
@@ -91,7 +91,7 @@ export default function NuevaCategoria() {
     onError: () => {
       toast({
         title: 'Error al crear la categoria',
-        description: `Intente de nuevo.`,
+        description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
       });
@@ -176,13 +176,13 @@ export default function NuevaCategoria() {
                           options={
                             tipoCategoriaSeleccionada == 'utn'
                               ? catUTN.map((option) => ({
-                                  value: option,
-                                  label: option,
-                                }))
+                                value: option,
+                                label: option,
+                              }))
                               : catMIN.map((option) => ({
-                                  value: option,
-                                  label: option,
-                                }))
+                                value: option,
+                                label: option,
+                              }))
                           }
                           errors={errors}
                         />

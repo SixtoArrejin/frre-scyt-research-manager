@@ -1,4 +1,4 @@
-# FRRE SCyT Research Manager
+# FRRe SCyT Research Manager
 
 Sistema de gestión de investigadores y proyectos para la Secretaría de Ciencia y Tecnología (SCyT) de la UTN Facultad Regional de Resistencia. Desarrollado como parte de la Beca Manuel Belgrano 2023.
 

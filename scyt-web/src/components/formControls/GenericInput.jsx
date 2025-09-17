@@ -29,7 +29,7 @@ export default function GenericInput(props) {
     isDisabled,
     disabled,
     onChange,
-    color: textColor || "black",
+    color: textColor || 'black',
   };
 
   // Filtra las propiedades undefined
@@ -40,13 +40,13 @@ export default function GenericInput(props) {
       {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps} x={{
         _disabled: {
           color: textColor,
-          opacity: "0.75"
-        }
+          opacity: '0.75',
+        },
       }} /> : <Input sx={{
         _disabled: {
           color: textColor,
-          opacity: "0.75"
-        }
+          opacity: '0.75',
+        },
       }} {...inputProps} />}
       {/* <Input {...inputProps} /> */}
       <FormLabel>{props.label ? props.label : ''}</FormLabel>

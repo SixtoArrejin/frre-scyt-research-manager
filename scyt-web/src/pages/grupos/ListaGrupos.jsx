@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Button } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllGrupos } from '../../utils/api/gruposApi';
@@ -10,12 +10,13 @@ import GenericInput from '../../components/formControls/GenericInput';
 import { Spinner } from '@chakra-ui/react';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data-3.png';
+import PermissionGate from '../../components/PermissionGate';
 
 export default function ListaGrupos() {
   const [siglas, setSiglas] = useState('');
   const [filtro, setFiltro] = useState(false);
 
-  const { data, isLoading, error } = useQuery('grupos', () => getAllGrupos());
+  const { data, isLoading } = useQuery('grupos', () => getAllGrupos());
   const [grupos, setGrupos] = useState(data?.grupos || []);
 
   //Esto ya pertenece a lo de grupos
@@ -61,11 +62,13 @@ export default function ListaGrupos() {
               <GenericInput label='Siglas' placeholder='Siglas' width='15vw' value={siglas} onChange={(event) => setSiglas(event.target.value)} />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
-              <Link to={'nuevo'}>
-                <Button colorScheme='blue' variant='outline' mr='5'>
-                  Grupo +
-                </Button>
-              </Link>
+              <PermissionGate module='grupos' action='create'>
+                <Link to={'nuevo'}>
+                  <Button colorScheme='blue' variant='outline' mr='5'>
+                    Grupo +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
           </Box>
 
@@ -79,9 +82,11 @@ export default function ListaGrupos() {
                   item.siglas,
                   item.resolucion,
                   formatoFechaISOaDDMMAAAA(item.fechaCreacion),
-                  <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}>
-                    <PlusSquareIcon />
-                  </Link>,
+                  <PermissionGate key={item.idGrupoInvestigacion} module='grupos' action='view'>
+                    <Link to={`/grupos-investigacion/${item.idGrupoInvestigacion}`}>
+                      <PlusSquareIcon />
+                    </Link>
+                  </PermissionGate>,
                 ];
               })}
               filtro={filtro}
