@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Spinner } from '@chakra-ui/react';
+import { Box, Spinner, FormControl, FormLabel, Switch } from '@chakra-ui/react';
 import { useModificarInvestigadorForm } from '../../hooks/useModificarInvestigadorForm';
 import FormLayout from '../../components/FormLayout';
 import ErrorAlert from '../../components/ErrorAlert';
@@ -7,7 +7,6 @@ import FormButtons from '../../components/FormButtons';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
-import GenericRadio from '../../components/formControls/GenericRadio';
 
 export default function ModificarInvestigador() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,14 +14,13 @@ export default function ModificarInvestigador() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
     error,
-    investigador,
     gruposOptions,
     gruposLoading,
     gruposError,
     investigadorError,
-    estadoOptions,
     handleCancel,
     onSubmitRaw,
     clearError,
@@ -68,7 +66,7 @@ export default function ModificarInvestigador() {
 
   return (
     <FormLayout
-      title='MODIFICAR DATOS DEL INVESTIGADOR'
+      title='Modificar datos del Investigador'
       description='Ingrese los datos del investigador'
     >
       <form onSubmit={(e) => e.preventDefault()}>
@@ -136,15 +134,18 @@ export default function ModificarInvestigador() {
 
           <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
             <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-              <GenericRadio
-                name='activo'
-                label='Estado'
-                direction='row'
-                options={estadoOptions}
-                register={register}
-                defaultValue={investigador?.persona.activo ? 'true' : 'false'}
-                errors={errors}
-              />
+              <FormControl width={{ base: '100%', md: '50%' }}>
+                <FormLabel>Estado del Investigador</FormLabel>
+                <Switch
+                  {...register('activo')}
+                  isChecked={watch('activo')}
+                  colorScheme='green'
+                  size='lg'
+                />
+                <Box mt={2} fontSize='sm' color='gray.600'>
+                  {watch('activo') ? 'Investigador activo' : 'Investigador inactivo'}
+                </Box>
+              </FormControl>
             </Box>
           </Box>
 

@@ -32,7 +32,7 @@ const modificarInvestigadorSchema = yup.object({
     .mixed()
     .required('Indique a que grupo pertenece')
     .test('idNaN', 'Indique a que grupo pertenece', (val) => !isNaN(val)),
-  activo: yup.string().required('El estado es requerido'),
+  activo: yup.boolean().required('El estado es requerido'),
 });
 
 // Valores por defecto para el formulario de modificación
@@ -41,7 +41,7 @@ const defaultValues = {
   apellido: '',
   dni: '',
   idGrupoInvestigacion: '',
-  activo: 'true',
+  activo: false,
 };
 
 /**
@@ -100,7 +100,7 @@ export const useModificarInvestigadorForm = () => {
       apellido: formData.apellido?.trim(),
       dni: parseInt(formData.dni, 10),
       idGrupoInvestigacion: parseInt(formData.idGrupoInvestigacion, 10),
-      activo: formData.activo === 'true',
+      activo: formData.activo, // Ya es boolean, no necesita conversión
     };
   };
 
@@ -136,7 +136,7 @@ export const useModificarInvestigadorForm = () => {
   // Efecto para llenar el formulario cuando se cargan los datos (solo una vez)
   useEffect(() => {
     if (investigador?.persona && form.setValue && !hasFilledForm.current) {
-      form.setValue('activo', investigador.persona.activo.toString());
+      form.setValue('activo', investigador.persona.activo); // Ya es boolean
       form.setValue('nombre', investigador.persona.nombre);
       form.setValue('apellido', investigador.persona.apellido);
       form.setValue('dni', investigador.persona.dni);
