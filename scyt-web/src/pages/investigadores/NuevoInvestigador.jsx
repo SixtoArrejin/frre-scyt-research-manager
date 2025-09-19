@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@chakra-ui/react';
-import { useInvestigadorForm } from '../../hooks/useInvestigadorForm';
+import { useInvestigadorForm } from '../../hooks/forms/useInvestigadorForm';
 import FormLayout from '../../components/FormLayout';
 import ErrorAlert from '../../components/ErrorAlert';
 import FormButtons from '../../components/FormButtons';

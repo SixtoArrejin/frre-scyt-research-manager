@@ -1,10 +1,10 @@
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { createPersona } from '../utils/api/personasApi';
-import { getAllGrupos } from '../utils/api/gruposApi';
-import { useFormHandler } from './useFormHandler';
-import { useErrorHandler } from './useErrorHandler';
+import { createPersona } from '../../utils/api/personasApi';
+import { getAllGrupos } from '../../utils/api/gruposApi';
+import { useFormHandler } from '../useFormHandler';
+import { useErrorHandler } from '../useErrorHandler';
 
 // Schema de validación para investigadores
 const investigadorSchema = yup.object({

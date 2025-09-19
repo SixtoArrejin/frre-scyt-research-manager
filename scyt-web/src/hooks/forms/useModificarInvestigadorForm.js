@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as yup from 'yup';
-import { getPersonaById, updatePersona } from '../utils/api/personasApi';
-import { getAllGrupos } from '../utils/api/gruposApi';
-import { useFormHandler } from './useFormHandler';
-import { useErrorHandler } from './useErrorHandler';
+import { getPersonaById, updatePersona } from '../../utils/api/personasApi';
+import { getAllGrupos } from '../../utils/api/gruposApi';
+import { useFormHandler } from '../useFormHandler';
+import { useErrorHandler } from '../useErrorHandler';
 
 // Schema de validación para modificar investigadores (más flexible)
 const modificarInvestigadorSchema = yup.object({
