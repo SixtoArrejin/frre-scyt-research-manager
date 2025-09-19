@@ -4,7 +4,7 @@ import { FormControl, FormLabel, Input, Text, Textarea } from '@chakra-ui/react'
 export default function GenericInput(props) {
   const {
     name,
-    placeholder,
+    placeholder = '',
     type,
     register,
     value,

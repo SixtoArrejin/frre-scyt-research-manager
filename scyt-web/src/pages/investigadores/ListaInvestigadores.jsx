@@ -84,10 +84,10 @@ export default function ListaInvestigadores() {
 
           <Box display='flex' width='100%'>
             <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
-              <GenericInput label='Nombre' placeholder='Nombre' width='15vw' onChange={(event) => setNombre(event.target.value)} value={nombre} />
+              <GenericInput label='Nombre' width='15vw' onChange={(event) => setNombre(event.target.value)} value={nombre} />
               <GenericSelect
                 label='Grupo'
-                placeholder='Grupo...'
+                placeholder='Todos'
                 width={{ base: '100%', md: '50%' }}
                 options={dataGrupos?.grupos?.map((grupo) => ({
                   value: grupo.siglas,
