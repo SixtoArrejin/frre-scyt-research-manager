@@ -25,14 +25,14 @@ export const usePermissions = () => {
 
     // Verificar si existe la configuración para el módulo
     if (!PERMISSIONS_CONFIG[module]) {
-      // eslint-disable-next-line no-console
+
       console.warn(`Módulo '${module}' no encontrado en la configuración de permisos`);
       return false;
     }
 
     // Verificar si existe la configuración para la acción
     if (!PERMISSIONS_CONFIG[module][action]) {
-      // eslint-disable-next-line no-console
+
       console.warn(`Acción '${action}' no encontrada para el módulo '${module}'`);
       return false;
     }

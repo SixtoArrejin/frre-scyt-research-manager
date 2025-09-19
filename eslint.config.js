@@ -113,7 +113,7 @@ export default [
       'react/react-in-jsx-scope': 'off', // React 17+
       'react/no-unescaped-entities': 'off', // Permitir comillas y entidades sin escapar en JSX
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

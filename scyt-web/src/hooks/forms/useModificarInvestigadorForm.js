@@ -143,7 +143,7 @@ export const useModificarInvestigadorForm = () => {
       form.setValue('idGrupoInvestigacion', investigador.persona.idGrupoInvestigacion);
       hasFilledForm.current = true;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [investigador?.persona]);
 
   // Función para cancelar

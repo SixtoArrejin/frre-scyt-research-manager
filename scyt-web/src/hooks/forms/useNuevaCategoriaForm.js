@@ -87,7 +87,6 @@ export const useNuevaCategoriaForm = () => {
     if (tipoCategoriaSeleccionada) {
       form.setValue('categoria', '');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tipoCategoriaSeleccionada]);
 
   // Función para cancelar
