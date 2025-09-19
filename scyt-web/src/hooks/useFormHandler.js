@@ -67,6 +67,7 @@ export const useFormHandler = ({
     error: errorHandler.error,
     isSubmitting,
     submitHandler: handleSubmit(submitHandler),
+    onSubmitRaw: submitHandler, // Función sin envolver para casos especiales
     resetForm,
     clearError: errorHandler.clearError,
   };

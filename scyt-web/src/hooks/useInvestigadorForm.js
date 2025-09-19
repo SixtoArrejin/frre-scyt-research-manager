@@ -23,19 +23,10 @@ const investigadorSchema = yup.object({
     .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/, 'El apellido solo puede contener letras y espacios')
     .trim(),
   dni: yup
-    .string()
+    .mixed()
     .required('El DNI es requerido')
-    .matches(/^\d+$/, 'El DNI solo puede contener números')
-    .test('dni-length', 'El DNI debe tener exactamente entre 7 y 8 dígitos', (value) => {
-      if (!value) return false;
-      const cleanValue = value.toString().replace(/\D/g, '');
-      return cleanValue.length >= 7 && cleanValue.length <= 8;
-    })
-    .test('dni-range', 'El DNI debe ser un número válido', (value) => {
-      if (!value) return false;
-      const numericValue = parseInt(value, 10);
-      return numericValue >= 1000000 && numericValue <= 99999999;
-    }),
+    .test('NaN', 'El DNI es requerido', (val) => !isNaN(val))
+    .test('lenDNI', 'El DNI debe tener 8 dígitos', (val) => val.toString().length == 8),
   idGrupoInvestigacion: yup
     .mixed()
     .required('Debe seleccionar un grupo de investigación')
