@@ -42,7 +42,7 @@ const DisplayField = ({
       </Text>
       <Box
         px={3}
-        py={2}
+        py={1}
         border='1px'
         borderColor='gray.200'
         borderRadius='md'

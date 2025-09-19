@@ -176,7 +176,7 @@ export default function ProyectosPid() {
                     bg="green.500"
                     color="white"
                   >
-                    <Badge colorScheme="green" fontSize="md" px={2} py={1} borderRadius="md">
+                    <Badge colorScheme="green">
                       PID
                     </Badge>
                   </Tooltip>
@@ -188,7 +188,7 @@ export default function ProyectosPid() {
                     bg="blue.500"
                     color="white"
                   >
-                    <Badge colorScheme="purple" fontSize="md" px={2} py={1} borderRadius="md">
+                    <Badge colorScheme="purple">
                       EXTERNO
                     </Badge>
                   </Tooltip>
