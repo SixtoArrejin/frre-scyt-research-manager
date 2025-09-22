@@ -19,16 +19,8 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
-import {
-  FiHome,
-  FiMenu,
-  FiChevronDown,
-  FiUsers,
-  FiLink,
-  FiUserCheck
-} from 'react-icons/fi';
+import { FiHome, FiMenu, FiChevronDown, FiUsers, FiLink, FiUserCheck } from 'react-icons/fi';
 import { BiNetworkChart, BiTask } from 'react-icons/bi';
-import { MdAdminPanelSettings } from 'react-icons/md';
 import Logo from '../../src/img/Logo2-SinFondo.png';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
@@ -58,27 +50,16 @@ const getNavItems = (userRole) => {
 export default function SidebarWithHeader({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
-      />
-      <Drawer
-        autoFocus={false}
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full"
-      >
+    <Box minH='100vh' bg={useColorModeValue('gray.100', 'gray.900')}>
+      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <Drawer autoFocus={false} isOpen={isOpen} placement='left' onClose={onClose} returnFocusOnClose={false} onOverlayClick={onClose} size='full'>
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
+      <Box ml={{ base: 0, md: 60 }} p='4'>
         {children}
       </Box>
     </Box>
@@ -92,27 +73,22 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
   return (
     <Box
-      transition="3s ease"
+      transition='3s ease'
       bg={useColorModeValue('white', 'gray.900')}
-      borderRight="1px"
+      borderRight='1px'
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
       w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
+      pos='fixed'
+      h='full'
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <img src={Logo} alt="Logo" />
+      <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
+        <img src={Logo} alt='Logo' />
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {navItems.map((link) => (
-        <NavItem
-          key={link.name}
-          icon={link.icon}
-          route={link.route}
-          onClose={onClose}
-        >
+        <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
           {link.name}
         </NavItem>
       ))}
@@ -122,18 +98,14 @@ const SidebarContent = ({ onClose, ...rest }) => {
 
 const NavItem = ({ icon, children, route, onClose, ...rest }) => {
   return (
-    <Link
-      to={route}
-      style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}
-    >
+    <Link to={route} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
+        align='center'
+        p='4'
+        mx='4'
+        borderRadius='lg'
+        role='group'
+        cursor='pointer'
         _hover={{
           bg: 'cyan.400',
           color: 'white',
@@ -143,8 +115,8 @@ const NavItem = ({ icon, children, route, onClose, ...rest }) => {
       >
         {icon && (
           <Icon
-            mr="4"
-            fontSize="16"
+            mr='4'
+            fontSize='16'
             _groupHover={{
               color: 'white',
             }}
@@ -190,59 +162,38 @@ const MobileNav = ({ onOpen, ...rest }) => {
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
-      height="20"
-      alignItems="center"
+      height='20'
+      alignItems='center'
       bg={useColorModeValue('white', 'gray.900')}
-      borderBottomWidth="1px"
+      borderBottomWidth='1px'
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent={{ base: 'space-between', md: 'flex-end' }}
       {...rest}
     >
-      <IconButton
-        display={{ base: 'flex', md: 'none' }}
-        onClick={onOpen}
-        variant="outline"
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
+      <IconButton display={{ base: 'flex', md: 'none' }} onClick={onOpen} variant='outline' aria-label='open menu' icon={<FiMenu />} />
 
       <HStack spacing={{ base: '0', md: '6' }}>
         <Flex alignItems={'center'}>
           <Menu>
-            <MenuButton
-              py={2}
-              transition="all 0.3s"
-              _focus={{ boxShadow: 'none' }}
-            >
+            <MenuButton py={2} transition='all 0.3s' _focus={{ boxShadow: 'none' }}>
               <HStack>
                 <Avatar
                   size={'sm'}
-                  src={
-                    currentUser?.avatar || ''
-                  }
+                  src={currentUser?.avatar || ''}
                   name={getInitials(currentUser)}
-                  bg={(!currentUser?.avatar) ? 'blue.500' : undefined}
-                  color={(!currentUser?.avatar) ? 'white' : undefined}
+                  bg={!currentUser?.avatar ? 'blue.500' : undefined}
+                  color={!currentUser?.avatar ? 'white' : undefined}
                 />
-                <VStack
-                  display={{ base: 'none', md: 'flex' }}
-                  alignItems="flex-start"
-                  spacing="1px"
-                  ml="2"
-                >
-                  <Text fontSize="sm">
+                <VStack display={{ base: 'none', md: 'flex' }} alignItems='flex-start' spacing='1px' ml='2'>
+                  <Text fontSize='sm'>
                     {typeof currentUser === 'string'
                       ? currentUser
-                      : (currentUser && typeof currentUser.usuario === 'string')
-                        ? currentUser.usuario
-                        : 'Usuario'
-                    }
+                      : currentUser && typeof currentUser.usuario === 'string'
+                      ? currentUser.usuario
+                      : 'Usuario'}
                   </Text>
-                  <Text fontSize="xs" color="gray.600">
-                    {(currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string')
-                      ? currentUser.rol.toUpperCase()
-                      : 'Admin'
-                    }
+                  <Text fontSize='xs' color='gray.600'>
+                    {currentUser && typeof currentUser === 'object' && typeof currentUser.rol === 'string' ? currentUser.rol.toUpperCase() : 'Admin'}
                   </Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -250,17 +201,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 </Box>
               </HStack>
             </MenuButton>
-            <MenuList
-              bg={useColorModeValue('white', 'gray.900')}
-              borderColor={useColorModeValue('gray.200', 'gray.700')}
-            >
+            <MenuList bg={useColorModeValue('white', 'gray.900')} borderColor={useColorModeValue('gray.200', 'gray.700')}>
               {/*<MenuItem>Profile</MenuItem>*/}
               <Link to={'/perfil'}>
                 <MenuItem>Perfil</MenuItem>
               </Link>
               {/*<MenuItem>Billing</MenuItem>*/}
               <MenuDivider />
-              <Link onClick={logout} to={'/login'}><MenuItem>Salir</MenuItem></Link>
+              <Link onClick={logout} to={'/login'}>
+                <MenuItem>Salir</MenuItem>
+              </Link>
             </MenuList>
           </Menu>
         </Flex>

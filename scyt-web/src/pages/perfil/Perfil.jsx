@@ -1,15 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import {
-  Card,
-  CardBody,
-  Heading,
-  Box,
-  Avatar,
-  Text,
-  Button,
-  VStack,
-  Spinner,
-} from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Avatar, Text, Button, VStack, Spinner } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import GenericInput from '../../components/formControls/GenericInput';
@@ -62,17 +52,10 @@ export default function Perfil() {
     setLoading(false);
   }, [currentUser]);
 
-
   if (loading) {
     return (
-      <Box
-        display="flex"
-        height="calc(100vh - 80px - 16px - 1px - 16px)"
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
+      <Box display='flex' height='calc(100vh - 80px - 16px - 1px - 16px)' width='100%' alignItems='center' justifyContent='center'>
+        <Spinner thickness='4px' speed='0.65s' emptyColor='gray.200' color='blue.500' size='xl' />
       </Box>
     );
   }
@@ -80,67 +63,64 @@ export default function Perfil() {
   return (
     <Card>
       <CardBody>
-        <Box display="flex" flexDirection="column" alignItems="center" width="100%">
-          <Heading as="h2" size="xl" mb={4} textAlign="center">
+        <Box display='flex' flexDirection='column' alignItems='center' width='100%'>
+          <Heading as='h2' size='xl' mb={4} textAlign='center'>
             Perfil de Usuario
           </Heading>
 
           <br />
 
-          <Card width="100%">
+          <Card width='100%'>
             <CardBody>
-              <Text fontSize="md" mb={4}>Datos del perfil</Text>
+              <VStack spacing={6} width='100%' mb={6}>
+                <Avatar
+                  size='2xl'
+                  src={form?.avatar || ''}
+                  name={getInitials(form)}
+                  bg={!form?.avatar ? 'blue.500' : undefined}
+                  color={!form?.avatar ? 'white' : undefined}
+                />
+              </VStack>
+              <Text fontSize='md' mb={4}>
+                Datos del perfil
+              </Text>
 
-              <Box display="flex" width="100%" alignItems="center" justifyContent="center" flexDirection="column">
-                <VStack spacing={6} width="100%" mb={6}>
-                  <Avatar
-                    size="2xl"
-                    src={form?.avatar || ''}
-                    name={getInitials(form)}
-                    bg={!form?.avatar ? 'blue.500' : undefined}
-                    color={!form?.avatar ? 'white' : undefined}
-                  />
-                </VStack>
+              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  alignItems='center'
+                  justifyContent='space-between'
+                  width='100%'
+                  gap={4}
+                >
+                  <GenericInput label='Nombre' width={{ base: '100%', md: '30%' }} value={form?.nombre || form?.usuario || '-'} disabled mb='5vh' />
 
-                <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" width="100%" gap={4}>
-                  <GenericInput
-                    label="Nombre"
-                    width={{ base: '100%', md: '30%' }}
-                    value={form?.nombre || form?.usuario || '-'}
-                    disabled
-                    mb="5vh"
-                  />
+                  <GenericInput label='Apellido' width={{ base: '100%', md: '30%' }} value={form?.apellido || '-'} disabled mb='5vh' />
 
-                  <GenericInput
-                    label="Apellido"
-                    width={{ base: '100%', md: '30%' }}
-                    value={form?.apellido || '-'}
-                    disabled
-                    mb="5vh"
-                  />
-
-                  <GenericInput
-                    label="Email"
-                    width={{ base: '100%', md: '30%' }}
-                    value={form?.email || '-'}
-                    disabled
-                    mb="5vh"
-                  />
+                  <GenericInput label='Email' width={{ base: '100%', md: '30%' }} value={form?.email || '-'} disabled mb='5vh' />
                 </Box>
 
-                <Box display="flex" flexDirection={{ base: 'column', md: 'row' }} alignItems="center" justifyContent="space-between" width="100%" gap={4}>
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  alignItems='center'
+                  justifyContent='space-between'
+                  width='100%'
+                  gap={4}
+                >
                   <GenericInput
-                    label="Rol / Observación"
+                    label='Rol / Observación'
                     width={{ base: '100%', md: '48%' }}
                     value={currentUser?.rol.charAt(0).toUpperCase() + currentUser?.rol.slice(1) || '-'}
                     disabled
-                    mb="5vh"
+                    mb='5vh'
                   />
                 </Box>
 
-                <Box display="flex" width="100%" alignItems="center" justifyContent="flex-end">
+                <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                   <Link to={'/perfil/editar'}>
-                    <Button colorScheme="blue" variant="outline">
+                    <Button colorScheme='blue' variant='outline'>
                       Editar Perfil
                     </Button>
                   </Link>
