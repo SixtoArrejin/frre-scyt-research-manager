@@ -122,23 +122,19 @@ export default function ListaUsuarios() {
     </Badge>,
     formatDate(usuario.creadoEn),
     usuario.creadoPor || '-',
-    <HStack spacing={2} key={`actions-${usuario.usuario}`}>
-      <Button
-        as={Link}
-        to={`/usuarios/${usuario.usuario}/modificar`}
-        size="sm"
-        colorScheme="blue"
-      >
+    <HStack spacing={4} key={`actions-${usuario.usuario}`} justifyContent="center">
+      <Link to={`/usuarios/${usuario.usuario}/modificar`}>
         <EditIcon />
-      </Button>
-      <Button
-        size="sm"
-        colorScheme="red"
-        onClick={() => handleDeleteClick(usuario.usuario)}
-        isDisabled={usuario.usuario === currentUser.usuario}
-      >
-        <DeleteIcon />
-      </Button>
+      </Link>
+      <Link>
+        <DeleteIcon 
+          onClick={() => handleDeleteClick(usuario.usuario)}
+          style={{ 
+            opacity: usuario.usuario === currentUser.usuario ? 0.4 : 1,
+            pointerEvents: usuario.usuario === currentUser.usuario ? 'none' : 'auto'
+          }}
+        />
+      </Link>
     </HStack>,
   ]) || [];
 
