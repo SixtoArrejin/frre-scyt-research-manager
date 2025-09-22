@@ -50,7 +50,7 @@ const defaultValues = {
  * Hook personalizado para manejo de investigadores
  * @returns {Object} - Estado y funciones para manejo de investigadores
  */
-export const useInvestigadorForm = () => {
+export const useNuevoInvestigadorForm = () => {
   const navigate = useNavigate();
   const errorHandler = useErrorHandler();
 
