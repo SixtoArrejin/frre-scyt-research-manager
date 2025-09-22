@@ -25,6 +25,7 @@ import {
   FiChevronDown,
   FiUsers,
   FiLink,
+  FiUserCheck
 } from 'react-icons/fi';
 import { BiNetworkChart, BiTask } from 'react-icons/bi';
 import { MdAdminPanelSettings } from 'react-icons/md';
@@ -46,7 +47,7 @@ const getNavItems = (userRole) => {
   if (userRole === 'admin') {
     baseItems.push({
       name: 'Administración de Usuarios',
-      icon: MdAdminPanelSettings,
+      icon: FiUserCheck,
       route: '/usuarios',
     });
   }
