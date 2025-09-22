@@ -59,7 +59,7 @@ export default function ListaGrupos() {
 
           <Box display='flex' width='100%'>
             <Box display='flex' justifyContent='space-between' width='45%' marginLeft='2%'>
-              <GenericInput label='Siglas' placeholder='Siglas' width='15vw' value={siglas} onChange={(event) => setSiglas(event.target.value)} />
+              <GenericInput label='Siglas' width='15vw' value={siglas} onChange={(event) => setSiglas(event.target.value)} />
             </Box>
             <Box display='flex' justifyContent='flex-end' width='55%'>
               <PermissionGate module='grupos' action='create'>
