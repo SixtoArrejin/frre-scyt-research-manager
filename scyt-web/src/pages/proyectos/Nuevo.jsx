@@ -1,392 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardBody,
-  Text,
-  Heading,
-  Box,
-  Button,
-  useToast,
-} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Card, CardBody, Text, Box, Button, Heading } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation } from 'react-query';
-import { getAllGrupos } from '../../utils/api/gruposApi';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
-import { getAllPersonas } from '../../utils/api/personasApi';
-import { createProyecto } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
-import { getAllRegionales } from '../../utils/api/regionalesApi';
-import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
 import GenericInput from '../../components/formControls/GenericInput.jsx';
 import GenericSelect from '../../components/formControls/GenericSelect.jsx';
 import GenericRadio from '../../components/formControls/GenericRadio.jsx';
 import Tabla from '../../components/Tabla.jsx';
+
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general.jsx';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-
-const schema = yup.object({
-  codPid: yup.mixed().when('tipo', {
-    is: val => val === 'pid',
-    then: () => yup.string().required('El código PID es requerido'),
-    otherwise: () => yup.string().nullable(),
-  }),
-  denominacion: yup.string().required('La denominación es requerida'),
-  convocatoria: yup
-    .number()
-    .required('La convocatoria es requerida')
-    .typeError('Ingrese un número válido')
-    .test('is-valid-number', 'Ingrese un número válido', (value) => {
-      return typeof value === 'number' && !isNaN(value);
-    }),
-  programa: yup.string().required('El programa es requerido'),
-  tipoProyecto: yup.string().required('El tipo de proyecto es requerido'),
-  tipoActividad: yup.mixed().when('tipo', {
-    is: val => val === 'pid',
-    then: () => yup.string().required('El tipo de actividad es requerido'),
-    otherwise: () => yup.string().nullable(),
-  }),
-  estado: yup.mixed().when('tipo', {
-    is: val => val === 'pid',
-    then: () => yup.string().required('El estado es requerido'),
-    otherwise: () => yup.string().nullable(),
-  }),
-  disposicion: yup.mixed().when(['tipo', 'estado'], {
-    is: (tipo, estado) =>
-      tipo === 'pid' && estado === 'HOMOLOGADO',
-    then: () => yup.string().required('La disposición es requerida').matches(/^\d+\/\d+$/, 'El formato de la disposición debe ser \'###/###\''),
-    otherwise: () => yup.string().nullable(),
-  }),
-  nuevaFechaFin: yup.mixed().when(['tipo', 'prorrogado'], {
-    is: (tipo, prorrogado) =>
-      tipo === 'pid' && prorrogado === 'true',
-    then: () => yup.string().required('La nueva fecha de finalización es requerida'),
-    otherwise: () => yup.string().nullable(),
-  }),
-  nuevaDisposicion: yup.mixed().when(['tipo', 'prorrogado'], {
-    is: (tipo, prorrogado) =>
-      tipo === 'pid' && prorrogado === 'true',
-    then: () => yup.string().required('La nueva disposición es requerida').matches(/^\d+\/\d+$/, 'El formato de la disposición debe ser \'###/###\''),
-    otherwise: () => yup.string().nullable(),
-  }),
-});
-
-
-const tipoActividad = [
-  'Desarrollo Experimental',
-  'Investigación Aplicada',
-  'Investigación Básica',
-];
-
-const estadoProyecto = [
-  'EN TRÁMITE',
-  'HOMOLOGADO',
-  'REFORMULAR POR EVALUACIÓN EXTERNA',
-  'REFORMULAR POR CONSEJO DE PROGRAMAS',
-  'DENEGADO POR EVALUACIÓN EXTERNA',
-  'DENEGADO POR CONSEJO DE PROGRAMAS',
-  'CANCELADO',
-];
-
-const roles = [
-  'Director',
-  'CoDirector',
-  'Investigador',
-  'Becario',
-  'Asesor Cientifico',
-  'Técnico de Apoyo',
-];
+import {
+  useNuevoProyectoForm,
+  tipoActividad,
+  estadoProyecto,
+  roles,
+  tipoProyectosConRegionales,
+} from '../../hooks/forms/useNuevoProyectoForm';
 
 export default function NuevoPid() {
-  /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
 
   const closeModal = () => {
     setIsOpen(false);
   };
 
-  const toast = useToast();
-  const navigate = useNavigate();
-
   const {
-    data,
-  } = useQuery('grupos', () => getAllGrupos());
-
-  const {
-    data: dataRegionales,
-  } = useQuery(['regionales'], () => getAllRegionales());
-
-  const {
-    data: dataTiposProyectos,
-    isLoading: isLoadingGetTiposProyectos,
-    //error: errorTiposProyectos,
-  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
-
-  const grupos = data?.grupos;
-
-  const [investigadores, setInvestigadores] = useState([]);
-
-  const { data: dataInvestigadores } = useQuery(['investigadoresNewPID'], () =>
-    getAllPersonas(),
-  );
-
-  useEffect(() => {
-    setInvestigadores(dataInvestigadores?.personas);
-  }, [dataInvestigadores]);
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createProyecto(formData),
-    onSuccess: () => {
-      toast({
-        title: 'Nuevo Proyecto',
-        description: 'Se ha creado el nuevo proyecto exitosamente',
-        status: 'success',
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: (error) => {
-      const errorMessage = error?.message;
-      toast({
-        title: 'Error al crear el proyecto',
-        description: `${errorMessage || 'Intente nuevamente'}`,
-        status: 'error',
-        isClosable: true,
-      });
-    },
-  });
-
-  const {
-    control,
-    watch,
     register,
     handleSubmit,
-    //setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      tipoActividad: '',
-      fechaInicio: undefined,
-      fechaFin: undefined,
-      denominacion: '',
-      completo: false,
-      regional: 'Facultad Regional Resistencia',
-      convocatoria: undefined,
-      estado: undefined,
-      idDirector: undefined,
-      idCodirector: undefined,
-      tipoProyecto: '',
-      prorrogado: 'false',
-      nuevaFechaFin: undefined,
-      nuevaDisposicion: undefined,
-      codPid: '',
-      programa: '',
-      disposicion: undefined,
-      tipo: 'pid',
-      empresaInstitucion: '',
-      regionales: [],
-    },
-    resolver: yupResolver(schema),
-  });
+    trigger,
+    formState: { errors, isSubmitting },
+    grupos,
+    dataRegionales,
+    dataTiposProyectos,
+    isLoadingGetTiposProyectos,
+    investigadoresFields,
+    sortedInvestigadores,
+    gruposSeleccionados,
+    regionalesSeleccionados,
+    tipoProyecto: PidExterno,
+    prorrogado,
+    selectedTipoProyecto,
+    estado,
+    setSelectedOptions,
+    setSelectedOptionsGrupos,
+    setSelectedOptionsRegionales,
+    setRolSelected,
+    fechaSelected,
+    setFechaSelected,
+    handleCancel,
+    handleTipoProyectoChange,
+    setEstado,
+    agregarInvestigador,
+    agregarGrupo,
+    agregarRegional,
+    eliminarInvestigador,
+    eliminarGrupo,
+    eliminarRegional,
+    submitHandler,
+  } = useNuevoProyectoForm();
 
-  const { fields, append, remove } = useFieldArray({
-    control, // Debes proporcionar el objeto control de useForm
-    name: 'investigadores', // Nombre del campo de formulario que es un arreglo
-  });
-
-  const {
-    //fields: fieldsGrupos,
-    append: appendG,
-    remove: removeG,
-    //update: updateG,
-  } = useFieldArray({
-    control, // Debes proporcionar el objeto control de useForm
-    name: 'grupos', // Nombre del campo de formulario que es un arreglo
-  });
-
-  const {
-    //fields: fieldsRegionales,
-    append: appendR,
-    remove: removeR,
-    //update: updateR,
-  } = useFieldArray({
-    control, // Debes proporcionar el objeto control de useForm
-    name: 'regionales', // Nombre del campo de formulario que es un arreglo
-  });
-
-  const tipoProyectosConRegionales = [
-    'Integrador Asociado (PID IA) con Incentivo',
-    'Integrador Asociado (PID IA) sin Incentivo',
-    'Inter-institucional (PIC IN) con Incentivos',
-    'Inter-institucional (PIC IN) sin Incentivos',
-    'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
-    'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
-    'Tutorado con Incentivo',
-    'Tutorado sin Incentivo',
-  ];
-  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
-
-  const handleTipoProyectoChange = (e) => {
-    const value = e.target.value;
-    setSelectedTipoProyecto(value);
-  };
-
-  //Aca se agrega lo de la tabla de investigadores
-  const [selectedOptions, setSelectedOptions] = useState();
-  const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
-  const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
-  const [rolSelected, setRolSelected] = useState();
-  const [fechaSelected, setFechaSelected] = useState();
-
-  const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
-  const [investigadoresSeleccionados, setInvestigadoresSeleccionados] =
-    useState([]);
-  const [regionalesSeleccionados, setRegionalesSeleccionados] = useState([]);
-  const [investigadoresDelGrupo, setInvestigadoresDelGrupo] = useState([]);
-
-  const sortedInvestigadores = investigadoresDelGrupo?.sort((a, b) => {
-    const apellidoA = a.apellido.toLowerCase();
-    const apellidoB = b.apellido.toLowerCase();
-    return apellidoA.localeCompare(apellidoB);
-  });
-
-  const agregarInvestigador = () => {
-    console.log(sortedInvestigadores);
-    console.log(selectedOptions);
-    const objetoBuscado = sortedInvestigadores.find(
-      (item) => item.idPersona == selectedOptions,
-    );
-
-    const objetoAgregar = {
-      idPersona: objetoBuscado.idPersona,
-      rol: rolSelected,
-      persona: objetoBuscado,
-      fechaInicio: fechaSelected,
-    };
-
-    // Verificar si el objeto ya está en investigadoresSeleccionados antes de agregarlo
-    const objetoYaAgregado = investigadoresSeleccionados.find(
-      (item) => item.idPersona == selectedOptions,
-    );
-
-    if (!objetoYaAgregado) {
-      append(objetoAgregar);
-      setInvestigadoresSeleccionados([
-        ...investigadoresSeleccionados,
-        objetoBuscado,
-      ]);
+  const handleOpenModal = async() => {
+    // Trigger validation manually before opening modal
+    const isValid = await trigger();
+    if (isValid) {
+      setIsOpen(true);
     }
   };
 
-  const agregarGrupo = () => {
-    // console.log(sortedInvestigadores);
-    console.log(selectedOptionsGrupos);
-    const objetoBuscado = grupos.find(
-      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos,
-    );
-
-    const objetoAgregar = {
-      idGrupoInvestigacion: objetoBuscado.idGrupoInvestigacion,
-    };
-
-    // Verificar si el objeto ya está en gruposSeleccionados antes de agregarlo
-    const objetoYaAgregado = gruposSeleccionados.find(
-      (item) => item.idGrupoInvestigacion == selectedOptionsGrupos,
-    );
-
-    if (!objetoYaAgregado) {
-      appendG(objetoAgregar);
-      setGruposSeleccionados([...gruposSeleccionados, objetoBuscado]);
-      const investigadoresGrupo = investigadores.filter(
-        (investigador) =>
-          investigador.idGrupoInvestigacion ===
-          objetoBuscado.idGrupoInvestigacion,
-      );
-
-      // Actualizar la lista de investigadores seleccionados
-      setInvestigadoresDelGrupo([
-        ...investigadoresDelGrupo,
-        ...investigadoresGrupo,
-      ]);
-
-      console.log(investigadoresDelGrupo);
-    }
+  const handleSubmitAndClose = (data) => {
+    setIsOpen(false);
+    submitHandler(data);
   };
-
-  const agregarRegional = () => {
-    // Verificar si el objeto ya está en regionalesSeleccionadas antes de agregarlo
-    const objetoYaAgregado = regionalesSeleccionados.find(
-      (item) => item == selectedOptionsRegionales,
-    );
-
-    if (!objetoYaAgregado) {
-      appendR(selectedOptionsRegionales);
-      setRegionalesSeleccionados([
-        ...regionalesSeleccionados,
-        selectedOptionsRegionales,
-      ]);
-    }
-  };
-
-  const eliminarInvestigador = (idAEliminar, index) => {
-    // Filtrar los investigadores y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevosInvestigadores = investigadoresSeleccionados.filter(
-      (item) => item.idPersona !== idAEliminar,
-    );
-
-    remove(index);
-
-    // Actualizar investigadoresSeleccionados con el nuevo arreglo
-    setInvestigadoresSeleccionados(nuevosInvestigadores);
-  };
-
-  const eliminarGrupo = (idAEliminar, index) => {
-    // Filtrar los grupos y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevosGrupos = gruposSeleccionados.filter(
-      (item) => item.idGrupoInvestigacion !== idAEliminar,
-    );
-
-    // Filtrar los investigadores para mantener solo los que no pertenecen al grupo a eliminar
-    const investigadoresRestantes = investigadoresDelGrupo.filter(
-      (investigador) => investigador.idGrupoInvestigacion !== idAEliminar,
-    );
-
-    removeG(index);
-
-    // Actualizar investigadoresSeleccionados y gruposSeleccionados con los nuevos arreglos
-    setInvestigadoresDelGrupo(investigadoresRestantes);
-    console.log(investigadoresRestantes);
-    setGruposSeleccionados(nuevosGrupos);
-  };
-
-  const eliminarRegional = (itemEliminar, index) => {
-    // Filtrar las regionales y crear un nuevo arreglo sin el objeto a eliminar
-    const nuevasRegionales = regionalesSeleccionados.filter(
-      (item) => item !== itemEliminar,
-    );
-
-    removeR(index);
-
-    setRegionalesSeleccionados(nuevasRegionales);
-  };
-
-  const onSubmit = (values) => {
-    // Convierte el valor de 'prorroga' a booleano antes de enviar
-    const modifiedValues = {
-      ...values,
-      prorrogado: values.prorrogado === 'true',
-    };
-    console.log(modifiedValues);
-    mutate(modifiedValues);
-  };
-
-  const PidExterno = useWatch({ control, name: 'tipo' });
-  const [estado, setEstado] = useState('');
 
   return (
     <Card>
@@ -650,13 +333,13 @@ export default function NuevoPid() {
                               { value: 'false', label: 'No' },
                             ]}
                             register={register}
-                            defaultValue={watch('prorrogado')}
+                            defaultValue={prorrogado}
                             errors={errors}
                           />
                         </Box>
                       )}
                       {PidExterno === 'pid' &&
-                        watch('prorrogado') === 'true' && (
+                        prorrogado === 'true' && (
                         <Box
                           display="flex"
                           flexDirection={{ base: 'column', md: 'row' }}
@@ -677,7 +360,7 @@ export default function NuevoPid() {
                             mb="5vh"
                             isRequired={
                               PidExterno === 'pid' &&
-                                watch('prorrogado') === 'true'
+                                prorrogado === 'true'
                             }
                           />
                           {estado === 'HOMOLOGADO' && (
@@ -692,7 +375,7 @@ export default function NuevoPid() {
                               isRequired={
                                 estado === 'HOMOLOGADO' &&
                                   PidExterno === 'pid' &&
-                                  watch('prorrogado') === 'true'
+                                  prorrogado === 'true'
                               }
                             />
                           )}
@@ -850,7 +533,7 @@ export default function NuevoPid() {
                       'Fecha de Inicio',
                       'Eliminar',
                     ]}
-                    datos={fields?.map((item, index) => [
+                    datos={investigadoresFields?.map((item, index) => [
                       <div key={`nombre-${item.idPersona}`}>
                         {item.persona.apellido} {item.persona.nombre}
                       </div>,
@@ -948,14 +631,14 @@ export default function NuevoPid() {
             <Button
               colorScheme="gray"
               variant="outline"
-              onClick={() => navigate(-1)}
+              onClick={handleCancel}
               mr="5%"
             >
               Cancelar
             </Button>
             <Button
-              onClick={openModal}
-              isLoading={isLoading}
+              onClick={handleOpenModal}
+              isLoading={isSubmitting}
               colorScheme="blue"
               variant="outline"
               ml="5%"
@@ -968,8 +651,7 @@ export default function NuevoPid() {
               guardar={true}
               title="Guardar nuevo PID"
               content="Se guardara el nuevo Proyecto"
-              //onSave={handleSubmit((values) => console.log(values))}
-              onSave={handleSubmit((values) => onSubmit(values))}
+              onSave={handleSubmit(handleSubmitAndClose)}
             />
           </Box>
         </form>
