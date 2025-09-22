@@ -7,10 +7,10 @@ import { useQuery } from 'react-query';
 import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from '../../utils/general';
 import { getProyectosByIdGrupo } from '../../utils/api/proyectosApi';
 import Tabla from '../../components/Tabla';
-import GenericInput from '../../components/formControls/GenericInput';
 import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import ImgDefault from '../../components/ImgDefault';
+import DisplayField from '../../components/DisplayField';
 
 export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams();
@@ -55,7 +55,7 @@ export default function DetalleGrupo() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <Heading as='h2' size='xl' textAlign='center'>
-            DETALLES GRUPO
+            Grupo de Investigación{data?.grupo.siglas ? `: ${data?.grupo.siglas}` : ''}
           </Heading>
 
           <br />
@@ -64,31 +64,37 @@ export default function DetalleGrupo() {
             <CardBody>
               <Text fontSize='md'>Datos del grupo</Text>
               <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='center' justifyContent='space-between'>
-                  <GenericInput name='nombre' label='Nombre' width={{ base: '100%', md: '30%' }} value={data?.grupo.nombre} isDisabled mb='5vh' />
-
-                  <GenericInput name='siglas' label='Siglas' width={{ base: '100%', md: '20%' }} value={data?.grupo.siglas} isDisabled mb='5vh' />
-
-                  <GenericInput
-                    name='resolucion'
-                    label='Resolución'
-                    width={{ base: '100%', md: '15%' }}
-                    value={data?.grupo.resolucion}
-                    isDisabled
+              <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
+                  <DisplayField
+                    label='Nombre'
+                    value={data?.grupo?.nombre || ''}
+                    width={{ base: '100%', md: '30%' }}
                     mb='5vh'
                   />
 
-                  <GenericInput
-                    name='fechaCreacion'
+                  <DisplayField
+                    label='Siglas'
+                    value={data?.grupo?.siglas || ''}
+                    width={{ base: '100%', md: '20%' }}
+                    mb='5vh'
+                  />
+
+                  <DisplayField
+                    label='Resolución'
+                    value={data?.grupo?.resolucion || ''}
+                    width={{ base: '100%', md: '20%' }}
+                    mb='5vh'
+                  />
+
+                  <DisplayField
                     label='Fecha'
-                    width={{ base: '100%', md: '15%' }}
-                    value={formatoFechaISOaDDMMAAAA(data?.grupo.fechaCreacion) || ''}
-                    isDisabled
+                    value={formatoFechaISOaDDMMAAAA(data?.grupo?.fechaCreacion) || ''}
+                    width={{ base: '100%', md: '20%' }}
                     mb='5vh'
                   />
                 </Box>
-                <Box display='flex' width='90%' alignItems='center' justifyContent='flex-end'>
+                <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                   <Link to={'modificar'}>
                     <Button colorScheme='blue' variant='outline'>
                       Modificar
