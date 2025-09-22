@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Spinner, FormControl, FormLabel, Switch } from '@chakra-ui/react';
-import { useModificarInvestigadorForm } from '../../hooks/useModificarInvestigadorForm';
+import { useModificarInvestigadorForm } from '../../hooks/forms/useModificarInvestigadorForm';
 import FormLayout from '../../components/FormLayout';
 import ErrorAlert from '../../components/ErrorAlert';
 import FormButtons from '../../components/FormButtons';

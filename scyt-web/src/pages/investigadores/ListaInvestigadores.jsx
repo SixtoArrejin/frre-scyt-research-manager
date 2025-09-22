@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Button, Spinner, Badge } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllPersonas } from '../../utils/api/personasApi';
@@ -35,7 +35,9 @@ export default function ListaInvestigadores() {
     const categoriaMIN = getCategoriaMasActual(item.categorias, 'ministerio');
     return [
       item.apellido + ' ' + item.nombre,
-      item.activo ? 'Activo' : 'Inactivo',
+      <Badge colorScheme={item.activo ? 'green' : 'red'} key={`status-${item.idPersona}`}>
+        {item.activo ? 'Activo' : 'Inactivo'}
+      </Badge>,
       item.gruposinvestigacion.siglas,
       categoriaUTN ? categoriaUTN.categoria : '-',
       categoriaMIN ? categoriaMIN.categoria : '-',
