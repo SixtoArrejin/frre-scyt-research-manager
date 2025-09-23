@@ -115,7 +115,7 @@ export default function DetalleInvestigador() {
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
-                  <Box display='flex' flexDirection='column' width={{ base: '100%', md: '15%' }} mb='5vh'>
+                  <Box display='flex' flexDirection='column' width={{ base: '100%', md: '15%' }} mb={4}>
                     <Text fontSize='sm' fontWeight='medium' color='gray.500' mb={2}>
                       Estado
                     </Text>
@@ -146,21 +146,21 @@ export default function DetalleInvestigador() {
                     label="Apellido y Nombre"
                     value={data ? ayn : ''}
                     width={{ base: '100%', md: '30%' }}
-                    mb='5vh'
+                    mb={4}
                   />
 
                   <DisplayField
                     label="DNI"
                     value={data?.persona?.dni || ''}
                     width={{ base: '100%', md: '20%' }}
-                    mb='5vh'
+                    mb={4}
                   />
 
                   <DisplayField
                     label="Grupo"
                     value={data?.persona?.gruposinvestigacion?.siglas || ''}
                     width={{ base: '100%', md: '20%' }}
-                    mb='5vh'
+                    mb={4}
                   />
                 </Box>
                 <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>

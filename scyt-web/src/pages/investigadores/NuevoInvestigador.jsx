@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@chakra-ui/react';
-import { useInvestigadorForm } from '../../hooks/forms/useInvestigadorForm';
+import { useNuevoInvestigadorForm } from '../../hooks/forms/useNuevoInvestigadorForm';
 import FormLayout from '../../components/FormLayout';
 import ErrorAlert from '../../components/ErrorAlert';
 import FormButtons from '../../components/FormButtons';
@@ -22,7 +22,7 @@ export default function NuevoInvestigador() {
     handleCancel,
     submitHandler,
     clearError,
-  } = useInvestigadorForm();
+  } = useNuevoInvestigadorForm();
 
   const openModal = () => {
     clearError();

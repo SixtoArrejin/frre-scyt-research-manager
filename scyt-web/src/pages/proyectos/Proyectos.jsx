@@ -116,14 +116,12 @@ export default function ProyectosPid() {
               marginLeft="2%"
             >
               <GenericInput
-                placeholder="Código PID"
                 label="Código PID"
                 width="15vw"
                 value={codPID}
                 onChange={(event) => setCodPID(event.target.value)}
               />
               <GenericInput
-                placeholder="Denominación"
                 label="Denominación"
                 width="15vw"
                 value={denominacion}
@@ -131,6 +129,7 @@ export default function ProyectosPid() {
               />
               <GenericSelect
                 name="pidExterno"
+                label='Tipo Proyecto'
                 width="15vw"
                 options={[
                   { value: 'todos', label: 'Todos' },
