@@ -70,28 +70,28 @@ export default function DetalleGrupo() {
                     label='Nombre'
                     value={data?.grupo?.nombre || ''}
                     width={{ base: '100%', md: '30%' }}
-                    mb='5vh'
+                    mb={4}
                   />
 
                   <DisplayField
                     label='Siglas'
                     value={data?.grupo?.siglas || ''}
                     width={{ base: '100%', md: '20%' }}
-                    mb='5vh'
+                    mb={4}
                   />
 
                   <DisplayField
                     label='Resolución'
                     value={data?.grupo?.resolucion || ''}
                     width={{ base: '100%', md: '20%' }}
-                    mb='5vh'
+                    mb={4}
                   />
 
                   <DisplayField
                     label='Fecha'
                     value={formatoFechaISOaDDMMAAAA(data?.grupo?.fechaCreacion) || ''}
                     width={{ base: '100%', md: '20%' }}
-                    mb='5vh'
+                    mb={4}
                   />
                 </Box>
                 <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
