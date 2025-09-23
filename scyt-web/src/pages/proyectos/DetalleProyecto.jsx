@@ -17,7 +17,7 @@ import {
 } from '../../utils/general';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
-import GenericInput from '../../components/formControls/GenericInput';
+import DisplayField from '../../components/DisplayField';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
@@ -121,23 +121,21 @@ export default function DetalleProyectoPid() {
                     justifyContent="space-between"
                   >
                     {esPid && (
-                      <GenericInput
+                      <DisplayField
                         label="Código PID"
                         width={{ base: '100%', md: '30%' }}
                         value={data?.proyecto?.codPid}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
                     )}
-                    <GenericInput
+                    <DisplayField
                       label="Regional asociada"
                       width={{
                         base: '100%',
                         md: esPid === true ? '65%' : '100%',
                       }}
                       value={data?.proyecto?.regional}
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                   </Box>
                   <Box
@@ -147,13 +145,11 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <GenericInput
-                      textArea
+                    <DisplayField
                       label="Denominación"
                       width={{ base: '100%', md: '100%' }}
                       value={data?.proyecto?.denominacion}
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                   </Box>
                   <Box
@@ -163,7 +159,7 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <GenericInput
+                    <DisplayField
                       label="Director"
                       width={{ base: '100%', md: '47.5%' }}
                       value={
@@ -171,10 +167,9 @@ export default function DetalleProyectoPid() {
                         ', ' +
                         data?.proyecto?.director?.nombre
                       }
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
-                    <GenericInput
+                    <DisplayField
                       label="Codirector"
                       width={{ base: '100%', md: '47.5%' }}
                       value={
@@ -184,8 +179,7 @@ export default function DetalleProyectoPid() {
                             data?.proyecto?.codirector?.nombre
                           : '-'
                       }
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                   </Box>
                   <Box
@@ -195,7 +189,7 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <GenericInput
+                    <DisplayField
                       label="Fecha Inicio"
                       width={{ base: '100%', md: '47.5%' }}
                       value={
@@ -205,10 +199,9 @@ export default function DetalleProyectoPid() {
                           )
                           : 'No cargado'
                       }
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
-                    <GenericInput
+                    <DisplayField
                       label="Fecha Fin"
                       width={{ base: '100%', md: '47.5%' }}
                       value={
@@ -216,8 +209,7 @@ export default function DetalleProyectoPid() {
                           ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)
                           : 'No cargado'
                       }
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                   </Box>
                   <Box
@@ -227,19 +219,17 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <GenericInput
+                    <DisplayField
                       label="Programa"
                       width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.programa}
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
-                    <GenericInput
+                    <DisplayField
                       label="Tipo de proyecto"
                       width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.tipoProyecto}
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                   </Box>
                   {esPid && (
@@ -250,14 +240,13 @@ export default function DetalleProyectoPid() {
                       alignItems="center"
                       justifyContent="space-between"
                     >
-                      <GenericInput
+                      <DisplayField
                         label="Tipo Actividad"
                         width={{ base: '100%', md: '30%' }}
                         value={data?.proyecto?.tipoActividad}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
-                      <GenericInput
+                      <DisplayField
                         label="Estado"
                         width={{
                           base: '100%',
@@ -267,16 +256,14 @@ export default function DetalleProyectoPid() {
                               : '65%',
                         }}
                         value={data?.proyecto?.estado}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
                       {data?.proyecto?.estado === 'HOMOLOGADO' && (
-                        <GenericInput
+                        <DisplayField
                           label="Disposición"
                           width={{ base: '100%', md: '30%' }}
                           value={data?.proyecto?.disposicion}
-                          isDisabled
-                          mb="5vh"
+                          mb={4}
                         />
                       )}
                     </Box>
@@ -288,29 +275,26 @@ export default function DetalleProyectoPid() {
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <GenericInput
+                    <DisplayField
                       label="Convocatoria"
                       width={{ base: '100%', md: '47.5%' }}
                       value={data?.proyecto?.convocatoria}
-                      isDisabled
-                      mb="5vh"
+                      mb={4}
                     />
                     {esPid && (
-                      <GenericInput
+                      <DisplayField
                         label="Prorroga"
                         width={{ base: '100%', md: '47.5%' }}
                         value={data?.proyecto?.prorrogado ? 'Si' : 'No'}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
                     )}
                     {!esPid && (
-                      <GenericInput
+                      <DisplayField
                         label="Empresa/Institución"
                         width={{ base: '100%', md: '47.5%' }}
                         value={data?.proyecto?.empresaInstitucion}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
                     )}
                   </Box>
@@ -322,20 +306,18 @@ export default function DetalleProyectoPid() {
                       alignItems="center"
                       justifyContent="space-between"
                     >
-                      <GenericInput
+                      <DisplayField
                         label="Nueva Fecha Fin"
                         width={{ base: '100%', md: '47.5%' }}
                         value={formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)}
-                        isDisabled
-                        mb="5vh"
+                        mb={4}
                       />
                       {data?.proyecto?.estado === 'HOMOLOGADO' && (
-                        <GenericInput
+                        <DisplayField
                           label="Disposición"
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.proyecto?.disposicion}
-                          isDisabled
-                          mb="5vh"
+                          mb={4}
                         />
                       )}
                     </Box>
