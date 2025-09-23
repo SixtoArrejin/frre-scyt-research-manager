@@ -1,145 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  CardBody,
-  Text,
-  Heading,
-  Box,
-  Button,
-  useToast,
-  Spinner,
-} from '@chakra-ui/react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
-import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
-import { getProyectoById, updateProyecto } from '../../utils/api/proyectosApi';
+import React from 'react';
+import { Spinner, Box } from '@chakra-ui/react';
+import { useModificarProyectoForm } from '../../hooks/forms/useModificarProyectoForm';
+import FormLayout from '../../components/FormLayout';
+import FormButtons from '../../components/FormButtons';
 import CustomModal from '../../components/CustomModal';
-import { useForm } from 'react-hook-form';
-import { getAllTiposProyectos } from '../../utils/api/tiposProyectosApi';
-import { getAllRegionales } from '../../utils/api/regionalesApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import GenericRadio from '../../components/formControls/GenericRadio';
 
-const tipoActividad = [
-  'Desarrollo Experimental',
-  'Investigación Aplicada',
-  'Investigación Básica',
-];
-
-const estadoProyecto = [
-  'EN TRÁMITE',
-  'HOMOLOGADO',
-  'REFORMULAR POR EVALUACIÓN EXTERNA',
-  'REFORMULAR POR CONSEJO DE PROGRAMAS',
-  'DENEGADO POR EVALUACIÓN EXTERNA',
-  'DENEGADO POR CONSEJO DE PROGRAMAS',
-  'CANCELADO',
-];
-
 export default function ModificarPIDs() {
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  const { idPid } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const { data, isLoading } = useQuery(['proyecto', idPid], () =>
-    getProyectoById(Number(idPid)),
-  );
-
   const {
-    data: dataRegionales,
-    isLoading: isLoadingGetRegionales,
-  } = useQuery(['regionales'], () => getAllRegionales());
+    // Datos del proyecto
+    dataProyecto,
+    esPid,
 
-  const {
-    data: dataTiposProyectos,
-    isLoading: isLoadingGetTiposProyectos,
-  } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
+    // Estados
+    estado,
+    setEstado,
+    isModalOpen,
 
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => updateProyecto(Number(idPid), formData),
-    onSuccess: () => {
-      toast({
-        title: 'Modificar PID',
-        description: 'Se ha modificado el PID exitosamente',
-        status: 'success',
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: () => {
-      toast({
-        title: 'Error al modificar los datos del PID',
-        description: 'Intente de nuevo.',
-        status: 'error',
-        isClosable: true,
-      });
-    },
-  });
-  const {
+    // Formulario
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
+    errors,
     watch,
-  } = useForm();
+    onSubmit,
 
-  useEffect(() => {
-    if (data) {
-      reset({
-        proyecto: {
-          codPid: data.proyecto.codPid,
-          tipoActividad: data.proyecto.tipoActividad,
-          tipoProyecto: data.proyecto.tipoProyecto,
-          programa: data.proyecto.programa,
-          disposicion: data.proyecto.disposicion,
-          ...(data.proyecto.fechaInicio && {
-            fechaInicio: formatoFechaISOaAAAAMMDD(data.proyecto.fechaInicio),
-          }),
-          ...(data.proyecto.fechaFin && {
-            fechaFin: formatoFechaISOaAAAAMMDD(data.proyecto.fechaFin),
-          }),
-          denominacion: data.proyecto.denominacion,
-          completo: data.proyecto.completo ? 'true' : 'false',
-          regional: data.proyecto.regional,
-          convocatoria: data.proyecto.convocatoria,
-          estado: data.proyecto.estado,
-          prorrogado: data.proyecto.prorrogado ? 'true' : 'false',
-          tipo: data.proyecto.codPid ? 'pid' : 'externo',
-          empresaInstitucion: data.proyecto.empresaInstitucion,
-          nuevaFechaFin: formatoFechaISOaAAAAMMDD(data.proyecto.nuevaFechaFin),
-          nuevaDisposicion: data.proyecto.nuevaDisposicion,
-        },
-      });
-      setEstado(data.proyecto.estado);
-    }
-  }, [data, reset]);
+    // Loading states
+    isLoading,
+    isLoadingMutation,
 
-  const onSubmit = (values) => {
-    const modifiedValues = {
-      ...values.proyecto,
-      prorrogado: values.proyecto.prorrogado === 'true',
-      completo: values.proyecto.completo === 'true',
-    };
-    const proyecto = {
-      proyecto: modifiedValues,
-    };
+    // Opciones para selects
+    regionalesOptions,
+    tiposProyectoOptions,
+    tipoActividadOptions,
+    estadoProyectoOptions,
 
-    console.log(proyecto);
-    mutate(proyecto);
-  };
+    // Funciones de modal
+    openModal,
+    closeModal,
 
-  const [estado, setEstado] = useState(data?.proyecto?.estado || '');
+    // Navegación
+    handleCancel,
+  } = useModificarProyectoForm();
 
   if (isLoading) {
     return (
@@ -162,377 +65,316 @@ export default function ModificarPIDs() {
   }
 
   return (
-    <Card>
-      <CardBody>
+    <FormLayout title="Modificar datos del Proyecto" subtitle="Datos del proyecto">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box
           display="flex"
-          flexDirection="column"
           width="100%"
           alignItems="center"
           justifyContent="center"
+          flexDirection="column"
         >
-          <Heading as="h2" size="xl" textAlign="center">
-            Modificar datos del Proyecto
-          </Heading>
-          <br />
-          <Card width="100%">
-            <CardBody>
-              <Text fontSize="md">Datos del proyecto</Text>
-              <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-              >
+          <Box
+            display="flex"
+            width="70%"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+          >
+            {/* Campos básicos */}
+            <Box
+              display="flex"
+              flexDirection={{ base: 'column', md: 'row' }}
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              {esPid && (
+                <GenericInput
+                  name="codPid"
+                  label="Código PID"
+                  placeholder="Código PID"
+                  register={register}
+                  errors={errors}
+                  width={{ base: '100%', md: '30%' }}
+                  isRequired
+                  mb={4}
+                />
+              )}
+
+              <GenericSelect
+                name="regional"
+                label="Regional asociada"
+                placeholder="Regional..."
+                width={esPid ? { base: '100%', md: '65%' } : '100%'}
+                mb={4}
+                isRequired
+                register={register}
+                options={regionalesOptions}
+                errors={errors}
+              />
+            </Box>
+
+            <GenericInput
+              textArea
+              name="denominacion"
+              label="Denominación"
+              placeholder="Denominación"
+              register={register}
+              errors={errors}
+              width="100%"
+              isRequired
+              mb={4}
+            />
+
+            <Box
+              display="flex"
+              flexDirection={{ base: 'column', md: 'row' }}
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <GenericInput
+                type="date"
+                name="fechaInicio"
+                label="Fecha Inicio"
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '30%' }}
+                isRequired
+                mb={4}
+              />
+              <GenericInput
+                type="date"
+                name="fechaFin"
+                label="Fecha Fin"
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '30%' }}
+                isRequired
+                mb={4}
+              />
+
+              <GenericInput
+                type="number"
+                name="convocatoria"
+                label="Convocatoria"
+                placeholder="Convocatoria"
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '30%' }}
+                isRequired
+                mb={4}
+              />
+            </Box>
+
+            <Box
+              display="flex"
+              flexDirection={{ base: 'column', md: 'row' }}
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <GenericInput
+                name="programa"
+                label="Programa"
+                placeholder="Programa"
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '47.5%' }}
+                isRequired
+                mb={4}
+              />
+
+              <GenericSelect
+                name="tipoProyecto"
+                label="Tipo de proyecto"
+                placeholder="Tipo de proyecto..."
+                width={{ base: '100%', md: '47.5%' }}
+                mb={4}
+                isRequired
+                register={register}
+                options={tiposProyectoOptions}
+                errors={errors}
+              />
+            </Box>
+
+            {/* Campos específicos para proyectos externos */}
+            {!esPid && (
+              <GenericInput
+                name="empresaInstitucion"
+                label="Empresa/Institución"
+                placeholder="Empresa/Institución"
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '50%' }}
+                isRequired
+                mb={4}
+              />
+            )}
+
+            {/* Campos específicos para proyectos PID */}
+            {esPid && (
+              <>
                 <Box
                   display="flex"
-                  width="70%"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
                   alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
+                  justifyContent="space-between"
+                >
+                  <GenericSelect
+                    name="tipoActividad"
+                    label="Tipo de actividad"
+                    placeholder="Tipo de actividad..."
+                    width={{ base: '100%', md: '30%' }}
+                    mb={4}
+                    isRequired
+                    register={register}
+                    options={tipoActividadOptions}
+                    errors={errors}
+                  />
+                  <GenericSelect
+                    name="estado"
+                    label="Estado"
+                    placeholder="Estado..."
+                    width={{
+                      base: '100%',
+                      md: estado === 'HOMOLOGADO' ? '30%' : '65%',
+                    }}
+                    mb={4}
+                    isRequired
+                    register={register}
+                    options={estadoProyectoOptions}
+                    errors={errors}
+                    onChange={(e) => setEstado(e.target.value)}
+                  />
+
+                  {estado === 'HOMOLOGADO' && (
+                    <GenericInput
+                      name="disposicion"
+                      label="Disposición"
+                      placeholder="Disposición"
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '30%' }}
+                      isRequired={estado === 'HOMOLOGADO'}
+                      mb={4}
+                    />
+                  )}
+                </Box>
+
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="space-between"
                 >
                   <Box
+                    width={{ base: '100%', md: '50%' }}
                     display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
+                    justifyContent="center"
                   >
-                    {data?.proyecto?.codPid && (
-                      <GenericInput
-                        name="proyecto.codPid"
-                        label="Código PID"
-                        placeholder="Código PID"
-                        register={register}
-                        errors={errors}
-                        width={{ base: '100%', md: '30%' }}
-                        isRequired
-                        mb="5vh"
-                      />
-                    )}
-
-                    <GenericSelect
-                      name="proyecto.regional"
-                      label="Regional asociada"
-                      placeholder="Regional..."
-                      width={
-                        data?.proyecto?.codPid
-                          ? { base: '100%', md: '65%' }
-                          : '100%'
+                    <GenericRadio
+                      name="prorrogado"
+                      label="Prorroga:"
+                      direction="row"
+                      options={[
+                        { value: 'true', label: 'Si' },
+                        { value: 'false', label: 'No' },
+                      ]}
+                      register={register}
+                      defaultValue={
+                        dataProyecto?.proyecto?.prorrogado ? 'true' : 'false'
                       }
-                      mb="5vh"
-                      isRequired
-                      register={register}
-                      options={(isLoadingGetRegionales
-                        ? ['Cargando...']
-                        : dataRegionales.regionales
-                      ).map((regional) => ({
-                        value: regional,
-                        label: regional,
-                      }))}
                       errors={errors}
+                      mb={4}
                     />
                   </Box>
+
                   <Box
+                    width={{ base: '100%', md: '50%' }}
                     display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
+                    justifyContent="center"
                   >
-                    <GenericInput
-                      textArea
-                      name="proyecto.denominacion"
-                      label="Denominación"
-                      placeholder="Denominación"
+                    <GenericRadio
+                      name="completo"
+                      label="Completo:"
+                      direction="row"
+                      options={[
+                        { value: 'true', label: 'Si' },
+                        { value: 'false', label: 'No' },
+                      ]}
                       register={register}
+                      defaultValue={
+                        dataProyecto?.proyecto?.completo ? 'true' : 'false'
+                      }
                       errors={errors}
-                      width="100%"
-                      isRequired
-                      mb="5vh"
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <GenericInput
-                      type="date"
-                      name="proyecto.fechaInicio"
-                      label="Fecha Inicio"
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired
-                      mb="5vh"
-                    />
-                    <GenericInput
-                      type="date"
-                      name="proyecto.fechaFin"
-                      label="Fecha Fin"
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired
-                      mb="5vh"
-                    />
-
-                    <GenericInput
-                      type="number"
-                      name="proyecto.convocatoria"
-                      label="Convocatoria"
-                      placeholder="Convocatoria"
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired
-                      mb="5vh"
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <GenericInput
-                      name="proyecto.programa"
-                      label="Programa"
-                      placeholder="Programa"
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '47.5%' }}
-                      isRequired
-                      mb="5vh"
-                    />
-
-                    <GenericSelect
-                      name="proyecto.tipoProyecto"
-                      label="Tipo de proyecto"
-                      placeholder="Tipo de proyecto..."
-                      width={{ base: '100%', md: '47.5%' }}
-                      mb="5vh"
-                      isRequired
-                      register={register}
-                      options={(isLoadingGetTiposProyectos
-                        ? ['Cargando...']
-                        : (dataTiposProyectos?.tiposProyectos || [])
-                      ).map((tipo) => ({
-                        value: tipo,
-                        label: tipo,
-                      }))}
-                      errors={errors}
-                    />
-                  </Box>
-                  {!data?.proyecto?.codPid && (
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <GenericInput
-                        name="proyecto.empresaInstitucion"
-                        label="Empresa/Institución"
-                        placeholder="Empresa/Institución"
-                        register={register}
-                        errors={errors}
-                        width={{ base: '100%', md: '50%' }}
-                        isRequired
-                        mb="5vh"
-                      />
-                    </Box>
-                  )}
-                  {data?.proyecto?.codPid && (
-                    <>
-                      <Box
-                        display="flex"
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <GenericSelect
-                          name="proyecto.tipoActividad"
-                          label="Tipo de actividad"
-                          placeholder="Tipo de actividad..."
-                          width={{ base: '100%', md: '30%' }}
-                          mb="5vh"
-                          isRequired
-                          register={register}
-                          options={tipoActividad.map((actividad) => ({
-                            value: actividad,
-                            label: actividad,
-                          }))}
-                          errors={errors}
-                        />
-                        <GenericSelect
-                          name="proyecto.estado"
-                          label="Estado"
-                          placeholder="Estado..."
-                          width={{
-                            base: '100%',
-                            md: estado === 'HOMOLOGADO' ? '30%' : '65%',
-                          }}
-                          mb="5vh"
-                          isRequired
-                          register={register}
-                          options={estadoProyecto.map((estado) => ({
-                            value: estado,
-                            label: estado,
-                          }))}
-                          errors={errors}
-                          onChange={(e) => setEstado(e.target.value)}
-                        />
-
-                        {estado === 'HOMOLOGADO' && (
-                          <GenericInput
-                            name="proyecto.disposicion"
-                            label="Disposición"
-                            placeholder="Disposición"
-                            register={register}
-                            errors={errors}
-                            width={{ base: '100%', md: '30%' }}
-                            isRequired={estado === 'HOMOLOGADO'}
-                            mb="5vh"
-                          />
-                        )}
-                      </Box>
-
-                      <Box
-                        display="flex"
-                        flexDirection={{ base: 'column', md: 'row' }}
-                        width="100%"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Box
-                          width={{ base: '100%', md: '50%' }}
-                          display="flex"
-                          justifyContent="center"
-                        >
-                          <GenericRadio
-                            name="proyecto.prorrogado"
-                            label="Prorroga:"
-                            direction="row"
-                            options={[
-                              { value: 'true', label: 'Si' },
-                              { value: 'false', label: 'No' },
-                            ]}
-                            register={register}
-                            defaultValue={
-                              data?.proyecto?.prorrogado ? 'true' : 'false'
-                            }
-                            errors={errors}
-                            mb="5vh"
-                          />
-                        </Box>
-
-                        <Box
-                          width={{ base: '100%', md: '50%' }}
-                          display="flex"
-                          justifyContent="center"
-                        >
-                          <GenericRadio
-                            name="proyecto.completo"
-                            label="Completo:"
-                            direction="row"
-                            options={[
-                              { value: 'true', label: 'Si' },
-                              { value: 'false', label: 'No' },
-                            ]}
-                            register={register}
-                            defaultValue={
-                              data?.proyecto?.completo ? 'true' : 'false'
-                            }
-                            errors={errors}
-                            mb="5vh"
-                          />
-                        </Box>
-                      </Box>
-                      {watch('proyecto.prorrogado') === 'true' && (
-                        <Box
-                          display="flex"
-                          flexDirection={{ base: 'column', md: 'row' }}
-                          width="100%"
-                          alignItems="center"
-                          justifyContent="space-between"
-                        >
-                          <GenericInput
-                            name="proyecto.nuevaFechaFin"
-                            type="date"
-                            register={register}
-                            placeholder="Nueva Fecha Finalización"
-                            label="Nueva Fecha Finalización"
-                            width={{
-                              base: '100%',
-                              md: estado === 'HOMOLOGADO' ? '47.5%' : '100%',
-                            }}
-                            mb="5vh"
-                            isRequired={watch('prorrogado') === 'true'}
-                          />
-                          {estado === 'HOMOLOGADO' && (
-                            <GenericInput
-                              name="proyecto.nuevaDisposicion"
-                              placeholder="Nueva Disposición"
-                              register={register}
-                              label="Nueva Disposición"
-                              width={{ base: '100%', md: '46.25%' }}
-                              mb="5vh"
-                              isRequired={
-                                estado === 'HOMOLOGADO' &&
-                                watch('prorrogado') === 'true'
-                              }
-                            />
-                          )}
-                        </Box>
-                      )}
-                    </>
-                  )}
-                  <Box
-                    display="flex"
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Button
-                      colorScheme="gray"
-                      variant="outline"
-                      onClick={() => navigate(-1)}
-                      mr="3%"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      onClick={openModal}
-                      colorScheme="blue"
-                      variant="outline"
-                      isLoading={isLoadingMutation}
-                    >
-                      Aceptar
-                    </Button>
-                    <CustomModal
-                      isOpen={isOpen}
-                      onClose={closeModal}
-                      guardar={true}
-                      title="Se modificaran los datos del proyecto."
-                      content="¿Seguro que desea modificar la información del proyecto?"
-                      onSave={handleSubmit((values) => onSubmit(values))}
+                      mb={4}
                     />
                   </Box>
                 </Box>
-              </Box>
-            </CardBody>
-          </Card>
+
+                {watch('prorrogado') === 'true' && (
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <GenericInput
+                      name="nuevaFechaFin"
+                      type="date"
+                      register={register}
+                      placeholder="Nueva Fecha Finalización"
+                      label="Nueva Fecha Finalización"
+                      width={{
+                        base: '100%',
+                        md: estado === 'HOMOLOGADO' ? '47.5%' : '100%',
+                      }}
+                      mb={4}
+                      isRequired={watch('prorrogado') === 'true'}
+                    />
+                    {estado === 'HOMOLOGADO' && (
+                      <GenericInput
+                        name="nuevaDisposicion"
+                        placeholder="Nueva Disposición"
+                        register={register}
+                        label="Nueva Disposición"
+                        width={{ base: '100%', md: '46.25%' }}
+                        mb={4}
+                        isRequired={
+                          estado === 'HOMOLOGADO' &&
+                      watch('prorrogado') === 'true'
+                        }
+                      />
+                    )}
+                  </Box>
+                )}
+              </>
+            )}
+
+            <FormButtons
+              cancelText="Cancelar"
+              submitText="Aceptar"
+              isLoading={isLoadingMutation}
+              onCancel={handleCancel}
+              onSubmit={openModal}
+            />
+
+            <CustomModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              guardar={true}
+              title="Se modificarán los datos del proyecto."
+              content="¿Seguro que desea modificar la información del proyecto?"
+              onSave={handleSubmit(onSubmit)}
+            />
+          </Box>
         </Box>
-      </CardBody>
-    </Card>
+      </form>
+    </FormLayout>
   );
 }
