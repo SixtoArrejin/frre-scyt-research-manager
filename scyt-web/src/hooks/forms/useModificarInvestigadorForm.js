@@ -32,6 +32,11 @@ const modificarInvestigadorSchema = yup.object({
     .mixed()
     .required('Indique a que grupo pertenece')
     .test('idNaN', 'Indique a que grupo pertenece', (val) => !isNaN(val)),
+  fechaIngresoGrupo: yup
+    .date()
+    .required('La fecha de ingreso al grupo es requerida')
+    .max(new Date(), 'La fecha de ingreso no puede ser futura')
+    .typeError('Debe ingresar una fecha válida'),
   activo: yup.boolean().required('El estado es requerido'),
 });
 
@@ -41,6 +46,7 @@ const defaultValues = {
   apellido: '',
   dni: '',
   idGrupoInvestigacion: '',
+  fechaIngresoGrupo: '',
   activo: false,
 };
 
@@ -100,6 +106,7 @@ export const useModificarInvestigadorForm = () => {
       apellido: formData.apellido?.trim(),
       dni: parseInt(formData.dni, 10),
       idGrupoInvestigacion: parseInt(formData.idGrupoInvestigacion, 10),
+      fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
       activo: formData.activo, // Ya es boolean, no necesita conversión
     };
   };
@@ -141,6 +148,12 @@ export const useModificarInvestigadorForm = () => {
       form.setValue('apellido', investigador.persona.apellido);
       form.setValue('dni', investigador.persona.dni);
       form.setValue('idGrupoInvestigacion', investigador.persona.idGrupoInvestigacion);
+      // Convertir fecha ISO a formato YYYY-MM-DD para input type="date"
+      if (investigador.persona.fechaIngresoGrupo) {
+        const fecha = new Date(investigador.persona.fechaIngresoGrupo);
+        const fechaFormateada = fecha.toISOString().split('T')[0];
+        form.setValue('fechaIngresoGrupo', fechaFormateada);
+      }
       hasFilledForm.current = true;
     }
 

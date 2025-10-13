@@ -48,7 +48,7 @@ model personas {
   dni                  Int?                @unique(map: "dni")
   nombre               String?             @db.VarChar(30)
   apellido             String?             @db.VarChar(30)
-  fechaIngreso         DateTime?           @db.Date
+  fechaIngresoGrupo    DateTime?           @db.Date
   activo               Boolean?
   idGrupoInvestigacion Int
   categorias           categorias[]

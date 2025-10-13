@@ -111,6 +111,24 @@ export default function NuevoInvestigador() {
             </Box>
           </Box>
 
+          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <GenericInput
+                type='date'
+                name='fechaIngresoGrupo'
+                label='Fecha de Ingreso al Grupo'
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '50%' }}
+                isRequired
+                mb='5vh'
+              />
+            </Box>
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              {/* Espacio vacío para mantener el layout */}
+            </Box>
+          </Box>
+
           {/* Mostrar errores */}
           <ErrorAlert
             error={gruposError && {

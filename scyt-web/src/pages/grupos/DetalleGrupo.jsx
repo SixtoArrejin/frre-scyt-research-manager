@@ -119,7 +119,7 @@ export default function DetalleGrupo() {
                       item.dni,
                       item.apellido + ' ' + item.nombre,
                       item.activo ? 'Activo' : 'Inactivo',
-                      formatoFechaISOaDDMMAAAA(item.fechaIngreso),
+                      formatoFechaISOaDDMMAAAA(item.fechaIngresoGrupo),
                       categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
                       <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
                         <PlusSquareIcon />

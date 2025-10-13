@@ -134,6 +134,19 @@ export default function ModificarInvestigador() {
 
           <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
             <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <GenericInput
+                type='date'
+                name='fechaIngresoGrupo'
+                label='Fecha de Ingreso al Grupo'
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '50%' }}
+                isRequired
+                mb='5vh'
+              />
+            </Box>
+
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
               <FormControl width={{ base: '100%', md: '50%' }}>
                 <FormLabel>Estado del Investigador</FormLabel>
                 <Switch
