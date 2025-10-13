@@ -10,12 +10,12 @@ datasource db {
 model categorias {
   idCategoria  Int       @id @default(autoincrement())
   equiparacion Boolean?
-  tipo         String?   @db.VarChar(20)
-  categoria    String?   @db.VarChar(10)
+  tipo         String?   @db.VarChar(50)
+  categoria    String?   @db.VarChar(50)
   fecha        DateTime? @db.Date
-  normativa    String?   @db.VarChar(20)
+  normativa    String?   @db.VarChar(100)
   idPersona    Int
-  comision     String?   @db.VarChar(50)
+  comision     String?   @db.VarChar(256)
   personas     personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "categorias_ibfk_1")
 
   @@index([idPersona], map: "idPersona")
@@ -23,9 +23,9 @@ model categorias {
 
 model gruposinvestigacion {
   idGrupoInvestigacion Int        @id @default(autoincrement())
-  siglas               String?    @unique(map: "siglas") @db.VarChar(15)
-  nombre               String?    @db.VarChar(40)
-  resolucion           String?    @db.VarChar(10)
+  siglas               String?    @unique(map: "siglas") @db.VarChar(50)
+  nombre               String?    @db.VarChar(256)
+  resolucion           String?    @db.VarChar(100)
   fechaCreacion        DateTime?  @db.Date
   personas             personas[]
   tiene                tiene[]
@@ -34,7 +34,7 @@ model gruposinvestigacion {
 model participa {
   idPersona   Int
   idProyecto  Int
-  rol         String    @db.VarChar(50)
+  rol         String    @db.VarChar(100)
   fechaInicio DateTime? @db.Date
   personas    personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
   proyectos   proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
@@ -46,8 +46,8 @@ model participa {
 model personas {
   idPersona            Int                 @id @default(autoincrement())
   dni                  Int?                @unique(map: "dni")
-  nombre               String?             @db.VarChar(30)
-  apellido             String?             @db.VarChar(30)
+  nombre               String?             @db.VarChar(100)
+  apellido             String?             @db.VarChar(100)
   fechaIngresoGrupo    DateTime?           @db.Date
   activo               Boolean?
   idGrupoInvestigacion Int

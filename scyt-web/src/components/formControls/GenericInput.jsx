@@ -37,15 +37,33 @@ export default function GenericInput(props) {
 
   return (
     <FormControl variant='floating' {...rest}>
-      {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps} x={{
+      {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps} sx={{
         _disabled: {
           color: textColor,
           opacity: '0.75',
+        },
+        _placeholder: {
+          opacity: 0,
+          transition: 'opacity 0.2s',
+        },
+        _focus: {
+          _placeholder: {
+            opacity: 1,
+          },
         },
       }} /> : <Input sx={{
         _disabled: {
           color: textColor,
           opacity: '0.75',
+        },
+        _placeholder: {
+          opacity: 0,
+          transition: 'opacity 0.2s',
+        },
+        _focus: {
+          _placeholder: {
+            opacity: 1,
+          },
         },
       }} {...inputProps} />}
       {/* <Input {...inputProps} /> */}

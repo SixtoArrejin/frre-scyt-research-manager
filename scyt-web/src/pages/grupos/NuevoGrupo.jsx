@@ -45,52 +45,57 @@ export default function NuevoGrupo() {
     <FormLayout title='Nuevo Grupo de Investigación' description='Ingrese los datos del grupo'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+          {/* Primera fila: Nombre del grupo (TextArea 100%) */}
           <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-              <GenericInput
-                name='nombre'
-                label='Nombre'
-                register={register}
-                errors={errors}
-                width={{ base: '100%', md: '50%' }}
-                isRequired
-                mb='5vh'
-              />
-            </Box>
+            <GenericInput
+              textArea
+              name='nombre'
+              label='Nombre del Grupo'
+              placeholder='Ej: Centro de Investigación Aplicada a Tecnologías de la Información y la Comunicación'
+              register={register}
+              errors={errors}
+              width={{ base: '100%', md: '100%' }}
+              isRequired
+              mb='5vh'
+            />
+          </Box>
 
-            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+          {/* Segunda fila: Siglas (30%), Resolución (30%), Fecha Creación (30%) */}
+          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+            <Box display='flex' flexDirection='column' width={{ base: '100%', md: '30%' }} alignItems='center' justifyContent='center'>
               <GenericInput
                 name='siglas'
                 label='Siglas'
+                placeholder='Ej: CINAPTIC'
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '50%' }}
+                width={{ base: '100%', md: '100%' }}
                 isRequired
                 mb='5vh'
               />
             </Box>
-          </Box>
 
-          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+            <Box display='flex' flexDirection='column' width={{ base: '100%', md: '30%' }} alignItems='center' justifyContent='center'>
               <GenericInput
                 name='resolucion'
                 label='Resolución'
+                placeholder='Ej: RES-001/2023'
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '50%' }}
+                width={{ base: '100%', md: '100%' }}
                 isRequired
                 mb='5vh'
               />
             </Box>
-            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+
+            <Box display='flex' flexDirection='column' width={{ base: '100%', md: '30%' }} alignItems='center' justifyContent='center'>
               <GenericInput
                 name='fechaCreacion'
-                label='Fecha Creación'
+                label='Fecha de Creación'
                 type='date'
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '50%' }}
+                width={{ base: '100%', md: '100%' }}
                 isRequired
                 mb='5vh'
               />
