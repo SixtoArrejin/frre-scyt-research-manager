@@ -48,7 +48,6 @@ export default function DetalleInvestigador() {
 
   const { data, isLoading } = useQuery(['persona'], () => getPersonaById(idPersona));
   const { data: dataProyectos } = useQuery(['proyectos', idPersona], () => getProyectosByPersonaId(idPersona));
-  const ayn = data?.persona.apellido + ' ' + data?.persona.nombre;
 
   const toast = useToast();
 
@@ -114,6 +113,7 @@ export default function DetalleInvestigador() {
               <Text fontSize='md'>Datos del investigador</Text>
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
+                {/* Primera fila: Estado, Apellido, Nombre, DNI */}
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
                   <Box display='flex' flexDirection='column' width={{ base: '100%', md: '15%' }} mb={4}>
                     <Text fontSize='sm' fontWeight='medium' color='gray.500' mb={2}>
@@ -143,9 +143,16 @@ export default function DetalleInvestigador() {
                   </Box>
 
                   <DisplayField
-                    label="Apellido y Nombre"
-                    value={data ? ayn : ''}
-                    width={{ base: '100%', md: '30%' }}
+                    label="Apellido"
+                    value={data?.persona?.apellido || ''}
+                    width={{ base: '100%', md: '25%' }}
+                    mb={4}
+                  />
+
+                  <DisplayField
+                    label="Nombre"
+                    value={data?.persona?.nombre || ''}
+                    width={{ base: '100%', md: '25%' }}
                     mb={4}
                   />
 
@@ -155,14 +162,32 @@ export default function DetalleInvestigador() {
                     width={{ base: '100%', md: '20%' }}
                     mb={4}
                   />
+                </Box>
+
+                {/* Segunda fila: Siglas, Nombre del Grupo y Fecha de Ingreso */}
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
+                  <DisplayField
+                    label="Siglas del Grupo"
+                    value={data?.persona?.gruposinvestigacion?.siglas || ''}
+                    width={{ base: '100%', md: '30%' }}
+                    mb={4}
+                  />
 
                   <DisplayField
-                    label="Grupo"
-                    value={data?.persona?.gruposinvestigacion?.siglas || ''}
-                    width={{ base: '100%', md: '20%' }}
+                    label="Nombre del Grupo"
+                    value={data?.persona?.gruposinvestigacion?.nombre || ''}
+                    width={{ base: '100%', md: '30%' }}
+                    mb={4}
+                  />
+
+                  <DisplayField
+                    label="Fecha de Ingreso al Grupo"
+                    value={data?.persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(data.persona.fechaIngresoGrupo) : '-'}
+                    width={{ base: '100%', md: '30%' }}
                     mb={4}
                   />
                 </Box>
+
                 <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                   <PermissionGate module='investigadores' action='edit'>
                     <Link to={'modificar'}>

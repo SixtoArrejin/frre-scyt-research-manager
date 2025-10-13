@@ -34,13 +34,8 @@ export async function getPersonasByGroup(req, res) {
 
 export async function createPersona(req, res) {
   try {
-    const personaData = { fechaIngreso: new Date(), ...req.body };
-
-    // const fechaActual = new Date();
-    // personaData.fechaIngreso = "2023-08-30T00:00:00.000Z"
-    // console.log(convertToISOString(fechaActual));
+    const personaData = req.body;
     console.log(personaData);
-    // personaData.fechaIngreso = convertToISOString(fechaActual);
 
     const newPersona = await createPersonaService(personaData);
     return res.status(201).json({ message: 'Persona creada exitosamente', success: true, newPersona });

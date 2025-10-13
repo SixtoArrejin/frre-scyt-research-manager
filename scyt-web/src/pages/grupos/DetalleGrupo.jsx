@@ -65,35 +65,40 @@ export default function DetalleGrupo() {
               <Text fontSize='md'>Datos del grupo</Text>
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
+                {/* Primera fila: Nombre del grupo (100% con mayor altura) */}
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
                   <DisplayField
-                    label='Nombre'
+                    label='Nombre del Grupo'
                     value={data?.grupo?.nombre || ''}
-                    width={{ base: '100%', md: '30%' }}
+                    width='100%'
                     mb={4}
                   />
+                </Box>
 
+                {/* Segunda fila: Siglas (30%), Resolución (30%), Fecha (30%) */}
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
                   <DisplayField
                     label='Siglas'
                     value={data?.grupo?.siglas || ''}
-                    width={{ base: '100%', md: '20%' }}
+                    width={{ base: '100%', md: '30%' }}
                     mb={4}
                   />
 
                   <DisplayField
                     label='Resolución'
                     value={data?.grupo?.resolucion || ''}
-                    width={{ base: '100%', md: '20%' }}
+                    width={{ base: '100%', md: '30%' }}
                     mb={4}
                   />
 
                   <DisplayField
-                    label='Fecha'
+                    label='Fecha de Creación'
                     value={formatoFechaISOaDDMMAAAA(data?.grupo?.fechaCreacion) || ''}
-                    width={{ base: '100%', md: '20%' }}
+                    width={{ base: '100%', md: '30%' }}
                     mb={4}
                   />
                 </Box>
+
                 <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                   <Link to={'modificar'}>
                     <Button colorScheme='blue' variant='outline'>
@@ -119,7 +124,7 @@ export default function DetalleGrupo() {
                       item.dni,
                       item.apellido + ' ' + item.nombre,
                       item.activo ? 'Activo' : 'Inactivo',
-                      formatoFechaISOaDDMMAAAA(item.fechaIngreso),
+                      formatoFechaISOaDDMMAAAA(item.fechaIngresoGrupo),
                       categoriaMIN?.categoria ? categoriaMIN?.categoria : '-',
                       <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
                         <PlusSquareIcon />

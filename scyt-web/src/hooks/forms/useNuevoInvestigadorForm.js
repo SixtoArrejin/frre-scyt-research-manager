@@ -35,6 +35,11 @@ const investigadorSchema = yup.object({
       const numValue = parseInt(value, 10);
       return !isNaN(numValue) && numValue > 0;
     }),
+  fechaIngresoGrupo: yup
+    .date()
+    .required('La fecha de ingreso al grupo es requerida')
+    .max(new Date(), 'La fecha de ingreso no puede ser futura')
+    .typeError('Debe ingresar una fecha válida'),
 });
 
 // Valores por defecto para el formulario
@@ -43,6 +48,7 @@ const defaultValues = {
   apellido: '',
   dni: '',
   idGrupoInvestigacion: '',
+  fechaIngresoGrupo: '',
   activo: true,
 };
 
@@ -81,6 +87,7 @@ export const useNuevoInvestigadorForm = () => {
         formData.idGrupoInvestigacion && formData.idGrupoInvestigacion !== ''
           ? parseInt(formData.idGrupoInvestigacion, 10)
           : null,
+      fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
     };
   };
 
@@ -90,7 +97,8 @@ export const useNuevoInvestigadorForm = () => {
       !cleanedData.nombre ||
       !cleanedData.apellido ||
       !cleanedData.dni ||
-      !cleanedData.idGrupoInvestigacion
+      !cleanedData.idGrupoInvestigacion ||
+      !cleanedData.fechaIngresoGrupo
     ) {
       throw new Error('Todos los campos son requeridos');
     }
