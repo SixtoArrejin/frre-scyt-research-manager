@@ -67,6 +67,7 @@ export default function DetalleVinculacion() {
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
+                  {/* Primera fila: Empresa, Nro Marco, Proyecto */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
                       label='Empresa/Institución'
@@ -77,6 +78,16 @@ export default function DetalleVinculacion() {
                     />
                     <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} value={data?.vinculacion?.numeroMarco} isDisabled mb='5vh' />
                     <GenericInput label='Proyecto' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.proyectos?.denominacion} isDisabled mb='5vh' />
+                  </Box>
+                  {/* Segunda fila: Responsable */}
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericInput
+                      label='Responsable'
+                      width={{ base: '100%', md: '100%' }}
+                      value={data?.vinculacion?.responsable ? `${data.vinculacion.responsable.apellido}, ${data.vinculacion.responsable.nombre}` : 'Sin responsable asignado'}
+                      isDisabled
+                      mb='5vh'
+                    />
                   </Box>
                   {Financiamiento && (
                     <Box width='100%'>

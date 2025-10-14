@@ -133,6 +133,7 @@ export async function createVinculacion(idProyecto, dataVinculacion) {
     empresaInstitucion: dataVinculacion.empresaInstitucion,
     numeroMarco: dataVinculacion.nroMarco,
     idProyecto: idProyecto,
+    idResponsable: dataVinculacion.idResponsable,
   };
   console.log(vinculacionData);
   try {

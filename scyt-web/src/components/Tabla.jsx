@@ -8,10 +8,6 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
 
   const [selectedData, setSelectedData] = useState([]);
 
-  useEffect(() => {
-    console.log(selectedData);
-  }, [selectedData]);
-
   const totalPages = Math.ceil(datos?.length / itemsPerPage);
 
   const handleSelectPage = (event) => {

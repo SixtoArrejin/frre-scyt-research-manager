@@ -4,12 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 import { getVinculacionById, updateVinculacion } from '../../utils/api/vinculacionesApi';
+import { getProyectoById } from '../../utils/api/proyectosApi';
 import GenericInput from '../../components/formControls/GenericInput';
+import GenericSelect from '../../components/formControls/GenericSelect';
 import { useForm } from 'react-hook-form';
 import CustomModal from '../../components/CustomModal';
 
 export default function ModificarVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
+  const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
 
   const [isOpenModalVinculacion, setIsOpenModalVinculacion] = useState(false);
 
@@ -28,6 +31,13 @@ export default function ModificarVinculacion() {
 
   const { data, isLoading } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
+  // Obtener proyecto para listar investigadores
+  const { data: dataProyecto } = useQuery(
+    ['proyecto-investigadores', data?.vinculacion?.idProyecto],
+    () => getProyectoById(data?.vinculacion?.idProyecto),
+    { enabled: !!data?.vinculacion?.idProyecto },
+  );
+
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
       setFinanciamiento(false);
@@ -39,28 +49,30 @@ export default function ModificarVinculacion() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       //Vinculacion en general
-      empresaInstitucion: data?.vinculacion?.empresaInstitucion,
-      numeroMarco: data?.vinculacion?.numeroMarco,
+      empresaInstitucion: '',
+      numeroMarco: '',
+      idResponsable: '',
       //Vinculación con Financiamiento
       conFinanciamiento: {
-        titulo: data?.vinculacion?.vinculacionesconfinanciamiento?.titulo,
-        nombreBeneficiario: data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario,
-        monto: data?.vinculacion?.vinculacionesconfinanciamiento?.monto,
-        cantidadDesembolsos: data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos,
-        fechaPresentacion: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion),
-        fechaAdjudicacion: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion),
-        plazoEjecucion: data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion,
-        estado: data?.vinculacion?.vinculacionesconfinanciamiento?.estado,
-        motivoEstado: data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado,
+        titulo: '',
+        nombreBeneficiario: '',
+        monto: '',
+        cantidadDesembolsos: '',
+        fechaPresentacion: '',
+        fechaAdjudicacion: '',
+        plazoEjecucion: '',
+        estado: '',
+        motivoEstado: '',
       },
       sinFinanciamiento: {
-        fechaInicio: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio),
-        fechaCierre: formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre),
-        descripcion: data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion,
+        fechaInicio: '',
+        fechaCierre: '',
+        descripcion: '',
       },
     },
   });
@@ -87,6 +99,43 @@ export default function ModificarVinculacion() {
     },
   });
 
+  // Generar opciones de investigadores del proyecto
+  useEffect(() => {
+    if (dataProyecto?.proyecto?.participa) {
+      const options = dataProyecto.proyecto.participa.map((participacion) => ({
+        value: participacion.personas.idPersona,
+        label: `${participacion.personas.apellido}, ${participacion.personas.nombre}`,
+      }));
+      setInvestigadoresOptions(options);
+    }
+  }, [dataProyecto]);
+
+  // Resetear el formulario cuando se cargan los datos
+  useEffect(() => {
+    if (data?.vinculacion && reset) {
+      reset({
+        empresaInstitucion: data.vinculacion.empresaInstitucion || '',
+        numeroMarco: data.vinculacion.numeroMarco || '',
+        idResponsable: data.vinculacion.idResponsable || '',
+        conFinanciamiento: {
+          titulo: data.vinculacion.vinculacionesconfinanciamiento?.titulo || '',
+          nombreBeneficiario: data.vinculacion.vinculacionesconfinanciamiento?.nombreBeneficiario || '',
+          monto: data.vinculacion.vinculacionesconfinanciamiento?.monto || '',
+          cantidadDesembolsos: data.vinculacion.vinculacionesconfinanciamiento?.cantidadDesembolsos || '',
+          fechaPresentacion: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionesconfinanciamiento?.fechaPresentacion) || '',
+          fechaAdjudicacion: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionesconfinanciamiento?.fechaAdjudicacion) || '',
+          plazoEjecucion: data.vinculacion.vinculacionesconfinanciamiento?.plazoEjecucion || '',
+          estado: data.vinculacion.vinculacionesconfinanciamiento?.estado || '',
+          motivoEstado: data.vinculacion.vinculacionesconfinanciamiento?.motivoEstado || '',
+        },
+        sinFinanciamiento: {
+          fechaInicio: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionessinfinanciamiento?.fechaInicio) || '',
+          fechaCierre: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionessinfinanciamiento?.fechaCierre) || '',
+          descripcion: data.vinculacion.vinculacionessinfinanciamiento?.descripcion || '',
+        },
+      });
+    }
+  }, [data, reset]);
 
   if (isLoading) {
     return (
@@ -117,7 +166,6 @@ export default function ModificarVinculacion() {
                       register={register}
                       errors={errors}
                       width={{ base: '100%', md: '65%' }}
-                      defaultValue={data?.vinculacion?.empresaInstitucion}
                       mb='5vh'
                     />
                     <GenericInput
@@ -126,8 +174,19 @@ export default function ModificarVinculacion() {
                       name='numeroMarco'
                       label='Nro Marco'
                       width={{ base: '100%', md: '30%' }}
-                      defaultValue={data?.vinculacion?.numeroMarco}
                       type='number'
+                      mb='5vh'
+                    />
+                  </Box>
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                    <GenericSelect
+                      name='idResponsable'
+                      label='Responsable'
+                      placeholder='Seleccione un responsable...'
+                      register={register}
+                      errors={errors}
+                      options={investigadoresOptions}
+                      width={{ base: '100%', md: '100%' }}
                       mb='5vh'
                     />
                   </Box>
@@ -146,7 +205,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
                           mb='5vh'
                         />
                         <GenericInput
@@ -155,7 +213,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
                           mb='5vh'
                         />
                       </Box>
@@ -172,7 +229,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
                           type='number'
                           mb='5vh'
                         />
@@ -182,7 +238,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
                           type='number'
                           mb='5vh'
                         />
@@ -200,7 +255,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
                           type='date'
                           mb='5vh'
                         />
@@ -210,7 +264,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
                           type='date'
                           mb='5vh'
                         />
@@ -228,7 +281,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
                           type='number'
                           mb='5vh'
                         />
@@ -254,7 +306,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
                           mb='5vh'
                         />
                         {/* Pensar en si esto debe condicionarse o no. Cargar cuando el estado sea "Desistido" nomás? */}
@@ -264,7 +315,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado}
                           mb='5vh'
                         />
                       </Box>{' '}
@@ -285,7 +335,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)}
                           type='date'
                           mb='5vh'
                         />
@@ -295,7 +344,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={formatoFechaISOaAAAAMMDD(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)}
                           type='date'
                           mb='5vh'
                         />
@@ -314,7 +362,6 @@ export default function ModificarVinculacion() {
                           register={register}
                           errors={errors}
                           width={{ base: '100%', md: '47.5%' }}
-                          defaultValue={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
                           mb='5vh'
                         />
                       </Box>
@@ -333,8 +380,14 @@ export default function ModificarVinculacion() {
                       guardar={true}
                       title='Guardar datos'
                       content='Se guardara los nuevos datos del convenio'
-                      //onSave={handleSubmit((values) => console.log(values))}
-                      onSave={handleSubmit((values) => mutate(values))}
+                      onSave={handleSubmit((values) => {
+                        const modifiedValues = {
+                          ...values,
+                          idResponsable: values.idResponsable && values.idResponsable !== '' ? Number(values.idResponsable) : null,
+                        };
+                        console.log('Datos a actualizar:', modifiedValues);
+                        mutate(modifiedValues);
+                      })}
                     />
                   </Box>
                 </Box>

@@ -109,6 +109,7 @@ export async function updateVinculacionService(idVinculacion, vinculacionData) {
       const datosVinculacion = {
         empresaInstitucion: vinculacionData.empresaInstitucion,
         numeroMarco: vinculacionData.numeroMarco,
+        idResponsable: vinculacionData.idResponsable,
       };
 
       vinculacionUpdate = await update(

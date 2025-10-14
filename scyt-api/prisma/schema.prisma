@@ -44,18 +44,19 @@ model participa {
 }
 
 model personas {
-  idPersona            Int                 @id @default(autoincrement())
-  dni                  Int?                @unique(map: "dni")
-  nombre               String?             @db.VarChar(100)
-  apellido             String?             @db.VarChar(100)
-  fechaIngresoGrupo    DateTime?           @db.Date
-  activo               Boolean?
-  idGrupoInvestigacion Int
-  categorias           categorias[]
-  participa            participa[]
-  gruposinvestigacion  gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
-  proyectosDirector    proyectos[]         @relation("proyectos_idDirectorTopersonas")
-  proyectosCodirector  proyectos[]         @relation("proyectos_idCodirectorTopersonas")
+  idPersona                Int                 @id @default(autoincrement())
+  dni                      Int?                @unique(map: "dni")
+  nombre                   String?             @db.VarChar(100)
+  apellido                 String?             @db.VarChar(100)
+  fechaIngresoGrupo        DateTime?           @db.Date
+  activo                   Boolean?
+  idGrupoInvestigacion     Int
+  categorias               categorias[]
+  participa                participa[]
+  gruposinvestigacion      gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
+  proyectosDirector        proyectos[]         @relation("proyectos_idDirectorTopersonas")
+  proyectosCodirector      proyectos[]         @relation("proyectos_idCodirectorTopersonas")
+  vinculacionesResponsable vinculaciones[]     @relation("vinculaciones_responsable")
 
   @@index([idGrupoInvestigacion], map: "personas_idGrupoInvestigacion")
 }
@@ -184,12 +185,15 @@ model vinculaciones {
   empresaInstitucion             String?                         @db.VarChar(256)
   numeroMarco                    Int?
   idProyecto                     Int?
+  idResponsable                  Int?
   convenios                      convenios[]
   proyectos                      proyectos?                      @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "vinculaciones_ibfk_1")
+  responsable                    personas?                       @relation("vinculaciones_responsable", fields: [idResponsable], references: [idPersona], onDelete: NoAction, onUpdate: NoAction)
   vinculacionesconfinanciamiento vinculacionesconfinanciamiento?
   vinculacionessinfinanciamiento vinculacionessinfinanciamiento?
 
   @@index([idProyecto], map: "vinculaciones_idProyecto")
+  @@index([idResponsable], map: "vinculaciones_idResponsable")
 }
 
 model vinculacionesconfinanciamiento {

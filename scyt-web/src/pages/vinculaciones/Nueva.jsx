@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useFieldArray, useForm, useWatch } from 'react-hook-form';
-import { createVinculacion } from '../../utils/api/proyectosApi';
+import { createVinculacion, getProyectoById } from '../../utils/api/proyectosApi';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericRadio from '../../components/formControls/GenericRadio';
@@ -14,6 +14,7 @@ import Tabla from '../../components/Tabla';
 export default function NuevaVinculacion() {
   /* Usestate para el modal */
   const [isOpen, setIsOpen] = useState(false);
+  const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
   const { idPid } = useParams();
 
   const openModal = () => {
@@ -29,6 +30,24 @@ export default function NuevaVinculacion() {
 
   const [selectedConvenio, setSelectedConvenio] = useState();
   const [nroConvenio, setNroConvenio] = useState();
+
+  // Obtener proyecto para listar investigadores
+  const { data: dataProyecto } = useQuery(
+    ['proyecto-investigadores', idPid],
+    () => getProyectoById(idPid),
+    { enabled: !!idPid },
+  );
+
+  // Generar opciones de investigadores del proyecto
+  useEffect(() => {
+    if (dataProyecto?.proyecto?.participa) {
+      const options = dataProyecto.proyecto.participa.map((participacion) => ({
+        value: participacion.personas.idPersona,
+        label: `${participacion.personas.apellido}, ${participacion.personas.nombre}`,
+      }));
+      setInvestigadoresOptions(options);
+    }
+  }, [dataProyecto]);
 
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => createVinculacion(idPid, formData), //Cambiar por createVinculacion(idPid, formData)
@@ -59,6 +78,7 @@ export default function NuevaVinculacion() {
       desembolsos: null,
       empresaInstitucion: null,
       nroMarco: null,
+      idResponsable: '',
       financiamiento: 'false',
       linea: null,
       monto: null,
@@ -103,8 +123,9 @@ export default function NuevaVinculacion() {
     const modifiedValues = {
       ...values,
       financiamiento: values.financiamiento == 'true',
+      idResponsable: values.idResponsable && values.idResponsable !== '' ? Number(values.idResponsable) : null,
     };
-    // console.log(modifiedValues);
+    console.log('Datos a enviar:', modifiedValues);
     mutate(modifiedValues);
   };
 
@@ -159,6 +180,17 @@ export default function NuevaVinculacion() {
                         width={{ base: '100%', md: '50%' }}
                         mb='5vh'
                         isRequired
+                      />
+                    </Box>
+                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                      <GenericSelect
+                        name='idResponsable'
+                        label='Responsable'
+                        placeholder='Seleccione un responsable...'
+                        register={register}
+                        options={investigadoresOptions}
+                        width={{ base: '100%', md: '100%' }}
+                        mb='5vh'
                       />
                     </Box>
                   </Box>

@@ -13,6 +13,7 @@ export async function getAllVinculaciones() {
     'vinculacionesconfinanciamiento',
     'vinculacionessinfinanciamiento',
     'convenios',
+    'responsable',
   ];
   return await getAll('vinculaciones', includeRelations);
 }
@@ -23,6 +24,7 @@ export async function getVinculacionById(idVinculacion) {
     { vinculacionesconfinanciamiento: ['desembolsos'] },
     'vinculacionessinfinanciamiento',
     'convenios',
+    'responsable',
   ];
   return await getById(
     'vinculaciones',
