@@ -379,8 +379,8 @@ export default function NuevaVinculacion() {
                   isOpen={isOpen}
                   onClose={closeModal}
                   guardar={true}
-                  title='Guardar nuevo PID'
-                  content='Se guardara el nuevo Proyecto'
+                  title='Guardar nueva Vinculación'
+                  content='¿Está seguro que desea guardar la nueva vinculación?'
                   onSave={handleSubmit((values) => onSub(values))}
                 />
               </Box>
