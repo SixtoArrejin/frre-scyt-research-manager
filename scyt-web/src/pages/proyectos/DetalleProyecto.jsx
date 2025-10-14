@@ -56,7 +56,6 @@ export default function DetalleProyectoPid() {
   );
 
   useEffect(() => {
-    console.log(dataVinculaciones);
     setVinculaciones(dataVinculaciones?.vinculaciones);
   }, [dataVinculaciones]);
 
