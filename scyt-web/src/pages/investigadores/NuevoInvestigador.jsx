@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Switch } from '@chakra-ui/react';
 import { useNuevoInvestigadorForm } from '../../hooks/forms/useNuevoInvestigadorForm';
 import FormLayout from '../../components/FormLayout';
 import ErrorAlert from '../../components/ErrorAlert';
@@ -14,6 +14,7 @@ export default function NuevoInvestigador() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
     error,
     gruposOptions,
@@ -124,8 +125,21 @@ export default function NuevoInvestigador() {
                 mb='5vh'
               />
             </Box>
-            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-              {/* Espacio vacío para mantener el layout */}
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='flex-start'>
+              <FormControl width={{ base: '100%', md: '50%' }} mb='5vh'>
+                <FormLabel>Tipo de Investigador</FormLabel>
+                <Box display='flex' alignItems='center'>
+                  <Switch
+                    {...register('esBecario')}
+                    isChecked={watch('esBecario')}
+                    colorScheme='blue'
+                    size='lg'
+                  />
+                  <Box ml={3} fontSize='sm' color='gray.600'>
+                    {watch('esBecario') ? 'Becario' : 'Investigador'}
+                  </Box>
+                </Box>
+              </FormControl>
             </Box>
           </Box>
 

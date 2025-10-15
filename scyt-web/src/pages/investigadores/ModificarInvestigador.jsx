@@ -162,6 +162,27 @@ export default function ModificarInvestigador() {
             </Box>
           </Box>
 
+          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <FormControl width={{ base: '100%', md: '50%' }}>
+                <FormLabel>Tipo de Investigador</FormLabel>
+                <Switch
+                  {...register('esBecario')}
+                  isChecked={watch('esBecario')}
+                  colorScheme='blue'
+                  size='lg'
+                />
+                <Box mt={2} fontSize='sm' color='gray.600'>
+                  {watch('esBecario') ? 'Becario' : 'Investigador'}
+                </Box>
+              </FormControl>
+            </Box>
+
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              {/* Espacio vacío para mantener el layout */}
+            </Box>
+          </Box>
+
           {/* Mostrar errores */}
           <ErrorAlert
             error={investigadorError && {

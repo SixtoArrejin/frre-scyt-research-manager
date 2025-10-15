@@ -164,26 +164,33 @@ export default function DetalleInvestigador() {
                   />
                 </Box>
 
-                {/* Segunda fila: Siglas, Nombre del Grupo y Fecha de Ingreso */}
+                {/* Segunda fila: Tipo, Siglas, Nombre del Grupo y Fecha de Ingreso */}
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
+                  <DisplayField
+                    label="Tipo"
+                    value={data?.persona?.esBecario ? 'Becario' : 'Investigador'}
+                    width={{ base: '100%', md: '21.25%' }}
+                    mb={4}
+                  />
+
                   <DisplayField
                     label="Siglas del Grupo"
                     value={data?.persona?.gruposinvestigacion?.siglas || ''}
-                    width={{ base: '100%', md: '30%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
 
                   <DisplayField
                     label="Nombre del Grupo"
                     value={data?.persona?.gruposinvestigacion?.nombre || ''}
-                    width={{ base: '100%', md: '30%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
 
                   <DisplayField
                     label="Fecha de Ingreso al Grupo"
                     value={data?.persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(data.persona.fechaIngresoGrupo) : '-'}
-                    width={{ base: '100%', md: '30%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
                 </Box>

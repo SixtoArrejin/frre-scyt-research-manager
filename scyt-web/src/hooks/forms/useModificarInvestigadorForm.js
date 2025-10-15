@@ -38,6 +38,7 @@ const modificarInvestigadorSchema = yup.object({
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
   activo: yup.boolean().required('El estado es requerido'),
+  esBecario: yup.boolean(),
 });
 
 // Valores por defecto para el formulario de modificación
@@ -48,6 +49,7 @@ const defaultValues = {
   idGrupoInvestigacion: '',
   fechaIngresoGrupo: '',
   activo: false,
+  esBecario: false,
 };
 
 /**
@@ -108,6 +110,7 @@ export const useModificarInvestigadorForm = () => {
       idGrupoInvestigacion: parseInt(formData.idGrupoInvestigacion, 10),
       fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
       activo: formData.activo, // Ya es boolean, no necesita conversión
+      esBecario: formData.esBecario, // Ya es boolean, no necesita conversión
     };
   };
 
@@ -144,6 +147,7 @@ export const useModificarInvestigadorForm = () => {
   useEffect(() => {
     if (investigador?.persona && form.setValue && !hasFilledForm.current) {
       form.setValue('activo', investigador.persona.activo); // Ya es boolean
+      form.setValue('esBecario', investigador.persona.esBecario || false); // Ya es boolean
       form.setValue('nombre', investigador.persona.nombre);
       form.setValue('apellido', investigador.persona.apellido);
       form.setValue('dni', investigador.persona.dni);

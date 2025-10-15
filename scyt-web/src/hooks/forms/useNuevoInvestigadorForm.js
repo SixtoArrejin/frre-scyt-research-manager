@@ -40,6 +40,7 @@ const investigadorSchema = yup.object({
     .required('La fecha de ingreso al grupo es requerida')
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
+  esBecario: yup.boolean(),
 });
 
 // Valores por defecto para el formulario
@@ -50,6 +51,7 @@ const defaultValues = {
   idGrupoInvestigacion: '',
   fechaIngresoGrupo: '',
   activo: true,
+  esBecario: false,
 };
 
 /**
@@ -88,6 +90,7 @@ export const useNuevoInvestigadorForm = () => {
           ? parseInt(formData.idGrupoInvestigacion, 10)
           : null,
       fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
+      esBecario: formData.esBecario || false, // Ya es boolean, solo asegurar que no sea undefined
     };
   };
 
