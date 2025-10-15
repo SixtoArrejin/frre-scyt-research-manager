@@ -113,9 +113,9 @@ export default function DetalleInvestigador() {
               <Text fontSize='md'>Datos del investigador</Text>
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
-                {/* Primera fila: Estado, Apellido, Nombre, DNI */}
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
-                  <Box display='flex' flexDirection='column' width={{ base: '100%', md: '15%' }} mb={4}>
+                {/* Primera fila: Estado, Apellido, Nombre, DNI - Anchos iguales 21.25% con separación 5% */}
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
+                  <Box display='flex' flexDirection='column' width={{ base: '100%', md: '21.25%' }} mb={4}>
                     <Text fontSize='sm' fontWeight='medium' color='gray.500' mb={2}>
                       Estado
                     </Text>
@@ -145,30 +145,37 @@ export default function DetalleInvestigador() {
                   <DisplayField
                     label="Apellido"
                     value={data?.persona?.apellido || ''}
-                    width={{ base: '100%', md: '25%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
 
                   <DisplayField
                     label="Nombre"
                     value={data?.persona?.nombre || ''}
-                    width={{ base: '100%', md: '25%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
 
                   <DisplayField
                     label="DNI"
                     value={data?.persona?.dni || ''}
-                    width={{ base: '100%', md: '20%' }}
+                    width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
                 </Box>
 
-                {/* Segunda fila: Tipo, Siglas, Nombre del Grupo y Fecha de Ingreso */}
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='space-between' width='100%'>
+                {/* Segunda fila: Tipo, Legajo, Siglas, Fecha de Ingreso */}
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
                   <DisplayField
                     label="Tipo"
                     value={data?.persona?.esBecario ? 'Becario' : 'Investigador'}
+                    width={{ base: '100%', md: '21.25%' }}
+                    mb={4}
+                  />
+
+                  <DisplayField
+                    label="Legajo"
+                    value={data?.persona?.legajo || '-'}
                     width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
@@ -181,16 +188,57 @@ export default function DetalleInvestigador() {
                   />
 
                   <DisplayField
-                    label="Nombre del Grupo"
-                    value={data?.persona?.gruposinvestigacion?.nombre || ''}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
-                  />
-
-                  <DisplayField
                     label="Fecha de Ingreso al Grupo"
                     value={data?.persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(data.persona.fechaIngresoGrupo) : '-'}
                     width={{ base: '100%', md: '21.25%' }}
+                    mb={4}
+                  />
+                </Box>
+
+                {/* Tercera fila: Posgrado (solo si no es becario) */}
+                {!data?.persona?.esBecario && (
+                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
+                    <DisplayField
+                      label="Tiene Posgrado"
+                      value={data?.persona?.tienePosgrado ? 'Sí' : 'No'}
+                      width={{ base: '100%', md: '30%' }}
+                      mb={4}
+                    />
+
+                    {data?.persona?.tienePosgrado && (
+                      <>
+                        <DisplayField
+                          label="Nivel de Posgrado"
+                          value={
+                            data?.persona?.nivelPosgrado === 'doctorado' ? 'Doctorado' :
+                              data?.persona?.nivelPosgrado === 'maestria' ? 'Maestría' :
+                                data?.persona?.nivelPosgrado === 'especializacion' ? 'Especialización' :
+                                  data?.persona?.nivelPosgrado === 'diplomatura' ? 'Diplomatura' :
+                                    data?.persona?.nivelPosgrado === 'otro' ? 'Otro' : '-'
+                          }
+                          width={{ base: '100%', md: '30%' }}
+                          mb={4}
+                        />
+
+                        {data?.persona?.nivelPosgrado === 'otro' && data?.persona?.otroPosgrado && (
+                          <DisplayField
+                            label="Especificación"
+                            value={data?.persona?.otroPosgrado || '-'}
+                            width={{ base: '100%', md: '30%' }}
+                            mb={4}
+                          />
+                        )}
+                      </>
+                    )}
+                  </Box>
+                )}
+
+                {/* Cuarta fila: Nombre del Grupo completo - 100% width */}
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%'>
+                  <DisplayField
+                    label="Nombre del Grupo"
+                    value={data?.persona?.gruposinvestigacion?.nombre || '-'}
+                    width='100%'
                     mb={4}
                   />
                 </Box>
