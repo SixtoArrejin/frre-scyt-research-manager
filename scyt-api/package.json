@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --env-file=.env src/app.js",
-    "dev": "nodemon --env-file=.env src/app.js",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "pulldb": "npx prisma db pull"
   },
   "keywords": [],
