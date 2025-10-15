@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { formatoFechaISOaDDMMAAAA, getCategoriaMasActual } from '../../utils/general';
 import { getProyectosByIdGrupo } from '../../utils/api/proyectosApi';
 import Tabla from '../../components/Tabla';
+import PermissionGate from '../../components/PermissionGate';
 import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import ImgDefault from '../../components/ImgDefault';
@@ -99,13 +100,15 @@ export default function DetalleGrupo() {
                   />
                 </Box>
 
-                <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                  <Link to={'modificar'}>
-                    <Button colorScheme='blue' variant='outline'>
-                      Modificar
-                    </Button>
-                  </Link>
-                </Box>
+                <PermissionGate module="grupos" action="edit">
+                  <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                    <Link to={'modificar'}>
+                      <Button colorScheme='blue' variant='outline'>
+                        Modificar
+                      </Button>
+                    </Link>
+                  </Box>
+                </PermissionGate>
               </Box>
             </CardBody>
           </Card>

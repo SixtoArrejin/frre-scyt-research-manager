@@ -8,6 +8,7 @@ import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculac
 import GenericInput from '../../components/formControls/GenericInput';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
+import PermissionGate from '../../components/PermissionGate';
 import NoData from '../../img/no-data.png';
 import NoData1 from '../../img/no-data-2.png';
 import NuevoConvenioModal from './NuevoConvenioModal';
@@ -245,13 +246,15 @@ export default function DetalleVinculacion() {
                       </Box>
                     </Box>
                   )}
-                  <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                    <Link to={'modificar'}>
-                      <Button colorScheme='blue' variant='outline'>
-                        Modificar
-                      </Button>
-                    </Link>
-                  </Box>
+                  <PermissionGate module="vinculaciones" action="edit">
+                    <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                      <Link to={'modificar'}>
+                        <Button colorScheme='blue' variant='outline'>
+                          Modificar
+                        </Button>
+                      </Link>
+                    </Box>
+                  </PermissionGate>
                 </Box>
               </Box>
             </CardBody>
@@ -269,9 +272,11 @@ export default function DetalleVinculacion() {
                     return [
                       convenio.tipo,
                       convenio.numero,
-                      <Link key={convenio.idConvenio}>
-                        <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
-                      </Link>,
+                      <PermissionGate key={convenio.idConvenio} module="convenios" action="delete">
+                        <Link>
+                          <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
+                        </Link>
+                      </PermissionGate>,
                     ];
                   })}
                   paginado={false}
@@ -280,20 +285,22 @@ export default function DetalleVinculacion() {
                 <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay convenios para mostrar.' />
               )}
               <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <Link>
-                  <Button colorScheme='blue' variant='outline' onClick={() => openModal()}>
-                    Agregar Convenio
-                  </Button>
-                </Link>
-                <NuevoConvenioModal
+              <PermissionGate module="convenios" action="create">
+                <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                  <Link>
+                    <Button colorScheme='blue' variant='outline' onClick={() => openModal()}>
+                      Agregar Convenio
+                    </Button>
+                  </Link>
+                  <NuevoConvenioModal
                   // key={item.idCategoria}
-                  isOpen={isOpenModalConvenio}
-                  onClose={closeModal}
-                  guardar={true}
-                  title='Nuevo Convenio'
-                />
-              </Box>
+                    isOpen={isOpenModalConvenio}
+                    onClose={closeModal}
+                    guardar={true}
+                    title='Nuevo Convenio'
+                  />
+                </Box>
+              </PermissionGate>
               <br />
             </CardBody>
           </Card>
@@ -354,11 +361,13 @@ export default function DetalleVinculacion() {
                   />
                   {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
                     data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (
-                    <Link to={'nuevo-desembolso'}>
-                      <Button colorScheme='blue' variant='outline'>
-                          Agregar Desembolso
-                      </Button>
-                    </Link>
+                    <PermissionGate module="desembolsos" action="create">
+                      <Link to={'nuevo-desembolso'}>
+                        <Button colorScheme='blue' variant='outline'>
+                            Agregar Desembolso
+                        </Button>
+                      </Link>
+                    </PermissionGate>
                   )}
                 </Box>
                 <br />
