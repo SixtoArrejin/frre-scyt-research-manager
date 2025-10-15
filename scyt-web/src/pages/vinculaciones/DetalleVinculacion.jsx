@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
 import { convertirFechaDDMMAAAAaDate, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
 import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
-import GenericInput from '../../components/formControls/GenericInput';
+import DisplayField from '../../components/DisplayField';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
 import PermissionGate from '../../components/PermissionGate';
@@ -70,24 +70,32 @@ export default function DetalleVinculacion() {
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
                   {/* Primera fila: Empresa, Nro Marco, Proyecto */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput
+                    <DisplayField
                       label='Empresa/Institución'
                       width={{ base: '100%', md: '30%' }}
                       value={data?.vinculacion?.empresaInstitucion}
-                      isDisabled
-                      mb='5vh'
+                      mb={4}
                     />
-                    <GenericInput label='Nro Marco' width={{ base: '100%', md: '30%' }} value={data?.vinculacion?.numeroMarco} isDisabled mb='5vh' />
-                    <GenericInput label='Proyecto' width={{ base: '100%', md: '30%' }} defaultValue={data?.vinculacion?.proyectos?.denominacion} isDisabled mb='5vh' />
+                    <DisplayField
+                      label='Nro Marco'
+                      width={{ base: '100%', md: '30%' }}
+                      value={data?.vinculacion?.numeroMarco}
+                      mb={4}
+                    />
+                    <DisplayField
+                      label='Proyecto'
+                      width={{ base: '100%', md: '30%' }}
+                      value={data?.vinculacion?.proyectos?.denominacion}
+                      mb={4}
+                    />
                   </Box>
                   {/* Segunda fila: Responsable */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                    <GenericInput
+                    <DisplayField
                       label='Responsable'
                       width={{ base: '100%', md: '100%' }}
                       value={data?.vinculacion?.responsable ? `${data.vinculacion.responsable.apellido}, ${data.vinculacion.responsable.nombre}` : 'Sin responsable asignado'}
-                      isDisabled
-                      mb='5vh'
+                      mb={4}
                     />
                   </Box>
                   {Financiamiento && (
@@ -99,19 +107,17 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Título'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.titulo}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                        <GenericInput
+                        <DisplayField
                           label='Nombre del beneficiario'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreBeneficiario}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                       <Box
@@ -121,19 +127,17 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Monto ($)'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.monto}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                        <GenericInput
+                        <DisplayField
                           label='Cantidad de desembolsos'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                       <Box
@@ -143,19 +147,17 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Fecha de presentación'
                           width={{ base: '100%', md: '47.5%' }}
                           value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaPresentacion)}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                        <GenericInput
+                        <DisplayField
                           label='Fecha de adjudicación'
                           width={{ base: '100%', md: '47.5%' }}
                           value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionesconfinanciamiento?.fechaAdjudicacion)}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                       <Box
@@ -165,19 +167,11 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Plazo de ejecución (meses)'
-                          width={{ base: '100%', md: '47.5%' }}
+                          width={{ base: '100%', md: '100%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
-                          isDisabled
-                          mb='5vh'
-                        />
-                        <GenericInput
-                          label='Línea'
-                          width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea || '-'}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                       <Box
@@ -187,21 +181,19 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Estado'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.estado}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                        <GenericInput
+                        <DisplayField
                           label='Motivo desistido'
                           width={{ base: '100%', md: '47.5%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.motivoEstado || '-'}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                      </Box>{' '}
+                      </Box>
                     </Box>
                   )}
                   {!Financiamiento && (
@@ -213,19 +205,17 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
+                        <DisplayField
                           label='Fecha de inicio'
                           width={{ base: '100%', md: '47.5%' }}
                           value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaInicio)}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
-                        <GenericInput
+                        <DisplayField
                           label='Fecha de cierre'
                           width={{ base: '100%', md: '47.5%' }}
                           value={formatoFechaISOaDDMMAAAA(data?.vinculacion?.vinculacionessinfinanciamiento?.fechaCierre)}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                       <Box
@@ -235,13 +225,11 @@ export default function DetalleVinculacion() {
                         alignItems='center'
                         justifyContent='space-between'
                       >
-                        <GenericInput
-                          textArea
+                        <DisplayField
                           label='Descripción'
-                          width={{ base: '100%', md: '47.5%' }}
+                          width={{ base: '100%', md: '100%' }}
                           value={data?.vinculacion?.vinculacionessinfinanciamiento?.descripcion}
-                          isDisabled
-                          mb='5vh'
+                          mb={4}
                         />
                       </Box>
                     </Box>
@@ -351,15 +339,16 @@ export default function DetalleVinculacion() {
                 ) : (
                   <ImgDefault src={NoData1} alt='No Data' width='30%' text='Aún no hay desembolsos para mostrar.' />
                 )}
+                <br/>
                 <Box
                   display='flex'
                   width='100%'
                   alignItems='center'
-                  justifyContent='space-between' // Cambiado de "flex-end" a "space-between"
+                  justifyContent='space-between'
                 >
-                  <GenericInput
+                  <DisplayField
                     label='Saldo ($)'
-                    width={{ base: '100%', md: '47.5%' }}
+                    width={{ base: '100%', md: '20%' }}
                     value={
                       data?.vinculacion?.vinculacionesconfinanciamiento?.monto -
                       data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.reduce(
@@ -367,9 +356,8 @@ export default function DetalleVinculacion() {
                         0,
                       )
                     }
-                    isDisabled
-                    mb='5vh'
-                    mt='9'
+                    mb={4}
+                    mt={9}
                   />
                   {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length <
                     data?.vinculacion?.vinculacionesconfinanciamiento?.cantidadDesembolsos && (

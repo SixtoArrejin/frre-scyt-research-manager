@@ -178,11 +178,6 @@ model desembolsos {
   @@index([idConFinanciamiento], map: "desembolsos_idConFinanciamiento")
 }
 
-model lineas {
-  nombreLinea                    String                           @id @db.VarChar(256)
-  vinculacionesconfinanciamiento vinculacionesconfinanciamiento[]
-}
-
 model vinculaciones {
   idVinculacion                  Int                             @id @default(autoincrement())
   empresaInstitucion             String?                         @db.VarChar(256)
@@ -210,12 +205,8 @@ model vinculacionesconfinanciamiento {
   cantidadDesembolsos Int?
   fechaPresentacion   DateTime?     @db.Date
   fechaAdjudicacion   DateTime?     @db.Date
-  nombreLinea         String?       @db.VarChar(256)
   desembolsos         desembolsos[]
   vinculaciones       vinculaciones @relation(fields: [idConFinanciamiento], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_1")
-  lineas              lineas?       @relation(fields: [nombreLinea], references: [nombreLinea], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionesconfinanciamiento_ibfk_2")
-
-  @@index([nombreLinea], map: "vinculacionesconfinanciamiento_nombreLinea")
 }
 
 model vinculacionessinfinanciamiento {
