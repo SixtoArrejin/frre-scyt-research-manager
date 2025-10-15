@@ -14,6 +14,7 @@ import {
   createPidService,
   createProyectoExternoService,
   updateProyectoExternoService,
+  updateInstitucionesProyectoService,
   createPersonaParticipaProyectoService,
   delPersonaParticipaProyectoService,
   createProyectoTieneGrupoService,
@@ -186,6 +187,10 @@ export async function updateProyectoController(req, res) {
     }
     if (dataP.grupos) {
       console.log('grupos');
+    }
+    // Manejar actualización de instituciones
+    if (dataP.instituciones) {
+      await updateInstitucionesProyectoService(idProyecto, dataP.instituciones);
     }
     return res
       .status(200)

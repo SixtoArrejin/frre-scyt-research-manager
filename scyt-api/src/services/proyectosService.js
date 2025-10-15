@@ -13,6 +13,8 @@ import {
   createVinculacionSinFinanciamiento,
   createProyectoExterno,
   createRegionalesProyectos,
+  createInstitucionesProyectos,
+  deleteInstitucionesProyectosByProyecto,
   createPersonaParticipaProyecto,
   delPersonaParticipaProyecto,
   createProyectoTieneGrupo,
@@ -151,6 +153,20 @@ export async function createProyectoService(proyectoData) {
         }
       }
 
+      // Agregar instituciones asociadas para proyectos interinstitucionales
+      if (proyectoData.instituciones && proyectoData.instituciones.length > 0) {
+        for (const nombreInstitucion of proyectoData.instituciones) {
+          const newInstitucionProyecto = await createInstitucionesProyectosService({
+            idProyecto: newProyecto.idProyecto,
+            nombreInstitucion: nombreInstitucion,
+          });
+          if (!newProyecto.instituciones) {
+            newProyecto.instituciones = [];
+          }
+          newProyecto.instituciones.push(newInstitucionProyecto);
+        }
+      }
+
     }
 
     return newProyecto;
@@ -201,6 +217,38 @@ export async function createRegionalesProyectosService(dataP) {
     const newRP = await createRegionalesProyectos(dataP);
     return newRP;
   } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createInstitucionesProyectosService(dataI) {
+  try {
+    const newIP = await createInstitucionesProyectos(dataI);
+    return newIP;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updateInstitucionesProyectoService(idProyecto, instituciones) {
+  try {
+    // Primero eliminar todas las instituciones existentes del proyecto
+    await deleteInstitucionesProyectosByProyecto(idProyecto);
+    
+    // Luego crear las nuevas
+    const institucionesCreadas = [];
+    if (instituciones && instituciones.length > 0) {
+      for (const nombreInstitucion of instituciones) {
+        const newInstitucionProyecto = await createInstitucionesProyectos({
+          idProyecto: idProyecto,
+          nombreInstitucion: nombreInstitucion,
+        });
+        institucionesCreadas.push(newInstitucionProyecto);
+      }
+    }
+    return institucionesCreadas;
+  } catch (error) {
+    console.log(error.message);
     throw new Error(error.message);
   }
 }

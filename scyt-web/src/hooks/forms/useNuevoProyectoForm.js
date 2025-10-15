@@ -106,15 +106,9 @@ export const roles = [
   'Técnico de Apoyo',
 ];
 
-export const tipoProyectosConRegionales = [
-  'Integrador Asociado (PID IA) con Incentivo',
-  'Integrador Asociado (PID IA) sin Incentivo',
+export const tipoProyectosInterinstitucionales = [
   'Inter-institucional (PID IN) con Incentivos',
   'Inter-institucional (PID IN) sin Incentivos',
-  'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
-  'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
-  'Tutorado con Incentivo',
-  'Tutorado sin Incentivo',
 ];
 
 /**
@@ -128,7 +122,7 @@ export const useNuevoProyectoForm = () => {
   const [investigadores, setInvestigadores] = useState([]);
   const [gruposSeleccionados, setGruposSeleccionados] = useState([]);
   const [investigadoresSeleccionados, setInvestigadoresSeleccionados] = useState([]);
-  const [regionalesSeleccionados, setRegionalesSeleccionados] = useState([]);
+  const [institucionesSeleccionadas, setInstitucionesSeleccionadas] = useState([]);
   const [investigadoresDelGrupo, setInvestigadoresDelGrupo] = useState([]);
   const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
   const [estado, setEstado] = useState('');
@@ -136,7 +130,8 @@ export const useNuevoProyectoForm = () => {
   // Estados para selects
   const [selectedOptions, setSelectedOptions] = useState();
   const [selectedOptionsGrupos, setSelectedOptionsGrupos] = useState();
-  const [selectedOptionsRegionales, setSelectedOptionsRegionales] = useState();
+  const [selectedInstitucion, setSelectedInstitucion] = useState('');
+  const [otraInstitucion, setOtraInstitucion] = useState('');
   const [rolSelected, setRolSelected] = useState();
   const [fechaSelected, setFechaSelected] = useState();
 
@@ -158,6 +153,7 @@ export const useNuevoProyectoForm = () => {
       const modifiedValues = {
         ...formData,
         prorrogado: formData.prorrogado === 'true',
+        instituciones: institucionesSeleccionadas, // Agregamos las instituciones del estado local
       };
       return await createProyecto(modifiedValues);
     },
@@ -175,11 +171,6 @@ export const useNuevoProyectoForm = () => {
   const { append: appendGrupo, remove: removeGrupo } = useFieldArray({
     control: form.control,
     name: 'grupos',
-  });
-
-  const { append: appendRegional, remove: removeRegional } = useFieldArray({
-    control: form.control,
-    name: 'regionales',
   });
 
   // Watch para campos condicionales
@@ -288,23 +279,6 @@ export const useNuevoProyectoForm = () => {
     }
   };
 
-  const agregarRegional = () => {
-    if (!selectedOptionsRegionales) return;
-
-    // Verificar si el objeto ya está agregado
-    const objetoYaAgregado = regionalesSeleccionados.find(
-      (item) => item == selectedOptionsRegionales,
-    );
-
-    if (!objetoYaAgregado) {
-      appendRegional(selectedOptionsRegionales);
-      setRegionalesSeleccionados([
-        ...regionalesSeleccionados,
-        selectedOptionsRegionales,
-      ]);
-    }
-  };
-
   const eliminarInvestigador = (idAEliminar, index) => {
     const nuevosInvestigadores = investigadoresSeleccionados.filter(
       (item) => item.idPersona !== idAEliminar,
@@ -327,12 +301,43 @@ export const useNuevoProyectoForm = () => {
     setGruposSeleccionados(nuevosGrupos);
   };
 
-  const eliminarRegional = (itemEliminar, index) => {
-    const nuevasRegionales = regionalesSeleccionados.filter(
+  const agregarInstitucion = () => {
+    let nombreInstitucion = '';
+
+    if (selectedInstitucion === 'Otro') {
+      if (!otraInstitucion || otraInstitucion.trim() === '') {
+        // Si selecciona "Otro" pero no ingresa nombre, no hacer nada
+        return;
+      }
+      nombreInstitucion = otraInstitucion.trim();
+    } else {
+      if (!selectedInstitucion || selectedInstitucion === '') {
+        // Si no hay selección, no hacer nada
+        return;
+      }
+      nombreInstitucion = selectedInstitucion;
+    }
+
+    // Verificar si ya existe esta institución
+    const yaExiste = institucionesSeleccionadas.some(
+      (institucion) => institucion.toLowerCase() === nombreInstitucion.toLowerCase(),
+    );
+
+    if (yaExiste) {
+      // Aquí podrías agregar un toast o alerta si quieres
+      return;
+    }
+
+    setInstitucionesSeleccionadas([...institucionesSeleccionadas, nombreInstitucion]);
+    setSelectedInstitucion('');
+    setOtraInstitucion('');
+  };
+
+  const eliminarInstitucion = (itemEliminar) => {
+    const nuevasInstituciones = institucionesSeleccionadas.filter(
       (item) => item !== itemEliminar,
     );
-    removeRegional(index);
-    setRegionalesSeleccionados(nuevasRegionales);
+    setInstitucionesSeleccionadas(nuevasInstituciones);
   };
 
   const handleCancel = () => {
@@ -353,7 +358,7 @@ export const useNuevoProyectoForm = () => {
     investigadoresFields,
     sortedInvestigadores,
     gruposSeleccionados,
-    regionalesSeleccionados,
+    institucionesSeleccionadas,
 
     // Watched values
     tipoProyecto,
@@ -366,8 +371,10 @@ export const useNuevoProyectoForm = () => {
     setSelectedOptions,
     selectedOptionsGrupos,
     setSelectedOptionsGrupos,
-    selectedOptionsRegionales,
-    setSelectedOptionsRegionales,
+    selectedInstitucion,
+    setSelectedInstitucion,
+    otraInstitucion,
+    setOtraInstitucion,
     rolSelected,
     setRolSelected,
     fechaSelected,
@@ -379,9 +386,9 @@ export const useNuevoProyectoForm = () => {
     setEstado,
     agregarInvestigador,
     agregarGrupo,
-    agregarRegional,
+    agregarInstitucion,
     eliminarInvestigador,
     eliminarGrupo,
-    eliminarRegional,
+    eliminarInstitucion,
   };
 };

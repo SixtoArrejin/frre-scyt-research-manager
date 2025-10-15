@@ -129,6 +129,7 @@ export default function NuevoInvestigador() {
             <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
               <GenericInput
                 name='legajo'
+                type='number'
                 label='Legajo'
                 placeholder='Legajo'
                 register={register}
