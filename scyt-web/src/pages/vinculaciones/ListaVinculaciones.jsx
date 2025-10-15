@@ -44,7 +44,7 @@ export default function ListaInvestigadores() {
     } else {
       const filteredVinculaciones = dataVinculaciones?.vinculaciones?.filter(
         (item) =>
-          item.empresaInstitucion.toLowerCase().includes(empresainstitucionFiltro.toLowerCase()) &&
+          (item.empresaInstitucion || '').toLowerCase().includes(empresainstitucionFiltro.toLowerCase()) &&
           (financiamientoFiltro == (item.vinculacionesconfinanciamiento ? 'Con financiamiento' : 'Sin financiamiento') ||
             (financiamientoFiltro != 'Con financiamiento' && financiamientoFiltro != 'Sin financiamiento')),
       );

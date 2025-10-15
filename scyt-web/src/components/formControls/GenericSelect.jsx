@@ -12,7 +12,7 @@ export default function GenericSelect(props) {
     isDisabled,
     onChange,
     options = [],
-    isSearchable = false,
+    isSearchable, // Extraído para evitar pasarlo al Select (Chakra UI no lo soporta)
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
@@ -26,7 +26,7 @@ export default function GenericSelect(props) {
     defaultValue,
     isDisabled,
     onChange,
-    isSearchable,
+    // isSearchable removido - no es una prop válida de Chakra UI Select
   };
 
   // Filtra las propiedades undefined
