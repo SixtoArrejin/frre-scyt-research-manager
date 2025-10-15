@@ -10,8 +10,6 @@ import { useFormHandler } from '../useFormHandler';
 // Constantes
 export const tiposConvenio = ['Especifico', 'Colaboración', 'Otro...'];
 
-export const lineasFinanciamiento = ['1ro', '2do', '3ro'];
-
 // Schema de validación para nueva vinculación
 const nuevaVinculacionSchema = yup.object({
   empresaInstitucion: yup.string().required('La empresa/institución es requerida'),
@@ -90,11 +88,6 @@ const nuevaVinculacionSchema = yup.object({
       .nullable()
       .transform((value, originalValue) => (originalValue === '' ? null : value)),
   }),
-  linea: yup.mixed().when('financiamiento', {
-    is: val => val === 'true',
-    then: () => yup.string().required('La línea es requerida'),
-    otherwise: () => yup.string().nullable(),
-  }),
 
   // Campos condicionales para vinculación SIN financiamiento
   fechaInicio: yup.mixed().when('financiamiento', {
@@ -129,7 +122,6 @@ const defaultValues = {
   presentacion: '',
   adjudicacion: '',
   plazoEjecucion: '',
-  linea: '',
   // Sin financiamiento
   fechaInicio: '',
   fechaCierre: '',
@@ -202,7 +194,6 @@ export const useNuevaVinculacionForm = () => {
         'presentacion',
         'adjudicacion',
         'plazoEjecucion',
-        'linea',
       ]);
       // Resetear valores de campos con financiamiento
       // Campos de texto a string vacío
@@ -210,7 +201,6 @@ export const useNuevaVinculacionForm = () => {
       form.setValue('beneficiario', '', { shouldValidate: false });
       form.setValue('presentacion', '', { shouldValidate: false });
       form.setValue('adjudicacion', '', { shouldValidate: false });
-      form.setValue('linea', '', { shouldValidate: false });
       // Campos numéricos a undefined para evitar NaN
       form.setValue('monto', undefined, { shouldValidate: false });
       form.setValue('desembolsos', undefined, { shouldValidate: false });

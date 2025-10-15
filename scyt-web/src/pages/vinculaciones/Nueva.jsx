@@ -4,7 +4,6 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import {
   useNuevaVinculacionForm,
   tiposConvenio,
-  lineasFinanciamiento,
 } from '../../hooks/forms/useNuevaVinculacionForm';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
@@ -267,23 +266,9 @@ export default function NuevaVinculacion() {
                         register={register}
                         errors={errors}
                         label='Plazo de ejecución (meses)'
-                        width={{ base: '100%', md: '47.5%' }}
+                        width={{ base: '100%', md: '100%' }}
                         mb='5vh'
                         isRequired
-                      />
-                      <GenericSelect
-                        name='linea'
-                        label='Línea'
-                        width={{ base: '100%', md: '47.5%' }}
-                        mb='5vh'
-                        isRequired
-                        register={register}
-                        errors={errors}
-                        options={lineasFinanciamiento.map((item) => ({
-                          value: item,
-                          label: item,
-                        }))}
-                        placeholder='Línea...'
                       />
                     </Box>
                   </Box>

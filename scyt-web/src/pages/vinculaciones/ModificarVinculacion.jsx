@@ -280,16 +280,8 @@ export default function ModificarVinculacion() {
                           name='conFinanciamiento.plazoEjecucion'
                           register={register}
                           errors={errors}
-                          width={{ base: '100%', md: '47.5%' }}
+                          width={{ base: '100%', md: '100%' }}
                           type='number'
-                          mb='5vh'
-                        />
-                        {/* La línea probablemente desaparezca de la vinculación (La borramos) */}
-                        <GenericInput
-                          label='Línea'
-                          width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea}
-                          isDisabled
                           mb='5vh'
                         />
                       </Box>

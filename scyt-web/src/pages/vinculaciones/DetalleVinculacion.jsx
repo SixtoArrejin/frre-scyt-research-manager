@@ -169,14 +169,8 @@ export default function DetalleVinculacion() {
                       >
                         <DisplayField
                           label='Plazo de ejecución (meses)'
-                          width={{ base: '100%', md: '47.5%' }}
+                          width={{ base: '100%', md: '100%' }}
                           value={data?.vinculacion?.vinculacionesconfinanciamiento?.plazoEjecucion}
-                          mb={4}
-                        />
-                        <DisplayField
-                          label='Línea'
-                          width={{ base: '100%', md: '47.5%' }}
-                          value={data?.vinculacion?.vinculacionesconfinanciamiento?.nombreLinea || '-'}
                           mb={4}
                         />
                       </Box>
