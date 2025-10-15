@@ -50,6 +50,11 @@ model personas {
   apellido                 String?             @db.VarChar(100)
   fechaIngresoGrupo        DateTime?           @db.Date
   activo                   Boolean?
+  esBecario                Boolean?            @default(false)
+  legajo                   String?             @db.VarChar(50)
+  tienePosgrado            Boolean?            @default(false)
+  nivelPosgrado            String?             @db.VarChar(50)
+  otroPosgrado             String?             @db.VarChar(100)
   idGrupoInvestigacion     Int
   categorias               categorias[]
   participa                participa[]

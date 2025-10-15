@@ -15,6 +15,7 @@ export default function ModificarInvestigador() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
     error,
     gruposOptions,
@@ -147,7 +148,37 @@ export default function ModificarInvestigador() {
             </Box>
 
             <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
-              <FormControl width={{ base: '100%', md: '50%' }}>
+              <GenericInput
+                name='legajo'
+                label='Legajo'
+                placeholder='Legajo'
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '50%' }}
+                isRequired
+                mb='5vh'
+              />
+            </Box>
+          </Box>
+
+          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <FormControl width={{ base: '100%', md: '50%' }} mb='5vh'>
+                <FormLabel>Tipo de Investigador</FormLabel>
+                <Switch
+                  {...register('esBecario')}
+                  isChecked={watch('esBecario')}
+                  colorScheme='blue'
+                  size='lg'
+                />
+                <Box mt={2} fontSize='sm' color='gray.600'>
+                  {watch('esBecario') ? 'Becario' : 'Investigador'}
+                </Box>
+              </FormControl>
+            </Box>
+
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <FormControl width={{ base: '100%', md: '50%' }} mb='5vh'>
                 <FormLabel>Estado del Investigador</FormLabel>
                 <Switch
                   {...register('activo')}
@@ -161,6 +192,73 @@ export default function ModificarInvestigador() {
               </FormControl>
             </Box>
           </Box>
+
+          {/* Campos de posgrado - Solo para investigadores no becarios */}
+          {!watch('esBecario') && (
+            <>
+              <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                  <FormControl width={{ base: '100%', md: '50%' }} mb='5vh'>
+                    <FormLabel>¿Tiene Posgrado?</FormLabel>
+                    <Box display='flex' alignItems='center'>
+                      <Switch
+                        {...register('tienePosgrado')}
+                        isChecked={watch('tienePosgrado')}
+                        colorScheme='blue'
+                        size='lg'
+                      />
+                      <Box ml={3} fontSize='sm' color='gray.600'>
+                        {watch('tienePosgrado') ? 'Sí' : 'No'}
+                      </Box>
+                    </Box>
+                  </FormControl>
+                </Box>
+                <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                  {watch('tienePosgrado') && (
+                    <GenericSelect
+                      name='nivelPosgrado'
+                      label='Nivel de Posgrado'
+                      placeholder='Seleccione el nivel...'
+                      register={register}
+                      options={[
+                        { value: 'doctorado', label: 'Doctorado' },
+                        { value: 'maestria', label: 'Maestría' },
+                        { value: 'especializacion', label: 'Especialización' },
+                        { value: 'diplomatura', label: 'Diplomatura' },
+                        { value: 'otro', label: 'Otro' },
+                      ]}
+                      errors={errors}
+                      width={{ base: '100%', md: '50%' }}
+                      isRequired
+                      mb='5vh'
+                      onChange={(e) => {
+                        setValue('nivelPosgrado', e.target.value);
+                      }}
+                    />
+                  )}
+                </Box>
+              </Box>
+              {watch('tienePosgrado') && watch('nivelPosgrado') === 'otro' && (
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+                  <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                    <GenericInput
+                      name='otroPosgrado'
+                      label='Especifique el Posgrado'
+                      placeholder='Especifique...'
+                      register={register}
+                      errors={errors}
+                      width={{ base: '100%', md: '50%' }}
+                      isRequired
+                      mb='5vh'
+                    />
+                  </Box>
+                  <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+                    {/* Espacio vacío */}
+                  </Box>
+                </Box>
+              )}
+            </>
+          )}
 
           {/* Mostrar errores */}
           <ErrorAlert

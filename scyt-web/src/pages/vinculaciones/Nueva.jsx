@@ -28,8 +28,8 @@ export default function NuevaVinculacion() {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const [selectedConvenio, setSelectedConvenio] = useState();
-  const [nroConvenio, setNroConvenio] = useState();
+  const [selectedConvenio, setSelectedConvenio] = useState('Especifico');
+  const [nroConvenio, setNroConvenio] = useState('');
 
   // Obtener proyecto para listar investigadores
   const { data: dataProyecto } = useQuery(
@@ -99,8 +99,41 @@ export default function NuevaVinculacion() {
   const tipoFinanciamiento = useWatch({ control, name: 'financiamiento' });
 
   const agregarConvenio = () => {
+    // Validar que ambos campos estén completos
+    if (!selectedConvenio || selectedConvenio.trim() === '') {
+      toast({
+        title: 'Tipo de convenio requerido',
+        description: 'Debe seleccionar un tipo de convenio',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!nroConvenio || nroConvenio === '') {
+      toast({
+        title: 'Número de convenio requerido',
+        description: 'Debe ingresar el número de convenio',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Validar que el número de convenio sea un número válido
+    const nroConvenioNum = Number(nroConvenio);
+    if (isNaN(nroConvenioNum) || nroConvenioNum <= 0) {
+      toast({
+        title: 'Número de convenio inválido',
+        description: 'El número de convenio debe ser un número válido mayor a 0',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+
     // Verificar si ya existe un convenio con el mismo tipo y número
-    const convenioExistente = convenios.find((convenio) => convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenio);
+    const convenioExistente = convenios.find((convenio) => convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenioNum);
 
     if (convenioExistente) {
       // Mostrar un mensaje de error o realizar alguna acción apropiada
@@ -110,8 +143,17 @@ export default function NuevaVinculacion() {
         isClosable: true,
       });
     } else {
-      // Agregar el nuevo convenio al array
-      append({ tipoConvenio: selectedConvenio, nroConvenio });
+      // Agregar el nuevo convenio al array (ya convertido a número)
+      append({ tipoConvenio: selectedConvenio, nroConvenio: nroConvenioNum });
+      // Limpiar los campos después de agregar
+      setSelectedConvenio('Especifico');
+      setNroConvenio('');
+      toast({
+        title: 'Convenio agregado',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -216,6 +258,7 @@ export default function NuevaVinculacion() {
                         value: item,
                         label: item,
                       }))}
+                      value={selectedConvenio}
                       onChange={(e) => {
                         setSelectedConvenio(e.target.value);
                       }}
@@ -223,11 +266,13 @@ export default function NuevaVinculacion() {
                       mb='5vh'
                     />
                     <GenericInput
+                      type='number'
                       placeholder='Nro Convenio'
                       label='Nro Convenio'
                       width={{ base: '100%', md: '35%' }}
                       mb='5vh'
-                      onChange={(e) => setNroConvenio(Number(e.target.value))}
+                      value={nroConvenio}
+                      onChange={(e) => setNroConvenio(e.target.value)}
                     />
 
                     <Box display='flex' justifyContent='flex-end' width='20%'>

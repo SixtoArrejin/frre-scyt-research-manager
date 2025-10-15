@@ -38,6 +38,26 @@ const modificarInvestigadorSchema = yup.object({
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
   activo: yup.boolean().required('El estado es requerido'),
+  esBecario: yup.boolean(),
+  legajo: yup
+    .string()
+    .required('El legajo es requerido')
+    .trim(),
+  tienePosgrado: yup.boolean().when('esBecario', {
+    is: false,
+    then: (schema) => schema.required('Debe indicar si tiene posgrado'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  nivelPosgrado: yup.string().when(['esBecario', 'tienePosgrado'], {
+    is: (esBecario, tienePosgrado) => !esBecario && tienePosgrado,
+    then: (schema) => schema.required('Debe seleccionar el nivel de posgrado'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  otroPosgrado: yup.string().when(['esBecario', 'tienePosgrado', 'nivelPosgrado'], {
+    is: (esBecario, tienePosgrado, nivelPosgrado) => !esBecario && tienePosgrado && nivelPosgrado === 'otro',
+    then: (schema) => schema.required('Debe especificar el tipo de posgrado').trim(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 // Valores por defecto para el formulario de modificación
@@ -48,6 +68,11 @@ const defaultValues = {
   idGrupoInvestigacion: '',
   fechaIngresoGrupo: '',
   activo: false,
+  esBecario: false,
+  legajo: '',
+  tienePosgrado: false,
+  nivelPosgrado: '',
+  otroPosgrado: '',
 };
 
 /**
@@ -100,15 +125,36 @@ export const useModificarInvestigadorForm = () => {
 
   // Función para formatear datos antes del envío
   const formatData = (formData) => {
-    return {
+    const baseData = {
       ...formData,
       nombre: formData.nombre?.trim(),
       apellido: formData.apellido?.trim(),
       dni: parseInt(formData.dni, 10),
       idGrupoInvestigacion: parseInt(formData.idGrupoInvestigacion, 10),
       fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
-      activo: formData.activo, // Ya es boolean, no necesita conversión
+      activo: formData.activo,
+      esBecario: formData.esBecario,
+      legajo: formData.legajo?.trim() || null,
     };
+
+    // Solo incluir campos de posgrado si NO es becario
+    if (!formData.esBecario) {
+      baseData.tienePosgrado = formData.tienePosgrado || false;
+      if (formData.tienePosgrado) {
+        baseData.nivelPosgrado = formData.nivelPosgrado || null;
+        baseData.otroPosgrado = formData.nivelPosgrado === 'otro' ? formData.otroPosgrado?.trim() || null : null;
+      } else {
+        baseData.nivelPosgrado = null;
+        baseData.otroPosgrado = null;
+      }
+    } else {
+      // Si es becario, asegurar que estos campos sean null
+      baseData.tienePosgrado = false;
+      baseData.nivelPosgrado = null;
+      baseData.otroPosgrado = null;
+    }
+
+    return baseData;
   };
 
   // Función de envío
@@ -143,11 +189,17 @@ export const useModificarInvestigadorForm = () => {
   // Efecto para llenar el formulario cuando se cargan los datos (solo una vez)
   useEffect(() => {
     if (investigador?.persona && form.setValue && !hasFilledForm.current) {
-      form.setValue('activo', investigador.persona.activo); // Ya es boolean
+      form.setValue('activo', investigador.persona.activo);
+      form.setValue('esBecario', investigador.persona.esBecario || false);
       form.setValue('nombre', investigador.persona.nombre);
       form.setValue('apellido', investigador.persona.apellido);
       form.setValue('dni', investigador.persona.dni);
       form.setValue('idGrupoInvestigacion', investigador.persona.idGrupoInvestigacion);
+      form.setValue('legajo', investigador.persona.legajo || '');
+      form.setValue('tienePosgrado', investigador.persona.tienePosgrado || false);
+      form.setValue('nivelPosgrado', investigador.persona.nivelPosgrado || '');
+      form.setValue('otroPosgrado', investigador.persona.otroPosgrado || '');
+
       // Convertir fecha ISO a formato YYYY-MM-DD para input type="date"
       if (investigador.persona.fechaIngresoGrupo) {
         const fecha = new Date(investigador.persona.fechaIngresoGrupo);

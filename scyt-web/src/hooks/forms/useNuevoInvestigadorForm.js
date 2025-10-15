@@ -40,6 +40,26 @@ const investigadorSchema = yup.object({
     .required('La fecha de ingreso al grupo es requerida')
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
+  esBecario: yup.boolean(),
+  legajo: yup
+    .string()
+    .required('El legajo es requerido')
+    .trim(),
+  tienePosgrado: yup.boolean().when('esBecario', {
+    is: false,
+    then: (schema) => schema.required('Debe indicar si tiene posgrado'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  nivelPosgrado: yup.string().when(['esBecario', 'tienePosgrado'], {
+    is: (esBecario, tienePosgrado) => !esBecario && tienePosgrado,
+    then: (schema) => schema.required('Debe seleccionar el nivel de posgrado'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  otroPosgrado: yup.string().when(['esBecario', 'tienePosgrado', 'nivelPosgrado'], {
+    is: (esBecario, tienePosgrado, nivelPosgrado) => !esBecario && tienePosgrado && nivelPosgrado === 'otro',
+    then: (schema) => schema.required('Debe especificar el tipo de posgrado').trim(),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 // Valores por defecto para el formulario
@@ -50,6 +70,11 @@ const defaultValues = {
   idGrupoInvestigacion: '',
   fechaIngresoGrupo: '',
   activo: true,
+  esBecario: false,
+  legajo: '',
+  tienePosgrado: false,
+  nivelPosgrado: '',
+  otroPosgrado: '',
 };
 
 /**
@@ -78,7 +103,7 @@ export const useNuevoInvestigadorForm = () => {
 
   // Función para limpiar y formatear datos
   const formatData = (formData) => {
-    return {
+    const baseData = {
       ...formData,
       nombre: formData.nombre?.trim(),
       apellido: formData.apellido?.trim(),
@@ -88,7 +113,28 @@ export const useNuevoInvestigadorForm = () => {
           ? parseInt(formData.idGrupoInvestigacion, 10)
           : null,
       fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
+      esBecario: formData.esBecario || false,
+      legajo: formData.legajo?.trim() || null,
     };
+
+    // Solo incluir campos de posgrado si NO es becario
+    if (!formData.esBecario) {
+      baseData.tienePosgrado = formData.tienePosgrado || false;
+      if (formData.tienePosgrado) {
+        baseData.nivelPosgrado = formData.nivelPosgrado || null;
+        baseData.otroPosgrado = formData.nivelPosgrado === 'otro' ? formData.otroPosgrado?.trim() || null : null;
+      } else {
+        baseData.nivelPosgrado = null;
+        baseData.otroPosgrado = null;
+      }
+    } else {
+      // Si es becario, asegurar que estos campos sean null
+      baseData.tienePosgrado = false;
+      baseData.nivelPosgrado = null;
+      baseData.otroPosgrado = null;
+    }
+
+    return baseData;
   };
 
   // Validar datos antes de enviar
