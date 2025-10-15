@@ -313,23 +313,35 @@ export default function DetalleVinculacion() {
                 <br />
                 {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
                   <Tabla
-                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
+                    columnas={['Nro.', 'Fecha desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
                     datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
 
                       const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
                       const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(item.fechaDesembolso, item.plazoEtapa));
 
+                      const estadoFueraDePlazo = convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) &&
+                        item.estado === 'En ejecución';
+                      const estadoTexto = convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
+                        ? item.estado == 'En ejecución'
+                          ? 'En ejecución - Fuera de plazo'
+                          : item.estado || '-'
+                        : item.estado || '-';
+
                       return [
                         index + 1,
                         formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
                         item.montoDesembolsado,
-                        item.montoRendido ? item.montoRendido : '-',
-                        convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
-                          ? item.estado == 'En ejecución'
-                            ? 'En ejecución - Fuera de plazo'
-                            : item.estado || '-'
-                          : item.estado || '-',
-                        <Link key={item.idDesembolso} to={`desembolso/${item.idDesembolso}`}>
+                        item.montoRendido ? (
+                          <Text color={item.montoRendido < item.montoDesembolsado ? 'red' : 'inherit'}>
+                            {item.montoRendido}
+                          </Text>
+                        ) : (
+                          '-'
+                        ),
+                        <Text key={`estado-${item.idDesembolso}`} color={estadoFueraDePlazo ? 'red' : 'inherit'}>
+                          {estadoTexto}
+                        </Text>,
+                        <Link key={`link-${item.idDesembolso}`} to={`desembolso/${item.idDesembolso}`}>
                           <PlusSquareIcon />
                         </Link>,
                       ];

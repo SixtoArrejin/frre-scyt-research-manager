@@ -106,9 +106,9 @@ export default function NuevoDesembolso() {
                     <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
                       <GenericInput
                         name='plazoEtapa'
-                        label='Plazo de etapa (meses)'
+                        label='Plazo de etapa'
                         type='number'
-                        placeholder='Plazo de etapa'
+                        placeholder='Plazo de la etapa en meses'
                         register={register}
                         errors={errors}
                         width={{ base: '100%', md: '50%' }}

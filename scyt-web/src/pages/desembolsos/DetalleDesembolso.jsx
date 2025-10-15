@@ -90,7 +90,6 @@ export default function DetalleDesembolso() {
   } = useForm({
     defaultValues: {
       fechaAprobado: new Date().toISOString().split('T')[0],
-      estado: 'Aprobado',
     },
     resolver: yupResolver(schema),
   });
@@ -256,11 +255,17 @@ export default function DetalleDesembolso() {
                       mb='5vh'
                     />
                     <GenericInput
-                      label='Monto rendido'
+                      label='Monto rendido ($)'
                       width={{ base: '100%', md: '47.5%' }}
                       value={dataDesembolso?.desembolso?.montoRendido || '-'}
                       isDisabled
                       mb='5vh'
+                      textColor={
+                        dataDesembolso?.desembolso?.montoRendido &&
+                        dataDesembolso?.desembolso?.montoRendido < dataDesembolso?.desembolso?.montoDesembolsado
+                          ? 'red'
+                          : 'inherit'
+                      }
                     />
                   </Box>
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
@@ -318,8 +323,8 @@ export default function DetalleDesembolso() {
                               <GenericInput
                                 name='montoRendido'
                                 type='number'
-                                label='Monto rendido'
-                                placeholder='Monto rendido'
+                                label='Monto rendido ($)'
+                                placeholder='Monto rendido ($)'
                                 register={registerRendicion}
                                 isRequired
                               />
