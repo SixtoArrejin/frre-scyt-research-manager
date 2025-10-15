@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
+    "start": "node --env-file=.env src/app.js",
+    "dev": "nodemon --env-file=.env src/app.js",
     "pulldb": "npx prisma db pull"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "@prisma/client": "^5.0.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0"
