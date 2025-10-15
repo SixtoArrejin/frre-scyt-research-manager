@@ -313,7 +313,7 @@ export default function DetalleVinculacion() {
                 <br />
                 {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
                   <Tabla
-                    columnas={['Nro. Desembolso', 'Fecha de desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
+                    columnas={['Nro.', 'Fecha desembolso', 'Monto desmbolsado ($)', 'Monto rendido ($)', 'Estado', 'Ver más']}
                     datos={data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.map((item, index) => {
 
                       const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
@@ -323,7 +323,13 @@ export default function DetalleVinculacion() {
                         index + 1,
                         formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
                         item.montoDesembolsado,
-                        item.montoRendido ? item.montoRendido : '-',
+                        item.montoRendido ? (
+                          <Text color={item.montoRendido < item.montoDesembolsado ? 'red' : 'inherit'}>
+                            {item.montoRendido}
+                          </Text>
+                        ) : (
+                          '-'
+                        ),
                         convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
                           ? item.estado == 'En ejecución'
                             ? 'En ejecución - Fuera de plazo'

@@ -11,7 +11,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import CustomModal from '../../components/CustomModal';
 import GenericSelect from '../../components/formControls/GenericSelect';
 
-const estados = ['Rendido', 'Aprobado', 'En ejecución', 'En ejecución - Fuera de plazo'];
+const estados = ['Rendido', 'En ejecución', 'En ejecución - Fuera de plazo'];
 const schema = yup.object({});
 
 export default function ModificarDesembolso() {
