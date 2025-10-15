@@ -319,6 +319,14 @@ export default function DetalleVinculacion() {
                       const fechaActual = formatoFechaISOaDDMMAAAA(new Date());
                       const fechaRendicion = formatoFechaISOaDDMMAAAA(sumarMeses(item.fechaDesembolso, item.plazoEtapa));
 
+                      const estadoFueraDePlazo = convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion) &&
+                        item.estado === 'En ejecución';
+                      const estadoTexto = convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
+                        ? item.estado == 'En ejecución'
+                          ? 'En ejecución - Fuera de plazo'
+                          : item.estado || '-'
+                        : item.estado || '-';
+
                       return [
                         index + 1,
                         formatoFechaISOaDDMMAAAA(item.fechaDesembolso),
@@ -330,12 +338,10 @@ export default function DetalleVinculacion() {
                         ) : (
                           '-'
                         ),
-                        convertirFechaDDMMAAAAaDate(fechaActual) > convertirFechaDDMMAAAAaDate(fechaRendicion)
-                          ? item.estado == 'En ejecución'
-                            ? 'En ejecución - Fuera de plazo'
-                            : item.estado || '-'
-                          : item.estado || '-',
-                        <Link key={item.idDesembolso} to={`desembolso/${item.idDesembolso}`}>
+                        <Text key={`estado-${item.idDesembolso}`} color={estadoFueraDePlazo ? 'red' : 'inherit'}>
+                          {estadoTexto}
+                        </Text>,
+                        <Link key={`link-${item.idDesembolso}`} to={`desembolso/${item.idDesembolso}`}>
                           <PlusSquareIcon />
                         </Link>,
                       ];

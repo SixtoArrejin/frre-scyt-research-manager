@@ -137,8 +137,8 @@ export default function ModificarDesembolso() {
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <GenericInput
                       name='plazoEtapa'
-                      label='Plazo de etapa (meses)'
-                      placeholder='Plazo de etapa (meses)'
+                      label='Plazo de etapa'
+                      placeholder='Meses'
                       type='number'
                       width={{ base: '100%', md: '28%' }}
                       register={register}
