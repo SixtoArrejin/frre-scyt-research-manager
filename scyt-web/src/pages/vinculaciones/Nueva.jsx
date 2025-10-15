@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import React from 'react';
+import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
-import { useFieldArray, useForm, useWatch } from 'react-hook-form';
-import { createVinculacion, getProyectoById } from '../../utils/api/proyectosApi';
+import {
+  useNuevaVinculacionForm,
+  tiposConvenio,
+  lineasFinanciamiento,
+} from '../../hooks/forms/useNuevaVinculacionForm';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericRadio from '../../components/formControls/GenericRadio';
@@ -12,169 +13,44 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
 
 export default function NuevaVinculacion() {
-  /* Usestate para el modal */
-  const [isOpen, setIsOpen] = useState(false);
-  const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
-  const { idPid } = useParams();
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const toast = useToast();
-  const navigate = useNavigate();
-
-  const [selectedConvenio, setSelectedConvenio] = useState('Especifico');
-  const [nroConvenio, setNroConvenio] = useState('');
-
-  // Obtener proyecto para listar investigadores
-  const { data: dataProyecto } = useQuery(
-    ['proyecto-investigadores', idPid],
-    () => getProyectoById(idPid),
-    { enabled: !!idPid },
-  );
-
-  // Generar opciones de investigadores del proyecto
-  useEffect(() => {
-    if (dataProyecto?.proyecto?.participa) {
-      const options = dataProyecto.proyecto.participa.map((participacion) => ({
-        value: participacion.personas.idPersona,
-        label: `${participacion.personas.apellido}, ${participacion.personas.nombre}`,
-      }));
-      setInvestigadoresOptions(options);
-    }
-  }, [dataProyecto]);
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createVinculacion(idPid, formData), //Cambiar por createVinculacion(idPid, formData)
-    onSuccess: () => {
-      toast({
-        title: 'Nueva Vinculación',
-        description: 'Se ha creado la nueva vinculación exitosamente',
-        status: 'success',
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: (error) => {
-      const errorMessage = error?.message;
-      toast({
-        title: 'Error al crear la vinculación',
-        description: `${errorMessage || 'Intente nuevamente'}`,
-        status: 'error',
-        isClosable: true,
-      });
-    },
-  });
-
-  const { control, register, handleSubmit } = useForm({
-    defaultValues: {
-      adjudicacion: null,
-      beneficiario: null,
-      desembolsos: null,
-      empresaInstitucion: null,
-      nroMarco: null,
-      idResponsable: '',
-      financiamiento: 'false',
-      linea: null,
-      monto: null,
-      plazoEjecucion: null,
-      presentacion: null,
-    },
-  });
-
   const {
-    fields: convenios,
-    append,
-    remove,
-  } = useFieldArray({
-    control, // Debes proporcionar el objeto control de useForm
-    name: 'convenios', // Nombre del campo de formulario que es un arreglo
-  });
+    // Formulario
+    register,
+    handleSubmit,
+    errors,
+    onSubmit,
 
-  const tipoFinanciamiento = useWatch({ control, name: 'financiamiento' });
+    // Estados
+    isModalOpen,
+    investigadoresOptions,
+    selectedConvenio,
+    setSelectedConvenio,
+    nroConvenio,
+    setNroConvenio,
 
-  const agregarConvenio = () => {
-    // Validar que ambos campos estén completos
-    if (!selectedConvenio || selectedConvenio.trim() === '') {
-      toast({
-        title: 'Tipo de convenio requerido',
-        description: 'Debe seleccionar un tipo de convenio',
-        status: 'warning',
-        isClosable: true,
-      });
-      return;
-    }
+    // Convenios
+    convenios,
+    agregarConvenio,
+    eliminarConvenio,
 
-    if (!nroConvenio || nroConvenio === '') {
-      toast({
-        title: 'Número de convenio requerido',
-        description: 'Debe ingresar el número de convenio',
-        status: 'warning',
-        isClosable: true,
-      });
-      return;
-    }
+    // Watched values
+    tipoFinanciamiento,
 
-    // Validar que el número de convenio sea un número válido
-    const nroConvenioNum = Number(nroConvenio);
-    if (isNaN(nroConvenioNum) || nroConvenioNum <= 0) {
-      toast({
-        title: 'Número de convenio inválido',
-        description: 'El número de convenio debe ser un número válido mayor a 0',
-        status: 'warning',
-        isClosable: true,
-      });
-      return;
-    }
+    // Loading
+    isLoadingMutation,
 
-    // Verificar si ya existe un convenio con el mismo tipo y número
-    const convenioExistente = convenios.find((convenio) => convenio.tipoConvenio === selectedConvenio && convenio.nroConvenio === nroConvenioNum);
+    // Funciones de modal
+    openModal,
+    closeModal,
 
-    if (convenioExistente) {
-      // Mostrar un mensaje de error o realizar alguna acción apropiada
-      toast({
-        title: 'Este convenio ya fue agregado',
-        status: 'info',
-        isClosable: true,
-      });
-    } else {
-      // Agregar el nuevo convenio al array (ya convertido a número)
-      append({ tipoConvenio: selectedConvenio, nroConvenio: nroConvenioNum });
-      // Limpiar los campos después de agregar
-      setSelectedConvenio('Especifico');
-      setNroConvenio('');
-      toast({
-        title: 'Convenio agregado',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const eliminarConvenio = (index) => {
-    remove(index);
-  };
-
-  const onSub = (values) => {
-    const modifiedValues = {
-      ...values,
-      financiamiento: values.financiamiento == 'true',
-      idResponsable: values.idResponsable && values.idResponsable !== '' ? Number(values.idResponsable) : null,
-    };
-    console.log('Datos a enviar:', modifiedValues);
-    mutate(modifiedValues);
-  };
+    // Navegación
+    handleCancel,
+  } = useNuevaVinculacionForm();
 
   return (
     <Card>
       <CardBody>
-        <form style={{ width: '100%' }} onSubmit={handleSubmit((values) => onSub(values))}>
+        <form style={{ width: '100%' }} onSubmit={handleSubmit(onSubmit)}>
           <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
             <Heading as='h2' size='xl' textAlign='center'>
               Nueva Vinculacion
@@ -192,6 +68,7 @@ export default function NuevaVinculacion() {
                         label='Empresa/Institución'
                         placeholder='Empresa/Institución'
                         register={register}
+                        errors={errors}
                         width={{ base: '100%', md: '50%' }}
                         isRequired
                         mb='5vh'
@@ -218,6 +95,7 @@ export default function NuevaVinculacion() {
                         name='nroMarco'
                         placeholder='Nro Marco'
                         register={register}
+                        errors={errors}
                         label='Nro Marco'
                         width={{ base: '100%', md: '50%' }}
                         mb='5vh'
@@ -230,6 +108,7 @@ export default function NuevaVinculacion() {
                         label='Responsable'
                         placeholder='Seleccione un responsable...'
                         register={register}
+                        errors={errors}
                         options={investigadoresOptions}
                         width={{ base: '100%', md: '100%' }}
                         mb='5vh'
@@ -254,7 +133,7 @@ export default function NuevaVinculacion() {
                     <GenericSelect
                       isSearchable={true}
                       label='Tipo de convenio'
-                      options={['Especifico', 'Colaboración', 'Otro...'].map((item) => ({
+                      options={tiposConvenio.map((item) => ({
                         value: item,
                         label: item,
                       }))}
@@ -317,6 +196,7 @@ export default function NuevaVinculacion() {
                         name='titulo'
                         placeholder='Título'
                         register={register}
+                        errors={errors}
                         label='Título'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -326,6 +206,7 @@ export default function NuevaVinculacion() {
                         name='beneficiario'
                         placeholder='Nombre del beneficiario'
                         register={register}
+                        errors={errors}
                         label='Nombre del beneficiario'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -338,6 +219,7 @@ export default function NuevaVinculacion() {
                         name='monto'
                         placeholder='Monto'
                         register={register}
+                        errors={errors}
                         label='Monto'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -348,6 +230,7 @@ export default function NuevaVinculacion() {
                         name='desembolsos'
                         placeholder='Cantidad de desembolsos'
                         register={register}
+                        errors={errors}
                         label='Cantidad de desembolsos'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -360,6 +243,7 @@ export default function NuevaVinculacion() {
                         type='date'
                         name='presentacion'
                         register={register}
+                        errors={errors}
                         label='Presentación'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -369,6 +253,7 @@ export default function NuevaVinculacion() {
                         type='date'
                         name='adjudicacion'
                         register={register}
+                        errors={errors}
                         label='Adjudicación'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -380,6 +265,7 @@ export default function NuevaVinculacion() {
                         name='plazoEjecucion'
                         placeholder='Plazo de ejecución'
                         register={register}
+                        errors={errors}
                         label='Plazo de ejecución (meses)'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -392,7 +278,8 @@ export default function NuevaVinculacion() {
                         mb='5vh'
                         isRequired
                         register={register}
-                        options={['1ro', '2do', '3ro'].map((item) => ({
+                        errors={errors}
+                        options={lineasFinanciamiento.map((item) => ({
                           value: item,
                           label: item,
                         }))}
@@ -409,6 +296,7 @@ export default function NuevaVinculacion() {
                         type='date'
                         name='fechaInicio'
                         register={register}
+                        errors={errors}
                         label='Inicio'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -418,6 +306,7 @@ export default function NuevaVinculacion() {
                         type='date'
                         name='fechaCierre'
                         register={register}
+                        errors={errors}
                         label='Cierre'
                         width={{ base: '100%', md: '47.5%' }}
                         mb='5vh'
@@ -430,6 +319,7 @@ export default function NuevaVinculacion() {
                         name='descripcion'
                         placeholder='Descripción'
                         register={register}
+                        errors={errors}
                         label='Descripción'
                         width='100%'
                         mb='5vh'
@@ -444,21 +334,20 @@ export default function NuevaVinculacion() {
                 width='100%'
                 alignItems='center'
                 justifyContent='flex-end'
-                // justifyContent="center"
               >
-                <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
+                <Button colorScheme='gray' variant='outline' onClick={handleCancel} mr='5%'>
                   Cancelar
                 </Button>
-                <Button onClick={openModal} isLoading={isLoading} colorScheme='blue' variant='outline' ml='5%'>
+                <Button onClick={openModal} isLoading={isLoadingMutation} colorScheme='blue' variant='outline' ml='5%'>
                   Guardar
                 </Button>
                 <CustomModal
-                  isOpen={isOpen}
+                  isOpen={isModalOpen}
                   onClose={closeModal}
                   guardar={true}
                   title='Guardar nueva Vinculación'
                   content='¿Está seguro que desea guardar la nueva vinculación?'
-                  onSave={handleSubmit((values) => onSub(values))}
+                  onSave={handleSubmit(onSubmit)}
                 />
               </Box>
             </CardBody>
