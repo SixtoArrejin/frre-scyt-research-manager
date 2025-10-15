@@ -3,7 +3,7 @@ import { prisma } from '../db.js';
 import convertToISOString from '../utils/funciones.js';
 
 export async function getAllProyectos() {
-  const includeRelations = ['participa', 'regionales', 'director', 'codirector', 'tiene', 'tiposproyectos', 'pid', 'proyectoExterno', 'regionalesAsociadas'];
+  const includeRelations = ['participa', 'regionales', 'director', 'codirector', 'tiene', 'tiposproyectos', 'pid', 'proyectoExterno', 'institucionesAsociadas'];
   return await getAll('proyectos', includeRelations);
 }
 
@@ -23,7 +23,7 @@ export async function getProyectosExternos(subtipo = null) {
 }
 
 export async function getProyectoById(idProyecto) { //SACAR CODIRECTOR
-  const includeRelations = ['director', 'codirector', 'pid', 'proyectoExterno', { participa: [{ personas: ['categorias'] }] }, { tiene: ['gruposinvestigacion'] }, 'regionalesAsociadas'];
+  const includeRelations = ['director', 'codirector', 'pid', 'proyectoExterno', { participa: [{ personas: ['categorias'] }] }, { tiene: ['gruposinvestigacion'] }, 'institucionesAsociadas'];
   return await getById('proyectos', 'idProyecto', idProyecto, includeRelations);
 }
 
@@ -112,6 +112,27 @@ export async function createRegionalesProyectos(dataP) {
     console.log(dataP);
     const newRP = await create('regionalesProyectos', dataP);
     return newRP;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function createInstitucionesProyectos(dataI) {
+  try {
+    console.log(dataI);
+    const newIP = await create('institucionesProyectos', dataI);
+    return newIP;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function deleteInstitucionesProyectosByProyecto(idProyecto) {
+  try {
+    const deleted = await prisma.institucionesProyectos.deleteMany({
+      where: { idProyecto },
+    });
+    return deleted;
   } catch (error) {
     throw new Error(error.message);
   }

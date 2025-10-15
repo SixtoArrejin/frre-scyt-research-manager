@@ -33,15 +33,11 @@ export default function DetalleProyectoPid() {
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [regionales, setRegionales] = useState(
-    data?.proyecto?.regionalesAsociadas,
-  );
   const [esPid, setEsPId] = useState(false);
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
-    setRegionales(data?.proyecto?.regionalesAsociadas);
     if (data?.proyecto?.codPid) {
       setEsPId(true);
     }
@@ -471,13 +467,15 @@ export default function DetalleProyectoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Regionales</Text>
+              <Text fontSize="md">Instituciones Asociadas</Text>
               <br />
 
-              {regionales?.length > 0 ? (
+              {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
                 <Tabla
-                  columnas={['Nombre']}
-                  datos={regionales?.map((item) => [item.nombreRegional])}
+                  columnas={['Institución']}
+                  datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
+                    item.nombreInstitucion,
+                  ])}
                   paginado={false}
                 />
               ) : (
@@ -485,24 +483,9 @@ export default function DetalleProyectoPid() {
                   src={NoData}
                   alt="No Data"
                   width="30%"
-                  text="Este proyecto aún no tiene regionales."
+                  text="Este proyecto no tiene instituciones asociadas."
                 />
               )}
-              <br />
-              <PermissionGate module="proyectos" action="edit">
-                <Box
-                  display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                >
-                  <Link to={'agregar-regional'}>
-                    <Button colorScheme="blue" variant="outline">
-                      Agregar Regional
-                    </Button>
-                  </Link>
-                </Box>
-              </PermissionGate>
             </CardBody>
           </Card>
 

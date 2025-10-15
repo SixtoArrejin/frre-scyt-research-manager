@@ -33,7 +33,7 @@ import ListaVinculaciones from './pages/vinculaciones/ListaVinculaciones';
 import DetalleDesembolso from './pages/desembolsos/DetalleDesembolso';
 import Home from './pages/Home';
 import AgregarInvestigador2 from './pages/proyectos/AgregarInvestigador2';
-import AgregarRegional from './pages/proyectos/AgregarRegional';
+// import AgregarRegional from './pages/proyectos/AgregarRegional'; // DESHABILITADO - reutilizar para AgregarInstituciones
 import ModificarDesembolso from './pages/desembolsos/ModificarDesembolso';
 import ModificarVinculacion from './pages/vinculaciones/ModificarVinculacion';
 import Perfil from './pages/perfil/Perfil';
@@ -95,7 +95,7 @@ const routes = [
     element: <AgregarInvestigador2 />,
   },
   { path: '/proyectos/:idPid/agregar-grupo', element: <AgregarGrupo /> },
-  { path: '/proyectos/:idPid/agregar-regional', element: <AgregarRegional /> },
+  // { path: '/proyectos/:idPid/agregar-regional', element: <AgregarRegional /> }, // DESHABILITADO - usar para AgregarInstituciones
   {
     path: '/proyectos/:idPid/nueva-vinculacion',
     element: <NuevaVinculacion />,

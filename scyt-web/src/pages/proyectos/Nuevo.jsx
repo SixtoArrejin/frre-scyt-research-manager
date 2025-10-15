@@ -13,7 +13,7 @@ import {
   tipoActividad,
   estadoProyecto,
   roles,
-  tipoProyectosConRegionales,
+  tipoProyectosInterinstitucionales,
 } from '../../hooks/forms/useNuevoProyectoForm';
 
 export default function NuevoPid() {
@@ -35,14 +35,17 @@ export default function NuevoPid() {
     investigadoresFields,
     sortedInvestigadores,
     gruposSeleccionados,
-    regionalesSeleccionados,
+    institucionesSeleccionadas,
     tipoProyecto: PidExterno,
     prorrogado,
     selectedTipoProyecto,
     estado,
     setSelectedOptions,
     setSelectedOptionsGrupos,
-    setSelectedOptionsRegionales,
+    selectedInstitucion,
+    setSelectedInstitucion,
+    otraInstitucion,
+    setOtraInstitucion,
     setRolSelected,
     fechaSelected,
     setFechaSelected,
@@ -51,10 +54,10 @@ export default function NuevoPid() {
     setEstado,
     agregarInvestigador,
     agregarGrupo,
-    agregarRegional,
+    agregarInstitucion,
     eliminarInvestigador,
     eliminarGrupo,
-    eliminarRegional,
+    eliminarInstitucion,
     submitHandler,
   } = useNuevoProyectoForm();
 
@@ -555,10 +558,10 @@ export default function NuevoPid() {
               </CardBody>
             </Card>
           )}
-          {tipoProyectosConRegionales?.includes(selectedTipoProyecto) && (
+          {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
             <Card width="100%">
               <CardBody>
-                <Text fontSize="md">Agregar las regionales asociadas</Text>
+                <Text fontSize="md">Agregar instituciones asociadas</Text>
                 <br />
                 <Box
                   display="flex"
@@ -574,27 +577,39 @@ export default function NuevoPid() {
                       justifyContent="space-between"
                       width="45%"
                       marginLeft="2%"
+                      gap="2%"
                     >
                       <GenericSelect
-                        placeholder="Regionales..."
+                        placeholder="Instituciones..."
                         isSearchable={true}
-                        options={dataRegionales?.regionales?.map(
-                          (regional) => ({
+                        options={[
+                          ...(dataRegionales?.regionales?.map((regional) => ({
                             value: regional,
                             label: regional,
-                          }),
-                        )}
+                          })) || []),
+                          { value: 'Otro', label: 'Otro' },
+                        ]}
+                        value={selectedInstitucion}
                         onChange={(e) => {
-                          setSelectedOptionsRegionales(e.target.value);
+                          setSelectedInstitucion(e.target.value);
                         }}
                       />
+                      {selectedInstitucion === 'Otro' && (
+                        <GenericInput
+                          placeholder="Nombre de la institución..."
+                          value={otraInstitucion}
+                          onChange={(e) => {
+                            setOtraInstitucion(e.target.value);
+                          }}
+                        />
+                      )}
                     </Box>
                     <Box display="flex" justifyContent="flex-end" width="55%">
                       <Button
                         colorScheme="blue"
                         variant="outline"
                         mr="5"
-                        onClick={agregarRegional}
+                        onClick={agregarInstitucion}
                       >
                         Agregar
                       </Button>
@@ -603,14 +618,14 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={['Regional', 'Eliminar']}
-                    datos={regionalesSeleccionados?.map((item, index) => [
+                    columnas={['Institución', 'Eliminar']}
+                    datos={institucionesSeleccionadas?.map((item, index) => [
                       item,
                       <DeleteIcon
-                        key={`delete-regional-${item}-${index}`}
+                        key={`delete-institucion-${item}-${index}`}
                         cursor={'pointer'}
                         onClick={() => {
-                          eliminarRegional(item, index);
+                          eliminarInstitucion(item);
                         }}
                       />,
                     ])}
