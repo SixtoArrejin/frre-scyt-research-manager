@@ -109,8 +109,8 @@ export const roles = [
 export const tipoProyectosConRegionales = [
   'Integrador Asociado (PID IA) con Incentivo',
   'Integrador Asociado (PID IA) sin Incentivo',
-  'Inter-institucional (PIC IN) con Incentivos',
-  'Inter-institucional (PIC IN) sin Incentivos',
+  'Inter-institucional (PID IN) con Incentivos',
+  'Inter-institucional (PID IN) sin Incentivos',
   'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
   'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
   'Tutorado con Incentivo',

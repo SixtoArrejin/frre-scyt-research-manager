@@ -39,8 +39,8 @@ const regionalesData = [
 const tiposProyectosData = [
   'Integrador Asociado (PID IA) con Incentivo',
   'Integrador Asociado (PID IA) sin Incentivo',
-  'Inter-institucional (PIC IN) con Incentivos',
-  'Inter-institucional (PIC IN) sin Incentivos',
+  'Inter-institucional (PID IN) con Incentivos',
+  'Inter-institucional (PID IN) sin Incentivos',
   'PID Con Incentivos',
   'PID Equipos Consolidados con Incentivos (TC)',
   'PID Equipos Consolidados sin Incentivos (TC)',
