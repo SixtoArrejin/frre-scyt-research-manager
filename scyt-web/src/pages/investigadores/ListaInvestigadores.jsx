@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Heading, Box, Button, Spinner, Badge } from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Button, Spinner, Badge, useDisclosure, useToast } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllPersonas } from '../../utils/api/personasApi';
@@ -12,6 +12,13 @@ import GenericSelect from '../../components/formControls/GenericSelect';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
 import PermissionGate from '../../components/PermissionGate';
+import ExportModal from '../../components/ExportModal';
+import { useExcelExport } from '../../hooks/useExcelExport';
+import {
+  getInvestigadoresExportConfig,
+  filterInvestigadores,
+  prepareInvestigadoresForExport,
+} from '../../utils/exportUtils/investigadoresExport';
 
 const columnas = ['Apellido y Nombre', 'Estado', 'Grupo', 'Cat. UTN', 'Cat. Min.', 'Ver Más'];
 
@@ -23,6 +30,11 @@ export default function ListaInvestigadores() {
   const { data, isLoading } = useQuery('personas', () => getAllPersonas());
   const { data: dataGrupos } = useQuery(['grupoFiltro'], () => getAllGrupos());
   const [investigadores, setInvestigadores] = useState(data?.personas || []);
+  
+  // Hook y estado para el modal de exportación
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { exportToExcel } = useExcelExport();
+  const toast = useToast();
 
   const sortedInvestigadores = [...investigadores]?.sort((a, b) => {
     const apellidoA = a.apellido.toLowerCase();
@@ -65,6 +77,57 @@ export default function ListaInvestigadores() {
       setFiltro(true);
     }
   }, [nombre, grupo, data]);
+
+  // Función para manejar la exportación
+  const handleExport = ({ filters, columns }) => {
+    try {
+      // Filtrar investigadores según los filtros seleccionados
+      const filteredData = filterInvestigadores(data?.personas || [], filters);
+
+      if (filteredData.length === 0) {
+        toast({
+          title: 'Sin datos',
+          description: 'No hay investigadores que coincidan con los filtros seleccionados.',
+          status: 'warning',
+          isClosable: true,
+        });
+        return;
+      }
+
+      // Preparar datos para exportación
+      const exportData = prepareInvestigadoresForExport(filteredData, columns);
+
+      // Exportar a Excel
+      const success = exportToExcel(exportData, 'Investigadores', 'Investigadores');
+
+      if (success) {
+        toast({
+          title: 'Exportar a Excel',
+          description: `Se exportaron ${filteredData.length} investigador(es) correctamente.`,
+          status: 'success',
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Exportar a Excel',
+          description: 'Hubo un problema al exportar los datos.',
+          status: 'error',
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error en la exportación:', error);
+      toast({
+        title: 'Exportar a Excel',
+        description: 'Hubo un problema al exportar los datos.',
+        status: 'error',
+        isClosable: true,
+      });
+    }
+  };
+
+  // Configuración de filtros para el modal
+  const exportConfig = getInvestigadoresExportConfig(dataGrupos?.grupos || []);
 
   if (isLoading) {
     return (
@@ -112,7 +175,7 @@ export default function ListaInvestigadores() {
           <br />
 
           {investigadores?.length > 0 ? (
-            <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={true} />
+            <Tabla columnas={columnas} datos={filas} filtro={filtro} checkbox={false} />
           ) : (
             <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay investigadores para mostrar' />
           )}
@@ -120,12 +183,21 @@ export default function ListaInvestigadores() {
           <br />
 
           <Box display='flex' justifyContent='flex-end' width='100%'>
-            <Button colorScheme='blue' variant='outline'>
-              Imprimir
+            <Button colorScheme='blue' variant='outline' onClick={onOpen}>
+              Exportar a Excel
             </Button>
           </Box>
         </Box>
       </CardBody>
+
+      {/* Modal de exportación */}
+      <ExportModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onExport={handleExport}
+        filterConfig={exportConfig}
+        title='Exportar Investigadores a Excel'
+      />
     </Card>
   );
 }
