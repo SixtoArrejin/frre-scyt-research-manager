@@ -20,6 +20,7 @@ import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
 import DisplayField from '../../components/DisplayField';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
+import PermissionGate from '../../components/PermissionGate';
 import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import NoData3 from '../../img/no-data-3.png';
@@ -321,18 +322,20 @@ export default function DetalleProyectoPid() {
                       )}
                     </Box>
                   )}
-                  <Box
-                    display="flex"
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Link to={'modificar'}>
-                      <Button colorScheme="blue" variant="outline">
-                        Modificar
-                      </Button>
-                    </Link>
-                  </Box>
+                  <PermissionGate module="proyectos" action="edit">
+                    <Box
+                      display="flex"
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="flex-end"
+                    >
+                      <Link to={'modificar'}>
+                        <Button colorScheme="blue" variant="outline">
+                          Modificar
+                        </Button>
+                      </Link>
+                    </Box>
+                  </PermissionGate>
                 </Box>
               </Box>
             </CardBody>
@@ -393,18 +396,20 @@ export default function DetalleProyectoPid() {
                 />
               )}
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              >
-                <Link to={'agregar-investigador'}>
-                  <Button colorScheme="blue" variant="outline">
-                    Agregar Investigador
-                  </Button>
-                </Link>
-              </Box>
+              <PermissionGate module="proyectos" action="edit">
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
+                  <Link to={'agregar-investigador'}>
+                    <Button colorScheme="blue" variant="outline">
+                      Agregar Investigador
+                    </Button>
+                  </Link>
+                </Box>
+              </PermissionGate>
             </CardBody>
           </Card>
 
@@ -446,18 +451,20 @@ export default function DetalleProyectoPid() {
                 />
               )}
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              >
-                <Link to={'agregar-grupo'}>
-                  <Button colorScheme="blue" variant="outline">
-                    Agregar Grupo
-                  </Button>
-                </Link>
-              </Box>
+              <PermissionGate module="proyectos" action="edit">
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
+                  <Link to={'agregar-grupo'}>
+                    <Button colorScheme="blue" variant="outline">
+                      Agregar Grupo
+                    </Button>
+                  </Link>
+                </Box>
+              </PermissionGate>
             </CardBody>
           </Card>
 
@@ -482,18 +489,20 @@ export default function DetalleProyectoPid() {
                 />
               )}
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              >
-                <Link to={'agregar-regional'}>
-                  <Button colorScheme="blue" variant="outline">
-                    Agregar Regional
-                  </Button>
-                </Link>
-              </Box>
+              <PermissionGate module="proyectos" action="edit">
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
+                  <Link to={'agregar-regional'}>
+                    <Button colorScheme="blue" variant="outline">
+                      Agregar Regional
+                    </Button>
+                  </Link>
+                </Box>
+              </PermissionGate>
             </CardBody>
           </Card>
 
@@ -529,18 +538,20 @@ export default function DetalleProyectoPid() {
                 />
               )}
               <br />
-              <Box
-                display="flex"
-                width="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-              >
-                <Link to={'nueva-vinculacion'}>
-                  <Button colorScheme="blue" variant="outline">
-                      Nueva vinculación
-                  </Button>
-                </Link>
-              </Box>
+              <PermissionGate module="vinculaciones" action="create">
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
+                  <Link to={'nueva-vinculacion'}>
+                    <Button colorScheme="blue" variant="outline">
+                        Nueva vinculación
+                    </Button>
+                  </Link>
+                </Box>
+              </PermissionGate>
             </CardBody>
           </Card>
           <br />

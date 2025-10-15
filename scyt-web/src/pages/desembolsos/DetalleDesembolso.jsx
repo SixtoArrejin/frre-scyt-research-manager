@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import GenericInput from '../../components/formControls/GenericInput';
+import PermissionGate from '../../components/PermissionGate';
 
 const schema = yup.object({});
 
@@ -397,15 +398,17 @@ export default function DetalleDesembolso() {
                       >
                         Volver
                       </Button>
-                      <Button
-                        colorScheme='blue'
-                        variant='outline'
-                        onClick={() => {
-                          navigate('modificar');
-                        }}
-                      >
-                        Modificar
-                      </Button>
+                      <PermissionGate module="desembolsos" action="edit">
+                        <Button
+                          colorScheme='blue'
+                          variant='outline'
+                          onClick={() => {
+                            navigate('modificar');
+                          }}
+                        >
+                          Modificar
+                        </Button>
+                      </PermissionGate>
                     </Box>
                   </Box>
                 </Box>
