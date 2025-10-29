@@ -126,13 +126,13 @@ export default function AgregarInvestigador2() {
             <Box /> {/* Spacer para centrar el título */}
           </HStack>
 
-        {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
-        <br />
-        <Card width='100%'>
-          <CardBody>
-            <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
-            <br />
-            <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
+          <br />
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
+              <br />
+              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
               <br />
               <Box display='flex' width='100%'>
                 <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
@@ -216,6 +216,7 @@ export default function AgregarInvestigador2() {
             </Box>
           </CardBody>
         </Card>
+        </Box>
       </CardBody>
     </Card>
   );
