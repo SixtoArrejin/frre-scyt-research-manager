@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast, HStack } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
@@ -9,6 +9,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import { useForm } from 'react-hook-form';
 import CustomModal from '../../components/CustomModal';
+import BackButton from '../../components/BackButton';
 
 export default function ModificarVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
@@ -149,9 +150,13 @@ export default function ModificarVinculacion() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Modificar datos de la vinculación
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Modificar datos de la vinculación
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
           <br />
           <Card width='100%'>
             <CardBody>

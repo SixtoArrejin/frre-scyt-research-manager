@@ -13,7 +13,6 @@ import {
   Switch,
   Spinner,
 } from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -21,6 +20,7 @@ import { getAllUsuarios, updateUsuario, getRoles } from '../../utils/api/usuario
 import { UserContext } from '../../context/UserContext';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import BackButton from '../../components/BackButton';
 
 export default function ModificarUsuario() {
   const { usuario: usuarioParam } = useParams();
@@ -144,9 +144,7 @@ export default function ModificarUsuario() {
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
           <HStack width='100%' justifyContent='space-between' mb={6}>
-            <Button as={Link} to='/usuarios' variant='outline'>
-              <ArrowBackIcon />
-            </Button>
+            <BackButton to='/usuarios' />
             <Heading as='h2' size='xl' textAlign='center'>
               Modificar Usuario: {usuarioParam}
             </Heading>

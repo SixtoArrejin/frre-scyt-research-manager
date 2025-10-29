@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack } from '@chakra-ui/react';
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
@@ -12,6 +12,7 @@ import PermissionGate from '../../components/PermissionGate';
 import NoData from '../../img/no-data.png';
 import NoData1 from '../../img/no-data-2.png';
 import NuevoConvenioModal from './NuevoConvenioModal';
+import BackButton from '../../components/BackButton';
 
 export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
@@ -58,9 +59,13 @@ export default function DetalleVinculacion() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Detalles de vinculación
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton to='/vinculaciones' />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Detalles de vinculación
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
           <br />
           <Card width='100%'>
             <CardBody>

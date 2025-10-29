@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardBody, Text, Heading, Box, Button } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, HStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import {
   useNuevaVinculacionForm,
@@ -10,6 +10,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import GenericRadio from '../../components/formControls/GenericRadio';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
+import BackButton from '../../components/BackButton';
 
 export default function NuevaVinculacion() {
   const {
@@ -51,9 +52,13 @@ export default function NuevaVinculacion() {
       <CardBody>
         <form style={{ width: '100%' }} onSubmit={handleSubmit(onSubmit)}>
           <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-            <Heading as='h2' size='xl' textAlign='center'>
-              Nueva Vinculacion
-            </Heading>
+            <HStack width='100%' justifyContent='space-between' mb={6}>
+              <BackButton to='/vinculaciones' />
+              <Heading as='h2' size='xl' textAlign='center'>
+                Nueva Vinculacion
+              </Heading>
+              <Box /> {/* Spacer para centrar el título */}
+            </HStack>
             <br />
             <Card width='100%'>
               <CardBody>

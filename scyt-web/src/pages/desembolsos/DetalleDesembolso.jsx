@@ -16,6 +16,7 @@ import {
   ModalCloseButton,
   Stack,
   Spinner,
+  HStack,
 } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -26,6 +27,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import GenericInput from '../../components/formControls/GenericInput';
 import PermissionGate from '../../components/PermissionGate';
+import BackButton from '../../components/BackButton';
 
 const schema = yup.object({});
 
@@ -197,9 +199,13 @@ export default function DetalleDesembolso() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Detalles del desembolso
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Detalles del desembolso
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
           <br />
 

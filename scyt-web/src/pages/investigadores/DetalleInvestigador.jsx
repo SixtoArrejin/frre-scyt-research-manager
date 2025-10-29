@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, Badge } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, Badge, HStack } from '@chakra-ui/react';
 import { DeleteIcon, PlusSquareIcon, EditIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getPersonaById } from '../../utils/api/personasApi';
@@ -16,6 +16,7 @@ import ImgDefault from '../../components/ImgDefault';
 import EditCategoriaModal from './EditCategoriaModal';
 import PermissionGate from '../../components/PermissionGate';
 import DisplayField from '../../components/DisplayField';
+import BackButton from '../../components/BackButton';
 
 export default function DetalleInvestigador() {
   /* Usestate para el modal */
@@ -101,9 +102,13 @@ export default function DetalleInvestigador() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Detalles del Investigador
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton to='/investigadores' />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Detalles del Investigador
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
           <br />
           <br />

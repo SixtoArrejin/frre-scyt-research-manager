@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, HStack } from '@chakra-ui/react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { getDesembolsoById, putDesembolsoById } from '../../utils/api/vinculacionesApi';
@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import GenericInput from '../../components/formControls/GenericInput';
 import CustomModal from '../../components/CustomModal';
 import GenericSelect from '../../components/formControls/GenericSelect';
+import BackButton from '../../components/BackButton';
 
 const estados = ['Rendido', 'En ejecución', 'En ejecución - Fuera de plazo'];
 const schema = yup.object({});
@@ -99,9 +100,13 @@ export default function ModificarDesembolso() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Modificar detalles del desembolso
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Modificar detalles del desembolso
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
           <br />
 
