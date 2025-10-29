@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Spinner,
+  HStack,
 } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
@@ -24,6 +25,7 @@ import PermissionGate from '../../components/PermissionGate';
 import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import NoData3 from '../../img/no-data-3.png';
+import BackButton from '../../components/BackButton';
 
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
@@ -86,9 +88,13 @@ export default function DetalleProyectoPid() {
           alignItems="center"
           justifyContent="center"
         >
-          <Heading as="h2" size="xl" textAlign="center">
-            Detalles del proyecto
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton to='/proyectos' />
+            <Heading as="h2" size="xl" textAlign="center">
+              Detalles del proyecto
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
           <br />
 
           <Card width="100%">

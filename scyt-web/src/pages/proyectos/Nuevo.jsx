@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Box, Button, Heading } from '@chakra-ui/react';
+import { Card, CardBody, Text, Box, Button, Heading, HStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput.jsx';
 import GenericSelect from '../../components/formControls/GenericSelect.jsx';
 import GenericRadio from '../../components/formControls/GenericRadio.jsx';
 import Tabla from '../../components/Tabla.jsx';
+import BackButton from '../../components/BackButton';
 
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general.jsx';
 import {
@@ -88,9 +89,13 @@ export default function NuevoPid() {
             alignItems="center"
             justifyContent="center"
           >
-            <Heading as="h2" size="xl" textAlign="center">
-              Nuevo Proyecto
-            </Heading>
+            <HStack width='100%' justifyContent='space-between' mb={6}>
+              <BackButton to='/proyectos' />
+              <Heading as="h2" size="xl" textAlign="center">
+                Nuevo Proyecto
+              </Heading>
+              <Box /> {/* Spacer para centrar el título */}
+            </HStack>
             <br />
             <Card width="100%">
               <CardBody>

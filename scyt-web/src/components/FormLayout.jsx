@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardBody, Text, Heading, Box } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, HStack } from '@chakra-ui/react';
+import BackButton from './BackButton';
 
 /**
  * Layout reutilizable para formularios
@@ -9,6 +10,8 @@ import { Card, CardBody, Text, Heading, Box } from '@chakra-ui/react';
  * @param {React.ReactNode} props.children - Contenido del formulario
  * @param {Object} props.cardProps - Props adicionales para la Card principal
  * @param {Object} props.innerCardProps - Props adicionales para la Card interna
+ * @param {boolean} props.showBackButton - Mostrar botón de retroceder (default: true)
+ * @param {string} props.backButtonTo - Ruta específica para el botón de retroceder
  */
 const FormLayout = ({
   title,
@@ -16,6 +19,8 @@ const FormLayout = ({
   children,
   cardProps = {},
   innerCardProps = {},
+  showBackButton = true,
+  backButtonTo,
 }) => {
   return (
     <Card {...cardProps}>
@@ -27,9 +32,19 @@ const FormLayout = ({
           alignItems='center'
           justifyContent='center'
         >
-          <Heading as='h2' size='xl' textAlign='center'>
-            {title}
-          </Heading>
+          {showBackButton ? (
+            <HStack width='100%' justifyContent='space-between' mb={6}>
+              <BackButton to={backButtonTo} />
+              <Heading as='h2' size='xl' textAlign='center'>
+                {title}
+              </Heading>
+              <Box /> {/* Spacer para centrar el título */}
+            </HStack>
+          ) : (
+            <Heading as='h2' size='xl' textAlign='center'>
+              {title}
+            </Heading>
+          )}
 
           <br />
           <br />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, HStack } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createDesembolsoByIdVinculacion } from '../../utils/api/vinculacionesApi';
 import GenericInput from '../../components/formControls/GenericInput';
+import BackButton from '../../components/BackButton';
 
 const schema = yup.object({
   fechaDesembolso: yup.date().required('La fecha es requerida'),
@@ -76,9 +77,13 @@ export default function NuevoDesembolso() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Nuevo Desembolso
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Nuevo Desembolso
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
           <br />
           <br />

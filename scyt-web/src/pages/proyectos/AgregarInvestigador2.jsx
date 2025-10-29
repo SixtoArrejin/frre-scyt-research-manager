@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, HStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueries, useQueryClient } from 'react-query';
@@ -12,6 +12,7 @@ import Tabla from '../../components/Tabla';
 import { getAllGrupos } from '../../utils/api/gruposApi';
 import GenericInput from '../../components/formControls/GenericInput';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
+import BackButton from '../../components/BackButton';
 
 const roles = ['Director', 'CoDirector', 'Investigador', 'Becario', 'Asesor Cientifico', 'Técnico de Apoyo'];
 
@@ -117,18 +118,21 @@ export default function AgregarInvestigador2() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Modificar Integrantes
-          </Heading>
-        </Box>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Modificar Integrantes
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
-        {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
-        <br />
-        <Card width='100%'>
-          <CardBody>
-            <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
-            <br />
-            <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
+          <br />
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
+              <br />
+              <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
               <br />
               <Box display='flex' width='100%'>
                 <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
@@ -212,6 +216,7 @@ export default function AgregarInvestigador2() {
             </Box>
           </CardBody>
         </Card>
+        </Box>
       </CardBody>
     </Card>
   );

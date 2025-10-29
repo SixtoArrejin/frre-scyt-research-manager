@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, HStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
@@ -9,6 +9,7 @@ import CustomModal from '../../components/CustomModal';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
+import BackButton from '../../components/BackButton';
 
 export default function AgregarGrupo() {
   const queryClient = useQueryClient();
@@ -86,9 +87,13 @@ export default function AgregarGrupo() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Modificar Grupos
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Modificar Grupos
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
         </Box>
 
         {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}

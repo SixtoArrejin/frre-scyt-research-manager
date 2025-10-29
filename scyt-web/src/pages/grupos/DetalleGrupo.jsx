@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
 import { getGrupoById } from '../../utils/api/gruposApi';
@@ -12,6 +12,7 @@ import NoData from '../../img/no-data.png';
 import NoData2 from '../../img/no-data-2.png';
 import ImgDefault from '../../components/ImgDefault';
 import DisplayField from '../../components/DisplayField';
+import BackButton from '../../components/BackButton';
 
 export default function DetalleGrupo() {
   const { idGrupoInvestigacion } = useParams();
@@ -55,9 +56,13 @@ export default function DetalleGrupo() {
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-          <Heading as='h2' size='xl' textAlign='center'>
-            Grupo de Investigación{data?.grupo.siglas ? `: ${data?.grupo.siglas}` : ''}
-          </Heading>
+          <HStack width='100%' justifyContent='space-between' mb={6}>
+            <BackButton to='/grupos-investigacion' />
+            <Heading as='h2' size='xl' textAlign='center'>
+              Grupo de Investigación{data?.grupo.siglas ? `: ${data?.grupo.siglas}` : ''}
+            </Heading>
+            <Box /> {/* Spacer para centrar el título */}
+          </HStack>
 
           <br />
           <br />
