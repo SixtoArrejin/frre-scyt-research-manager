@@ -48,14 +48,14 @@ model personas {
   dni                      Int?                @unique(map: "dni")
   nombre                   String?             @db.VarChar(100)
   apellido                 String?             @db.VarChar(100)
-  fechaIngresoGrupo        DateTime?           @db.Date
   activo                   Boolean?
+  idGrupoInvestigacion     Int
+  fechaIngresoGrupo        DateTime?           @db.Date
   esBecario                Boolean?            @default(false)
   legajo                   String?             @db.VarChar(50)
-  tienePosgrado            Boolean?            @default(false)
   nivelPosgrado            String?             @db.VarChar(50)
   otroPosgrado             String?             @db.VarChar(100)
-  idGrupoInvestigacion     Int
+  tienePosgrado            Boolean?            @default(false)
   categorias               categorias[]
   participa                participa[]
   gruposinvestigacion      gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
@@ -77,16 +77,16 @@ model proyectos {
   idCodirector           Int?
   tipoProyecto           String?                  @db.VarChar(256)
   programa               String?                  @db.VarChar(256)
+  institucionesAsociadas institucionesProyectos[] @relation("institucionesProyectos")
   participa              participa[]
+  pid                    pids?                    @relation("proyectos_pids")
   regionales             regionales?              @relation(fields: [regional], references: [nombre], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyectos_regionales")
   director               personas?                @relation("proyectos_idDirectorTopersonas", fields: [idDirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_1")
   codirector             personas?                @relation("proyectos_idCodirectorTopersonas", fields: [idCodirector], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_2")
   tiposproyectos         tiposproyectos?          @relation(fields: [tipoProyecto], references: [tipoProyecto], onDelete: NoAction, onUpdate: NoAction, map: "proyectos_ibfk_3")
+  proyectoExterno        proyectosExternos?       @relation("proyectos_externos")
   tiene                  tiene[]
   vinculaciones          vinculaciones[]
-  pid                    pids?                    @relation("proyectos_pids")
-  proyectoExterno        proyectosExternos?       @relation("proyectos_externos")
-  institucionesAsociadas institucionesProyectos[] @relation("institucionesProyectos")
 
   @@index([idCodirector], map: "proyectos_idCodirector")
   @@index([idDirector], map: "proyectos_idDirector")
@@ -104,13 +104,13 @@ model pids {
   prorrogado       Boolean?
   nuevaDisposicion String?   @db.VarChar(256)
   nuevaFechaFin    DateTime? @db.Date
-  proyecto         proyectos @relation("proyectos_pids", fields: [idPid], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
+  proyecto         proyectos @relation("proyectos_pids", fields: [idPid], references: [idProyecto], onDelete: Cascade)
 }
 
 model proyectosExternos {
   idProyectoExterno  Int       @id @unique
   empresaInstitucion String?   @db.VarChar(256)
-  proyecto           proyectos @relation("proyectos_externos", fields: [idProyectoExterno], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
+  proyecto           proyectos @relation("proyectos_externos", fields: [idProyectoExterno], references: [idProyecto], onDelete: Cascade)
 }
 
 model tiene {
@@ -126,7 +126,7 @@ model tiene {
 model institucionesProyectos {
   idProyecto        Int
   nombreInstitucion String    @db.VarChar(256)
-  proyecto          proyectos @relation("institucionesProyectos", fields: [idProyecto], references: [idProyecto], onDelete: Cascade, onUpdate: Cascade)
+  proyecto          proyectos @relation("institucionesProyectos", fields: [idProyecto], references: [idProyecto], onDelete: Cascade)
 
   @@id([idProyecto, nombreInstitucion])
 }
@@ -153,7 +153,7 @@ model tiposproyectos {
 model convenios {
   idConvenio    Int            @id @default(autoincrement())
   tipo          String?        @db.VarChar(256)
-  numero        Int?
+  numero        String?        @db.VarChar(256)
   idVinculacion Int?
   vinculaciones vinculaciones? @relation(fields: [idVinculacion], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "convenios_ibfk_1")
 
@@ -161,7 +161,7 @@ model convenios {
 }
 
 model desembolsos {
-  idDesembolso                   Int                            @default(autoincrement())
+  idDesembolso                   Int                            @id @default(autoincrement())
   idConFinanciamiento            Int
   montoDesembolsado              Float?                         @db.Real
   montoRendido                   Float?                         @db.Real
@@ -174,7 +174,6 @@ model desembolsos {
   fechaRendicion                 DateTime?                      @db.Date
   vinculacionesconfinanciamiento vinculacionesconfinanciamiento @relation(fields: [idConFinanciamiento], references: [idConFinanciamiento], onDelete: NoAction, onUpdate: NoAction, map: "desembolsos_ibfk_1")
 
-  @@id([idDesembolso])
   @@index([idConFinanciamiento], map: "desembolsos_idConFinanciamiento")
 }
 

@@ -94,19 +94,6 @@ export default function NuevaVinculacion() {
                       </Box>
                     </Box>
                     <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
-                      <GenericInput
-                        type='number'
-                        name='nroMarco'
-                        placeholder='Nro Marco'
-                        register={register}
-                        errors={errors}
-                        label='Nro Marco'
-                        width={{ base: '100%', md: '50%' }}
-                        mb='5vh'
-                        isRequired
-                      />
-                    </Box>
-                    <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                       <GenericSelect
                         name='idResponsable'
                         label='Responsable'
@@ -149,7 +136,7 @@ export default function NuevaVinculacion() {
                       mb='5vh'
                     />
                     <GenericInput
-                      type='number'
+                      type='text'
                       placeholder='Nro Convenio'
                       label='Nro Convenio'
                       width={{ base: '100%', md: '35%' }}

@@ -54,16 +54,7 @@ export default function ModificarVinculacion() {
                       label='Empresa/Institución'
                       register={register}
                       errors={errors}
-                      width={{ base: '100%', md: '65%' }}
-                      mb='5vh'
-                    />
-                    <GenericInput
-                      register={register}
-                      errors={errors}
-                      name='numeroMarco'
-                      label='Nro Marco'
-                      width={{ base: '100%', md: '30%' }}
-                      type='number'
+                      width={{ base: '100%', md: '100%' }}
                       mb='5vh'
                     />
                   </Box>

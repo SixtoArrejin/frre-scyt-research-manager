@@ -152,7 +152,7 @@ export async function deleteParticipa(idProyecto) {
 export async function createVinculacion(idProyecto, dataVinculacion) {
   const vinculacionData = {
     empresaInstitucion: dataVinculacion.empresaInstitucion,
-    numeroMarco: dataVinculacion.nroMarco,
+    numeroMarco: dataVinculacion.nroMarco || null,
     idProyecto: idProyecto,
     idResponsable: dataVinculacion.idResponsable,
   };

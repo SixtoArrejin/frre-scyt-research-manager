@@ -10,12 +10,6 @@ import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
 // Schema de validación para modificar vinculación
 const modificarVinculacionSchema = yup.object({
   empresaInstitucion: yup.string().required('La empresa/institución es requerida'),
-  numeroMarco: yup
-    .number()
-    .typeError('El número de marco debe ser un número')
-    .required('El número de marco es requerido')
-    .positive('El número de marco debe ser positivo')
-    .integer('El número de marco debe ser un entero'),
   idResponsable: yup
     .number()
     .typeError('Debe seleccionar un responsable')
@@ -55,7 +49,6 @@ const modificarVinculacionSchema = yup.object({
 // Valores por defecto
 const defaultValues = {
   empresaInstitucion: '',
-  numeroMarco: '',
   idResponsable: '',
   conFinanciamiento: {
     titulo: '',
@@ -157,7 +150,6 @@ export const useModificarVinculacionForm = () => {
     if (data?.vinculacion && form.reset) {
       form.reset({
         empresaInstitucion: data.vinculacion.empresaInstitucion || '',
-        numeroMarco: data.vinculacion.numeroMarco || '',
         idResponsable: data.vinculacion.idResponsable || '',
         conFinanciamiento: {
           titulo: data.vinculacion.vinculacionesconfinanciamiento?.titulo || '',

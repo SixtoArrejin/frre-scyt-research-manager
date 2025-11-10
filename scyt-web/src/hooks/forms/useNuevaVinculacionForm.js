@@ -8,17 +8,11 @@ import { createVinculacion, getProyectoById } from '../../utils/api/proyectosApi
 import { useFormHandler } from '../useFormHandler';
 
 // Constantes
-export const tiposConvenio = ['Especifico', 'Colaboración', 'Otro...'];
+export const tiposConvenio = ['Marco', 'Especifico', 'Colaboración', 'Otro...'];
 
 // Schema de validación para nueva vinculación
 const nuevaVinculacionSchema = yup.object({
   empresaInstitucion: yup.string().required('La empresa/institución es requerida'),
-  nroMarco: yup
-    .number()
-    .typeError('El número de marco debe ser un número')
-    .required('El número de marco es requerido')
-    .positive('El número de marco debe ser positivo')
-    .integer('El número de marco debe ser un entero'),
   idResponsable: yup
     .number()
     .typeError('Debe seleccionar un responsable')
@@ -110,7 +104,6 @@ const nuevaVinculacionSchema = yup.object({
 // Valores por defecto
 const defaultValues = {
   empresaInstitucion: '',
-  nroMarco: '',
   idResponsable: '',
   financiamiento: 'false',
   convenios: [],
@@ -140,7 +133,7 @@ export const useNuevaVinculacionForm = () => {
   // Estados locales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
-  const [selectedConvenio, setSelectedConvenio] = useState('Especifico');
+  const [selectedConvenio, setSelectedConvenio] = useState('Marco');
   const [nroConvenio, setNroConvenio] = useState('');
 
   // Configuración del formulario
@@ -251,22 +244,10 @@ export const useNuevaVinculacionForm = () => {
       return;
     }
 
-    if (!nroConvenio || nroConvenio === '') {
+    if (!nroConvenio || nroConvenio.trim() === '') {
       toast({
         title: 'Número de convenio requerido',
         description: 'Debe ingresar el número de convenio',
-        status: 'warning',
-        isClosable: true,
-      });
-      return;
-    }
-
-    // Validar que el número de convenio sea un número válido
-    const nroConvenioNum = Number(nroConvenio);
-    if (isNaN(nroConvenioNum) || nroConvenioNum <= 0) {
-      toast({
-        title: 'Número de convenio inválido',
-        description: 'El número de convenio debe ser un número válido mayor a 0',
         status: 'warning',
         isClosable: true,
       });
@@ -277,7 +258,7 @@ export const useNuevaVinculacionForm = () => {
     const convenioExistente = convenios.find(
       (convenio) =>
         convenio.tipoConvenio === selectedConvenio &&
-        convenio.nroConvenio === nroConvenioNum,
+        convenio.nroConvenio === nroConvenio,
     );
 
     if (convenioExistente) {
@@ -288,9 +269,9 @@ export const useNuevaVinculacionForm = () => {
       });
     } else {
       // Agregar el nuevo convenio al array
-      appendConvenio({ tipoConvenio: selectedConvenio, nroConvenio: nroConvenioNum });
+      appendConvenio({ tipoConvenio: selectedConvenio, nroConvenio: nroConvenio });
       // Limpiar los campos después de agregar
-      setSelectedConvenio('Especifico');
+      setSelectedConvenio('Marco');
       setNroConvenio('');
       toast({
         title: 'Convenio agregado',

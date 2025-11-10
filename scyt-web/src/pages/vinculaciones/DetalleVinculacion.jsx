@@ -73,23 +73,17 @@ export default function DetalleVinculacion() {
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
-                  {/* Primera fila: Empresa, Nro Marco, Proyecto */}
+                  {/* Primera fila: Empresa y Proyecto */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <DisplayField
                       label='Empresa/Institución'
-                      width={{ base: '100%', md: '30%' }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={data?.vinculacion?.empresaInstitucion}
                       mb={4}
                     />
                     <DisplayField
-                      label='Nro Marco'
-                      width={{ base: '100%', md: '30%' }}
-                      value={data?.vinculacion?.numeroMarco}
-                      mb={4}
-                    />
-                    <DisplayField
                       label='Proyecto'
-                      width={{ base: '100%', md: '30%' }}
+                      width={{ base: '100%', md: '47.5%' }}
                       value={data?.vinculacion?.proyectos?.denominacion}
                       mb={4}
                     />

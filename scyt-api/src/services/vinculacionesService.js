@@ -108,7 +108,7 @@ export async function updateVinculacionService(idVinculacion, vinculacionData) {
       //Si existe la vinculación
       const datosVinculacion = {
         empresaInstitucion: vinculacionData.empresaInstitucion,
-        numeroMarco: vinculacionData.numeroMarco,
+        numeroMarco: vinculacionData.numeroMarco || null,
         idResponsable: vinculacionData.idResponsable,
       };
 
