@@ -9,6 +9,7 @@ import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import ImgDefault from '../../components/ImgDefault';
 import NoData from '../../img/no-data.png';
+import PermissionGate from '../../components/PermissionGate';
 
 const financiamientos = ['Sin financiamiento', 'Con financiamiento'];
 const columnas = ['Empresa/Institución', 'Nro. Marco', 'Financiamiento', 'Ver Más'];
@@ -90,6 +91,15 @@ export default function ListaInvestigadores() {
                 }))}
                 onChange={(event) => setFinanciamientoFiltro(event.target.value)}
               />
+            </Box>
+            <Box display='flex' justifyContent='flex-end' width='55%'>
+              <PermissionGate module='vinculaciones' action='create'>
+                <Link to='nueva'>
+                  <Button colorScheme='blue' variant='outline' mr='5'>
+                    Vinculación +
+                  </Button>
+                </Link>
+              </PermissionGate>
             </Box>
           </Box>
 

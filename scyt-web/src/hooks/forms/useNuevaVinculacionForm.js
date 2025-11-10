@@ -135,6 +135,11 @@ export const useNuevaVinculacionForm = () => {
   const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
   const [selectedConvenio, setSelectedConvenio] = useState('Marco');
   const [nroConvenio, setNroConvenio] = useState('');
+  const [selectedProyecto, setSelectedProyecto] = useState(null);
+  const [proyectoSeleccionado, setProyectoSeleccionado] = useState(false);
+
+  // Determinar el ID del proyecto a usar
+  const proyectoId = idPid || selectedProyecto?.idProyecto;
 
   // Configuración del formulario
   const form = useFormHandler({
@@ -159,9 +164,9 @@ export const useNuevaVinculacionForm = () => {
 
   // Query para obtener proyecto y sus investigadores
   const { data: dataProyecto } = useQuery(
-    ['proyecto-investigadores', idPid],
-    () => getProyectoById(idPid),
-    { enabled: !!idPid },
+    ['proyecto-investigadores', proyectoId],
+    () => getProyectoById(proyectoId),
+    { enabled: !!proyectoId },
   );
 
   // Generar opciones de investigadores del proyecto
@@ -174,6 +179,19 @@ export const useNuevaVinculacionForm = () => {
       setInvestigadoresOptions(options);
     }
   }, [dataProyecto]);
+
+  // Función para manejar la selección de proyecto
+  const handleProyectoSelected = (proyecto) => {
+    setSelectedProyecto(proyecto);
+    setProyectoSeleccionado(true);
+    toast({
+      title: 'Proyecto seleccionado',
+      description: `${proyecto.denominacion}`,
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   // Limpiar errores de campos ocultos cuando cambia el tipo de financiamiento
   useEffect(() => {
@@ -210,7 +228,7 @@ export const useNuevaVinculacionForm = () => {
 
   // Mutation para crear vinculación
   const { mutate: createVinculacionMutation, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => createVinculacion(idPid, formData),
+    mutationFn: (formData) => createVinculacion(proyectoId, formData),
     onSuccess: () => {
       toast({
         title: 'Nueva Vinculación',
@@ -218,7 +236,12 @@ export const useNuevaVinculacionForm = () => {
         status: 'success',
         isClosable: true,
       });
-      navigate(-1);
+      // Redirigir según el contexto
+      if (idPid) {
+        navigate(-1); // Desde proyecto, volver atrás
+      } else {
+        navigate('/vinculaciones'); // Desde vinculaciones, ir a la lista
+      }
     },
     onError: (error) => {
       const errorMessage = error?.message;
@@ -324,6 +347,12 @@ export const useNuevaVinculacionForm = () => {
     setSelectedConvenio,
     nroConvenio,
     setNroConvenio,
+
+    // Proyecto
+    selectedProyecto,
+    proyectoSeleccionado,
+    handleProyectoSelected,
+    vinculandoDesdeProyecto: !!idPid,
 
     // Convenios
     convenios,

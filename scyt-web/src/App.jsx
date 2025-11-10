@@ -101,13 +101,12 @@ const routes = [
     element: <NuevaVinculacion />,
   },
   { path: '/proyectos/:idPid/nuevo-desembolso', element: <NuevoDesembolso /> },
+  { path: '/vinculaciones', element: <ListaVinculaciones /> },
+  { path: '/vinculaciones/nueva', element: <NuevaVinculacion /> },
   {
     path: '/vinculaciones/:idVinculacion/nuevo-desembolso',
     element: <NuevoDesembolso />,
   },
-  { path: '/vinculaciones', element: <ListaVinculaciones /> },
-  { path: '/vinculaciones/nuevo', element: <NuevaVinculacion /> },
-  { path: '/vinculaciones/:idVinculacion', element: <DetalleVinculacion /> },
   {
     path: '/vinculaciones/:idVinculacion/desembolso/:idDesembolso',
     element: <DetalleDesembolso />,
@@ -120,6 +119,7 @@ const routes = [
     path: '/vinculaciones/:idVinculacion/modificar',
     element: <ModificarVinculacion />,
   },
+  { path: '/vinculaciones/:idVinculacion', element: <DetalleVinculacion /> },
   {
     path: '/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar',
     element: <ModificarDesembolso />,
