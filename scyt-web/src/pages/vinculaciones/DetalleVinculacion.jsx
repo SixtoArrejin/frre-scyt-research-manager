@@ -73,7 +73,7 @@ export default function DetalleVinculacion() {
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
-                  {/* Primera fila: Empresa y Proyecto */}
+                  {/* Primera fila: Empresa y Responsable */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <DisplayField
                       label='Empresa/Institución'
@@ -82,18 +82,18 @@ export default function DetalleVinculacion() {
                       mb={4}
                     />
                     <DisplayField
-                      label='Proyecto'
+                      label='Responsable'
                       width={{ base: '100%', md: '47.5%' }}
-                      value={data?.vinculacion?.proyectos?.denominacion}
+                      value={data?.vinculacion?.responsable ? `${data.vinculacion.responsable.apellido}, ${data.vinculacion.responsable.nombre}` : 'Sin responsable asignado'}
                       mb={4}
                     />
                   </Box>
-                  {/* Segunda fila: Responsable */}
+                  {/* Segunda fila: Proyecto */}
                   <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
                     <DisplayField
-                      label='Responsable'
+                      label='Proyecto'
                       width={{ base: '100%', md: '100%' }}
-                      value={data?.vinculacion?.responsable ? `${data.vinculacion.responsable.apellido}, ${data.vinculacion.responsable.nombre}` : 'Sin responsable asignado'}
+                      value={data?.vinculacion?.proyectos?.denominacion}
                       mb={4}
                     />
                   </Box>
