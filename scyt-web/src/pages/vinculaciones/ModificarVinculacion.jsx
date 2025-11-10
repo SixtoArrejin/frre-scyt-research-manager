@@ -1,142 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner, useToast, HStack } from '@chakra-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
-import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
-import { getVinculacionById, updateVinculacion } from '../../utils/api/vinculacionesApi';
-import { getProyectoById } from '../../utils/api/proyectosApi';
+import React from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack } from '@chakra-ui/react';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
-import { useForm } from 'react-hook-form';
 import CustomModal from '../../components/CustomModal';
 import BackButton from '../../components/BackButton';
+import { useModificarVinculacionForm } from '../../hooks/forms/useModificarVinculacionForm';
 
 export default function ModificarVinculacion() {
-  const [Financiamiento, setFinanciamiento] = useState();
-  const [investigadoresOptions, setInvestigadoresOptions] = useState([]);
-
-  const [isOpenModalVinculacion, setIsOpenModalVinculacion] = useState(false);
-
-  const openModal = () => {
-    setIsOpenModalVinculacion(true);
-  };
-
-  const closeModal = () => {
-    setIsOpenModalVinculacion(false);
-  };
-
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  const { idVinculacion } = useParams();
-
-  const { data, isLoading } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
-
-  // Obtener proyecto para listar investigadores
-  const { data: dataProyecto } = useQuery(
-    ['proyecto-investigadores', data?.vinculacion?.idProyecto],
-    () => getProyectoById(data?.vinculacion?.idProyecto),
-    { enabled: !!data?.vinculacion?.idProyecto },
-  );
-
-  useEffect(() => {
-    if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
-      setFinanciamiento(false);
-    } else {
-      setFinanciamiento(true);
-    }
-  }, [data]);
-
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      //Vinculacion en general
-      empresaInstitucion: '',
-      numeroMarco: '',
-      idResponsable: '',
-      //Vinculación con Financiamiento
-      conFinanciamiento: {
-        titulo: '',
-        nombreBeneficiario: '',
-        monto: '',
-        cantidadDesembolsos: '',
-        fechaPresentacion: '',
-        fechaAdjudicacion: '',
-        plazoEjecucion: '',
-        estado: '',
-        motivoEstado: '',
-      },
-      sinFinanciamiento: {
-        fechaInicio: '',
-        fechaCierre: '',
-        descripcion: '',
-      },
-    },
-  });
-
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => updateVinculacion(idVinculacion, formData),
-    onSuccess: () => {
-      toast({
-        title: 'Modificar vinculación',
-        description: 'Se ha modificado el grupo exitosamente',
-        status: 'success',
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: (error) => {
-      const errorMessage = error?.message;
-      toast({
-        title: 'Error al modificar los datos de la vinculación',
-        description: `${errorMessage || 'Intente nuevamente'}`,
-        status: 'error',
-        isClosable: true,
-      });
-    },
-  });
-
-  // Generar opciones de investigadores del proyecto
-  useEffect(() => {
-    if (dataProyecto?.proyecto?.participa) {
-      const options = dataProyecto.proyecto.participa.map((participacion) => ({
-        value: participacion.personas.idPersona,
-        label: `${participacion.personas.apellido}, ${participacion.personas.nombre}`,
-      }));
-      setInvestigadoresOptions(options);
-    }
-  }, [dataProyecto]);
-
-  // Resetear el formulario cuando se cargan los datos
-  useEffect(() => {
-    if (data?.vinculacion && reset) {
-      reset({
-        empresaInstitucion: data.vinculacion.empresaInstitucion || '',
-        numeroMarco: data.vinculacion.numeroMarco || '',
-        idResponsable: data.vinculacion.idResponsable || '',
-        conFinanciamiento: {
-          titulo: data.vinculacion.vinculacionesconfinanciamiento?.titulo || '',
-          nombreBeneficiario: data.vinculacion.vinculacionesconfinanciamiento?.nombreBeneficiario || '',
-          monto: data.vinculacion.vinculacionesconfinanciamiento?.monto || '',
-          cantidadDesembolsos: data.vinculacion.vinculacionesconfinanciamiento?.cantidadDesembolsos || '',
-          fechaPresentacion: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionesconfinanciamiento?.fechaPresentacion) || '',
-          fechaAdjudicacion: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionesconfinanciamiento?.fechaAdjudicacion) || '',
-          plazoEjecucion: data.vinculacion.vinculacionesconfinanciamiento?.plazoEjecucion || '',
-          estado: data.vinculacion.vinculacionesconfinanciamiento?.estado || '',
-          motivoEstado: data.vinculacion.vinculacionesconfinanciamiento?.motivoEstado || '',
-        },
-        sinFinanciamiento: {
-          fechaInicio: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionessinfinanciamiento?.fechaInicio) || '',
-          fechaCierre: formatoFechaISOaAAAAMMDD(data.vinculacion.vinculacionessinfinanciamiento?.fechaCierre) || '',
-          descripcion: data.vinculacion.vinculacionessinfinanciamiento?.descripcion || '',
-        },
-      });
-    }
-  }, [data, reset]);
+    errors,
+    financiamiento,
+    investigadoresOptions,
+    isLoading,
+    isSubmitting,
+    isModalOpen,
+    openModal,
+    closeModal,
+    handleCancel,
+    onSubmit,
+  } = useModificarVinculacionForm();
 
   if (isLoading) {
     return (
@@ -160,7 +44,7 @@ export default function ModificarVinculacion() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos de vinculación</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos de vinculación</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -170,16 +54,7 @@ export default function ModificarVinculacion() {
                       label='Empresa/Institución'
                       register={register}
                       errors={errors}
-                      width={{ base: '100%', md: '65%' }}
-                      mb='5vh'
-                    />
-                    <GenericInput
-                      register={register}
-                      errors={errors}
-                      name='numeroMarco'
-                      label='Nro Marco'
-                      width={{ base: '100%', md: '30%' }}
-                      type='number'
+                      width={{ base: '100%', md: '100%' }}
                       mb='5vh'
                     />
                   </Box>
@@ -195,7 +70,7 @@ export default function ModificarVinculacion() {
                       mb='5vh'
                     />
                   </Box>
-                  {Financiamiento && (
+                  {financiamiento && (
                     <Box width='100%'>
                       <Box
                         display='flex'
@@ -317,7 +192,7 @@ export default function ModificarVinculacion() {
                       </Box>{' '}
                     </Box>
                   )}
-                  {!Financiamiento && (
+                  {!financiamiento && (
                     <Box width='100%'>
                       <Box
                         display='flex'
@@ -365,26 +240,19 @@ export default function ModificarVinculacion() {
                     </Box>
                   )}
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                    <Button colorScheme='gray' variant='outline' mr='3%' onClick={() => navigate(-1)}>
+                    <Button colorScheme='gray' variant='outline' mr='3%' onClick={handleCancel}>
                       Cancelar
                     </Button>
-                    <Button onClick={openModal} isLoading={isLoadingMutation} colorScheme='blue' variant='outline'>
+                    <Button onClick={openModal} isLoading={isSubmitting} colorScheme='blue' variant='outline'>
                       Guardar
                     </Button>
                     <CustomModal
-                      isOpen={isOpenModalVinculacion}
+                      isOpen={isModalOpen}
                       onClose={closeModal}
                       guardar={true}
                       title='Guardar datos'
                       content='Se guardara los nuevos datos del convenio'
-                      onSave={handleSubmit((values) => {
-                        const modifiedValues = {
-                          ...values,
-                          idResponsable: values.idResponsable && values.idResponsable !== '' ? Number(values.idResponsable) : null,
-                        };
-                        console.log('Datos a actualizar:', modifiedValues);
-                        mutate(modifiedValues);
-                      })}
+                      onSave={handleSubmit(onSubmit)}
                     />
                   </Box>
                 </Box>

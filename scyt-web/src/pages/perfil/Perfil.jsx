@@ -81,7 +81,7 @@ export default function Perfil() {
                   color={!form?.avatar ? 'white' : undefined}
                 />
               </VStack>
-              <Text fontSize='md' mb={4}>
+              <Text fontSize='md' fontWeight='bold' mb={4}>
                 Datos del perfil
               </Text>
 

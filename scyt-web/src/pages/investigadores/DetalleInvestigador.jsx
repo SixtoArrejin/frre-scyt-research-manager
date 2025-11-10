@@ -115,7 +115,7 @@ export default function DetalleInvestigador() {
 
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos del investigador</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos del investigador</Text>
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
                 {/* Primera fila: Estado, Apellido, Nombre, DNI - Anchos iguales 21.25% con separación 5% */}
@@ -264,7 +264,7 @@ export default function DetalleInvestigador() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Categoría Ministerio</Text>
+              <Text fontSize='md' fontWeight='bold'>Categoría Ministerio</Text>
               <br />
               {categoriasMIN?.length > 0 ? (
                 <Tabla
@@ -312,7 +312,7 @@ export default function DetalleInvestigador() {
               )}
 
               <br />
-              <Text fontSize='md'>Categoría UTN</Text>
+              <Text fontSize='md' fontWeight='bold'>Categoría UTN</Text>
               <br />
               {categoriasUTN?.length > 0 ? (
                 <Tabla
@@ -375,7 +375,7 @@ export default function DetalleInvestigador() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Proyectos</Text>
+              <Text fontSize='md' fontWeight='bold'>Proyectos</Text>
               <br />
               {(dataProyectos?.proyectos?.length > 0) ? (
                 <Tabla

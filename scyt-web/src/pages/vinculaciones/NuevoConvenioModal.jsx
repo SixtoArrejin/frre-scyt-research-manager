@@ -16,7 +16,7 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, categoria =
     defaultValues: {
       idVinculacion: parseInt(idVinculacion),
       tipoConvenio: '',
-      nroConvenio: null,
+      nroConvenio: '',
     },
   });
 
@@ -65,14 +65,14 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, categoria =
               width={{ base: '100%', md: '47.5%' }}
               isRequired
               register={register}
-              options={['Especifico', 'Colaboración', 'Otro...'].map((option) => ({
+              options={['Marco', 'Especifico', 'Colaboración', 'Otro...'].map((option) => ({
                 value: option,
                 label: option,
               }))}
               errors={errors}
             />
             <GenericInput
-              type='number'
+              type='text'
               name='nroConvenio'
               label='Número'
               placeholder='Número'

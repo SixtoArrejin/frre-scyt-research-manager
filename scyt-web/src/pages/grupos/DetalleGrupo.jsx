@@ -68,7 +68,7 @@ export default function DetalleGrupo() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos del grupo</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos del grupo</Text>
               <br />
               <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
                 {/* Primera fila: Nombre del grupo (100% con mayor altura) */}
@@ -121,7 +121,7 @@ export default function DetalleGrupo() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Integrantes</Text>
+              <Text fontSize='md' fontWeight='bold'>Integrantes</Text>
               <br />
               {sortedInvestigadores?.length > 0 ? (
                 <Tabla
@@ -149,7 +149,7 @@ export default function DetalleGrupo() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Proyectos</Text>
+              <Text fontSize='md' fontWeight='bold'>Proyectos</Text>
               <br />
               {proyectos?.length > 0 ? (
                 <Tabla

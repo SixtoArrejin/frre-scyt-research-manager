@@ -99,7 +99,7 @@ export default function NuevoPid() {
             <br />
             <Card width="100%">
               <CardBody>
-                <Text fontSize="md">Ingrese los datos del proyecto: </Text>
+                <Text fontSize="md" fontWeight="bold">Ingrese los datos del proyecto: </Text>
                 <br />
                 <Box
                   display="flex"
@@ -401,7 +401,7 @@ export default function NuevoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">
+              <Text fontSize="md" fontWeight="bold">
                 Agregar los grupos asociados al proyecto
               </Text>
               <br />
@@ -467,7 +467,7 @@ export default function NuevoPid() {
           {gruposSeleccionados.length > 0 && (
             <Card width="100%">
               <CardBody>
-                <Text fontSize="md">
+                <Text fontSize="md" fontWeight="bold">
                   Agregar los investigadores al proyecto
                 </Text>
                 <br />
@@ -566,7 +566,7 @@ export default function NuevoPid() {
           {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
             <Card width="100%">
               <CardBody>
-                <Text fontSize="md">Agregar instituciones asociadas</Text>
+                <Text fontSize="md" fontWeight="bold">Agregar instituciones asociadas</Text>
                 <br />
                 <Box
                   display="flex"

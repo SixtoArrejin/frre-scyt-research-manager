@@ -1,92 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, useToast, Spinner, HStack } from '@chakra-ui/react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getDesembolsoById, putDesembolsoById } from '../../utils/api/vinculacionesApi';
-import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
+import React from 'react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack } from '@chakra-ui/react';
 import GenericInput from '../../components/formControls/GenericInput';
 import CustomModal from '../../components/CustomModal';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import BackButton from '../../components/BackButton';
-
-const estados = ['Rendido', 'En ejecución', 'En ejecución - Fuera de plazo'];
-const schema = yup.object({});
+import { useModificarDesembolsoForm } from '../../hooks/forms/useModificarDesembolsoForm';
 
 export default function ModificarDesembolso() {
-  const navigate = useNavigate();
-  const toast = useToast();
-  const queryClient = useQueryClient();
-
-  const { idDesembolso } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const { data: dataDesembolso, isLoading } = useQuery(['desembolso', idDesembolso], () => getDesembolsoById(idDesembolso));
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  useEffect(() => {
-    if (dataDesembolso) {
-      reset({
-        plazoEtapa: dataDesembolso.desembolso.plazoEtapa,
-        montoDesembolsado: dataDesembolso.desembolso.montoDesembolsado,
-        estado: dataDesembolso.desembolso.estado,
-        fechaDesembolso: formatoFechaISOaAAAAMMDD(dataDesembolso.desembolso.fechaDesembolso),
-        ...(dataDesembolso.desembolso.fechaAprobado && { fechaAprobado: formatoFechaISOaAAAAMMDD(dataDesembolso.desembolso.fechaAprobado) }),
-        ...(dataDesembolso.desembolso.fechaDeRendicionReal && {
-          fechaDeRendicionReal: formatoFechaISOaAAAAMMDD(dataDesembolso.desembolso.fechaDeRendicionReal),
-        }),
-        ...(dataDesembolso.desembolso.montoRendido && { montoRendido: dataDesembolso.desembolso.montoRendido }),
-        ...(dataDesembolso.desembolso.estado && { estado: dataDesembolso.desembolso.estado }),
-        ...(dataDesembolso.desembolso.motivoEstado && { motivoEstado: dataDesembolso.desembolso.motivoEstado }),
-      });
-    }
-  }, [dataDesembolso, reset]);
-
-  const { mutate, isLoading: isLoadingMutation } = useMutation({
-    mutationFn: (formData) => putDesembolsoById(parseInt(idDesembolso), formData),
-    onSuccess: () => {
-      queryClient.refetchQueries(['desembolso', idDesembolso]);
-      toast({
-        title: 'Desembolso modificado',
-        description: 'Se ha modificado el desembolso exitosamente',
-        status: 'success',
-        isClosable: true,
-      });
-      navigate(-1);
-    },
-    onError: () => {
-      toast({
-        title: 'Error al modificar el desembolso',
-        description: 'Intente de nuevo.',
-        status: 'error',
-        isClosable: true,
-      });
-    },
-  });
-
-  const onSubmit = (values) => {
-    console.log(values);
-    mutate(values);
-    closeModal();
-  };
+    errors,
+    isLoading,
+    isSubmitting,
+    isModalOpen,
+    openModal,
+    closeModal,
+    handleCancel,
+    estadosOptions,
+    onSubmit,
+  } = useModificarDesembolsoForm();
 
   if (isLoading) {
     return (
@@ -112,7 +45,7 @@ export default function ModificarDesembolso() {
 
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos del desembolso</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos del desembolso</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -191,10 +124,7 @@ export default function ModificarDesembolso() {
                       mb='5vh'
                       isRequired
                       register={register}
-                      options={estados.map((estado) => ({
-                        value: estado,
-                        label: estado,
-                      }))}
+                      options={estadosOptions}
                       errors={errors}
                     />
                     <GenericInput
@@ -208,20 +138,20 @@ export default function ModificarDesembolso() {
                   </Box>
                   <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
                     <Box display='flex' width='20%' justifyContent='flex-end'>
-                      <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='3%'>
+                      <Button colorScheme='gray' variant='outline' onClick={handleCancel} mr='3%'>
                         Cancelar
                       </Button>
                     </Box>
-                    <Button onClick={openModal} colorScheme='blue' variant='outline' isLoading={isLoadingMutation}>
+                    <Button onClick={openModal} colorScheme='blue' variant='outline' isLoading={isSubmitting}>
                       Aceptar
                     </Button>
                     <CustomModal
-                      isOpen={isOpen}
+                      isOpen={isModalOpen}
                       onClose={closeModal}
                       guardar={true}
                       title='Se modificaran los datos del desembolso.'
                       content='¿Seguro que desea modificar la información del desembolso?'
-                      onSave={handleSubmit((values) => onSubmit(values))}
+                      onSave={handleSubmit(onSubmit)}
                     />
                   </Box>
                 </Box>

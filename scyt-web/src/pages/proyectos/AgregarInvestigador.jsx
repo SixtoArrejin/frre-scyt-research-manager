@@ -200,7 +200,7 @@ export default function AgregarInvestigador() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
+              <Text fontSize='md' fontWeight='bold'>Agregar los investigadores al proyecto</Text>
               <br />
               <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                 <br />
