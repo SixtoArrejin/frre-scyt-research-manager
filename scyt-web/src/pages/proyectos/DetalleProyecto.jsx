@@ -18,6 +18,7 @@ import {
 } from '../../utils/general';
 import { getProyectoById } from '../../utils/api/proyectosApi';
 import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
+import { getPropiedadIntelectualByIdProyecto } from '../../utils/api/propiedadIntelectualApi';
 import DisplayField from '../../components/DisplayField';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
@@ -57,6 +58,19 @@ export default function DetalleProyectoPid() {
   useEffect(() => {
     setVinculaciones(dataVinculaciones?.vinculaciones);
   }, [dataVinculaciones]);
+
+  const {
+    data: dataPropiedadIntelectual,
+  } = useQuery(['propiedadIntelectual', idProyecto], () =>
+    getPropiedadIntelectualByIdProyecto(Number(idProyecto)),
+  );
+  const [propiedadIntelectual, setPropiedadIntelectual] = useState(
+    dataPropiedadIntelectual?.propiedadIntelectual,
+  );
+
+  useEffect(() => {
+    setPropiedadIntelectual(dataPropiedadIntelectual?.propiedadIntelectual);
+  }, [dataPropiedadIntelectual]);
 
   if (isLoading) {
     return (
@@ -537,6 +551,54 @@ export default function DetalleProyectoPid() {
                   <Link to={'nueva-vinculacion'}>
                     <Button colorScheme="blue" variant="outline">
                         Nueva vinculación
+                    </Button>
+                  </Link>
+                </Box>
+              </PermissionGate>
+            </CardBody>
+          </Card>
+          <br />
+          <Card width="100%">
+            <CardBody>
+              <Text fontSize="md" fontWeight="bold">Propiedad Intelectual</Text>
+              <br />
+              {propiedadIntelectual?.length > 0 ? (
+                <Tabla
+                  columnas={[
+                    'Tipo',
+                    'Nro. Expediente',
+                    'Fecha Inicio',
+                    'Ver más',
+                  ]}
+                  datos={propiedadIntelectual?.map((item) => [
+                    item.tipoPI,
+                    item.numeroExpediente || '-',
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio) || '-',
+                    <Link key={item.idPI} to={`propiedad-intelectual/${item.idPI}`}>
+                      <PlusSquareIcon />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault
+                  src={NoData3}
+                  alt="No Data"
+                  width="30%"
+                  text="Este proyecto aún no tiene propiedad intelectual."
+                />
+              )}
+              <br />
+              <PermissionGate module="propiedadIntelectual" action="create">
+                <Box
+                  display="flex"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                >
+                  <Link to={'nueva-propiedad-intelectual'}>
+                    <Button colorScheme="blue" variant="outline">
+                        Nueva PI
                     </Button>
                   </Link>
                 </Box>
