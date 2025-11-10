@@ -5,7 +5,7 @@ import { useToast } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { updatePropiedadIntelectual, getPropiedadIntelectualById } from '../../utils/api/propiedadIntelectualApi';
 import { useFormHandler } from '../useFormHandler';
-import { getPersonas } from '../../utils/api/personasApi';
+import { getAllPersonas } from '../../utils/api/personasApi';
 
 // Schema de validación para modificar PI
 const modificarPISchema = yup.object({
@@ -27,7 +27,7 @@ export function useModificarPIForm() {
   const [porcentajeParticipacion, setPorcentajeParticipacion] = useState('');
 
   // Cargar investigadores
-  const { data: investigadoresData } = useQuery('investigadores', getPersonas);
+  const { data: investigadoresData } = useQuery('investigadores', getAllPersonas);
   const investigadores = investigadoresData?.personas || [];
 
   // Cargar PI actual

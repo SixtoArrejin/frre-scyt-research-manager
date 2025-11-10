@@ -5,7 +5,7 @@ import { useToast } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { createPropiedadIntelectualByProyectoId, getProyectoById } from '../../utils/api/proyectosApi';
 import { useFormHandler } from '../useFormHandler';
-import { getPersonas } from '../../utils/api/personasApi';
+import { getAllPersonas } from '../../utils/api/personasApi';
 
 // Constantes
 export const tiposPropiedadIntelectual = [
@@ -41,7 +41,7 @@ export function useNuevaPIForm() {
   const vinculandoDesdeProyecto = !!idPid;
 
   // Cargar investigadores
-  const { data: investigadoresData } = useQuery('investigadores', getPersonas);
+  const { data: investigadoresData } = useQuery('investigadores', getAllPersonas);
   const investigadores = investigadoresData?.personas || [];
 
   // Cargar proyecto si viene desde un proyecto
