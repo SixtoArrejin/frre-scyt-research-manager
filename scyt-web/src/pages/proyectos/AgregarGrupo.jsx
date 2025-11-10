@@ -101,7 +101,7 @@ export default function AgregarGrupo() {
 
         <Card width='100%'>
           <CardBody>
-            <Text fontSize='md'>Agregar los grupos asociados al proyecto</Text>
+            <Text fontSize='md' fontWeight='bold'>Agregar los grupos asociados al proyecto</Text>
             <br />
             <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
               <br />

@@ -130,92 +130,92 @@ export default function AgregarInvestigador2() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Agregar los investigadores al proyecto</Text>
+              <Text fontSize='md' fontWeight='bold'>Agregar los investigadores al proyecto</Text>
               <br />
               <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-              <br />
-              <Box display='flex' width='100%'>
-                <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
-                  <GenericSelect
-                    placeholder='Integrantes...'
-                    options={investigadoresGrupos.map((item) => ({
-                      value: item.idPersona,
-                      label: item.apellido + ', ' + item.nombre,
-                    }))}
-                    onChange={(e) => {
-                      setSelectedOptions(e.target.value);
-                    }}
-                    width='30%'
-                  />
-                  <GenericSelect
-                    placeholder='Rol...'
-                    options={roles.map((item) => ({
-                      value: item,
-                      label: item,
-                    }))}
-                    onChange={(e) => {
-                      setRolSelectedOptions(e.target.value);
-                    }}
-                    width='30%'
-                  />
-                  <GenericInput
-                    name='fechaInicio'
-                    label='Fecha ingreso'
-                    placeholder='Fecha de ingreso'
-                    type='date'
-                    width='30%'
-                    onChange={(e) => setFechaSelected(e.target.value)}
-                    value={fechaSelected}
-                  />
-                </Box>
-                <Box display='flex' justifyContent='flex-end' width='25%'>
-                  <Button colorScheme='blue' variant='outline' mr='5' onClick={() => mutateInvestigador()}>
+                <br />
+                <Box display='flex' width='100%'>
+                  <Box display='flex' justifyContent='space-between' width='75%' marginLeft='2%'>
+                    <GenericSelect
+                      placeholder='Integrantes...'
+                      options={investigadoresGrupos.map((item) => ({
+                        value: item.idPersona,
+                        label: item.apellido + ', ' + item.nombre,
+                      }))}
+                      onChange={(e) => {
+                        setSelectedOptions(e.target.value);
+                      }}
+                      width='30%'
+                    />
+                    <GenericSelect
+                      placeholder='Rol...'
+                      options={roles.map((item) => ({
+                        value: item,
+                        label: item,
+                      }))}
+                      onChange={(e) => {
+                        setRolSelectedOptions(e.target.value);
+                      }}
+                      width='30%'
+                    />
+                    <GenericInput
+                      name='fechaInicio'
+                      label='Fecha ingreso'
+                      placeholder='Fecha de ingreso'
+                      type='date'
+                      width='30%'
+                      onChange={(e) => setFechaSelected(e.target.value)}
+                      value={fechaSelected}
+                    />
+                  </Box>
+                  <Box display='flex' justifyContent='flex-end' width='25%'>
+                    <Button colorScheme='blue' variant='outline' mr='5' onClick={() => mutateInvestigador()}>
                     Agregar
-                  </Button>
+                    </Button>
+                  </Box>
                 </Box>
+                <br />
+
+                <Tabla
+                  columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Fecha de inicio', 'Eliminar']}
+                  datos={dataProyecto?.proyecto?.participa?.map((item) => {
+                    return [
+                      <div key={`nombre-${item.personas.idPersona}`}>{item.personas.apellido + ', ' + item.personas.nombre}</div>,
+                      calcularGrupo(item.personas.idGrupoInvestigacion), //Buscar manera de indicar las siglas no el id del grupo
+                      item.rol,
+                      formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                      <DeleteIcon
+                        key={`delete-${item.personas.idPersona}`}
+                        cursor={'pointer'}
+                        // onClick={() => {
+                        //   eliminarInvestigador(item.idPersona, index);
+                        // }}
+                        onClick={() => {
+                          mutateDelInvestigador(item.personas.idPersona);
+                        }}
+                      />,
+                    ];
+                  })}
+                  paginado={false}
+                />
               </Box>
               <br />
-
-              <Tabla
-                columnas={['Apellido y nombre', 'Grupo', 'Rol', 'Fecha de inicio', 'Eliminar']}
-                datos={dataProyecto?.proyecto?.participa?.map((item) => {
-                  return [
-                    <div key={`nombre-${item.personas.idPersona}`}>{item.personas.apellido + ', ' + item.personas.nombre}</div>,
-                    calcularGrupo(item.personas.idGrupoInvestigacion), //Buscar manera de indicar las siglas no el id del grupo
-                    item.rol,
-                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
-                    <DeleteIcon
-                      key={`delete-${item.personas.idPersona}`}
-                      cursor={'pointer'}
-                      // onClick={() => {
-                      //   eliminarInvestigador(item.idPersona, index);
-                      // }}
-                      onClick={() => {
-                        mutateDelInvestigador(item.personas.idPersona);
-                      }}
-                    />,
-                  ];
-                })}
-                paginado={false}
-              />
-            </Box>
-            <br />
-            <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-              <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
+              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+                <Button colorScheme='gray' variant='outline' onClick={() => navigate(-1)} mr='5%'>
                 Volver
-              </Button>
-              <CustomModal
-                isOpen={isOpen}
-                onClose={closeModal}
-                guardar={true}
-                title='Guardar nuevo PID'
-                content='Se guardara el nuevo PID'
-              // onSave={handleSubmit((values) => mutate(values))}
-              // onSave={() => mutateInvestigador()}
-              />
-            </Box>
-          </CardBody>
-        </Card>
+                </Button>
+                <CustomModal
+                  isOpen={isOpen}
+                  onClose={closeModal}
+                  guardar={true}
+                  title='Guardar nuevo PID'
+                  content='Se guardara el nuevo PID'
+                  // onSave={handleSubmit((values) => mutate(values))}
+                  // onSave={() => mutateInvestigador()}
+                />
+              </Box>
+            </CardBody>
+          </Card>
         </Box>
       </CardBody>
     </Card>

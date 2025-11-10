@@ -99,7 +99,7 @@ export default function DetalleProyectoPid() {
 
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Datos del proyecto</Text>
+              <Text fontSize="md" fontWeight="bold">Datos del proyecto</Text>
               <br />
               <Box
                 display="flex"
@@ -346,7 +346,7 @@ export default function DetalleProyectoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Integrantes del proyecto</Text>
+              <Text fontSize="md" fontWeight="bold">Integrantes del proyecto</Text>
               <br />
 
               {integrantes?.length > 0 ? (
@@ -418,7 +418,7 @@ export default function DetalleProyectoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Grupos</Text>
+              <Text fontSize="md" fontWeight="bold">Grupos</Text>
               <br />
 
               {grupos?.length > 0 ? (
@@ -473,7 +473,7 @@ export default function DetalleProyectoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Instituciones Asociadas</Text>
+              <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
               <br />
 
               {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
@@ -498,7 +498,7 @@ export default function DetalleProyectoPid() {
           <br />
           <Card width="100%">
             <CardBody>
-              <Text fontSize="md">Vinculaciones</Text>
+              <Text fontSize="md" fontWeight="bold">Vinculaciones</Text>
               <br />
               {vinculaciones?.length > 0 ? (
                 <Tabla

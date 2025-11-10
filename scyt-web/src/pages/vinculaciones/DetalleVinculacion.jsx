@@ -69,7 +69,7 @@ export default function DetalleVinculacion() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos de vinculación</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos de vinculación</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -250,7 +250,7 @@ export default function DetalleVinculacion() {
           <br />
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Convenio</Text>
+              <Text fontSize='md' fontWeight='bold'>Convenio</Text>
               <br />
               {data?.vinculacion?.convenios?.length > 0 ? (
                 <Tabla
@@ -296,7 +296,7 @@ export default function DetalleVinculacion() {
           {Financiamiento && (
             <Card width='100%'>
               <CardBody>
-                <Text fontSize='md'>Desembolsos</Text>
+                <Text fontSize='md' fontWeight='bold'>Desembolsos</Text>
                 <br />
                 {data?.vinculacion?.vinculacionesconfinanciamiento?.desembolsos?.length > 0 ? (
                   <Tabla

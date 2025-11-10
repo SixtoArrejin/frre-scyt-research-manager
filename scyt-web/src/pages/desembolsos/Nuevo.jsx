@@ -34,7 +34,7 @@ export default function NuevoDesembolso() {
 
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Ingrese los datos del desembolso</Text>
+              <Text fontSize='md' fontWeight='bold'>Ingrese los datos del desembolso</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>

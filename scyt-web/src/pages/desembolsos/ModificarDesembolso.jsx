@@ -45,7 +45,7 @@ export default function ModificarDesembolso() {
 
           <Card width='100%'>
             <CardBody>
-              <Text fontSize='md'>Datos del desembolso</Text>
+              <Text fontSize='md' fontWeight='bold'>Datos del desembolso</Text>
               <br />
               <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                 <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>

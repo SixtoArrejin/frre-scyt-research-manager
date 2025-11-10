@@ -53,7 +53,7 @@ const FormLayout = ({
             <CardBody>
               {description && (
                 <>
-                  <Text fontSize='md'>{description}</Text>
+                  <Text fontSize='md' fontWeight='bold'>{description}</Text>
                   <br />
                 </>
               )}

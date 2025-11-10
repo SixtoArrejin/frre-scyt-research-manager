@@ -114,7 +114,7 @@ export default function NuevaVinculacion() {
               <>
                 <Card width='100%'>
                   <CardBody>
-                    <Text fontSize='md'>Ingrese los datos de la nueva vinculación</Text>
+                    <Text fontSize='md' fontWeight='bold'>Ingrese los datos de la nueva vinculación</Text>
                     <br />
                     <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                       <Box display='flex' width='70%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -166,7 +166,7 @@ export default function NuevaVinculacion() {
                 <br />
                 <Card width='100%'>
                   <CardBody>
-                    <Text fontSize='md'>Convenios</Text>
+                    <Text fontSize='md' fontWeight='bold'>Convenios</Text>
                     <br />
                     <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                       <br />
@@ -228,7 +228,7 @@ export default function NuevaVinculacion() {
 
                 <Card width='100%'>
                   <CardBody>
-                    <Text fontSize='md'>Ingrese los datos del convenio {tipoFinanciamiento === 'true' ? 'con' : 'sin'} financiamiento</Text>
+                    <Text fontSize='md' fontWeight='bold'>Ingrese los datos del convenio {tipoFinanciamiento === 'true' ? 'con' : 'sin'} financiamiento</Text>
                     <br />
                     <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
                       {tipoFinanciamiento === 'true' && (

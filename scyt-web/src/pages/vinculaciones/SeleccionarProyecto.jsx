@@ -60,7 +60,7 @@ export default function SeleccionarProyecto({ onProyectoSelected }) {
   return (
     <Card width='100%'>
       <CardBody>
-        <Text fontSize='md'>Seleccione el proyecto para la vinculación</Text>
+        <Text fontSize='md' fontWeight='bold'>Seleccione el proyecto para la vinculación</Text>
         <br />
         <Box display='flex' width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
           <Box display='flex' width='100%' marginBottom='20px'>
