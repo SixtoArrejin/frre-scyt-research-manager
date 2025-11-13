@@ -36,6 +36,10 @@ import AgregarInvestigador2 from './pages/proyectos/AgregarInvestigador2';
 // import AgregarRegional from './pages/proyectos/AgregarRegional'; // DESHABILITADO - reutilizar para AgregarInstituciones
 import ModificarDesembolso from './pages/desembolsos/ModificarDesembolso';
 import ModificarVinculacion from './pages/vinculaciones/ModificarVinculacion';
+import DetallePropiedadIntelectual from './pages/propiedadIntelectual/DetallePropiedadIntelectual';
+import NuevaPropiedadIntelectual from './pages/propiedadIntelectual/Nueva';
+import ListaPropiedadIntelectual from './pages/propiedadIntelectual/ListaPropiedadIntelectual';
+import ModificarPropiedadIntelectual from './pages/propiedadIntelectual/ModificarPropiedadIntelectual';
 import Perfil from './pages/perfil/Perfil';
 import ListaUsuarios from './pages/usuarios/ListaUsuarios';
 import NuevoUsuario from './pages/usuarios/NuevoUsuario';
@@ -120,6 +124,28 @@ const routes = [
     element: <ModificarVinculacion />,
   },
   { path: '/vinculaciones/:idVinculacion', element: <DetalleVinculacion /> },
+  { path: '/propiedadIntelectual', element: <ListaPropiedadIntelectual /> },
+  { path: '/propiedadIntelectual/nueva', element: <NuevaPropiedadIntelectual /> },
+  {
+    path: '/propiedadIntelectual/:idPI',
+    element: <DetallePropiedadIntelectual />,
+  },
+  {
+    path: '/propiedadIntelectual/:idPI/modificar',
+    element: <ModificarPropiedadIntelectual />,
+  },
+  {
+    path: '/proyectos/:idPid/nueva-propiedad-intelectual',
+    element: <NuevaPropiedadIntelectual />,
+  },
+  {
+    path: '/proyectos/:idPid/propiedad-intelectual/:idPI',
+    element: <DetallePropiedadIntelectual />,
+  },
+  {
+    path: '/proyectos/:idPid/propiedad-intelectual/:idPI/modificar',
+    element: <ModificarPropiedadIntelectual />,
+  },
   {
     path: '/proyectos/:idPid/vinculacion/:idVinculacion/desembolso/:idDesembolso/modificar',
     element: <ModificarDesembolso />,

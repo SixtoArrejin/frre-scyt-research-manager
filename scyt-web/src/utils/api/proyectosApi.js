@@ -35,6 +35,10 @@ export async function createVinculacion(id, data) {
   return post(`/api/proyectos/${id}/vinculaciones`, data);
 }
 
+export async function createPropiedadIntelectualByProyectoId(id, data) {
+  return post(`/api/propiedadIntelectual`, { ...data, idProyecto: id });
+}
+
 export async function addInvestigador(idProyecto, data) {
   console.log('info: ', idProyecto, data);
   return post(`/api/proyectos/${idProyecto}/investigador`, data);

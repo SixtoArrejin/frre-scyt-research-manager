@@ -62,6 +62,7 @@ model personas {
   proyectosDirector        proyectos[]         @relation("proyectos_idDirectorTopersonas")
   proyectosCodirector      proyectos[]         @relation("proyectos_idCodirectorTopersonas")
   vinculacionesResponsable vinculaciones[]     @relation("vinculaciones_responsable")
+  propiedadIntelectual     investigadorespi[]  @relation("investigadores_pi")
 
   @@index([idGrupoInvestigacion], map: "personas_idGrupoInvestigacion")
 }
@@ -87,6 +88,7 @@ model proyectos {
   proyectoExterno        proyectosExternos?       @relation("proyectos_externos")
   tiene                  tiene[]
   vinculaciones          vinculaciones[]
+  propiedadIntelectual   propiedadintelectual[]
 
   @@index([idCodirector], map: "proyectos_idCodirector")
   @@index([idDirector], map: "proyectos_idDirector")
@@ -214,4 +216,29 @@ model vinculacionessinfinanciamiento {
   fechaCierre         DateTime?     @db.Date
   descripcion         String?       @db.VarChar(256)
   vinculaciones       vinculaciones @relation(fields: [idSinFinanciamiento], references: [idVinculacion], onDelete: NoAction, onUpdate: NoAction, map: "vinculacionessinfinanciamiento_ibfk_1")
+}
+
+model propiedadintelectual {
+  idPI              Int                  @id @default(autoincrement())
+  tipoPI            String               @db.VarChar(100)
+  numeroExpediente  String?              @db.VarChar(256)
+  fechaInicio       DateTime?            @db.Date
+  fechaCierre       DateTime?            @db.Date
+  descripcion       String?              @db.VarChar(1000)
+  idProyecto        Int?
+  proyectos         proyectos?           @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "propiedadintelectual_ibfk_1")
+  investigadores    investigadorespi[]
+
+  @@index([idProyecto], map: "propiedadintelectual_idProyecto")
+}
+
+model investigadorespi {
+  idPI                   Int
+  idPersona              Int
+  porcentajeParticipacion Float?
+  propiedadintelectual   propiedadintelectual @relation(fields: [idPI], references: [idPI], onDelete: Cascade, onUpdate: NoAction, map: "investigadorespi_ibfk_1")
+  personas               personas             @relation("investigadores_pi", fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "investigadorespi_ibfk_2")
+
+  @@id([idPI, idPersona])
+  @@index([idPersona], map: "investigadorespi_idPersona")
 }
