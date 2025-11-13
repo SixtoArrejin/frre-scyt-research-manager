@@ -18,6 +18,7 @@ export const RESOURCES = {
   REGIONALES: 'regionales',
   TIPOS_PROYECTOS: 'tiposProyectos',
   CONVENIOS: 'convenios',
+  PROPIEDAD_INTELECTUAL: 'propiedadIntelectual',
 };
 
 export const ACTIONS = {
@@ -85,6 +86,12 @@ export const PERMISSIONS = {
       ACTIONS.UPDATE,
       ACTIONS.DELETE,
     ],
+    [RESOURCES.PROPIEDAD_INTELECTUAL]: [
+      ACTIONS.CREATE,
+      ACTIONS.READ,
+      ACTIONS.UPDATE,
+      ACTIONS.DELETE,
+    ],
   },
 
   [ROLES.PID]: {
@@ -112,6 +119,7 @@ export const PERMISSIONS = {
       ACTIONS.DELETE,
     ],
     [RESOURCES.CONVENIOS]: [ACTIONS.READ],
+    [RESOURCES.PROPIEDAD_INTELECTUAL]: [ACTIONS.READ],
     // PID no tiene acceso a gestión de usuarios
   },
 
@@ -140,6 +148,7 @@ export const PERMISSIONS = {
     [RESOURCES.REGIONALES]: [ACTIONS.READ],
     [RESOURCES.TIPOS_PROYECTOS]: [ACTIONS.READ],
     [RESOURCES.CONVENIOS]: [ACTIONS.READ],
+    [RESOURCES.PROPIEDAD_INTELECTUAL]: [ACTIONS.READ],
     // RRHH no tiene acceso a gestión de usuarios
   },
 
@@ -163,6 +172,12 @@ export const PERMISSIONS = {
       ACTIONS.UPDATE,
       ACTIONS.DELETE,
     ],
+    [RESOURCES.PROPIEDAD_INTELECTUAL]: [
+      ACTIONS.CREATE,
+      ACTIONS.READ,
+      ACTIONS.UPDATE,
+      ACTIONS.DELETE,
+    ],
     // UVT no tiene acceso a gestión de usuarios
   },
 
@@ -176,6 +191,7 @@ export const PERMISSIONS = {
     [RESOURCES.REGIONALES]: [ACTIONS.READ],
     [RESOURCES.TIPOS_PROYECTOS]: [ACTIONS.READ],
     [RESOURCES.CONVENIOS]: [ACTIONS.READ],
+    [RESOURCES.PROPIEDAD_INTELECTUAL]: [ACTIONS.READ],
     // Viewer no puede ver usuarios
   },
 };

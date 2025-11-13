@@ -90,6 +90,14 @@ export const PERMISSIONS_CONFIG = {
     edit: ['admin', 'uvt'],
     delete: ['admin', 'uvt'],
   },
+
+  // Módulo de Propiedad Intelectual
+  propiedadIntelectual: {
+    view: ['admin', 'rrhh', 'pid', 'uvt', 'viewer'],
+    create: ['admin', 'uvt'],
+    edit: ['admin', 'uvt'],
+    delete: ['admin', 'uvt'],
+  },
 };
 
 /**
@@ -108,6 +116,7 @@ export const MODULE_ACCESS = {
   proyectos: ['admin', 'rrhh', 'pid', 'uvt', 'viewer'],
   vinculaciones: ['admin', 'rrhh', 'pid', 'uvt', 'viewer'],
   desembolsos: ['admin', 'rrhh', 'pid', 'uvt', 'viewer'],
+  propiedadIntelectual: ['admin', 'rrhh', 'pid', 'uvt', 'viewer'],
 };
 
 /**

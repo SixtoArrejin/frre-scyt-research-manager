@@ -10,6 +10,7 @@ import Regionales from './routes/regionalesRouter.js';
 import TiposProyectos from './routes/tiposProyectosRouter.js';
 import Vinculaciones from './routes/vinculacionesRouter.js';
 import Convenios from './routes/conveniosRouter.js';
+import PropiedadIntelectual from './routes/propiedadIntelectualRouter.js';
 import { initDatabase } from './repository/initDB.js';
 import { createDefaultUsers } from '../scripts/createDefaultUsers.js';
 
@@ -47,6 +48,7 @@ app.use('/api/regionales', Regionales);
 app.use('/api/tiposProyectos', TiposProyectos);
 app.use('/api/vinculaciones', Vinculaciones);
 app.use('/api/convenios', Convenios);
+app.use('/api/propiedadIntelectual', PropiedadIntelectual);
 
 const PORT = process.env.PORT || 8000;
 
