@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Text, Box } from '@chakra-ui/react';
-import { PlusSquareIcon } from '@chakra-ui/icons';
 import { useQuery } from 'react-query';
 import Tabla from '../../components/Tabla';
 import GenericInput from '../../components/formControls/GenericInput';
 import { getProyectos } from '../../utils/api/proyectosApi';
 
-const columnas = ['Cod. PID', 'Denominación', 'Director', 'Tipo', 'Seleccionar'];
+const columnas = ['Cod. PID', 'Denominación', 'Director', 'Tipo'];
 
 export default function SeleccionarProyecto({ onProyectoSelected }) {
   const [denominacionFiltro, setDenominacionFiltro] = useState('');
@@ -49,11 +48,7 @@ export default function SeleccionarProyecto({ onProyectoSelected }) {
       denominacionCorta,
       item.director ? `${item.director.apellido}, ${item.director.nombre}` : '-',
       tipoCorto,
-      <PlusSquareIcon
-        key={item.idProyecto}
-        cursor='pointer'
-        onClick={() => onProyectoSelected(item)}
-      />,
+      item, // Pasamos el objeto proyecto para poder accederlo en el click
     ];
   });
 
@@ -85,7 +80,12 @@ export default function SeleccionarProyecto({ onProyectoSelected }) {
           {isLoading ? (
             <Text>Cargando proyectos...</Text>
           ) : filas && filas.length > 0 ? (
-            <Tabla columnas={columnas} datos={filas} paginado={true} />
+            <Tabla
+              columnas={columnas}
+              datos={filas}
+              paginado={true}
+              onRowClick={(fila) => onProyectoSelected(fila[4])}
+            />
           ) : (
             <Text>No hay proyectos disponibles</Text>
           )}
