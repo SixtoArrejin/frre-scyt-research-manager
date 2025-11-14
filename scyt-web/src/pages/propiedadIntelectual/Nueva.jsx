@@ -242,10 +242,11 @@ export default function NuevaPropiedadIntelectual() {
                       <br />
                       {investigadoresAgregados.length > 0 ? (
                         <Tabla
-                          columnas={['Apellido', 'Nombre', 'Porcentaje (%)', 'Eliminar']}
+                          columnas={['Investigador', 'Porcentaje (%)', 'Eliminar']}
                           datos={investigadoresAgregados.map((inv) => [
-                            inv.apellido,
-                            inv.nombre,
+                            <div key={`nombre-${inv.idPersona}`}>
+                              {inv.apellido} {inv.nombre}
+                            </div>,
                             inv.porcentajeParticipacion,
                             <DeleteIcon
                               key={inv.idPersona}
