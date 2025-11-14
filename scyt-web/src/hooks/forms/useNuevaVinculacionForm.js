@@ -184,13 +184,6 @@ export const useNuevaVinculacionForm = () => {
   const handleProyectoSelected = (proyecto) => {
     setSelectedProyecto(proyecto);
     setProyectoSeleccionado(true);
-    toast({
-      title: 'Proyecto seleccionado',
-      description: `${proyecto.denominacion}`,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
   };
 
   // Limpiar errores de campos ocultos cuando cambia el tipo de financiamiento

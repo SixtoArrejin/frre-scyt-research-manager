@@ -3,7 +3,7 @@ import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, T
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-export default function Tabla({ columnas = [], datos = [], filtro = false, checkbox = false, paginado = true, itemsPerPage = 10 }) {
+export default function Tabla({ columnas = [], datos = [], filtro = false, checkbox = false, paginado = true, itemsPerPage = 10, onRowClick = null }) {
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
   const [selectedData, setSelectedData] = useState([]);
@@ -78,7 +78,12 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
             </Thead>
             <Tbody>
               {displayedData?.map((fila, filaIndex) => (
-                <Tr key={filaIndex}>
+                <Tr
+                  key={filaIndex}
+                  onClick={() => onRowClick && onRowClick(fila)}
+                  cursor={onRowClick ? 'pointer' : 'default'}
+                  _hover={onRowClick ? { bg: 'gray.100' } : {}}
+                >
                   {checkbox && (
                     <Td textAlign='center'>
                       <Checkbox border='gray' isChecked={selectedData.includes(fila)} onChange={() => handleDataSelection(fila)} />

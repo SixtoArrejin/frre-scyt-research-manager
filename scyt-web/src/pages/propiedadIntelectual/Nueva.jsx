@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardBody, Text, Heading, Box, Button, HStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { PlusSquareIcon } from '@chakra-ui/icons';
 import {
   useNuevaPIForm,
   tiposPropiedadIntelectual,
 } from '../../hooks/forms/useNuevaPIForm';
+import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import Tabla from '../../components/Tabla';
@@ -14,6 +14,8 @@ import SeleccionarProyecto from '../vinculaciones/SeleccionarProyecto';
 import DisplayField from '../../components/DisplayField';
 
 export default function NuevaPropiedadIntelectual() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     // Formulario
     register,
@@ -46,15 +48,28 @@ export default function NuevaPropiedadIntelectual() {
     handleCancel,
   } = useNuevaPIForm();
 
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+
+  const handleSubmitAndClose = async() => {
+    await onSubmit();
+    closeModal();
+  };
+
   // Opciones para el select de investigadores (excluir los ya agregados)
   const investigadoresDisponibles = investigadores.filter(
-    (inv) => !investigadoresAgregados.find((agregado) => agregado.idPersona === inv.idPersona)
+    (inv) => !investigadoresAgregados.find((agregado) => agregado.idPersona === inv.idPersona),
   );
 
   return (
     <Card>
       <CardBody>
-        <form style={{ width: '100%' }} onSubmit={handleSubmit(onSubmit)}>
+        <form style={{ width: '100%' }}>
           <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
             <HStack width='100%' justifyContent='space-between' mb={6}>
               <BackButton to={vinculandoDesdeProyecto ? `/proyectos/${selectedProyecto?.idProyecto}` : '/proyectos'} />
@@ -185,29 +200,21 @@ export default function NuevaPropiedadIntelectual() {
                       <Box display='flex' width='100%'>
                         <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} justifyContent='space-between' width='70%' marginLeft='2%' gap={4}>
                           <Box width={{ base: '100%', md: '45%' }}>
-                            <Text fontSize='sm' mb={2}>Investigador</Text>
-                            <select
-                              style={{
-                                width: '100%',
-                                padding: '8px',
-                                borderRadius: '4px',
-                                border: '1px solid #E2E8F0',
-                              }}
+                            <GenericSelect
+                              label='Investigador'
+                              placeholder='Seleccione un investigador...'
+                              options={investigadoresDisponibles.map((inv) => ({
+                                value: inv.idPersona,
+                                label: `${inv.apellido}, ${inv.nombre}`,
+                              }))}
                               value={investigadorSeleccionado?.idPersona || ''}
                               onChange={(e) => {
                                 const selected = investigadores.find(
-                                  (inv) => inv.idPersona === parseInt(e.target.value)
+                                  (inv) => inv.idPersona === parseInt(e.target.value),
                                 );
                                 setInvestigadorSeleccionado(selected);
                               }}
-                            >
-                              <option value=''>Seleccione un investigador...</option>
-                              {investigadoresDisponibles.map((inv) => (
-                                <option key={inv.idPersona} value={inv.idPersona}>
-                                  {inv.apellido}, {inv.nombre}
-                                </option>
-                              ))}
-                            </select>
+                            />
                           </Box>
                           <GenericInput
                             type='number'
@@ -235,10 +242,11 @@ export default function NuevaPropiedadIntelectual() {
                       <br />
                       {investigadoresAgregados.length > 0 ? (
                         <Tabla
-                          columnas={['Apellido', 'Nombre', 'Porcentaje (%)', 'Eliminar']}
+                          columnas={['Investigador', 'Porcentaje (%)', 'Eliminar']}
                           datos={investigadoresAgregados.map((inv) => [
-                            inv.apellido,
-                            inv.nombre,
+                            <div key={`nombre-${inv.idPersona}`}>
+                              {inv.apellido} {inv.nombre}
+                            </div>,
                             inv.porcentajeParticipacion,
                             <DeleteIcon
                               key={inv.idPersona}
@@ -261,14 +269,24 @@ export default function NuevaPropiedadIntelectual() {
                     Cancelar
                   </Button>
                   <Button
-                    type='submit'
                     colorScheme='blue'
+                    variant='outline'
+                    onClick={handleOpenModal}
                     isLoading={isLoadingMutation}
-                    loadingText='Creando...'
+                    loadingText='Guardando...'
                   >
-                    Crear Propiedad Intelectual
+                    Guardar
                   </Button>
                 </Box>
+
+                <CustomModal
+                  isOpen={isOpen}
+                  onClose={closeModal}
+                  guardar={true}
+                  title='Guardar nueva Propiedad Intelectual'
+                  content='¿Estás seguro de que deseas crear esta Propiedad Intelectual?'
+                  onSave={() => handleSubmit(handleSubmitAndClose)()}
+                />
               </>
             )}
           </Box>
@@ -277,3 +295,4 @@ export default function NuevaPropiedadIntelectual() {
     </Card>
   );
 }
+
