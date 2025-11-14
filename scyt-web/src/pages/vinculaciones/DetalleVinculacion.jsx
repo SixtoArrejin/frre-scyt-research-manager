@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack } from '@chakra-ui/react';
+import { Card, CardBody, Text, Heading, Box, Button, Spinner, HStack, useToast } from '@chakra-ui/react';
 import { DeleteIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { convertirFechaDDMMAAAAaDate, formatoFechaISOaDDMMAAAA, sumarMeses } from '../../utils/general';
 import { deleteConvenioById, getVinculacionById } from '../../utils/api/vinculacionesApi';
 import DisplayField from '../../components/DisplayField';
 import Tabla from '../../components/Tabla';
 import ImgDefault from '../../components/ImgDefault';
 import PermissionGate from '../../components/PermissionGate';
+import CustomModal from '../../components/CustomModal';
 import NoData from '../../img/no-data.png';
 import NoData1 from '../../img/no-data-2.png';
 import NuevoConvenioModal from './NuevoConvenioModal';
@@ -16,8 +17,10 @@ import BackButton from '../../components/BackButton';
 
 export default function DetalleVinculacion() {
   const [Financiamiento, setFinanciamiento] = useState();
-
   const [isOpenModalConvenio, setIsOpenModalConvenio] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [convenioAEliminar, setConvenioAEliminar] = useState(null);
+  const toast = useToast();
 
   const openModal = () => {
     setIsOpenModalConvenio(true);
@@ -27,10 +30,19 @@ export default function DetalleVinculacion() {
     setIsOpenModalConvenio(false);
   };
 
-  const { idVinculacion } = useParams();
-  const queryClient = useQueryClient();
+  const openDeleteModal = (idConvenio) => {
+    setConvenioAEliminar(idConvenio);
+    setIsOpenDeleteModal(true);
+  };
 
-  const { data, isLoading } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
+  const closeDeleteModal = () => {
+    setIsOpenDeleteModal(false);
+    setConvenioAEliminar(null);
+  };
+
+  const { idVinculacion } = useParams();
+
+  const { data, isLoading, refetch } = useQuery(['vinculacion-mod', idVinculacion], () => getVinculacionById(idVinculacion));
 
   useEffect(() => {
     if (!data || !data.vinculacion || data.vinculacion.vinculacionesconfinanciamiento == null) {
@@ -40,11 +52,20 @@ export default function DetalleVinculacion() {
     }
   }, [data]);
 
-  //PARA LA PÁGINA DE MODIFICAR SE VA
-  const onDeleted = async(idConvenio) => {
-    await deleteConvenioById(Number(idConvenio));
-    queryClient.invalidateQueries(['vinculacion', idVinculacion]);
-    queryClient.refetchQueries(['vinculacion', idVinculacion]);
+  const onDeleted = async() => {
+    try {
+      await deleteConvenioById(Number(convenioAEliminar));
+      await refetch();
+      closeDeleteModal();
+      toast({
+        title: 'Convenio eliminado',
+        description: 'El convenio se ha eliminado exitosamente.',
+        status: 'info',
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error al eliminar convenio:', error);
+    }
   };
 
   if (isLoading) {
@@ -261,7 +282,7 @@ export default function DetalleVinculacion() {
                       convenio.numero,
                       <PermissionGate key={convenio.idConvenio} module="convenios" action="delete">
                         <Link>
-                          <DeleteIcon onClick={() => onDeleted(convenio.idConvenio)} />
+                          <DeleteIcon onClick={() => openDeleteModal(convenio.idConvenio)} cursor='pointer' />
                         </Link>
                       </PermissionGate>,
                     ];
@@ -280,14 +301,23 @@ export default function DetalleVinculacion() {
                     </Button>
                   </Link>
                   <NuevoConvenioModal
-                  // key={item.idCategoria}
                     isOpen={isOpenModalConvenio}
                     onClose={closeModal}
                     guardar={true}
                     title='Nuevo Convenio'
+                    onConvenioAdded={() => refetch()}
                   />
                 </Box>
               </PermissionGate>
+
+              <CustomModal
+                isOpen={isOpenDeleteModal}
+                onClose={closeDeleteModal}
+                eliminar={true}
+                title='Eliminar Convenio'
+                content='¿Estás seguro de que deseas eliminar este convenio?'
+                onSave={onDeleted}
+              />
               <br />
             </CardBody>
           </Card>
