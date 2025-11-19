@@ -124,235 +124,216 @@ export default function DetalleProyectoPid() {
               >
                 <Box
                   display="flex"
-                  width="70%"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
                 >
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    {esPid && (
-                      <DisplayField
-                        label="Código PID"
-                        width={{ base: '100%', md: '30%' }}
-                        value={data?.proyecto?.codPid}
-                        mb={4}
-                      />
-                    )}
+                  {esPid && (
                     <DisplayField
-                      label="Regional asociada"
-                      width={{
-                        base: '100%',
-                        md: esPid === true ? '65%' : '100%',
-                      }}
-                      value={data?.proyecto?.regional}
+                      label="Código PID"
+                      width={{ base: '100%', md: '50%' }}
+                      value={data?.proyecto?.codPid}
                       mb={4}
                     />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <DisplayField
-                      label="Denominación"
-                      width={{ base: '100%', md: '100%' }}
-                      value={data?.proyecto?.denominacion}
-                      mb={4}
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <DisplayField
-                      label="Director"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={
-                        data?.proyecto?.director?.apellido +
+                  )}
+                  <DisplayField
+                    label="Regional asociada"
+                    width={{
+                      base: '100%',
+                      md: esPid === true ? '50%' : '100%',
+                    }}
+                    value={data?.proyecto?.regional}
+                    mb={4}
+                  />
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
+                >
+                  <DisplayField
+                    label="Denominación"
+                    width={{ base: '100%', md: '100%' }}
+                    value={data?.proyecto?.denominacion}
+                    mb={4}
+                  />
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
+                >
+                  <DisplayField
+                    label="Director"
+                    width={{ base: '100%', md: '50%' }}
+                    value={
+                      data?.proyecto?.director?.apellido +
                         ', ' +
                         data?.proyecto?.director?.nombre
-                      }
-                      mb={4}
-                    />
-                    <DisplayField
-                      label="Codirector"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={
-                        data?.proyecto?.codirector
-                          ? data?.proyecto?.codirector?.apellido +
+                    }
+                    mb={4}
+                  />
+                  <DisplayField
+                    label="Codirector"
+                    width={{ base: '100%', md: '50%' }}
+                    value={
+                      data?.proyecto?.codirector
+                        ? data?.proyecto?.codirector?.apellido +
                             ', ' +
                             data?.proyecto?.codirector?.nombre
-                          : '-'
-                      }
-                      mb={4}
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <DisplayField
-                      label="Fecha Inicio"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={
-                        data?.proyecto?.fechaInicio
-                          ? formatoFechaISOaDDMMAAAA(
-                            data?.proyecto?.fechaInicio,
-                          )
-                          : 'No cargado'
-                      }
-                      mb={4}
-                    />
-                    <DisplayField
-                      label="Fecha Fin"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={
-                        data?.proyecto?.fechaFin
-                          ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)
-                          : 'No cargado'
-                      }
-                      mb={4}
-                    />
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <DisplayField
-                      label="Programa"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={data?.proyecto?.programa}
-                      mb={4}
-                    />
-                    <DisplayField
-                      label="Tipo de proyecto"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={data?.proyecto?.tipoProyecto}
-                      mb={4}
-                    />
-                  </Box>
-                  {esPid && (
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <DisplayField
-                        label="Tipo Actividad"
-                        width={{ base: '100%', md: '30%' }}
-                        value={data?.proyecto?.tipoActividad}
-                        mb={4}
-                      />
-                      <DisplayField
-                        label="Estado"
-                        width={{
-                          base: '100%',
-                          md:
-                            data?.proyecto?.estado === 'HOMOLOGADO'
-                              ? '30%'
-                              : '65%',
-                        }}
-                        value={data?.proyecto?.estado}
-                        mb={4}
-                      />
-                      {data?.proyecto?.estado === 'HOMOLOGADO' && (
-                        <DisplayField
-                          label="Disposición"
-                          width={{ base: '100%', md: '30%' }}
-                          value={data?.proyecto?.disposicion}
-                          mb={4}
-                        />
-                      )}
-                    </Box>
-                  )}
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <DisplayField
-                      label="Convocatoria"
-                      width={{ base: '100%', md: '47.5%' }}
-                      value={data?.proyecto?.convocatoria}
-                      mb={4}
-                    />
-                    {esPid && (
-                      <DisplayField
-                        label="Prorroga"
-                        width={{ base: '100%', md: '47.5%' }}
-                        value={data?.proyecto?.prorrogado ? 'Si' : 'No'}
-                        mb={4}
-                      />
-                    )}
-                    {!esPid && (
-                      <DisplayField
-                        label="Empresa/Institución"
-                        width={{ base: '100%', md: '47.5%' }}
-                        value={data?.proyecto?.empresaInstitucion}
-                        mb={4}
-                      />
-                    )}
-                  </Box>
-                  {esPid && data?.proyecto?.prorrogado && (
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <DisplayField
-                        label="Nueva Fecha Fin"
-                        width={{ base: '100%', md: '47.5%' }}
-                        value={formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)}
-                        mb={4}
-                      />
-                      {data?.proyecto?.estado === 'HOMOLOGADO' && (
-                        <DisplayField
-                          label="Disposición"
-                          width={{ base: '100%', md: '47.5%' }}
-                          value={data?.proyecto?.disposicion}
-                          mb={4}
-                        />
-                      )}
-                    </Box>
-                  )}
-                  <PermissionGate module="proyectos" action="edit">
-                    <Box
-                      display="flex"
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="flex-end"
-                    >
-                      <Link to={'modificar'}>
-                        <Button colorScheme="blue" variant="outline">
-                          Modificar
-                        </Button>
-                      </Link>
-                    </Box>
-                  </PermissionGate>
+                        : '-'
+                    }
+                    mb={4}
+                  />
                 </Box>
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
+                >
+                  <DisplayField
+                    label="Fecha Inicio"
+                    width={{ base: '100%', md: '50%' }}
+                    value={
+                      data?.proyecto?.fechaInicio
+                        ? formatoFechaISOaDDMMAAAA(
+                          data?.proyecto?.fechaInicio,
+                        )
+                        : 'No cargado'
+                    }
+                    mb={4}
+                  />
+                  <DisplayField
+                    label="Fecha Fin"
+                    width={{ base: '100%', md: '50%' }}
+                    value={
+                      data?.proyecto?.fechaFin
+                        ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)
+                        : 'No cargado'
+                    }
+                    mb={4}
+                  />
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
+                >
+                  <DisplayField
+                    label="Programa"
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.programa}
+                    mb={4}
+                  />
+                  <DisplayField
+                    label="Tipo de proyecto"
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.tipoProyecto}
+                    mb={4}
+                  />
+                </Box>
+                {esPid && (
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    gap={4}
+                  >
+                    <DisplayField
+                      label="Tipo Actividad"
+                      width={{ base: '100%', md: '33.33%' }}
+                      value={data?.proyecto?.tipoActividad}
+                      mb={4}
+                    />
+                    <DisplayField
+                      label="Estado"
+                      width={{
+                        base: '100%',
+                        md: '33.33%',
+                      }}
+                      value={data?.proyecto?.estado}
+                      mb={4}
+                    />
+                    {data?.proyecto?.estado === 'HOMOLOGADO' && (
+                      <DisplayField
+                        label="Disposición"
+                        width={{ base: '100%', md: '33.33%' }}
+                        value={data?.proyecto?.disposicion}
+                        mb={4}
+                      />
+                    )}
+                  </Box>
+                )}
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  gap={4}
+                >
+                  <DisplayField
+                    label="Convocatoria"
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.convocatoria}
+                    mb={4}
+                  />
+                  {esPid && (
+                    <DisplayField
+                      label="Prorroga"
+                      width={{ base: '100%', md: '50%' }}
+                      value={data?.proyecto?.prorrogado ? 'Si' : 'No'}
+                      mb={4}
+                    />
+                  )}
+                  {!esPid && (
+                    <DisplayField
+                      label="Empresa/Institución"
+                      width={{ base: '100%', md: '50%' }}
+                      value={data?.proyecto?.empresaInstitucion}
+                      mb={4}
+                    />
+                  )}
+                </Box>
+                {esPid && data?.proyecto?.prorrogado && (
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    gap={4}
+                  >
+                    <DisplayField
+                      label="Nueva Fecha Fin"
+                      width={{ base: '100%', md: '50%' }}
+                      value={formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)}
+                      mb={4}
+                    />
+                    {data?.proyecto?.estado === 'HOMOLOGADO' && (
+                      <DisplayField
+                        label="Disposición"
+                        width={{ base: '100%', md: '50%' }}
+                        value={data?.proyecto?.disposicion}
+                        mb={4}
+                      />
+                    )}
+                  </Box>
+                )}
+                <PermissionGate module="proyectos" action="edit">
+                  <Box
+                    display="flex"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    <Link to={'modificar'}>
+                      <Button colorScheme="blue" variant="outline">
+                          Modificar
+                      </Button>
+                    </Link>
+                  </Box>
+                </PermissionGate>
               </Box>
             </CardBody>
           </Card>

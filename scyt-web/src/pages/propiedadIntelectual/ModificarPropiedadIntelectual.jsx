@@ -58,8 +58,8 @@ export default function ModificarPropiedadIntelectual() {
     setIsOpen(true);
   };
 
-  const handleSubmitAndClose = async() => {
-    await onSubmit();
+  const handleSubmitAndClose = async(data) => {
+    await onSubmit(data);
     closeModal();
   };
 

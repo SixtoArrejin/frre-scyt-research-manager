@@ -1,17 +1,19 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, useToast, Box } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useForm } from 'react-hook-form';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import { useParams } from 'react-router-dom';
 import { createConvenio } from '../../utils/api/vinculacionesApi';
 
-export default function NuevoConvenioModal({ isOpen, onClose, title, categoria = null }) {
+export default function NuevoConvenioModal({ isOpen, onClose, title, categoria = null, onConvenioAdded = null }) {
   const { idVinculacion } = useParams();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    reset,
   } = useForm({
     defaultValues: {
       idVinculacion: parseInt(idVinculacion),
@@ -21,23 +23,25 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, categoria =
   });
 
   const toast = useToast();
-  const queryClient = useQueryClient();
 
   const { mutate, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => createConvenio(formData),
     onSuccess: () => {
-      queryClient.refetchQueries(['vinculacion', idVinculacion]);
       toast({
         title: 'Nuevo Convenio',
         description: 'Se ha agregado el convenio exitosamente.',
         status: 'success',
         isClosable: true,
       });
+      reset();
       onClose();
+      if (onConvenioAdded) {
+        onConvenioAdded();
+      }
     },
     onError: () => {
       toast({
-        title: 'Error al modificar los datos de la categoria',
+        title: 'Error al agregar el convenio',
         description: 'Intente de nuevo.',
         status: 'error',
         isClosable: true,
@@ -45,7 +49,27 @@ export default function NuevoConvenioModal({ isOpen, onClose, title, categoria =
     },
   });
   const onSub = (values) => {
-    console.log(values);
+    const tipoConvenio = getValues('tipoConvenio');
+    const nroConvenio = getValues('nroConvenio');
+
+    if (!tipoConvenio || tipoConvenio.trim() === '') {
+      toast({
+        title: 'Campo requerido',
+        description: 'Por favor seleccione un tipo de convenio.',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
+    if (!nroConvenio || nroConvenio.trim() === '') {
+      toast({
+        title: 'Campo requerido',
+        description: 'Por favor ingrese un número de convenio.',
+        status: 'warning',
+        isClosable: true,
+      });
+      return;
+    }
     mutate(values);
   };
 
