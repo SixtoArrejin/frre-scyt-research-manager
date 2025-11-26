@@ -33,6 +33,34 @@ export async function getPropiedadIntelectualByProyectoId(req, res) {
   }
 }
 
+export async function getPropiedadIntelectualByPersonaId(req, res) {
+  const { idPersona } = req.params;
+  try {
+    const propiedadIntelectual = await getAllPropiedadIntelectualService();
+    // Filter intellectual properties where the person is an investigator
+    const piFiltrada = propiedadIntelectual.filter(
+      (pi) => pi.investigadores?.some((inv) => inv.idPersona == idPersona),
+    );
+
+    // Map to include the person's participation percentage
+    const piConParticipacion = piFiltrada.map((pi) => {
+      const participacion = pi.investigadores?.find(
+        (inv) => inv.idPersona == idPersona,
+      );
+      return {
+        ...pi,
+        porcentajeParticipacion: participacion?.porcentajeParticipacion || null,
+      };
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Propiedad intelectual encontrada', success: true, propiedadIntelectual: piConParticipacion });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+}
+
 export async function getPropiedadIntelectualById(req, res) {
   try {
     const { idPI } = req.params;
