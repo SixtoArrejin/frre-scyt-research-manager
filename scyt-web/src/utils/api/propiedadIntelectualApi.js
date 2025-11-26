@@ -10,6 +10,10 @@ export async function getPropiedadIntelectualByIdProyecto(idProyecto) {
   return get(`/api/propiedadIntelectual/proyecto/${idProyecto}`);
 }
 
+export async function getPropiedadIntelectualByIdPersona(idPersona) {
+  return get(`/api/propiedadIntelectual/persona/${idPersona}`);
+}
+
 export async function getPropiedadIntelectualById(idPI) {
   return get(`/api/propiedadIntelectual/${idPI}`);
 }

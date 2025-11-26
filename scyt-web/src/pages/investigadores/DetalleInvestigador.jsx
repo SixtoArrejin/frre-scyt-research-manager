@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { formatoFechaISOaDDMMAAAA } from '../../utils/general';
 import { deleteCategoriaById } from '../../utils/api/categoriasApi';
 import { getProyectosByPersonaId } from '../../utils/api/proyectosApi';
+import { getPropiedadIntelectualByIdPersona } from '../../utils/api/propiedadIntelectualApi';
 import CustomModal from '../../components/CustomModal';
 import Tabla from '../../components/Tabla';
 import NoData from '../../img/no-data.png';
@@ -49,6 +50,7 @@ export default function DetalleInvestigador() {
 
   const { data, isLoading } = useQuery(['persona'], () => getPersonaById(idPersona));
   const { data: dataProyectos } = useQuery(['proyectos', idPersona], () => getProyectosByPersonaId(idPersona));
+  const { data: dataPropiedadIntelectual } = useQuery(['propiedadIntelectual', idPersona], () => getPropiedadIntelectualByIdPersona(idPersona));
 
   const toast = useToast();
 
@@ -396,6 +398,35 @@ export default function DetalleInvestigador() {
                 />
               ) : (
                 <ImgDefault src={NoData3} alt='No Data' width='30%' text='No hay proyectos para mostrar.' />
+              )}
+              <br />
+            </CardBody>
+          </Card>
+
+          <br />
+          <Card width='100%'>
+            <CardBody>
+              <Text fontSize='md' fontWeight='bold'>Propiedad Intelectual</Text>
+              <br />
+              {(dataPropiedadIntelectual?.propiedadIntelectual?.length > 0) ? (
+                <Tabla
+                  columnas={['Tipo', 'N° Expediente', 'Proyecto', 'Participación (%)', 'Fec. Inicio', 'Más']}
+                  datos={dataPropiedadIntelectual?.propiedadIntelectual?.map((item) => [
+                    item.tipoPI,
+                    item.numeroExpediente || '-',
+                    item.proyectos?.denominacion?.length > 30
+                      ? `${item.proyectos.denominacion.substring(0, 30)}...`
+                      : item.proyectos?.denominacion || '-',
+                    item.porcentajeParticipacion !== null && item.porcentajeParticipacion !== undefined ? `${item.porcentajeParticipacion}%` : '-',
+                    formatoFechaISOaDDMMAAAA(item.fechaInicio),
+                    <Link key={`pi-link-${item.idPI}`} to={`/propiedad-intelectual/${item.idPI}`}>
+                      <PlusSquareIcon />
+                    </Link>,
+                  ])}
+                  paginado={false}
+                />
+              ) : (
+                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay propiedad intelectual para mostrar.' />
               )}
               <br />
             </CardBody>
