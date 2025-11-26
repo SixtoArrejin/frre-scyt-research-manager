@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getAllPropiedadIntelectual,
   getPropiedadIntelectualByProyectoId,
+  getPropiedadIntelectualByPersonaId,
   getPropiedadIntelectualById,
   createPropiedadIntelectual,
   updatePropiedadIntelectual,
@@ -33,6 +34,11 @@ router.get(
   '/proyecto/:idProyecto',
   requirePermission(RESOURCES.PROPIEDAD_INTELECTUAL, ACTIONS.READ),
   getPropiedadIntelectualByProyectoId,
+);
+router.get(
+  '/persona/:idPersona',
+  requirePermission(RESOURCES.PROPIEDAD_INTELECTUAL, ACTIONS.READ),
+  getPropiedadIntelectualByPersonaId,
 );
 
 // Rutas de escritura - solo ADMIN y UVT pueden crear/modificar PI
