@@ -419,7 +419,7 @@ export default function DetalleInvestigador() {
                       : item.proyectos?.denominacion || '-',
                     item.porcentajeParticipacion !== null && item.porcentajeParticipacion !== undefined ? `${item.porcentajeParticipacion}%` : '-',
                     formatoFechaISOaDDMMAAAA(item.fechaInicio),
-                    <Link key={`pi-link-${item.idPI}`} to={`/propiedad-intelectual/${item.idPI}`}>
+                    <Link key={`pi-link-${item.idPI}`} to={`/proyectos/${item.idProyecto}/propiedad-intelectual/${item.idPI}`}>
                       <PlusSquareIcon />
                     </Link>,
                   ])}
