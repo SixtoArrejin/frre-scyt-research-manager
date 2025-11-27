@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useColorMode } from '@chakra-ui/react';
-
-// Clave para localStorage (debe coincidir con ThemeSelector)
-const THEME_PREFERENCE_KEY = 'scyt_theme_preference';
+import { THEME_PREFERENCE_KEY, THEME_VALUES } from '../config/themeConstants';
 
 /**
  * Hook que inicializa el tema basándose en la preferencia guardada
@@ -17,7 +15,7 @@ export default function useThemeInitializer() {
   useEffect(() => {
     const savedPreference = localStorage.getItem(THEME_PREFERENCE_KEY);
 
-    if (savedPreference === 'system' || !savedPreference) {
+    if (savedPreference === THEME_VALUES.SYSTEM || !savedPreference) {
       // Detectar preferencia del sistema
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setColorMode(systemPrefersDark ? 'dark' : 'light');
@@ -26,7 +24,7 @@ export default function useThemeInitializer() {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = (e) => {
         const currentPreference = localStorage.getItem(THEME_PREFERENCE_KEY);
-        if (currentPreference === 'system' || !currentPreference) {
+        if (currentPreference === THEME_VALUES.SYSTEM || !currentPreference) {
           setColorMode(e.matches ? 'dark' : 'light');
         }
       };

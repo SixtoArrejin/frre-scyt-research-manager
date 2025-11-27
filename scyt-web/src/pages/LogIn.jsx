@@ -26,7 +26,6 @@ import { useForm } from 'react-hook-form';
 //   import { PasswordField } from './PasswordField'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useThemeInitializer from '../hooks/useThemeInitializer';
 
 const schema = yup.object({
   usuario: yup.string().required('Usuario requerido'),
@@ -41,9 +40,6 @@ export default function LogIn() {
   const toast = useToast();
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
-
-  // Inicializar el tema
-  useThemeInitializer();
 
   // Colores para modo claro/oscuro
   const bgColor = useColorModeValue('gray.100', 'github.canvas');

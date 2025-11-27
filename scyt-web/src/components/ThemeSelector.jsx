@@ -11,9 +11,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { FiSun, FiMoon, FiMonitor } from 'react-icons/fi';
-
-// Clave para localStorage
-const THEME_PREFERENCE_KEY = 'scyt_theme_preference';
+import { THEME_PREFERENCE_KEY, THEME_VALUES } from '../config/themeConstants';
 
 /**
  * Componente selector de tema que permite elegir entre:
@@ -27,7 +25,7 @@ export default function ThemeSelector() {
   const { colorMode, setColorMode } = useColorMode();
 
   // Obtener la preferencia guardada (system, light, dark)
-  const savedPreference = localStorage.getItem(THEME_PREFERENCE_KEY) || 'system';
+  const savedPreference = localStorage.getItem(THEME_PREFERENCE_KEY) || THEME_VALUES.SYSTEM;
 
   // Colores para el componente
   const borderColor = useColorModeValue('gray.200', 'github.border');
@@ -41,7 +39,7 @@ export default function ThemeSelector() {
   const handleThemeChange = (value) => {
     localStorage.setItem(THEME_PREFERENCE_KEY, value);
 
-    if (value === 'system') {
+    if (value === THEME_VALUES.SYSTEM) {
       // Detectar preferencia del sistema
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setColorMode(systemPrefersDark ? 'dark' : 'light');
@@ -53,19 +51,19 @@ export default function ThemeSelector() {
   // Opciones de tema
   const themeOptions = [
     {
-      value: 'system',
+      value: THEME_VALUES.SYSTEM,
       label: 'Sistema',
       description: 'Sincronizar con el sistema',
       icon: FiMonitor,
     },
     {
-      value: 'light',
+      value: THEME_VALUES.LIGHT,
       label: 'Claro',
       description: 'Tema claro',
       icon: FiSun,
     },
     {
-      value: 'dark',
+      value: THEME_VALUES.DARK,
       label: 'Oscuro',
       description: 'Tema oscuro',
       icon: FiMoon,
