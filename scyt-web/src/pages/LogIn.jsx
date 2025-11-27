@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   useToast,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import Logo from '../img/SCyT-SinFondo.png';
 import { UserContext } from '../context/UserContext';
@@ -25,6 +26,7 @@ import { useForm } from 'react-hook-form';
 //   import { PasswordField } from './PasswordField'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import useThemeInitializer from '../hooks/useThemeInitializer';
 
 const schema = yup.object({
   usuario: yup.string().required('Usuario requerido'),
@@ -39,6 +41,14 @@ export default function LogIn() {
   const toast = useToast();
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
+
+  // Inicializar el tema
+  useThemeInitializer();
+
+  // Colores para modo claro/oscuro
+  const bgColor = useColorModeValue('gray.100', 'github.canvas');
+  const cardBgColor = useColorModeValue('white', 'github.canvasSubtle');
+  const textColor = useColorModeValue('gray.800', 'github.text');
 
   const {
     register,
@@ -107,103 +117,106 @@ export default function LogIn() {
   };
 
   return (
-    <Container
-      maxW='lg'
-      py={{
-        base: '12',
-        md: '24',
-      }}
-      px={{
-        base: '0',
-        sm: '8',
-      }}
-    >
-      <Stack spacing='8'>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack spacing='6'>
-            <Image src={Logo} width='100px' />
-            <Stack
-              spacing={{
-                base: '2',
-                md: '3',
-              }}
-              textAlign='center'
-            >
-              <Heading
-                size={{
-                  base: 'xs',
-                  md: 'sm',
+    <Box minH="100vh" bg={bgColor}>
+      <Container
+        maxW='lg'
+        py={{
+          base: '12',
+          md: '24',
+        }}
+        px={{
+          base: '0',
+          sm: '8',
+        }}
+      >
+        <Stack spacing='8'>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing='6'>
+              <Image src={Logo} width='100px' />
+              <Stack
+                spacing={{
+                  base: '2',
+                  md: '3',
                 }}
+                textAlign='center'
               >
-                Ingrese a su cuenta
-              </Heading>
-              {/* <Text color="fg.muted">
-                Don't have an account? <Link href="#">Sign up</Link>
-              </Text> */}
-            </Stack>
-          </VStack>
-          <Box
-            py={{
-              base: '0',
-              sm: '8',
-            }}
-            px={{
-              base: '4',
-              sm: '10',
-            }}
-            bg={{
-              base: 'transparent',
-              sm: 'bg.surface',
-            }}
-            boxShadow={{
-              base: 'none',
-              sm: 'md',
-            }}
-            borderRadius={{
-              base: 'none',
-              sm: 'xl',
-            }}
-          >
-            <Stack spacing='6'>
-              <Stack spacing='5'>
-                <FormControl>
-                  <FormLabel htmlFor='usuario'>Usuario</FormLabel>
-                  {/* <Input type="text" name='usuario' value={dataForm.usuario} onChange={handleChangeUsuario} /> */}
-                  <Input type='text' name='usuario' {...register('usuario')} />
-                  <Text fontSize='md' color='red'>
-                    {errors.usuario?.message}
-                  </Text>
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor='pass'>Contraseña</FormLabel>
-                  {/* <Input type="password" name='contrasena' value={dataForm.contrasena} onChange={handleChangeContrasena} /> */}
-                  <Input type='password' name='contrasena' {...register('contrasena')} />
-                  <Text fontSize='md' color='red'>
-                    {errors.contrasena?.message}
-                  </Text>
-                </FormControl>
-                {/* <PasswordField /> */}
-              </Stack>
-              <HStack justify='space-between'>
-                <Checkbox
-                  isChecked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                <Heading
+                  size={{
+                    base: 'xs',
+                    md: 'sm',
+                  }}
+                  color={textColor}
                 >
-                  Recuérdame
-                </Checkbox>
-                <Button variant='text' size='sm'>
-                  ¿Olvidaste tu contraseña?
-                </Button>
-              </HStack>
-              <Stack spacing='6'>
-                <Button type='submit' isLoading={isLoading}>
-                  Iniciar sesión
-                </Button>
+                  Ingrese a su cuenta
+                </Heading>
+                {/* <Text color="fg.muted">
+                  Don't have an account? <Link href="#">Sign up</Link>
+                </Text> */}
               </Stack>
-            </Stack>
-          </Box>
-        </form>
-      </Stack>
-    </Container>
+            </VStack>
+            <Box
+              py={{
+                base: '0',
+                sm: '8',
+              }}
+              px={{
+                base: '4',
+                sm: '10',
+              }}
+              bg={{
+                base: 'transparent',
+                sm: cardBgColor,
+              }}
+              boxShadow={{
+                base: 'none',
+                sm: 'md',
+              }}
+              borderRadius={{
+                base: 'none',
+                sm: 'xl',
+              }}
+            >
+              <Stack spacing='6'>
+                <Stack spacing='5'>
+                  <FormControl>
+                    <FormLabel htmlFor='usuario'>Usuario</FormLabel>
+                    {/* <Input type="text" name='usuario' value={dataForm.usuario} onChange={handleChangeUsuario} /> */}
+                    <Input type='text' name='usuario' {...register('usuario')} />
+                    <Text fontSize='md' color='red'>
+                      {errors.usuario?.message}
+                    </Text>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel htmlFor='pass'>Contraseña</FormLabel>
+                    {/* <Input type="password" name='contrasena' value={dataForm.contrasena} onChange={handleChangeContrasena} /> */}
+                    <Input type='password' name='contrasena' {...register('contrasena')} />
+                    <Text fontSize='md' color='red'>
+                      {errors.contrasena?.message}
+                    </Text>
+                  </FormControl>
+                  {/* <PasswordField /> */}
+                </Stack>
+                <HStack justify='space-between'>
+                  <Checkbox
+                    isChecked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  >
+                    Recuérdame
+                  </Checkbox>
+                  <Button variant='text' size='sm'>
+                    ¿Olvidaste tu contraseña?
+                  </Button>
+                </HStack>
+                <Stack spacing='6'>
+                  <Button type='submit' isLoading={isLoading}>
+                    Iniciar sesión
+                  </Button>
+                </Stack>
+              </Stack>
+            </Box>
+          </form>
+        </Stack>
+      </Container>
+    </Box>
   );
 }
