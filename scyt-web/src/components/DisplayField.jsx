@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 
 /**
  * Componente para mostrar campos de solo lectura con label y contenido
@@ -23,6 +22,12 @@ const DisplayField = ({
   valueProps = {},
   boxProps = {},
 }) => {
+  // Colores para modo claro/oscuro
+  const labelColor = useColorModeValue('gray.500', 'github.textMuted');
+  const borderColor = useColorModeValue('gray.200', 'github.border');
+  const bgColor = useColorModeValue('gray.50', 'github.borderMuted');
+  const textColor = useColorModeValue('gray.700', 'github.text');
+
   return (
     <Box
       display='flex'
@@ -34,7 +39,7 @@ const DisplayField = ({
       <Text
         fontSize='sm'
         fontWeight='medium'
-        color='gray.500'
+        color={labelColor}
         mb={2}
         {...labelProps}
       >
@@ -44,9 +49,9 @@ const DisplayField = ({
         px={3}
         py={1}
         border='1px'
-        borderColor='gray.200'
+        borderColor={borderColor}
         borderRadius='md'
-        bg='gray.50'
+        bg={bgColor}
         minH='36px'
         display='flex'
         alignItems='center'
@@ -55,7 +60,7 @@ const DisplayField = ({
       >
         <Text
           fontSize='md'
-          color='gray.700'
+          color={textColor}
           textAlign='left'
           {...valueProps}
         >

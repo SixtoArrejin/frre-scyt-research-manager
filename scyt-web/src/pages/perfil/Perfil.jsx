@@ -1,8 +1,9 @@
 import { useContext, useState, useEffect } from 'react';
-import { Card, CardBody, Heading, Box, Avatar, Text, Button, VStack, Spinner } from '@chakra-ui/react';
+import { Card, CardBody, Heading, Box, Avatar, Text, Button, VStack, Spinner, Divider } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import GenericInput from '../../components/formControls/GenericInput';
+import ThemeSelector from '../../components/ThemeSelector';
 
 export default function Perfil() {
   const { currentUser } = useContext(UserContext);
@@ -126,6 +127,17 @@ export default function Perfil() {
                   </Link>
                 </Box>
               </Box>
+            </CardBody>
+          </Card>
+
+          {/* Sección de Configuración */}
+          <Card width='100%' mt={6}>
+            <CardBody>
+              <Text fontSize='md' fontWeight='bold' mb={4}>
+                Configuración
+              </Text>
+              <Divider mb={4} />
+              <ThemeSelector />
             </CardBody>
           </Card>
         </Box>

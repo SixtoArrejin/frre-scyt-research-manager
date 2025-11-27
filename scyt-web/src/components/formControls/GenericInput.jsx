@@ -1,5 +1,4 @@
-import React from 'react';
-import { FormControl, FormLabel, Input, Text, Textarea } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Text, Textarea, useColorModeValue } from '@chakra-ui/react';
 
 export default function GenericInput(props) {
   const {
@@ -17,6 +16,10 @@ export default function GenericInput(props) {
     ...rest // Resto de las propiedades para FormControl
   } = props;
 
+  // Colores para modo claro/oscuro
+  const defaultTextColor = useColorModeValue('gray.800', 'github.text');
+  const labelBgColor = useColorModeValue('white', 'github.canvasSubtle');
+
   const registerProps = register ? (type === 'number' ? register(name, { valueAsNumber: true }) : register(name)) : {};
 
   const inputProps = {
@@ -29,7 +32,7 @@ export default function GenericInput(props) {
     isDisabled,
     disabled,
     onChange,
-    color: textColor || 'black',
+    color: textColor || defaultTextColor,
   };
 
   // Filtra las propiedades undefined
@@ -39,7 +42,7 @@ export default function GenericInput(props) {
     <FormControl variant='floating' {...rest}>
       {textArea ? <Textarea style={{ resize: 'none' }} {...inputProps} sx={{
         _disabled: {
-          color: textColor,
+          color: textColor || defaultTextColor,
           opacity: '0.75',
         },
         _placeholder: {
@@ -53,7 +56,7 @@ export default function GenericInput(props) {
         },
       }} /> : <Input sx={{
         _disabled: {
-          color: textColor,
+          color: textColor || defaultTextColor,
           opacity: '0.75',
         },
         _placeholder: {
@@ -67,7 +70,7 @@ export default function GenericInput(props) {
         },
       }} {...inputProps} />}
       {/* <Input {...inputProps} /> */}
-      <FormLabel>{props.label ? props.label : ''}</FormLabel>
+      <FormLabel bg={labelBgColor}>{props.label ? props.label : ''}</FormLabel>
       <Text fontSize='sm' color='red'>
         {name ? (props.errors ? (props.errors[name] ? props.errors[name]?.message : '') : '') : ''}
       </Text>

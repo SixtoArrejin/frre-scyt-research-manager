@@ -28,6 +28,7 @@ import Modificar from './pages/proyectos/Modificar';
 import AgregarGrupo from './pages/proyectos/AgregarGrupo';
 import DetalleVinculacion from './pages/vinculaciones/DetalleVinculacion';
 import NuevaVinculacion from './pages/vinculaciones/Nueva';
+import useThemeInitializer from './hooks/useThemeInitializer';
 import NuevoDesembolso from './pages/desembolsos/Nuevo';
 import ListaVinculaciones from './pages/vinculaciones/ListaVinculaciones';
 import DetalleDesembolso from './pages/desembolsos/DetalleDesembolso';
@@ -162,6 +163,9 @@ const routes = [
 
 function App() {
   const { isLoggedIn } = useContext(UserContext); // Reemplaza "UserContext" con el nombre de tu contexto de usuario
+
+  // Inicializar el tema basándose en la preferencia guardada
+  useThemeInitializer();
 
   return (
     <ChakraToastProvider>

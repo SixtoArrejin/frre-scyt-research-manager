@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
-import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, Tbody, Td, HStack, IconButton, Input } from '@chakra-ui/react';
+import { Card, CardBody, TableContainer, Table, Thead, Tr, Th, Checkbox, Text, Tbody, Td, HStack, IconButton, Input, useColorModeValue } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -7,6 +7,10 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
   const [currentPage, setCurrentPage] = useState(0); // Estado para controlar la página actual
 
   const [selectedData, setSelectedData] = useState([]);
+
+  // Colores para modo claro/oscuro
+  const hoverBgColor = useColorModeValue('gray.100', 'github.borderMuted');
+  const checkboxBorderColor = useColorModeValue('gray', 'github.border');
 
   const totalPages = Math.ceil(datos?.length / itemsPerPage);
 
@@ -66,7 +70,7 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
               <Tr>
                 {checkbox && (
                   <Th textAlign='center'>
-                    <Checkbox border='gray' isChecked={isAllSelected} onChange={handleSelectAll} />
+                    <Checkbox borderColor={checkboxBorderColor} isChecked={isAllSelected} onChange={handleSelectAll} />
                   </Th>
                 )}
                 {columnas.map((column) => (
@@ -82,11 +86,11 @@ export default function Tabla({ columnas = [], datos = [], filtro = false, check
                   key={filaIndex}
                   onClick={() => onRowClick && onRowClick(fila)}
                   cursor={onRowClick ? 'pointer' : 'default'}
-                  _hover={onRowClick ? { bg: 'gray.100' } : {}}
+                  _hover={onRowClick ? { bg: hoverBgColor } : {}}
                 >
                   {checkbox && (
                     <Td textAlign='center'>
-                      <Checkbox border='gray' isChecked={selectedData.includes(fila)} onChange={() => handleDataSelection(fila)} />
+                      <Checkbox borderColor={checkboxBorderColor} isChecked={selectedData.includes(fila)} onChange={() => handleDataSelection(fila)} />
                     </Td>
                   )}
                   {columnas.map((columna, colIndex) => (
