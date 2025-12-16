@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1
+
+FROM node:20-bookworm-slim AS builder
+WORKDIR /app
+
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+FROM httpd:2.4-alpine
+
+# Habilitar módulos necesarios (rewrite/headers + proxy para /api)
+RUN sed -i 's/^#LoadModule rewrite_module/LoadModule rewrite_module/' /usr/local/apache2/conf/httpd.conf \
+ && sed -i 's/^#LoadModule headers_module/LoadModule headers_module/' /usr/local/apache2/conf/httpd.conf \
+ && sed -i 's/^#LoadModule proxy_module/LoadModule proxy_module/' /usr/local/apache2/conf/httpd.conf \
+ && sed -i 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' /usr/local/apache2/conf/httpd.conf
+
+# Incluir nuestra config (DocumentRoot + SPA fallback)
+COPY apache.conf /usr/local/apache2/conf/extra/scyt-web.conf
+RUN printf '\nInclude conf/extra/scyt-web.conf\n' >> /usr/local/apache2/conf/httpd.conf
+
+# Copiar build
+COPY --from=builder /app/build/ /usr/local/apache2/htdocs/
