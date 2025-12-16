@@ -131,13 +131,11 @@ Ejemplos:
 - Si frontend y backend están en el mismo dominio (por ejemplo, API publicada bajo `/api/`): `VITE_API_BASE_URL=https://DOMINIO`
 - Si el backend está separado: `VITE_API_BASE_URL=https://api.DOMINIO` (o `http://HOST:PUERTO`)
 
-## 6) Despliegue recomendado (modo “clásico”)
+## 6) Despliegue
 
 ### 6.1 Frontend (Nginx o Apache)
 
-En este proyecto, el entregable del frontend es el contenido de `scyt-web/build/` (HTML/CSS/JS). TI puede recibirlo como `.zip` y:
-
-- Descomprimir/copiar el contenido del build al DocumentRoot del servidor web.
+En este proyecto, el entregable del frontend es el contenido de `scyt-web/build/` (HTML/CSS/JS).
 
 Ejemplos de destinos típicos:
 
@@ -174,17 +172,13 @@ Configuración mínima de SPA fallback (ejemplo Apache 2.4 con `mod_rewrite`):
 </Directory>
 ```
 
-Nota importante (SPA + assets):
-
-- El “fallback” a `index.html` debe aplicarse **solo** cuando el recurso solicitado **no existe**.
-- No debe reescribir pedidos a archivos estáticos (por ejemplo `/assets/*.js`, `/assets/*.css`, `/favicon.ico`).
-  - Si un asset no existe, lo correcto es que sea **404**, no devolver `index.html` (eso rompe el navegador por MIME incorrecto).
+El el repositorio de código en GitHub contamos con los ejemplos de archivos de configuración tanto para Nginx como para Apache usados para una prueba de deploy en contenedores de Docker.
 
 ### 6.2 Backend/API (Node.js como servicio)
 
-TI puede recibir el backend como `.zip` con el contenido de `scyt-api/` y:
+Se entrega el código del backend en unca parpeta con el contenido de `scyt-api/` y se debe:
 
-1. Copiar/descomprimir a una carpeta de aplicación en el servidor (por ejemplo `/opt/scyt-api`).
+1. Copiar a una carpeta de aplicación en el servidor (por ejemplo `/opt/scyt-api`).
 2. Definir variables de entorno del servicio:
 
 - `DATABASE_URL`
@@ -199,32 +193,9 @@ npm ci --omit=dev
 npx prisma generate
 ```
 
-4. Ejecutar como servicio (recomendado systemd). Ejemplo de unidad:
-
-```ini
-# /etc/systemd/system/scyt-api.service
-[Unit]
-Description=SCyT API
-After=network.target
-
-[Service]
-Type=simple
-WorkingDirectory=/opt/scyt-api
-Environment=PORT=8000
-Environment=DATABASE_URL=postgresql://USUARIO:CLAVE@HOST:5432/NOMBRE_DB?schema=public
-ExecStart=/usr/bin/node /opt/scyt-api/src/app.js
-Restart=always
-RestartSec=3
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Comandos:
+4. Ejecutar como servicio.
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable scyt-api
-sudo systemctl start scyt-api
-sudo systemctl status scyt-api
+cd /opt/scyt-api
+npm start
 ```
