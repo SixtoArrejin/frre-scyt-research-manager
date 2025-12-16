@@ -1,0 +1,38 @@
+services:
+  api:
+    image: scyt-api
+    container_name: scyt-api
+    build:
+      context: ./scyt-api
+    env_file:
+      - ./scyt-api/.env
+    environment:
+      - PORT=8000
+    ports:
+      - "8001:8000"
+
+  web:
+    image: scyt-web-nginx
+    container_name: scyt-web-nginx
+    build:
+      context: ./scyt-web
+      dockerfile: Dockerfile.nginx
+      args:
+        VITE_API_BASE_URL: "/api"
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+  web_apache:
+    image: scyt-web-apache
+    container_name: scyt-web-apache
+    build:
+      context: ./scyt-web
+      dockerfile: Dockerfile.apache
+      args:
+        VITE_API_BASE_URL: "/api"
+    depends_on:
+      - api
+    ports:
+      - "8081:80"
