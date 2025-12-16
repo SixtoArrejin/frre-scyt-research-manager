@@ -18,7 +18,7 @@ services:
       context: ./scyt-web
       dockerfile: Dockerfile.nginx
       args:
-        VITE_API_BASE_URL: "http://localhost:8001"
+        VITE_API_BASE_URL: "/api"
     depends_on:
       - api
     ports:
@@ -31,7 +31,7 @@ services:
       context: ./scyt-web
       dockerfile: Dockerfile.apache
       args:
-        VITE_API_BASE_URL: "http://localhost:8001"
+        VITE_API_BASE_URL: "/api"
     depends_on:
       - api
     ports:

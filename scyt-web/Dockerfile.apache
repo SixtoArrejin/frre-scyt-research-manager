@@ -14,9 +14,11 @@ RUN npm run build
 
 FROM httpd:2.4-alpine
 
-# Habilitar mod_rewrite y mod_headers
+# Habilitar módulos necesarios (rewrite/headers + proxy para /api)
 RUN sed -i 's/^#LoadModule rewrite_module/LoadModule rewrite_module/' /usr/local/apache2/conf/httpd.conf \
- && sed -i 's/^#LoadModule headers_module/LoadModule headers_module/' /usr/local/apache2/conf/httpd.conf
+ && sed -i 's/^#LoadModule headers_module/LoadModule headers_module/' /usr/local/apache2/conf/httpd.conf \
+ && sed -i 's/^#LoadModule proxy_module/LoadModule proxy_module/' /usr/local/apache2/conf/httpd.conf \
+ && sed -i 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' /usr/local/apache2/conf/httpd.conf
 
 # Incluir nuestra config (DocumentRoot + SPA fallback)
 COPY apache.conf /usr/local/apache2/conf/extra/scyt-web.conf
