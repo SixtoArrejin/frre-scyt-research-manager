@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getCategoriaById, createCategoria, deleteCategoria, updateCategoria } from '../controllers/categoriasController.js';
+import { validateToken } from '../middleware/authMiddleware.js'; // Importa la función validateToken
+
+const router = Router();
+
+router.get('/:idCategoria', getCategoriaById);
+router.put('/:idCategoria', updateCategoria);
+router.post('/', validateToken, createCategoria);
+router.delete('/:idCategoria', validateToken, deleteCategoria);
+
+export default router;
