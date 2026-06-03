@@ -279,8 +279,8 @@ node scripts/createExampleUsers.js
 
 1. **Contraseñas**: Se encriptan con bcrypt antes de almacenar
 2. **JWT**: Tokens con expiración de 1 hora
-3. **Secreto JWT**: Cambiar la clave "secreto" por una más segura en producción
-4. **Variables de entorno**: Mover configuraciones sensibles a `.env`
+3. **Secreto JWT**: Definido mediante la variable de entorno `JWT_SECRET` en el archivo `.env`
+4. **Variables de entorno**: Mover configuraciones sensibles a `.env` (como la clave secreta y la base de datos)
 5. **HTTPS**: Usar HTTPS en producción para proteger tokens
 
 ## 🔄 Próximas Mejoras
