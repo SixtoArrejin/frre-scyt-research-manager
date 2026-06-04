@@ -2,154 +2,89 @@ import { prisma } from '../src/db.js';
 import bcrypt from 'bcrypt';
 import { ROLES } from '../src/config/roles.js';
 
-// Configuración de usuarios por defecto
-const DEFAULT_USERS = [
-  {
-    usuario: 'SCyT-Admin',
-    contrasena: 'scytadmin123',
-    rol: ROLES.ADMIN,
-    descripcion: 'Usuario administrador del sistema',
-  },
-  {
-    usuario: 'SCyT-PID',
-    contrasena: 'scytpid123',
-    rol: ROLES.PID,
-    descripcion: 'Usuario para gestión de proyectos PID',
-  },
-  {
-    usuario: 'SCyT-UVT',
-    contrasena: 'scytuvt123',
-    rol: ROLES.UVT,
-    descripcion: 'Usuario para gestión de vinculaciones tecnológicas',
-  },
-  {
-    usuario: 'SCyT-RRHH',
-    contrasena: 'scytrrhh123',
-    rol: ROLES.RRHH,
-    descripcion: 'Usuario para gestión de recursos humanos',
-  },
-  {
-    usuario: 'SCyT-VIEWER',
-    contrasena: 'scytviewer123',
-    rol: ROLES.VIEWER,
-    descripcion: 'Usuario con permisos de solo lectura',
-  },
-];
+// Configuración de usuario administrador inicial obtenido de variables de entorno
 
 /**
- * Crea un usuario específico si no existe
- * @param {Object} userData - Datos del usuario a crear
- * @param {boolean} silent - Si debe ejecutarse en modo silencioso
- * @returns {Object} Resultado de la operación
- */
-async function createUserIfNotExists(userData, silent = false) {
-  try {
-    // Verificar si ya existe el usuario
-    const existingUser = await prisma.usuarios.findUnique({
-      where: { usuario: userData.usuario },
-    });
-
-    if (existingUser) {
-      if (!silent) {
-        console.log(`⚠️  Usuario '${userData.usuario}' ya existe.`);
-      }
-      return { exists: true, created: false, usuario: userData.usuario };
-    }
-
-    // Crear el usuario
-    const hashedPassword = await bcrypt.hash(userData.contrasena, 10);
-    await prisma.usuarios.create({
-      data: {
-        usuario: userData.usuario,
-        contrasena: hashedPassword,
-        rol: userData.rol,
-        activo: true,
-        creadoPor: 'system',
-      },
-    });
-
-    if (!silent) {
-      console.log(`✅ Usuario '${userData.usuario}' creado exitosamente`);
-    }
-
-    return { exists: false, created: true, usuario: userData.usuario };
-  } catch (error) {
-    console.error(`❌ Error al crear usuario '${userData.usuario}':`, error.message);
-    return { exists: false, created: false, usuario: userData.usuario, error: error.message };
-  }
-}
-
-/**
- * Crea todos los usuarios por defecto del sistema
+ * Crea el usuario administrador inicial si no existe ninguno creado por el sistema
  * @param {boolean} silent - Si debe ejecutarse en modo silencioso
  * @returns {Object} Resumen de la operación
  */
 async function createDefaultUsers(silent = false) {
   try {
     if (!silent) {
-      console.log('🚀 Inicializando usuarios por defecto del sistema...');
+      console.log('🚀 Inicializando usuario administrador del sistema...');
       console.log('─'.repeat(60));
     }
 
-    const results = {
-      total: DEFAULT_USERS.length,
-      created: 0,
+    // Verificar si ya existe algún administrador creado por el sistema
+    const existingSystemAdmin = await prisma.usuarios.findFirst({
+      where: {
+        rol: ROLES.ADMIN,
+        creadoPor: 'system',
+      },
+    });
+
+    if (existingSystemAdmin) {
+      if (!silent) {
+        console.log(`⚠️  Ya existe un usuario administrador creado por el sistema: '${existingSystemAdmin.usuario}'.`);
+        console.log('Omitiendo inicialización.');
+      }
+      return { 
+        total: 1, 
+        created: 0, 
+        existed: 1, 
+        errors: 0, 
+        details: [{ exists: true, created: false, usuario: existingSystemAdmin.usuario }] 
+      };
+    }
+
+    // Obtener credenciales de variables de entorno con fallbacks seguros
+    const adminUsername = process.env.INITIAL_ADMIN_USER || 'SCyT-Admin';
+    const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || 'scytadmin123';
+
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
+    // Crear el administrador inicial
+    await prisma.usuarios.create({
+      data: {
+        usuario: adminUsername,
+        contrasena: hashedPassword,
+        rol: ROLES.ADMIN,
+        activo: true,
+        creadoPor: 'system',
+      },
+    });
+
+    if (!silent) {
+      console.log('✅ Usuario administrador creado exitosamente');
+      console.log('─'.repeat(60));
+      console.log('🔐 Credenciales del administrador inicial:');
+      console.log(`   Usuario: ${adminUsername}`);
+      console.log(`   Contraseña: ${adminPassword}`);
+      console.log(`   Rol: ${ROLES.ADMIN}`);
+      console.log('─'.repeat(60));
+      console.log('⚠️  IMPORTANTE: Cambia la contraseña después del primer login');
+    } else {
+      console.log('✅ Usuario administrador por defecto inicializado automáticamente');
+    }
+
+    return {
+      total: 1,
+      created: 1,
       existed: 0,
       errors: 0,
-      details: [],
+      details: [{ exists: false, created: true, usuario: adminUsername }]
     };
-
-    // Crear cada usuario
-    for (const userData of DEFAULT_USERS) {
-      const result = await createUserIfNotExists(userData, silent);
-      results.details.push(result);
-      
-      if (result.created) {
-        results.created++;
-      } else if (result.exists) {
-        results.existed++;
-      } else {
-        results.errors++;
-      }
-    }
-
-    // Mostrar resumen
-    if (!silent) {
-      console.log('─'.repeat(60));
-      console.log('📊 Resumen de inicialización de usuarios:');
-      console.log(`   • Total de usuarios: ${results.total}`);
-      console.log(`   • Creados: ${results.created}`);
-      console.log(`   • Ya existían: ${results.existed}`);
-      console.log(`   • Errores: ${results.errors}`);
-      
-      if (results.created > 0) {
-        console.log('\n🔐 Credenciales de usuarios creados:');
-        console.log('─'.repeat(60));
-        DEFAULT_USERS.forEach(user => {
-          const userResult = results.details.find(r => r.usuario === user.usuario);
-          if (userResult && userResult.created) {
-            console.log(`   ${user.descripcion}:`);
-            console.log(`   Usuario: ${user.usuario}`);
-            console.log(`   Contraseña: ${user.contrasena}`);
-            console.log(`   Rol: ${user.rol}`);
-            console.log('   ─'.repeat(40));
-          }
-        });
-        console.log('\n⚠️  IMPORTANTE: Cambiar las contraseñas después del primer login');
-      }
-    } else if (results.created > 0) {
-      console.log(`✅ ${results.created} usuarios por defecto inicializados automáticamente`);
-    }
-
-    return results;
   } catch (error) {
     console.error('❌ Error durante la inicialización de usuarios:', error);
-    return { 
-      total: DEFAULT_USERS.length,
+    return {
+      total: 1,
       created: 0,
       existed: 0,
-      errors: DEFAULT_USERS.length,
+      errors: 1,
       error: error.message,
+      details: []
     };
   }
 }
@@ -160,11 +95,11 @@ async function createDefaultUsers(silent = false) {
  * @returns {Object} Resultado de la creación del admin
  */
 async function createAdminUser(silent = false) {
-  const adminUser = DEFAULT_USERS.find(user => user.rol === ROLES.ADMIN);
-  if (adminUser) {
-    return await createUserIfNotExists(adminUser, silent);
+  const result = await createDefaultUsers(silent);
+  if (result.details && result.details.length > 0) {
+    return result.details[0];
   }
-  throw new Error('Usuario administrador no encontrado en la configuración por defecto');
+  throw new Error(result.error || 'Error al inicializar el usuario administrador');
 }
 
 // Ejecutar si el script se llama directamente
