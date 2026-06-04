@@ -1,7 +1,6 @@
-# Info para deploy
+# Especificación Técnica y Guía de Despliegue
 
 Repositorio del proyecto:
-
 - https://github.com/SixtoArrejin/frre-scyt-research-manager
 
 ## 1) Resumen
@@ -17,6 +16,8 @@ La comunicación es:
 - Navegador → Frontend (Nginx/Apache)
 - Navegador → Backend/API (HTTP/HTTPS)
 - Backend/API → PostgreSQL 17
+
+---
 
 ## 2) Tecnologías y versiones
 
@@ -47,11 +48,13 @@ Entregable (build) del frontend:
 Entregable del backend:
 
 - Una aplicación Node.js (código JavaScript) que se ejecuta como servicio.
-- Se despliega copiando el contenido de `scyt-api/` al servidor y ejecutando instalación de dependencias (`npm ci --omit=dev`) + generación de Prisma (`npx prisma generate`).
+- Se despliega copiando el contenido de `scyt-api/` al servidor y ejecutando la instalación de dependencias (`npm ci --omit=dev`) + generación del cliente de Prisma (`npx prisma generate`) + sincronización de base de datos (`npx prisma db push`).
 
 ### Base de datos
 
 - PostgreSQL: **17.x**
+
+---
 
 ## 3) Requisitos de infraestructura
 
@@ -92,33 +95,29 @@ Requisitos:
 Formato de URL de conexión (Prisma) usado por el backend:
 
 - `DATABASE_URL=postgresql://USUARIO:CLAVE@HOST:PUERTO/NOMBRE_DB?schema=public`
-  - `USUARIO`: usuario de la DB
-  - `CLAVE`: contraseña
-  - `HOST`: servidor o IP
-  - `PUERTO`: normalmente `5432`
-  - `NOMBRE_DB`: nombre de la base
+
+---
 
 ## 4) Puertos y red
 
 - Todos los puertos son **configurables** según sea necesario.
-
-- Frontend (Nginx/Apache): típicamente HTTP 80 y/o HTTPS 443, pero puede publicarse en otro puerto si se desea.
+- Frontend (Nginx/Apache): HTTP 80 y/o HTTPS 443.
 - Backend/API (Node/Express): puerto configurable (por defecto **8000**).
-- Base de datos: PostgreSQL TCP típicamente **5432** (o el que se configure).
+- Base de datos: PostgreSQL TCP típicamente **5432**.
+
+---
 
 ## 5) Configuración (variables necesarias)
 
 ### 5.1 Backend/API
 
-Variables esperadas por el backend:
+Variables esperadas por el backend en el archivo `.env`:
 
-- `PORT`: puerto HTTP del servicio (ejemplo: `8000`)
-- `DATABASE_URL`: string de conexión PostgreSQL (formato Prisma)
-- `JWT_SECRET`: secreto para firmar/verificar JWT (clave para encriptar las contraseñas)
-
-Ejemplo:
-
-- `DATABASE_URL=postgresql://USUARIO:CLAVE@HOST:5432/NOMBRE_DB?schema=public`
+- `PORT`: puerto HTTP del servicio (ejemplo: `8000`).
+- `DATABASE_URL`: string de conexión PostgreSQL (formato Prisma).
+- `JWT_SECRET`: secreto para firmar/verificar JWT.
+- `INITIAL_ADMIN_USER`: nombre de usuario para el administrador inicial ("Bootstrap Admin").
+- `INITIAL_ADMIN_PASSWORD`: contraseña del administrador inicial.
 
 ### 5.2 Frontend
 
@@ -133,8 +132,6 @@ Para solucionar esto sin tener que reconstruir la web o saber la URL del backend
    
 2. **Proxy Inverso en el Servidor Web (Recomendado)**:
    El servidor web de la facultad (Nginx o Apache) se configura para que todas las peticiones que vayan a `/api/` sean redirigidas internamente al backend (Node.js) que corre en su respectivo puerto (ej. `http://localhost:8000/api/`).
-   
-*Nota: Si prefieres inyectar una URL absoluta en la compilación, deberás definir `VITE_API_BASE_URL=https://url-del-back.facultad.edu.ar` antes de ejecutar el comando `npm run build`.*
 
 ---
 
@@ -156,13 +153,9 @@ Para solucionar esto sin tener que reconstruir la web o saber la URL del backend
    VITE_API_BASE_URL=/api npm run build
    ```
    *(En Windows PowerShell: `$env:VITE_API_BASE_URL="/api"; npm run build`)*
-4. El comando generará una carpeta llamada `build/` (o `dist/` según la configuración de Vite, configurada en `build/` en este proyecto). El contenido de esta carpeta son los archivos HTML/CSS/JS listos para ser copiados al servidor web.
+4. El comando generará una carpeta llamada `build/`. El contenido de esta carpeta son los archivos HTML/CSS/JS listos para ser copiados al servidor web.
 
-#### Destinos típicos en producción:
-- Nginx: `/usr/share/nginx/html` o `/var/www/scyt-web`
-- Apache: `/var/www/html` o el DocumentRoot del VirtualHost
-
-#### Configuración mínima de SPA fallback y Proxy (Nginx):
+#### Configuración de SPA fallback y Proxy (Nginx):
 ```nginx
 server {
   listen 80;
@@ -188,67 +181,35 @@ server {
 }
 ```
 
-*Nota: Contamos con los archivos completos `nginx.conf` y `apache.conf` de ejemplo en la raíz de `scyt-web/`.*
-
 ### 6.2 Backend/API (Node.js como servicio)
 
-Se entrega el código del backend en una carpeta con el contenido de `scyt-api/`. 
-
-#### Paso a paso para compilar y ejecutar:
-1. Copiar los archivos a la carpeta de destino en el servidor (ej: `/opt/scyt-api`). No es necesario copiar `node_modules`.
-2. Crear un archivo `.env` en la raíz de la carpeta en el servidor con las variables:
-   ```env
-   PORT=8000
-   DATABASE_URL=postgresql://USUARIO:CLAVE@HOST:5432/NOMBRE_DB?schema=public
-   JWT_SECRET=tu_clave_secreta_muy_segura
-   ```
-3. Instalar dependencias de producción y generar Prisma Client:
+#### Paso a paso para desplegar y ejecutar:
+1. Copiar los archivos de `scyt-api/` (excepto `node_modules` y `.env` locales) a la carpeta de destino en el servidor (ej: `/opt/scyt-api`).
+2. Crear un archivo `.env` en la raíz de la carpeta en el servidor con las variables descritas en la sección 5.1.
+3. Instalar dependencias de producción, compilar Prisma Client y sincronizar la base de datos:
    ```bash
    cd /opt/scyt-api
    npm ci --omit=dev
    npx prisma generate
+   npx prisma db push
    ```
-4. Ejecutar el servicio (se recomienda usar un administrador de procesos como `pm2` para producción):
+4. Ejecutar el servicio en segundo plano (PM2 recomendado):
    ```bash
-   # Con Node directamente:
-   npm start
-   
-   # O con PM2 (recomendado):
    pm2 start src/app.js --name "scyt-api"
    ```
 
 ### 6.3 Base de Datos (PostgreSQL 17)
 
-Para inicializar la base de datos en el servidor de la facultad, tienes dos opciones principales:
+#### Sincronización automática de tablas (Recomendada)
+Dado que el proyecto utiliza Prisma ORM, la sincronización se realiza mediante `npx prisma db push`. Esto crea automáticamente todas las tablas, índices y relaciones en la base de datos PostgreSQL de manera idéntica al modelo de datos de la aplicación.
 
-#### Opción A: A través de Prisma (Recomendada y automatizada)
-Dado que el proyecto utiliza Prisma ORM, no necesitas scripts SQL manuales para crear las tablas. Prisma puede sincronizar y estructurar la base de datos de producción leyendo la definición del modelo en `schema.prisma`.
+#### Datos semilla e inicialización del Administrador
+Al arrancar el servidor backend por primera vez, el sistema realiza lo siguiente de forma automática:
+1. Inserta los datos fijos iniciales (roles, regionales y tipos de proyecto).
+2. Comprueba si existe algún usuario administrador en la base de datos. Si no existe, crea el administrador inicial ("Bootstrap Admin") utilizando las credenciales configuradas en las variables `INITIAL_ADMIN_USER` e `INITIAL_ADMIN_PASSWORD` en el archivo `.env`.
 
-1. Asegúrate de configurar correctamente la variable `DATABASE_URL` en el archivo `.env` del backend apuntando a la base de datos PostgreSQL de la facultad (esta base de datos debe existir previamente, aunque esté vacía).
-2. Desde la carpeta del backend (`scyt-api/`), ejecuta el comando:
-   ```bash
-   npx prisma db push
-   ```
-   *Esto creará automáticamente todas las tablas, índices y relaciones en la base de datos PostgreSQL.*
-3. Para insertar los datos iniciales obligatorios (roles, regiones, tipos de proyecto y usuario admin por defecto), inicia la aplicación API. El script interno `initializeApp()` en `src/app.js` se encargará de crearlos en el primer inicio de forma automática.
-
-#### Opción B: Exportar script SQL desde tu base de datos local
-Si el personal de TI de la facultad solicita obligatoriamente un script `.sql` para importarlo directamente en el motor de base de datos PostgreSQL, puedes exportarlo usando la herramienta nativa `pg_dump`:
-
-1. **Exportar solo la estructura (tablas, claves, etc.) sin registros:**
-   Abre una terminal en tu computadora (donde tienes corriendo la DB local) y ejecuta:
-   ```bash
-   pg_dump -U postgres -d dbscyt-dev -s -f database/estructura_db.sql
-   ```
-   *(Reemplaza `postgres` por tu usuario local y `dbscyt-dev` por el nombre de tu base de datos).*
-
-2. **Exportar estructura Y datos (backup completo):**
-   ```bash
-   pg_dump -U postgres -d dbscyt-dev -f database/backup_completo.sql
-   ```
-
-3. **Importar el script SQL en el servidor de la facultad:**
-   El personal de TI (o tú) puede ejecutar el script en el servidor de base de datos con:
-   ```bash
-   psql -U usuario_facultad -d nombre_db_facultad -f backup_completo.sql
-   ```
+#### Backup manual mediante script SQL (Backup / Entornos restringidos)
+Si se requiere de forma mandatoria un archivo `.sql` por parte de los administradores de sistemas de la facultad para crear la estructura de forma aislada, se puede utilizar el script `estructura_db.sql` disponible en la carpeta de entregables:
+```bash
+psql -U usuario_facultad -d nombre_db_facultad -f estructura_db.sql
+```
