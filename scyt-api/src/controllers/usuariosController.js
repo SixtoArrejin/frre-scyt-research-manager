@@ -159,7 +159,6 @@ export async function login(req, res) {
 
     const { contrasena: contrasenaExcluir, ...usuarioDataSinContrasena } =
       usuarioData; // Excluir la contraseña del objeto de usuario
-    console.log(usuarioDataSinContrasena);
     return res.status(200).json({
       message: 'Inicio de sesión exitoso',
       success: true,

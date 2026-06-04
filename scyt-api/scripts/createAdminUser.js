@@ -8,17 +8,20 @@ async function createAdminUser(silent = false) {
       console.log('🚀 Creando usuario administrador...');
     }
 
-    const adminUsername = 'admin';
-    const adminPassword = 'admin123'; // Cambiar en producción
+    const adminUsername = process.env.INITIAL_ADMIN_USER || 'SCyT-Admin';
+    const adminPassword = process.env.INITIAL_ADMIN_PASSWORD || 'scytadmin123';
 
-    // Verificar si ya existe un usuario admin
-    const existingAdmin = await prisma.usuarios.findUnique({
-      where: { usuario: adminUsername },
+    // Verificar si ya existe algún administrador creado por el sistema
+    const existingAdmin = await prisma.usuarios.findFirst({
+      where: {
+        rol: ROLES.ADMIN,
+        creadoPor: 'system',
+      },
     });
 
     if (existingAdmin) {
       if (!silent) {
-        console.log('⚠️  Usuario administrador ya existe.');
+        console.log(`⚠️  Usuario administrador creado por el sistema ya existe ('${existingAdmin.usuario}').`);
       }
       return { exists: true, created: false };
     } else {

@@ -22,7 +22,7 @@ Esta opción no requiere importar archivos SQL. Prisma crea la estructura leyend
     ```bash
     npx prisma db push
     ```
-3.  Al iniciar la API por primera vez, el servidor sembrará de manera automática los roles, regionales, tipos de proyecto y el usuario administrador inicial.
+3.  Al iniciar la API por primera vez, el servidor sembrará de manera automática los roles, regionales, tipos de proyecto y el usuario administrador inicial (obteniendo sus credenciales de las variables de entorno `INITIAL_ADMIN_USER` e `INITIAL_ADMIN_PASSWORD`).
 
 ### Opción B: Importación del Script SQL Nativo
 1.  Importa el script `estructura_db.sql` provisto en esta carpeta:
@@ -42,6 +42,8 @@ El backend es un servicio en Node.js.
     PORT=8000
     DATABASE_URL=postgresql://usuario:contraseña@servidor_db:5432/nombre_db?schema=public
     JWT_SECRET=una_clave_secreta_segura_para_jwt
+    INITIAL_ADMIN_USER=SCyT-Admin
+    INITIAL_ADMIN_PASSWORD=una_contraseña_muy_segura_para_el_admin
     ```
 3.  Instala las dependencias de producción y genera el cliente local de Prisma:
     ```bash

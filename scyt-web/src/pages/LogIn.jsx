@@ -69,7 +69,6 @@ export default function LogIn() {
   const { mutate, isLoading } = useMutation((formData) => logInUser(formData), {
     // onSuccess se ejecutará cuando la llamada sea exitosa
     onSuccess: (data) => {
-      console.log('Respuesta de la solicitud:', data);
       if (data.token && data.usuario) {
         login(data.token, data.usuario);
 
@@ -91,7 +90,6 @@ export default function LogIn() {
       navigate('/');
     },
     onError: (data) => {
-      console.log('Ocurrio un error intente nuevamente', data);
       toast({
         title: 'Inicio de sesión',
         description: 'Usuario o contraseña incorrectos.',
@@ -102,7 +100,6 @@ export default function LogIn() {
   });
 
   const onSubmit = (dataForm) => {
-    console.log(dataForm);
     mutate(dataForm);
   };
 

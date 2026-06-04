@@ -1,99 +1,62 @@
-# Usuarios por Defecto del Sistema
+# Inicialización de Usuario Administrador (Bootstrap Admin)
 
 ## Descripción
 
-El sistema crea automáticamente 5 usuarios por defecto al iniciar la aplicación. Estos usuarios solo se crean si no existen previamente en la base de datos.
+El sistema implementa el patrón **Bootstrap Admin Only**. Al iniciar la aplicación, el servidor busca si existe algún usuario administrador inicial creado por el sistema. Si no existe ninguno, crea automáticamente una única cuenta administradora inicial utilizando variables de entorno para configurar sus credenciales.
 
-## Usuarios Creados
+Esto previene tener contraseñas por defecto harcodeadas en el código y mantiene la seguridad del despliegue en producción.
 
-| Usuario       | Contraseña      | Rol    | Descripción                                        |
-| ------------- | --------------- | ------ | -------------------------------------------------- |
-| `SCyT-Admin`  | `scytadmin123`  | admin  | Usuario administrador del sistema                  |
-| `SCyT-PID`    | `scytpid123`    | pid    | Usuario para gestión de proyectos PID              |
-| `SCyT-UVT`    | `scytuvt123`    | uvt    | Usuario para gestión de vinculaciones tecnológicas |
-| `SCyT-RRHH`   | `scytrrhh123`   | rrhh   | Usuario para gestión de recursos humanos           |
-| `SCyT-VIEWER` | `scytviewer123` | viewer | Usuario con permisos de solo lectura               |
+Una vez iniciada la sesión con este usuario administrador, este será responsable de crear manualmente los usuarios funcionales de la organización (con roles como PID, UVT, RRHH, Viewer) a través del panel de administración del sistema.
 
-## Permisos por Rol
+## Credenciales del Administrador Inicial
 
-### Admin
+Las credenciales se obtienen de las siguientes variables de entorno en el archivo `.env`:
 
-- Acceso completo a todos los recursos
-- Gestión de usuarios
-- Todas las operaciones CRUD
+*   `INITIAL_ADMIN_USER`: Nombre de usuario del administrador inicial (Valor por defecto: `SCyT-Admin`).
+*   `INITIAL_ADMIN_PASSWORD`: Contraseña del administrador inicial (Valor por defecto: `scytadmin123`).
 
-### PID
+> [!WARNING]
+> En entornos de producción o desarrollo expuestos, es **mandatorio** sobrescribir estas variables en tu archivo `.env` local con valores seguros antes de levantar el servidor por primera vez.
 
-- Gestión de proyectos
-- Crear, editar y ver proyectos
-- Ver otros recursos (solo lectura)
+## Roles del Sistema
 
-### UVT (Unidad de Vinculación Tecnológica)
+Una vez que el administrador inicial accede, puede gestionar y crear usuarios con los siguientes roles provistos por la plataforma:
 
-- Gestión de vinculaciones tecnológicas
-- Crear, editar y ver vinculaciones
-- Ver otros recursos (solo lectura)
+| Rol | Descripción |
+| :--- | :--- |
+| **Admin** | Acceso completo a todos los recursos, auditorías y gestión de usuarios. |
+| **PID** | Gestión de proyectos de investigación y desarrollo (PID) (Crear, editar, ver). |
+| **UVT** | Gestión de vinculaciones tecnológicas (UVT) y convenios (Crear, editar, ver). |
+| **RRHH** | Gestión de investigadores, personas, categorías y grupos de investigación. |
+| **Viewer** | Acceso de solo lectura en todos los recursos (sin permisos de edición/creación). |
 
-### RRHH (Recursos Humanos)
-
-- Gestión de investigadores/personas
-- Gestión de grupos de investigación
-- Gestión de categorías
-- Ver otros recursos (solo lectura)
-
-### Viewer
-
-- Solo lectura en todos los recursos
-- No puede acceder a la gestión de usuarios
-- No puede crear, editar o eliminar contenido
-
-## Implementación
+## Ejecución del Script de Inicialización
 
 ### Automática
 
-Los usuarios se crean automáticamente cuando se inicia la aplicación (`npm start` o `node src/app.js`).
+El usuario administrador inicial se inicializa automáticamente al iniciar la aplicación (`npm start` o `node src/app.js`), comprobando primero si ya existe algún administrador con el flag `creadoPor: 'system'`.
 
-### Manual
+### Manual / Pruebas
 
-Para ejecutar solo la creación de usuarios:
+Para forzar la comprobación o ejecutar la creación de manera independiente, puedes usar los scripts provistos:
 
 ```bash
-# Ejecutar script completo (con detalles)
+# Ejecutar la inicialización mostrando los logs detallados
 node scripts/createDefaultUsers.js
 
-# Ejecutar script de prueba
+# Ejecutar el script de prueba
 node scripts/testDefaultUsers.js
-```
-
-### Programática
-
-```javascript
-import { createDefaultUsers } from "./scripts/createDefaultUsers.js";
-
-// Modo silencioso (para inicialización automática)
-await createDefaultUsers(true);
-
-// Modo detallado (muestra toda la información)
-await createDefaultUsers(false);
 ```
 
 ## Archivos Relacionados
 
-- `scripts/createDefaultUsers.js` - Script principal de creación
-- `scripts/testDefaultUsers.js` - Script de prueba
-- `src/app.js` - Inicialización automática
-- `src/config/roles.js` - Definición de roles y permisos
+*   [createDefaultUsers.js](file:///s:/Facu/3er%20a%C3%B1o/Secretar%C3%ADa%20de%20Ciencia%20y%20Tecnolog%C3%ADa/Beca-Secretaria-CyT/scyt-api/scripts/createDefaultUsers.js) - Script de comprobación y creación del administrador.
+*   [testDefaultUsers.js](file:///s:/Facu/3er%20a%C3%B1o/Secretar%C3%ADa%20de%20Ciencia%20y%20Tecnolog%C3%ADa/Beca-Secretaria-CyT/scyt-api/scripts/testDefaultUsers.js) - Script de pruebas.
+*   [app.js](file:///s:/Facu/3er%20a%C3%B1o/Secretar%C3%ADa%20de%20Ciencia%20y%20Tecnolog%C3%ADa/Beca-Secretaria-CyT/scyt-api/src/app.js) - Inicialización automática al arrancar.
+*   [roles.js](file:///s:/Facu/3er%20a%C3%B1o/Secretar%C3%ADa%20de%20Ciencia%20y%20Tecnolog%C3%ADa/Beca-Secretaria-CyT/scyt-api/src/config/roles.js) - Definición de roles y permisos.
 
-## ⚠️ Importante
+## ⚠️ Prácticas de Seguridad
 
-1. **Cambiar contraseñas**: Es fundamental cambiar las contraseñas después del primer login
-2. **Producción**: En ambiente de producción, considerar usar contraseñas más seguras
-3. **Seguridad**: Estos usuarios son para facilitar el setup inicial del sistema
-4. **Base de datos**: Los usuarios solo se crean si no existen previamente
-
-## Próximos Pasos
-
-- [ ] Implementar forzado de cambio de contraseña en primer login
-- [ ] Implementar política de contraseñas más estricta
-- [ ] Considerar usar variables de entorno para contraseñas por defecto
-- [ ] Implementar auditoría de accesos por usuario
+1.  **Cambiar contraseña inicial**: Cambiar la contraseña del usuario `SCyT-Admin` inmediatamente después del primer login.
+2.  **No compartir credenciales de sistema**: Evitar el uso compartido de la cuenta administrador del sistema; crear cuentas individuales para cada integrante de la secretaría con su rol respectivo.
+3.  **Protección de Variables de Entorno**: Asegurar que los archivos `.env` o configuraciones del orquestador en producción no sean accesibles para usuarios externos o subidos a sistemas de control de versiones.
