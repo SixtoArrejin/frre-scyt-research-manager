@@ -1,0 +1,29 @@
+name: Historia de Usuario
+description: Definí una historia de usuario para DateBox
+title: "Historia de Usuario"
+labels: ["historia"]
+assignees: []
+
+body:
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: 🎯 Historia de Usuario
+      description: Describí la historia de usuario
+      placeholder: Como [rol] quiero [acción] para [beneficio]
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: ✅ Criterios de Aceptación
+      description: Escribí cada criterio como un checkbox con `- [ ]`
+      placeholder: |
+        - [ ] Criterio 1
+        - [ ] Criterio 2
+        - [ ] Criterio 3
+
+  - type: textarea
+    id: info
+    attributes:
+      label: 💭 Información Adicional
+      placeholder: Agregá contexto útil, decisiones tomadas, etc.
