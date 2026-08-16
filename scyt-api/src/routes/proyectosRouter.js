@@ -9,6 +9,7 @@ import {
   updateProyectoController,
   addInvestigador,
   delInvestigador,
+  bajaInvestigadorController,
   addGrupo,
   delGrupo,
 } from '../controllers/proyectosController.js';
@@ -65,6 +66,11 @@ router.delete(
   '/:idProyecto/investigador/:idInvestigador',
   requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
   delInvestigador,
+);
+router.put(
+  '/:idProyecto/investigador/:idInvestigador/baja',
+  requirePermission(RESOURCES.PROYECTOS, ACTIONS.UPDATE),
+  bajaInvestigadorController,
 );
 router.post(
   '/:idProyecto/grupo',

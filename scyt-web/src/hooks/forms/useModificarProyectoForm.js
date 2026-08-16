@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { formatoFechaISOaAAAAMMDD } from '../../utils/general';
@@ -34,10 +34,16 @@ const modificarProyectoSchema = yup.object({
     otherwise: () => yup.string().nullable(),
   }),
   denominacion: yup.string().required('La denominación es requerida'),
-  fechaInicio: yup.string().required('La fecha de inicio es requerida'),
-  fechaFin: yup.string().required('La fecha de fin es requerida'),
+  fechaInicio: yup.string().nullable().notRequired(),
+  fechaFin: yup.string().nullable().notRequired(),
   programa: yup.string().required('El programa es requerido'),
-  tipoProyecto: yup.string().required('El tipo de proyecto es requerido'),
+  tipoProyecto: yup.mixed().when('tipo', {
+    is: val => val === 'pid',
+    then: () => yup.string().required('El tipo de proyecto es requerido'),
+    otherwise: () => yup.string().nullable().notRequired(),
+  }),
+  trl: yup.string().nullable().notRequired(),
+  descripcionBreve: yup.string().nullable().notRequired(),
   regional: yup.string().required('La regional es requerida'),
   convocatoria: yup.number()
     .typeError('La convocatoria debe ser un número')
@@ -87,6 +93,11 @@ const modificarProyectoSchema = yup.object({
   }),
 });
 
+export const tipoProyectosInterinstitucionales = [
+  'Inter-institucional (PID IN) con Incentivos',
+  'Inter-institucional (PID IN) sin Incentivos',
+];
+
 export const useModificarProyectoForm = () => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -95,6 +106,10 @@ export const useModificarProyectoForm = () => {
   // Estados locales
   const [estado, setEstado] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [institucionesSeleccionadas, setInstitucionesSeleccionadas] = useState([]);
+  const [selectedInstitucion, setSelectedInstitucion] = useState('');
+  const [otraInstitucion, setOtraInstitucion] = useState('');
+  const [selectedTipoProyecto, setSelectedTipoProyecto] = useState('');
 
   // Ref para controlar si ya se llenó el formulario
   const hasFilledForm = useRef(false);
@@ -123,6 +138,8 @@ export const useModificarProyectoForm = () => {
     codPid: '',
     tipo: esPid ? 'pid' : 'externo',
     denominacion: '',
+    descripcionBreve: '',
+    trl: '',
     fechaInicio: '',
     fechaFin: '',
     programa: '',
@@ -152,10 +169,15 @@ export const useModificarProyectoForm = () => {
     defaultValues,
   });
 
+  const queryClient = useQueryClient();
+
   // Mutation
   const { mutate: updateProyectoMutation, isLoading: isLoadingMutation } = useMutation({
     mutationFn: (formData) => updateProyecto(Number(idPid), formData),
     onSuccess: () => {
+      queryClient.invalidateQueries(['proyecto', Number(idPid)]);
+      queryClient.invalidateQueries(['proyecto', String(idPid)]);
+      queryClient.invalidateQueries('proyectos');
       toast({
         title: 'Modificar Proyecto',
         description: 'Se ha modificado el proyecto exitosamente',
@@ -187,6 +209,8 @@ export const useModificarProyectoForm = () => {
       // Campos básicos
       setValue('codPid', proyecto.codPid || '');
       setValue('denominacion', proyecto.denominacion || '');
+      setValue('descripcionBreve', proyecto.descripcionBreve || '');
+      setValue('trl', proyecto.trl || '');
       setValue('programa', proyecto.programa || '');
       setValue('convocatoria', proyecto.convocatoria || 0);
       setValue('empresaInstitucion', proyecto.empresaInstitucion || '');
@@ -219,13 +243,55 @@ export const useModificarProyectoForm = () => {
         setValue('nuevaFechaFin', formatoFechaISOaAAAAMMDD(proyecto.nuevaFechaFin));
       }
 
+      // Instituciones asociadas existentes
+      if (proyecto.institucionesAsociadas) {
+        setInstitucionesSeleccionadas(proyecto.institucionesAsociadas.map((i) => i.nombreInstitucion));
+      }
+
       // Actualizar estado local para condicionales
       setEstado(proyecto.estado || '');
+      setSelectedTipoProyecto(proyecto.tipoProyecto || '');
 
       // Marcar como llenado para evitar re-llenados
       hasFilledForm.current = true;
     }
   }, [dataProyecto, setValue]);
+
+  // Manejo del cambio de tipo de proyecto
+  const handleTipoProyectoChange = (e) => {
+    const val = e.target.value;
+    setValue('tipoProyecto', val, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setSelectedTipoProyecto(val);
+  };
+
+  // Manejo de instituciones asociadas
+  const agregarInstitucion = () => {
+    let nombreInstitucion = '';
+    if (selectedInstitucion === 'Otro') {
+      if (!otraInstitucion || otraInstitucion.trim() === '') {
+        return;
+      }
+      nombreInstitucion = otraInstitucion.trim();
+    } else {
+      if (!selectedInstitucion || selectedInstitucion === '') {
+        return;
+      }
+      nombreInstitucion = selectedInstitucion;
+    }
+
+    const yaExiste = institucionesSeleccionadas.some(
+      (inst) => inst.toLowerCase() === nombreInstitucion.toLowerCase(),
+    );
+    if (!yaExiste) {
+      setInstitucionesSeleccionadas([...institucionesSeleccionadas, nombreInstitucion]);
+      setSelectedInstitucion('');
+      setOtraInstitucion('');
+    }
+  };
+
+  const eliminarInstitucion = (itemEliminar) => {
+    setInstitucionesSeleccionadas(institucionesSeleccionadas.filter((i) => i !== itemEliminar));
+  };
 
   // Función de envío del formulario
   const onSubmit = (values) => {
@@ -236,6 +302,8 @@ export const useModificarProyectoForm = () => {
       completo: values.completo === 'true',
       // Convertir campos numéricos
       convocatoria: parseInt(values.convocatoria, 10),
+      // Instituciones asociadas
+      instituciones: institucionesSeleccionadas,
     };
 
     // Eliminar campo auxiliar 'tipo'
@@ -310,6 +378,18 @@ export const useModificarProyectoForm = () => {
     tiposProyectoOptions,
     tipoActividadOptions,
     estadoProyectoOptions,
+    dataRegionales,
+
+    // Instituciones asociadas
+    selectedTipoProyecto,
+    handleTipoProyectoChange,
+    institucionesSeleccionadas,
+    selectedInstitucion,
+    setSelectedInstitucion,
+    otraInstitucion,
+    setOtraInstitucion,
+    agregarInstitucion,
+    eliminarInstitucion,
 
     // Funciones de modal
     openModal,

@@ -181,6 +181,24 @@ export default function NuevoPid() {
                       justifyContent="space-between"
                     >
                       <GenericInput
+                        textArea
+                        name="descripcionBreve"
+                        placeholder="Descripción breve del proyecto"
+                        register={register}
+                        errors={errors}
+                        label="Descripción Breve"
+                        width={{ base: '100%', md: '100%' }}
+                        mb="5vh"
+                      />
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <GenericInput
                         name="fechaInicio"
                         type="date"
                         register={register}
@@ -244,8 +262,46 @@ export default function NuevoPid() {
                         }))}
                         errors={errors}
                         onChange={handleTipoProyectoChange}
-                        isRequired
+                        isRequired={PidExterno === 'pid'}
                       />
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      width="100%"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <GenericSelect
+                        name="trl"
+                        label="Nivel TRL (Madurez Tecnológica)"
+                        placeholder="Seleccione TRL..."
+                        width={{ base: '100%', md: PidExterno !== 'pid' ? '47.5%' : '100%' }}
+                        mb="5vh"
+                        register={register}
+                        options={[
+                          { value: 'TRL 1', label: 'TRL 1 - Principios básicos observados' },
+                          { value: 'TRL 2', label: 'TRL 2 - Concepto tecnológico formulado' },
+                          { value: 'TRL 3', label: 'TRL 3 - Prueba de concepto experimental' },
+                          { value: 'TRL 4', label: 'TRL 4 - Validación en laboratorio' },
+                          { value: 'TRL 5', label: 'TRL 5 - Validación en entorno relevante' },
+                          { value: 'TRL 6', label: 'TRL 6 - Demostración en entorno relevante' },
+                          { value: 'TRL 7', label: 'TRL 7 - Demostración de sistema operacional' },
+                          { value: 'TRL 8', label: 'TRL 8 - Sistema completo y calificado' },
+                          { value: 'TRL 9', label: 'TRL 9 - Sistema probado operacional' },
+                        ]}
+                        errors={errors}
+                      />
+                      {PidExterno !== 'pid' && (
+                        <GenericInput
+                          name="empresaInstitucion"
+                          placeholder="Empresa/Institución"
+                          register={register}
+                          label="Empresa/Institución"
+                          width={{ base: '100%', md: '47.5%' }}
+                          mb="5vh"
+                        />
+                      )}
                     </Box>
                     {PidExterno === 'pid' && (
                       <Box
@@ -303,23 +359,6 @@ export default function NuevoPid() {
                         )}
                       </Box>
                     )}
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      {PidExterno !== 'pid' && (
-                        <GenericInput
-                          name="empresaInstitucion"
-                          placeholder="Empresa/Institución"
-                          register={register}
-                          label="Empresa/Institución"
-                          width={{ base: '100%', md: '47.5%' }}
-                          mb="5vh"
-                        />
-                      )}
                       {PidExterno === 'pid' && (
                         <Box
                           width={{ base: '100%', md: '52.5%' }}
@@ -391,10 +430,9 @@ export default function NuevoPid() {
                       )}
                     </Box>
                   </Box>
-                </Box>
-              </CardBody>
-            </Card>
-          </Box>
+                </CardBody>
+              </Card>
+            </Box>
 
           {/* ACA SE AGREGA LA TABLA DE GRUPOS */}
           <br />

@@ -171,7 +171,7 @@ export default function DetalleInvestigador() {
                   />
                 </Box>
 
-                {/* Segunda fila: Tipo, Legajo, Siglas, Fecha de Ingreso */}
+                {/* Segunda fila: Tipo, Legajo, ORCID, Siglas, Fecha de Ingreso */}
                 <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
                   <DisplayField
                     label="Tipo"
@@ -188,12 +188,21 @@ export default function DetalleInvestigador() {
                   />
 
                   <DisplayField
+                    label="Número ORCID"
+                    value={data?.persona?.orcid || '-'}
+                    width={{ base: '100%', md: '21.25%' }}
+                    mb={4}
+                  />
+
+                  <DisplayField
                     label="Siglas del Grupo"
                     value={data?.persona?.gruposinvestigacion?.siglas || ''}
                     width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
+                </Box>
 
+                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
                   <DisplayField
                     label="Fecha de Ingreso al Grupo"
                     value={data?.persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(data.persona.fechaIngresoGrupo) : '-'}

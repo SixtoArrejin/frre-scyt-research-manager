@@ -33,8 +33,10 @@ export async function createProyecto(proyectoData) {
       denominacion: proyectoData.denominacion,
       regional: proyectoData.regional,
       convocatoria: proyectoData.convocatoria,
-      tipoProyecto: proyectoData.tipoProyecto,
+      tipoProyecto: proyectoData.tipoProyecto || null,
       programa: proyectoData.programa,
+      trl: proyectoData.trl || null,
+      descripcionBreve: proyectoData.descripcionBreve || null,
       ...(proyectoData.fechaInicio && { fechaInicio: convertToISOString(proyectoData.fechaInicio) }),
       ...(proyectoData.fechaFin && { fechaFin: convertToISOString(proyectoData.fechaFin) }),
     };
@@ -226,6 +228,26 @@ export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
   try {
     const deletedParticipante = await deleteByCompositeKey('participa', 'idPersona', idPersona, 'idProyecto', idProyecto);
     return deletedParticipante;
+  } catch (error) {
+    console.log(error.message);
+    throw new Error(error.message);
+  }
+}
+
+export async function bajaPersonaParticipaProyecto(idProyecto, idPersona, fechaFin) {
+  try {
+    const updatedParticipante = await prisma.participa.update({
+      where: {
+        idPersona_idProyecto: {
+          idPersona: parseInt(idPersona, 10),
+          idProyecto: parseInt(idProyecto, 10),
+        },
+      },
+      data: {
+        fechaFin: fechaFin ? convertToISOString(fechaFin) : new Date(),
+      },
+    });
+    return updatedParticipante;
   } catch (error) {
     console.log(error.message);
     throw new Error(error.message);

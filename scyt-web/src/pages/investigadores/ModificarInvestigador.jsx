@@ -142,7 +142,6 @@ export default function ModificarInvestigador() {
                 register={register}
                 errors={errors}
                 width={{ base: '100%', md: '50%' }}
-                isRequired
                 mb='5vh'
               />
             </Box>
@@ -155,9 +154,26 @@ export default function ModificarInvestigador() {
                 register={register}
                 errors={errors}
                 width={{ base: '100%', md: '50%' }}
-                isRequired
                 mb='5vh'
               />
+            </Box>
+          </Box>
+
+          <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} width='100%' alignItems='center' justifyContent='space-between'>
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              <GenericInput
+                name='orcid'
+                label='Número ORCID'
+                placeholder='0000-0000-0000-0000'
+                register={register}
+                errors={errors}
+                width={{ base: '100%', md: '50%' }}
+                mb='5vh'
+              />
+            </Box>
+
+            <Box display='flex' flexDirection='column' width='50%' alignItems='center' justifyContent='center'>
+              {/* Espacio reservado para alineación */}
             </Box>
           </Box>
 

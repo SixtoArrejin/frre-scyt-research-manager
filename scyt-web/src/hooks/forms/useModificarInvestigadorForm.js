@@ -34,14 +34,22 @@ const modificarInvestigadorSchema = yup.object({
     .test('idNaN', 'Indique a que grupo pertenece', (val) => !isNaN(val)),
   fechaIngresoGrupo: yup
     .date()
-    .required('La fecha de ingreso al grupo es requerida')
+    .nullable()
+    .notRequired()
+    .transform((curr, orig) => (orig === '' || !orig ? null : curr))
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
   activo: yup.boolean().required('El estado es requerido'),
   esBecario: yup.boolean(),
   legajo: yup
     .string()
-    .required('El legajo es requerido')
+    .nullable()
+    .notRequired()
+    .transform((val) => (val === '' ? null : val)),
+  orcid: yup
+    .string()
+    .nullable()
+    .notRequired()
     .trim(),
   tienePosgrado: yup.boolean().when('esBecario', {
     is: false,
@@ -70,6 +78,7 @@ const defaultValues = {
   activo: false,
   esBecario: false,
   legajo: '',
+  orcid: '',
   tienePosgrado: false,
   nivelPosgrado: '',
   otroPosgrado: '',
@@ -135,6 +144,7 @@ export const useModificarInvestigadorForm = () => {
       activo: formData.activo,
       esBecario: formData.esBecario,
       legajo: formData.legajo?.trim() || null,
+      orcid: formData.orcid?.trim() || null,
     };
 
     // Solo incluir campos de posgrado si NO es becario
@@ -196,6 +206,7 @@ export const useModificarInvestigadorForm = () => {
       form.setValue('dni', investigador.persona.dni);
       form.setValue('idGrupoInvestigacion', investigador.persona.idGrupoInvestigacion);
       form.setValue('legajo', investigador.persona.legajo || '');
+      form.setValue('orcid', investigador.persona.orcid || '');
       form.setValue('tienePosgrado', investigador.persona.tienePosgrado || false);
       form.setValue('nivelPosgrado', investigador.persona.nivelPosgrado || '');
       form.setValue('otroPosgrado', investigador.persona.otroPosgrado || '');
@@ -205,6 +216,8 @@ export const useModificarInvestigadorForm = () => {
         const fecha = new Date(investigador.persona.fechaIngresoGrupo);
         const fechaFormateada = fecha.toISOString().split('T')[0];
         form.setValue('fechaIngresoGrupo', fechaFormateada);
+      } else {
+        form.setValue('fechaIngresoGrupo', '');
       }
       hasFilledForm.current = true;
     }

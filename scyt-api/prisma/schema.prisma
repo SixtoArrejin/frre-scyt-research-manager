@@ -36,6 +36,7 @@ model participa {
   idProyecto  Int
   rol         String    @db.VarChar(100)
   fechaInicio DateTime? @db.Date
+  fechaFin    DateTime? @db.Date
   personas    personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
   proyectos   proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
 
@@ -56,6 +57,7 @@ model personas {
   nivelPosgrado            String?             @db.VarChar(50)
   otroPosgrado             String?             @db.VarChar(100)
   tienePosgrado            Boolean?            @default(false)
+  orcid                    String?             @db.VarChar(50)
   categorias               categorias[]
   participa                participa[]
   gruposinvestigacion      gruposinvestigacion @relation(fields: [idGrupoInvestigacion], references: [idGrupoInvestigacion], onDelete: NoAction, onUpdate: NoAction, map: "personas_ibfk_1")
@@ -78,6 +80,8 @@ model proyectos {
   idCodirector           Int?
   tipoProyecto           String?                  @db.VarChar(256)
   programa               String?                  @db.VarChar(256)
+  trl                    String?                  @db.VarChar(50)
+  descripcionBreve       String?                  @db.VarChar(1000)
   institucionesAsociadas institucionesProyectos[] @relation("institucionesProyectos")
   participa              participa[]
   pid                    pids?                    @relation("proyectos_pids")

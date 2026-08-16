@@ -8,15 +8,28 @@ import {
   Button,
   Spinner,
   HStack,
+  Badge,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  FormControl,
+  FormLabel,
+  useToast,
 } from '@chakra-ui/react';
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { PlusSquareIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { tipoProyectosInterinstitucionales } from '../../hooks/forms/useNuevoProyectoForm';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import {
   formatoFechaISOaDDMMAAAA,
   getCategoriaMasActual,
 } from '../../utils/general';
-import { getProyectoById } from '../../utils/api/proyectosApi';
+import { getProyectoById, bajaInvestigador } from '../../utils/api/proyectosApi';
 import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
 import { getPropiedadIntelectualByIdProyecto } from '../../utils/api/propiedadIntelectualApi';
 import DisplayField from '../../components/DisplayField';
@@ -30,6 +43,12 @@ import BackButton from '../../components/BackButton';
 
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const [isBajaModalOpen, setIsBajaModalOpen] = useState(false);
+  const [selectedInvestigadorBaja, setSelectedInvestigadorBaja] = useState(null);
+  const [fechaBaja, setFechaBaja] = useState(new Date().toISOString().split('T')[0]);
 
   const { data, isLoading } = useQuery(['proyecto', idProyecto], () =>
     getProyectoById(Number(idProyecto)),
@@ -37,6 +56,34 @@ export default function DetalleProyectoPid() {
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
   const [esPid, setEsPId] = useState(false);
+
+  const { mutate: handleBajaInvestigador, isLoading: isBajaLoading } = useMutation({
+    mutationFn: () => bajaInvestigador(idProyecto, selectedInvestigadorBaja.idPersona, fechaBaja),
+    onSuccess: () => {
+      toast({
+        title: 'Baja registrada',
+        description: 'Se ha registrado la baja del investigador en el proyecto correctamente.',
+        status: 'success',
+        isClosable: true,
+      });
+      setIsBajaModalOpen(false);
+      queryClient.invalidateQueries(['proyecto', idProyecto]);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'No se pudo registrar la baja.',
+        status: 'error',
+        isClosable: true,
+      });
+    },
+  });
+
+  const openBajaModal = (item) => {
+    setSelectedInvestigadorBaja(item);
+    setFechaBaja(new Date().toISOString().split('T')[0]);
+    setIsBajaModalOpen(true);
+  };
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
@@ -159,6 +206,21 @@ export default function DetalleProyectoPid() {
                     mb={4}
                   />
                 </Box>
+                {data?.proyecto?.descripcionBreve && (
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    gap={4}
+                  >
+                    <DisplayField
+                      label="Descripción Breve"
+                      width={{ base: '100%', md: '100%' }}
+                      value={data?.proyecto?.descripcionBreve}
+                      mb={4}
+                    />
+                  </Box>
+                )}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
@@ -225,14 +287,20 @@ export default function DetalleProyectoPid() {
                 >
                   <DisplayField
                     label="Programa"
-                    width={{ base: '100%', md: '50%' }}
+                    width={{ base: '100%', md: '33.33%' }}
                     value={data?.proyecto?.programa}
                     mb={4}
                   />
                   <DisplayField
                     label="Tipo de proyecto"
-                    width={{ base: '100%', md: '50%' }}
-                    value={data?.proyecto?.tipoProyecto}
+                    width={{ base: '100%', md: '33.33%' }}
+                    value={data?.proyecto?.tipoProyecto || 'No especificado'}
+                    mb={4}
+                  />
+                  <DisplayField
+                    label="Nivel TRL"
+                    width={{ base: '100%', md: '33.33%' }}
+                    value={data?.proyecto?.trl || '-'}
                     mb={4}
                   />
                 </Box>
@@ -349,11 +417,12 @@ export default function DetalleProyectoPid() {
                   columnas={[
                     'Rol',
                     'Apellido y Nombre',
-                    'Estado',
+                    'Estado En Proy.',
                     'Fecha Ingreso',
+                    'Fecha Baja',
                     'Cat. UTN',
                     'Cat. MIN.',
-                    'Más',
+                    'Acciones',
                   ]}
                   datos={integrantes?.map((item, index) => {
                     const ayn =
@@ -366,20 +435,50 @@ export default function DetalleProyectoPid() {
                       item?.personas.categorias,
                       'ministerio',
                     );
+                    const fechaInicio = data?.proyecto?.participa[index]?.fechaInicio
+                      ? formatoFechaISOaDDMMAAAA(
+                        data.proyecto.participa[index].fechaInicio,
+                      )
+                      : '-';
+                    const fechaFin = data?.proyecto?.participa[index]?.fechaFin
+                      ? formatoFechaISOaDDMMAAAA(
+                        data.proyecto.participa[index].fechaFin,
+                      )
+                      : '-';
+                    const estadoParticipante = item.fechaFin ? (
+                      <Badge colorScheme="red">Dado de baja</Badge>
+                    ) : (
+                      <Badge colorScheme="green">Activo</Badge>
+                    );
+
                     return [
                       item.rol,
                       ayn,
-                      item.personas.activo ? 'Activo' : 'Inactivo',
-                      data?.proyecto?.participa[index]?.fechaInicio
-                        ? formatoFechaISOaDDMMAAAA(
-                          data.proyecto.participa[index].fechaInicio,
-                        )
-                        : '-',
+                      estadoParticipante,
+                      fechaInicio,
+                      fechaFin,
                       catUTN ? catUTN.categoria : '-',
                       catMIN ? catMIN.categoria : '-',
-                      <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
-                        <PlusSquareIcon />
-                      </Link>,
+                      <HStack key={item.idPersona} spacing={2}>
+                        <PermissionGate module="proyectos" action="view">
+                          <Link to={`/investigadores/${item.idPersona}`} title="Ver perfil">
+                            <PlusSquareIcon />
+                          </Link>
+                        </PermissionGate>
+                        {!item.fechaFin && (
+                          <PermissionGate module="proyectos" action="edit">
+                            <Button
+                              size="xs"
+                              colorScheme="red"
+                              variant="outline"
+                              leftIcon={<SmallCloseIcon />}
+                              onClick={() => openBajaModal(item)}
+                            >
+                              Baja
+                            </Button>
+                          </PermissionGate>
+                        )}
+                      </HStack>,
                     ];
                   })}
                   paginado={false}
@@ -465,30 +564,35 @@ export default function DetalleProyectoPid() {
             </CardBody>
           </Card>
 
-          <br />
-          <Card width="100%">
-            <CardBody>
-              <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
+          {(tipoProyectosInterinstitucionales?.includes(data?.proyecto?.tipoProyecto) ||
+            data?.proyecto?.institucionesAsociadas?.length > 0) && (
+            <>
               <br />
+              <Card width="100%">
+                <CardBody>
+                  <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
+                  <br />
 
-              {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
-                <Tabla
-                  columnas={['Institución']}
-                  datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
-                    item.nombreInstitucion,
-                  ])}
-                  paginado={false}
-                />
-              ) : (
-                <ImgDefault
-                  src={NoData}
-                  alt="No Data"
-                  width="30%"
-                  text="Este proyecto no tiene instituciones asociadas."
-                />
-              )}
-            </CardBody>
-          </Card>
+                  {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
+                    <Tabla
+                      columnas={['Institución']}
+                      datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
+                        item.nombreInstitucion,
+                      ])}
+                      paginado={false}
+                    />
+                  ) : (
+                    <ImgDefault
+                      src={NoData}
+                      alt="No Data"
+                      width="30%"
+                      text="Este proyecto no tiene instituciones asociadas."
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            </>
+          )}
 
           <br />
           <Card width="100%">
@@ -604,6 +708,37 @@ export default function DetalleProyectoPid() {
             </Button>
           </Box>
         </Box>
+
+        {/* Modal para registrar la baja del investigador */}
+        <Modal isOpen={isBajaModalOpen} onClose={() => setIsBajaModalOpen(false)}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Registrar Baja de Investigador</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text mb={4}>
+                Registrar la desvinculación de <strong>{selectedInvestigadorBaja?.personas?.apellido} {selectedInvestigadorBaja?.personas?.nombre}</strong> de este proyecto. El historial conservará su registro previo.
+              </Text>
+              <FormControl isRequired>
+                <FormLabel>Fecha de Baja</FormLabel>
+                <Input
+                  type="date"
+                  value={fechaBaja}
+                  onChange={(e) => setFechaBaja(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" mr={3} onClick={() => setIsBajaModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button colorScheme="red" isLoading={isBajaLoading} onClick={() => handleBajaInvestigador()}>
+                Confirmar Baja
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </CardBody>
     </Card>
   );

@@ -17,6 +17,7 @@ import {
   deleteInstitucionesProyectosByProyecto,
   createPersonaParticipaProyecto,
   delPersonaParticipaProyecto,
+  bajaPersonaParticipaProyecto,
   createProyectoTieneGrupo,
   delProyectoTieneGrupo,
 } from '../repository/proyectosRepository.js';
@@ -265,8 +266,10 @@ export async function updatePidService(idProyecto, data) {
           denominacion: data.denominacion,
           regional: data.regional,
           convocatoria: data.convocatoria,
-          tipoProyecto: data.tipoProyecto,
+          tipoProyecto: data.tipoProyecto || null,
           programa: data.programa,
+          trl: data.trl || null,
+          descripcionBreve: data.descripcionBreve || null,
         };
         const dataPID = {
           codPid: data.codPid,
@@ -289,10 +292,6 @@ export async function updatePidService(idProyecto, data) {
       throw new Error(`El proyecto con id ${idProyecto} no existe`);
     }
 
-    // console.log(proyectoSearch);
-
-    // const updatedPid = await update('pids', filter, pidData);
-    // return updatedPid;
     return projectUpdate;
   } catch (error) {
     console.log('maleta', error.message);
@@ -312,8 +311,10 @@ export async function updateProyectoExternoService(idProyecto, data) {
           denominacion: data.denominacion,
           regional: data.regional,
           convocatoria: data.convocatoria,
-          tipoProyecto: data.tipoProyecto,
+          tipoProyecto: data.tipoProyecto || null,
           programa: data.programa,
+          trl: data.trl || null,
+          descripcionBreve: data.descripcionBreve || null,
         };
         const dataExterno = {
           empresaInstitucion: data.empresaInstitucion,
@@ -382,6 +383,16 @@ export async function delPersonaParticipaProyectoService(idProyecto, idInvestiga
   try {
     const delParticipante = await delPersonaParticipaProyecto(idProyecto, idInvestigador);
     return delParticipante;
+  } catch (error) {
+    console.log(error.message);
+    throw new Error(error.message);
+  }
+}
+
+export async function bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin) {
+  try {
+    const bajaParticipante = await bajaPersonaParticipaProyecto(idProyecto, idInvestigador, fechaFin);
+    return bajaParticipante;
   } catch (error) {
     console.log(error.message);
     throw new Error(error.message);
