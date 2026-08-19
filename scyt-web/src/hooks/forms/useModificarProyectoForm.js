@@ -96,6 +96,9 @@ const modificarProyectoSchema = yup.object({
 export const tipoProyectosInterinstitucionales = [
   'Inter-institucional (PID IN) con Incentivos',
   'Inter-institucional (PID IN) sin Incentivos',
+  'PID Interfacultad',
+  'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
+  'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
 ];
 
 export const useModificarProyectoForm = () => {

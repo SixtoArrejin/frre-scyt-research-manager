@@ -46,10 +46,11 @@ Este documento contiene el detalle técnico completo de las modificaciones reali
 ---
 
 ### Issue #143: Agregar la opción PID Interfacultad como tipo de proyecto
-- **Objetivo:** Incorporar "PID Interfacultad" como clasificación válida en el sistema.
+- **Objetivo:** Incorporar "PID Interfacultad" como clasificación válida en el sistema habilitando la carga e integración de Instituciones Asociadas.
 - **Archivos Modificados:**
-  - `scyt-api/src/repository/initDB.js`: Se añadió `'PID Interfacultad'` al array `tiposProyectosData` y se ejecutó la rutina de inserción inicial en la base de datos.
-  - El frontend obtiene dinámicamente los tipos de proyecto mediante API (`/api/tiposProyectos`), reflejando la nueva categoría de forma automática.
+  - `scyt-api/src/repository/initDB.js`: Se añadió `'PID Interfacultad'` al array `tiposProyectosData` para la base de datos.
+  - `scyt-web/src/hooks/forms/useNuevoProyectoForm.js` y `useModificarProyectoForm.js`: Se incorporó `'PID Interfacultad'` a la constante `tipoProyectosInterinstitucionales`.
+  - Con este ajuste, la carga (`Nuevo.jsx`), modificación (`Modificar.jsx`) y detalle (`DetalleProyecto.jsx`) despliegan y gestionan dinámicamente la tarjeta de "Instituciones Asociadas" para proyectos de tipo PID Interfacultad.
 
 ---
 
