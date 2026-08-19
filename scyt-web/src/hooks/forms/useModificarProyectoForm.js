@@ -305,8 +305,10 @@ export const useModificarProyectoForm = () => {
       completo: values.completo === 'true',
       // Convertir campos numéricos
       convocatoria: parseInt(values.convocatoria, 10),
-      // Instituciones asociadas
-      instituciones: institucionesSeleccionadas,
+      // Instituciones asociadas (solo si el tipo de proyecto lo requiere/permite)
+      instituciones: tipoProyectosInterinstitucionales.includes(values.tipoProyecto)
+        ? institucionesSeleccionadas
+        : [],
     };
 
     if (values.tipo === 'externo') {

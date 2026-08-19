@@ -166,7 +166,9 @@ export const useNuevoProyectoForm = () => {
       const modifiedValues = {
         ...formData,
         prorrogado: formData.prorrogado === 'true',
-        instituciones: institucionesSeleccionadas, // Agregamos las instituciones del estado local
+        instituciones: tipoProyectosInterinstitucionales.includes(formData.tipoProyecto)
+          ? institucionesSeleccionadas
+          : [],
       };
       return await createProyecto(modifiedValues);
     },
