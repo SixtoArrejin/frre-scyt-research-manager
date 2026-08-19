@@ -278,3 +278,25 @@ export async function delProyectoTieneGrupo(idProyecto, idGrupo) {
     throw new Error(error.message);
   }
 }
+
+export async function deletePid(idProyecto) {
+  try {
+    const deleted = await prisma.pids.deleteMany({
+      where: { idPid: idProyecto },
+    });
+    return deleted;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function deleteProyectoExterno(idProyecto) {
+  try {
+    const deleted = await prisma.proyectosExternos.deleteMany({
+      where: { idProyectoExterno: idProyecto },
+    });
+    return deleted;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

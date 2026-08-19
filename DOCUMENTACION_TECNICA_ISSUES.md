@@ -35,11 +35,13 @@ Este documento contiene el detalle técnico completo de las modificaciones reali
 
 ---
 
-### Issue #142: Permitir modificar el tipo de proyecto tras la carga inicial
-- **Objetivo:** Posibilitar la edición y actualización del selector "Tipo de proyecto" en proyectos existentes.
+### Issue #142: Permitir modificar el tipo de proyecto tras la carga inicial (PID a Externo y viceversa)
+- **Objetivo:** Posibilitar el cambio entre tipo de proyecto PID y proyecto Externo tras la carga inicial, así como la actualización de la subclasificación "Tipo de proyecto".
 - **Archivos Modificados:**
-  - `scyt-api/src/services/proyectosService.js`: Se actualizó la función `updatePidService` y `updateProyectoExternoService` para incluir `tipoProyecto: data.tipoProyecto || null` en la consulta de actualización a Prisma.
-  - `scyt-web/src/pages/proyectos/Modificar.jsx`: Se vinculó el selector `GenericSelect` de `tipoProyecto` al formulario para enviar la nueva opción elegida al backend.
+  - `scyt-api/src/repository/proyectosRepository.js`: Se incorporaron las funciones `deletePid` y `deleteProyectoExterno` para remover los registros de extensiones al cambiar la categoría del proyecto.
+  - `scyt-api/src/services/proyectosService.js`: Se implementó `updateProyectoDataService` detectando si el proyecto cambia de tipo (PID $\leftrightarrow$ Externo), eliminando la relación anterior en la BD y creando/actualizando la nueva relación correspondiente.
+  - `scyt-web/src/hooks/forms/useModificarProyectoForm.js`: Se configuró `esPid` de forma reactiva con `watch('tipo')` y se mantuvo la propiedad `tipo` en el objeto final de modificación enviado al backend.
+  - `scyt-web/src/pages/proyectos/Modificar.jsx`: Se añadió el selector de radio `GenericRadio` para alternar entre "PID" y "Externo" durante la edición del proyecto.
 
 ---
 

@@ -102,7 +102,28 @@ export default function ModificarPIDs() {
               width="100%"
               alignItems="center"
               justifyContent="space-between"
+              mb={4}
             >
+              <Box
+                width={{ base: '100%', md: '30%' }}
+                display="flex"
+                alignItems="center"
+              >
+                <GenericRadio
+                  name="tipo"
+                  label="Tipo de proyecto:"
+                  direction="row"
+                  options={[
+                    { value: 'pid', label: 'PID' },
+                    { value: 'externo', label: 'Externo' },
+                  ]}
+                  register={register}
+                  value={watch('tipo')}
+                  errors={errors}
+                  width="100%"
+                />
+              </Box>
+
               {esPid && (
                 <GenericInput
                   name="codPid"
@@ -110,24 +131,23 @@ export default function ModificarPIDs() {
                   placeholder="Código PID"
                   register={register}
                   errors={errors}
-                  width={{ base: '100%', md: '30%' }}
+                  width={{ base: '100%', md: '65%' }}
                   isRequired
-                  mb={4}
                 />
               )}
-
-              <GenericSelect
-                name="regional"
-                label="Regional asociada"
-                placeholder="Regional..."
-                width={esPid ? { base: '100%', md: '65%' } : '100%'}
-                mb={4}
-                isRequired
-                register={register}
-                options={regionalesOptions}
-                errors={errors}
-              />
             </Box>
+
+            <GenericSelect
+              name="regional"
+              label="Regional asociada"
+              placeholder="Regional..."
+              width="100%"
+              mb={4}
+              isRequired
+              register={register}
+              options={regionalesOptions}
+              errors={errors}
+            />
 
             <GenericInput
               textArea

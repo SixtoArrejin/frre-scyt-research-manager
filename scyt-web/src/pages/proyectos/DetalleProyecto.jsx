@@ -55,7 +55,7 @@ export default function DetalleProyectoPid() {
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [esPid, setEsPId] = useState(false);
+  const esPid = Boolean(data?.proyecto?.codPid);
 
   const { mutate: handleBajaInvestigador, isLoading: isBajaLoading } = useMutation({
     mutationFn: () => bajaInvestigador(idProyecto, selectedInvestigadorBaja.idPersona, fechaBaja),
@@ -88,9 +88,6 @@ export default function DetalleProyectoPid() {
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
-    if (data?.proyecto?.codPid) {
-      setEsPId(true);
-    }
   }, [data]);
 
   const {

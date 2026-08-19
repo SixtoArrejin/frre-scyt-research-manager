@@ -130,32 +130,6 @@ export const useModificarProyectoForm = () => {
     isLoading: isLoadingTiposProyectos,
   } = useQuery(['tiposProyectos'], () => getAllTiposProyectos());
 
-  // Determinar si es PID
-  const esPid = Boolean(dataProyecto?.proyecto?.codPid);
-
-  // Valores por defecto
-  const defaultValues = {
-    codPid: '',
-    tipo: esPid ? 'pid' : 'externo',
-    denominacion: '',
-    descripcionBreve: '',
-    trl: '',
-    fechaInicio: '',
-    fechaFin: '',
-    programa: '',
-    tipoProyecto: '',
-    regional: '',
-    convocatoria: 0,
-    empresaInstitucion: '',
-    tipoActividad: '',
-    estado: '',
-    disposicion: '',
-    prorrogado: 'false',
-    completo: 'false',
-    nuevaFechaFin: '',
-    nuevaDisposicion: '',
-  };
-
   // Configuración del formulario
   const {
     register,
@@ -166,8 +140,32 @@ export const useModificarProyectoForm = () => {
     reset,
   } = useFormHandler({
     schema: modificarProyectoSchema,
-    defaultValues,
+    defaultValues: {
+      codPid: '',
+      tipo: 'pid',
+      denominacion: '',
+      descripcionBreve: '',
+      trl: '',
+      fechaInicio: '',
+      fechaFin: '',
+      programa: '',
+      tipoProyecto: '',
+      regional: '',
+      convocatoria: 0,
+      empresaInstitucion: '',
+      tipoActividad: '',
+      estado: '',
+      disposicion: '',
+      prorrogado: 'false',
+      completo: 'false',
+      nuevaFechaFin: '',
+      nuevaDisposicion: '',
+    },
   });
+
+  // Determinar si es PID de forma reactiva según el tipo seleccionado
+  const tipoForm = watch('tipo');
+  const esPid = tipoForm === 'pid';
 
   const queryClient = useQueryClient();
 
@@ -177,6 +175,8 @@ export const useModificarProyectoForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['proyecto', Number(idPid)]);
       queryClient.invalidateQueries(['proyecto', String(idPid)]);
+      queryClient.refetchQueries(['proyecto', Number(idPid)]);
+      queryClient.refetchQueries(['proyecto', String(idPid)]);
       queryClient.invalidateQueries('proyectos');
       toast({
         title: 'Modificar Proyecto',
@@ -306,8 +306,18 @@ export const useModificarProyectoForm = () => {
       instituciones: institucionesSeleccionadas,
     };
 
-    // Eliminar campo auxiliar 'tipo'
-    delete modifiedValues.tipo;
+    if (values.tipo === 'externo') {
+      modifiedValues.codPid = null;
+      modifiedValues.tipoActividad = null;
+      modifiedValues.estado = null;
+      modifiedValues.disposicion = null;
+      modifiedValues.prorrogado = false;
+      modifiedValues.completo = false;
+      modifiedValues.nuevaDisposicion = null;
+      modifiedValues.nuevaFechaFin = null;
+    } else if (values.tipo === 'pid') {
+      modifiedValues.empresaInstitucion = null;
+    }
 
     const proyectoData = {
       proyecto: modifiedValues,
