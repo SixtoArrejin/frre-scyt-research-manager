@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Heading, Box, Button, Spinner, Badge, useDisclosure, useToast } from '@chakra-ui/react';
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { PlusSquareIcon, DownloadIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import { getAllPersonas } from '../../utils/api/personasApi';
 import { useQuery } from 'react-query';
@@ -183,7 +183,7 @@ export default function ListaInvestigadores() {
           <br />
 
           <Box display='flex' justifyContent='flex-end' width='100%'>
-            <Button colorScheme='blue' variant='outline' onClick={onOpen}>
+            <Button colorScheme='green' variant='outline' leftIcon={<DownloadIcon />} onClick={onOpen}>
               Exportar a Excel
             </Button>
           </Box>

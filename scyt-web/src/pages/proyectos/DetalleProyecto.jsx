@@ -8,15 +8,50 @@ import {
   Button,
   Spinner,
   HStack,
+  Badge,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  Textarea,
+  FormControl,
+  FormLabel,
+  useToast,
+  SimpleGrid,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Icon,
 } from '@chakra-ui/react';
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import {
+  PlusSquareIcon,
+  SmallCloseIcon,
+  ViewIcon,
+  InfoOutlineIcon,
+  ChevronDownIcon,
+} from '@chakra-ui/icons';
+
+const ThreeDotsIcon = (props) => (
+  <Icon viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <circle cx="12" cy="5" r="2.2" />
+    <circle cx="12" cy="12" r="2.2" />
+    <circle cx="12" cy="19" r="2.2" />
+  </Icon>
+);
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { tipoProyectosInterinstitucionales } from '../../hooks/forms/useNuevoProyectoForm';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import {
   formatoFechaISOaDDMMAAAA,
   getCategoriaMasActual,
 } from '../../utils/general';
-import { getProyectoById } from '../../utils/api/proyectosApi';
+import { getProyectoById, bajaInvestigador } from '../../utils/api/proyectosApi';
 import { getVinculacionByIdProyecto } from '../../utils/api/vinculacionesApi';
 import { getPropiedadIntelectualByIdProyecto } from '../../utils/api/propiedadIntelectualApi';
 import DisplayField from '../../components/DisplayField';
@@ -30,20 +65,62 @@ import BackButton from '../../components/BackButton';
 
 export default function DetalleProyectoPid() {
   const { idProyecto } = useParams();
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const [isBajaModalOpen, setIsBajaModalOpen] = useState(false);
+  const [selectedInvestigadorBaja, setSelectedInvestigadorBaja] = useState(null);
+  const [fechaBaja, setFechaBaja] = useState(new Date().toISOString().split('T')[0]);
+  const [motivoBaja, setMotivoBaja] = useState('');
+
+  // Estado para el modal de Ver Detalles de Baja
+  const [isDetalleBajaModalOpen, setIsDetalleBajaModalOpen] = useState(false);
+  const [selectedInvestigadorDetalleBaja, setSelectedInvestigadorDetalleBaja] = useState(null);
+
+  const openDetalleBajaModal = (item) => {
+    setSelectedInvestigadorDetalleBaja(item);
+    setIsDetalleBajaModalOpen(true);
+  };
 
   const { data, isLoading } = useQuery(['proyecto', idProyecto], () =>
     getProyectoById(Number(idProyecto)),
   );
   const [integrantes, setIntegrantes] = useState(data?.proyecto?.participa);
   const [grupos, setGrupos] = useState(data?.proyecto?.tiene);
-  const [esPid, setEsPId] = useState(false);
+  const esPid = Boolean(data?.proyecto?.codPid);
+
+  const { mutate: handleBajaInvestigador, isLoading: isBajaLoading } = useMutation({
+    mutationFn: () => bajaInvestigador(idProyecto, selectedInvestigadorBaja.idPersona, fechaBaja, motivoBaja),
+    onSuccess: () => {
+      toast({
+        title: 'Baja registrada',
+        description: 'Se ha registrado la baja del investigador en el proyecto correctamente.',
+        status: 'success',
+        isClosable: true,
+      });
+      setIsBajaModalOpen(false);
+      queryClient.invalidateQueries(['proyecto', idProyecto]);
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'No se pudo registrar la baja.',
+        status: 'error',
+        isClosable: true,
+      });
+    },
+  });
+
+  const openBajaModal = (item) => {
+    setSelectedInvestigadorBaja(item);
+    setFechaBaja(new Date().toISOString().split('T')[0]);
+    setMotivoBaja('');
+    setIsBajaModalOpen(true);
+  };
 
   useEffect(() => {
     setIntegrantes(data?.proyecto?.participa);
     setGrupos(data?.proyecto?.tiene);
-    if (data?.proyecto?.codPid) {
-      setEsPId(true);
-    }
   }, [data]);
 
   const {
@@ -159,6 +236,21 @@ export default function DetalleProyectoPid() {
                     mb={4}
                   />
                 </Box>
+                {data?.proyecto?.descripcionBreve && (
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    gap={4}
+                  >
+                    <DisplayField
+                      label="Descripción Breve"
+                      width={{ base: '100%', md: '100%' }}
+                      value={data?.proyecto?.descripcionBreve}
+                      mb={4}
+                    />
+                  </Box>
+                )}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
@@ -225,14 +317,20 @@ export default function DetalleProyectoPid() {
                 >
                   <DisplayField
                     label="Programa"
-                    width={{ base: '100%', md: '50%' }}
+                    width={{ base: '100%', md: '33.33%' }}
                     value={data?.proyecto?.programa}
                     mb={4}
                   />
                   <DisplayField
                     label="Tipo de proyecto"
-                    width={{ base: '100%', md: '50%' }}
-                    value={data?.proyecto?.tipoProyecto}
+                    width={{ base: '100%', md: '33.33%' }}
+                    value={data?.proyecto?.tipoProyecto || 'No especificado'}
+                    mb={4}
+                  />
+                  <DisplayField
+                    label="Nivel TRL"
+                    width={{ base: '100%', md: '33.33%' }}
+                    value={data?.proyecto?.trl || '-'}
                     mb={4}
                   />
                 </Box>
@@ -353,7 +451,7 @@ export default function DetalleProyectoPid() {
                     'Fecha Ingreso',
                     'Cat. UTN',
                     'Cat. MIN.',
-                    'Más',
+                    'Acciones',
                   ]}
                   datos={integrantes?.map((item, index) => {
                     const ayn =
@@ -366,20 +464,94 @@ export default function DetalleProyectoPid() {
                       item?.personas.categorias,
                       'ministerio',
                     );
+                    const fechaInicio = data?.proyecto?.participa[index]?.fechaInicio
+                      ? formatoFechaISOaDDMMAAAA(
+                        data.proyecto.participa[index].fechaInicio,
+                      )
+                      : '-';
+                    const estadoParticipante = item.fechaFin ? (
+                      <Badge colorScheme="red" variant="subtle" px={2.5} py={1} borderRadius="full" fontWeight="bold">Dado de baja</Badge>
+                    ) : (
+                      <Badge colorScheme="green" variant="subtle" px={2.5} py={1} borderRadius="full" fontWeight="bold">Activo</Badge>
+                    );
+
                     return [
                       item.rol,
                       ayn,
-                      item.personas.activo ? 'Activo' : 'Inactivo',
-                      data?.proyecto?.participa[index]?.fechaInicio
-                        ? formatoFechaISOaDDMMAAAA(
-                          data.proyecto.participa[index].fechaInicio,
-                        )
-                        : '-',
+                      estadoParticipante,
+                      fechaInicio,
                       catUTN ? catUTN.categoria : '-',
                       catMIN ? catMIN.categoria : '-',
-                      <Link key={item.idPersona} to={`/investigadores/${item.idPersona}`}>
-                        <PlusSquareIcon />
-                      </Link>,
+                      <Menu key={item.idPersona} isLazy placement="bottom-end">
+                        <MenuButton
+                          as={IconButton}
+                          aria-label="Opciones de integrante"
+                          icon={<ThreeDotsIcon boxSize="18px" />}
+                          variant="ghost"
+                          size="sm"
+                          color="gray.600"
+                          borderRadius="full"
+                          _hover={{ bg: 'blue.50', color: 'blue.600' }}
+                          _active={{ bg: 'blue.100', color: 'blue.700' }}
+                        />
+                        <MenuList
+                          minW="185px"
+                          py={1.5}
+                          px={1.5}
+                          borderRadius="xl"
+                          borderColor="gray.100"
+                          boxShadow="0px 10px 25px -5px rgba(0, 0, 0, 0.08), 0px 8px 10px -6px rgba(0, 0, 0, 0.04)"
+                        >
+                          <PermissionGate module="proyectos" action="view">
+                            <MenuItem
+                              as={Link}
+                              to={`/investigadores/${item.idPersona}`}
+                              icon={<ViewIcon boxSize="15px" color="blue.500" />}
+                              borderRadius="lg"
+                              fontSize="sm"
+                              fontWeight="500"
+                              py={2}
+                              px={3}
+                              mb={1}
+                              _hover={{ bg: 'blue.50', color: 'blue.600' }}
+                            >
+                              Ver perfil
+                            </MenuItem>
+                          </PermissionGate>
+
+                          {!item.fechaFin ? (
+                            <PermissionGate module="proyectos" action="edit">
+                              <MenuItem
+                                icon={<SmallCloseIcon boxSize="15px" color="red.500" />}
+                                color="red.600"
+                                borderRadius="lg"
+                                fontSize="sm"
+                                fontWeight="500"
+                                py={2}
+                                px={3}
+                                _hover={{ bg: 'red.50', color: 'red.700' }}
+                                onClick={() => openBajaModal(item)}
+                              >
+                                Dar de baja
+                              </MenuItem>
+                            </PermissionGate>
+                          ) : (
+                            <MenuItem
+                              icon={<InfoOutlineIcon boxSize="15px" color="blue.500" />}
+                              color="blue.600"
+                              borderRadius="lg"
+                              fontSize="sm"
+                              fontWeight="500"
+                              py={2}
+                              px={3}
+                              _hover={{ bg: 'blue.50', color: 'blue.700' }}
+                              onClick={() => openDetalleBajaModal(item)}
+                            >
+                              Ver motivo de baja
+                            </MenuItem>
+                          )}
+                        </MenuList>
+                      </Menu>,
                     ];
                   })}
                   paginado={false}
@@ -465,30 +637,35 @@ export default function DetalleProyectoPid() {
             </CardBody>
           </Card>
 
-          <br />
-          <Card width="100%">
-            <CardBody>
-              <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
+          {(tipoProyectosInterinstitucionales?.includes(data?.proyecto?.tipoProyecto) ||
+            data?.proyecto?.institucionesAsociadas?.length > 0) && (
+            <>
               <br />
+              <Card width="100%">
+                <CardBody>
+                  <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
+                  <br />
 
-              {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
-                <Tabla
-                  columnas={['Institución']}
-                  datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
-                    item.nombreInstitucion,
-                  ])}
-                  paginado={false}
-                />
-              ) : (
-                <ImgDefault
-                  src={NoData}
-                  alt="No Data"
-                  width="30%"
-                  text="Este proyecto no tiene instituciones asociadas."
-                />
-              )}
-            </CardBody>
-          </Card>
+                  {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
+                    <Tabla
+                      columnas={['Institución']}
+                      datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
+                        item.nombreInstitucion,
+                      ])}
+                      paginado={false}
+                    />
+                  ) : (
+                    <ImgDefault
+                      src={NoData}
+                      alt="No Data"
+                      width="30%"
+                      text="Este proyecto no tiene instituciones asociadas."
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            </>
+          )}
 
           <br />
           <Card width="100%">
@@ -604,6 +781,100 @@ export default function DetalleProyectoPid() {
             </Button>
           </Box>
         </Box>
+
+        {/* Modal para registrar la baja del investigador */}
+        <Modal isOpen={isBajaModalOpen} onClose={() => setIsBajaModalOpen(false)} isCentered size="md">
+          <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
+          <ModalContent borderRadius="xl">
+            <ModalHeader pb={2} borderBottom="1px" borderColor="gray.100" fontSize="lg">
+              Registrar Baja de Investigador
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody py={4}>
+              <Text mb={4} fontSize="sm" color="gray.600">
+                Registrar la desvinculación de <strong>{selectedInvestigadorBaja?.personas?.apellido} {selectedInvestigadorBaja?.personas?.nombre}</strong> de este proyecto. El historial conservará su registro previo.
+              </Text>
+              <FormControl isRequired mb={4}>
+                <FormLabel fontSize="sm" fontWeight="medium">Fecha de Baja</FormLabel>
+                <Input
+                  type="date"
+                  size="sm"
+                  borderRadius="md"
+                  value={fechaBaja}
+                  onChange={(e) => setFechaBaja(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="sm" fontWeight="medium">Motivo de Baja (Opcional)</FormLabel>
+                <Textarea
+                  placeholder="Ingrese el motivo o razón de la desvinculación (ej. Renuncia, Cambio de proyecto, Fin de beca...)"
+                  value={motivoBaja}
+                  onChange={(e) => setMotivoBaja(e.target.value)}
+                  rows={3}
+                  size="sm"
+                  borderRadius="md"
+                  resize="vertical"
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter pt={2} borderTop="1px" borderColor="gray.100">
+              <Button variant="ghost" size="sm" mr={3} onClick={() => setIsBajaModalOpen(false)}>
+                Cancelar
+              </Button>
+              <Button colorScheme="red" size="sm" isLoading={isBajaLoading} onClick={() => handleBajaInvestigador()}>
+                Confirmar Baja
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Modal para visualizar los detalles de la baja registrada */}
+        <Modal isOpen={isDetalleBajaModalOpen} onClose={() => setIsDetalleBajaModalOpen(false)} isCentered size="md">
+          <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
+          <ModalContent borderRadius="xl">
+            <ModalHeader pb={2} borderBottom="1px" borderColor="gray.100" fontSize="lg">
+              Detalles de la Baja
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody py={4}>
+              <Box display="flex" flexDirection="column" gap={3}>
+                <DisplayField
+                  label="Investigador"
+                  value={`${selectedInvestigadorDetalleBaja?.personas?.apellido || ''} ${selectedInvestigadorDetalleBaja?.personas?.nombre || ''}`}
+                  mb={0}
+                />
+                <SimpleGrid columns={2} spacing={3}>
+                  <DisplayField
+                    label="Rol en el Proyecto"
+                    value={selectedInvestigadorDetalleBaja?.rol || '-'}
+                    mb={0}
+                  />
+                  <DisplayField
+                    label="Fecha de Ingreso"
+                    value={selectedInvestigadorDetalleBaja?.fechaInicio ? formatoFechaISOaDDMMAAAA(selectedInvestigadorDetalleBaja.fechaInicio) : '-'}
+                    mb={0}
+                  />
+                </SimpleGrid>
+                <DisplayField
+                  label="Fecha de Baja"
+                  value={selectedInvestigadorDetalleBaja?.fechaFin ? formatoFechaISOaDDMMAAAA(selectedInvestigadorDetalleBaja.fechaFin) : '-'}
+                  mb={0}
+                />
+                <DisplayField
+                  label="Motivo de Baja"
+                  value={selectedInvestigadorDetalleBaja?.motivoBaja || 'Sin motivo especificado'}
+                  mb={0}
+                />
+              </Box>
+            </ModalBody>
+            <ModalFooter pt={2} borderTop="1px" borderColor="gray.100">
+              <Button colorScheme="blue" size="sm" onClick={() => setIsDetalleBajaModalOpen(false)}>
+                Cerrar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </CardBody>
     </Card>
   );

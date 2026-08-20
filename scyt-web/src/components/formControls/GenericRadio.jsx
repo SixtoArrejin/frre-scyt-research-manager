@@ -8,6 +8,8 @@ export default function GenericRadio(props) {
     register,
     options = [],
     defaultValue,
+    value,
+    onChange,
     isDisabled,
     errors,
     direction = 'row', // 'row' para horizontal, 'column' para vertical
@@ -17,7 +19,7 @@ export default function GenericRadio(props) {
   return (
     <Box {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
-      <RadioGroup defaultValue={defaultValue} isDisabled={isDisabled}>
+      <RadioGroup defaultValue={defaultValue} value={value} onChange={onChange} isDisabled={isDisabled}>
         <Stack direction={direction}>
           {options.map((option, index) => (
             <Radio key={index} value={option.value} isDisabled={option.isDisabled} {...register(name)}>

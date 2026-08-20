@@ -10,10 +10,14 @@ import {
   VStack,
   Image,
   Input,
+  InputGroup,
+  InputRightElement,
+  IconButton,
   Stack,
   Text,
   useToast,
 } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import Logo from '../img/SCyT-SinFondo.png';
 import { UserContext } from '../context/UserContext';
 import { useContext, useEffect, useState } from 'react';
@@ -21,8 +25,6 @@ import { logInUser } from '../utils/api/logInApi';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-//   import { OAuthButtonGroup } from './OAuthButtonGroup'
-//   import { PasswordField } from './PasswordField'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -39,6 +41,9 @@ export default function LogIn() {
   const toast = useToast();
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   const {
     register,
@@ -134,9 +139,6 @@ export default function LogIn() {
               >
                 Ingrese a su cuenta
               </Heading>
-              {/* <Text color="fg.muted">
-                Don't have an account? <Link href="#">Sign up</Link>
-              </Text> */}
             </Stack>
           </VStack>
           <Box
@@ -165,7 +167,6 @@ export default function LogIn() {
               <Stack spacing='5'>
                 <FormControl>
                   <FormLabel htmlFor='usuario'>Usuario</FormLabel>
-                  {/* <Input type="text" name='usuario' value={dataForm.usuario} onChange={handleChangeUsuario} /> */}
                   <Input type='text' name='usuario' {...register('usuario')} />
                   <Text fontSize='md' color='red'>
                     {errors.usuario?.message}
@@ -173,13 +174,26 @@ export default function LogIn() {
                 </FormControl>
                 <FormControl>
                   <FormLabel htmlFor='pass'>Contraseña</FormLabel>
-                  {/* <Input type="password" name='contrasena' value={dataForm.contrasena} onChange={handleChangeContrasena} /> */}
-                  <Input type='password' name='contrasena' {...register('contrasena')} />
+                  <InputGroup>
+                    <Input
+                      type={showPassword ? 'text' : 'password'}
+                      name='contrasena'
+                      {...register('contrasena')}
+                    />
+                    <InputRightElement h='100%'>
+                      <IconButton
+                        variant='ghost'
+                        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                        icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                        onClick={toggleShowPassword}
+                        size='sm'
+                      />
+                    </InputRightElement>
+                  </InputGroup>
                   <Text fontSize='md' color='red'>
                     {errors.contrasena?.message}
                   </Text>
                 </FormControl>
-                {/* <PasswordField /> */}
               </Stack>
               <HStack justify='space-between'>
                 <Checkbox

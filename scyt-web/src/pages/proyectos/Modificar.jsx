@@ -1,12 +1,14 @@
 import React from 'react';
-import { Spinner, Box } from '@chakra-ui/react';
-import { useModificarProyectoForm } from '../../hooks/forms/useModificarProyectoForm';
+import { Spinner, Box, Card, CardBody, Text, Button } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useModificarProyectoForm, tipoProyectosInterinstitucionales } from '../../hooks/forms/useModificarProyectoForm';
 import FormLayout from '../../components/FormLayout';
 import FormButtons from '../../components/FormButtons';
 import CustomModal from '../../components/CustomModal';
 import GenericInput from '../../components/formControls/GenericInput';
 import GenericSelect from '../../components/formControls/GenericSelect';
 import GenericRadio from '../../components/formControls/GenericRadio';
+import Tabla from '../../components/Tabla';
 
 export default function ModificarPIDs() {
   const {
@@ -35,6 +37,18 @@ export default function ModificarPIDs() {
     tiposProyectoOptions,
     tipoActividadOptions,
     estadoProyectoOptions,
+    dataRegionales,
+
+    // Instituciones asociadas
+    selectedTipoProyecto,
+    handleTipoProyectoChange,
+    institucionesSeleccionadas,
+    selectedInstitucion,
+    setSelectedInstitucion,
+    otraInstitucion,
+    setOtraInstitucion,
+    agregarInstitucion,
+    eliminarInstitucion,
 
     // Funciones de modal
     openModal,
@@ -88,7 +102,28 @@ export default function ModificarPIDs() {
               width="100%"
               alignItems="center"
               justifyContent="space-between"
+              mb={4}
             >
+              <Box
+                width={{ base: '100%', md: '30%' }}
+                display="flex"
+                alignItems="center"
+              >
+                <GenericRadio
+                  name="tipo"
+                  label="Tipo de proyecto:"
+                  direction="row"
+                  options={[
+                    { value: 'pid', label: 'PID' },
+                    { value: 'externo', label: 'Externo' },
+                  ]}
+                  register={register}
+                  value={watch('tipo')}
+                  errors={errors}
+                  width="100%"
+                />
+              </Box>
+
               {esPid && (
                 <GenericInput
                   name="codPid"
@@ -96,24 +131,23 @@ export default function ModificarPIDs() {
                   placeholder="Código PID"
                   register={register}
                   errors={errors}
-                  width={{ base: '100%', md: '30%' }}
+                  width={{ base: '100%', md: '65%' }}
                   isRequired
-                  mb={4}
                 />
               )}
-
-              <GenericSelect
-                name="regional"
-                label="Regional asociada"
-                placeholder="Regional..."
-                width={esPid ? { base: '100%', md: '65%' } : '100%'}
-                mb={4}
-                isRequired
-                register={register}
-                options={regionalesOptions}
-                errors={errors}
-              />
             </Box>
+
+            <GenericSelect
+              name="regional"
+              label="Regional asociada"
+              placeholder="Regional..."
+              width="100%"
+              mb={4}
+              isRequired
+              register={register}
+              options={regionalesOptions}
+              errors={errors}
+            />
 
             <GenericInput
               textArea
@@ -124,6 +158,17 @@ export default function ModificarPIDs() {
               errors={errors}
               width="100%"
               isRequired
+              mb={4}
+            />
+
+            <GenericInput
+              textArea
+              name="descripcionBreve"
+              label="Descripción Breve"
+              placeholder="Descripción breve del proyecto"
+              register={register}
+              errors={errors}
+              width="100%"
               mb={4}
             />
 
@@ -141,7 +186,6 @@ export default function ModificarPIDs() {
                 register={register}
                 errors={errors}
                 width={{ base: '100%', md: '30%' }}
-                isRequired
                 mb={4}
               />
               <GenericInput
@@ -151,7 +195,6 @@ export default function ModificarPIDs() {
                 register={register}
                 errors={errors}
                 width={{ base: '100%', md: '30%' }}
-                isRequired
                 mb={4}
               />
 
@@ -192,26 +235,55 @@ export default function ModificarPIDs() {
                 placeholder="Tipo de proyecto..."
                 width={{ base: '100%', md: '47.5%' }}
                 mb={4}
-                isRequired
+                isRequired={esPid}
                 register={register}
                 options={tiposProyectoOptions}
                 errors={errors}
+                onChange={handleTipoProyectoChange}
               />
             </Box>
 
-            {/* Campos específicos para proyectos externos */}
-            {!esPid && (
-              <GenericInput
-                name="empresaInstitucion"
-                label="Empresa/Institución"
-                placeholder="Empresa/Institución"
-                register={register}
-                errors={errors}
-                width={{ base: '100%', md: '50%' }}
-                isRequired
+            <Box
+              display="flex"
+              flexDirection={{ base: 'column', md: 'row' }}
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <GenericSelect
+                name="trl"
+                label="Nivel TRL"
+                placeholder="Seleccione TRL..."
+                width={{ base: '100%', md: !esPid ? '47.5%' : '100%' }}
                 mb={4}
+                register={register}
+                options={[
+                  { value: 'TRL 1', label: 'TRL 1 - Principios básicos observados' },
+                  { value: 'TRL 2', label: 'TRL 2 - Concepto tecnológico formulado' },
+                  { value: 'TRL 3', label: 'TRL 3 - Prueba de concepto experimental' },
+                  { value: 'TRL 4', label: 'TRL 4 - Validación en laboratorio' },
+                  { value: 'TRL 5', label: 'TRL 5 - Validación en entorno relevante' },
+                  { value: 'TRL 6', label: 'TRL 6 - Demostración en entorno relevante' },
+                  { value: 'TRL 7', label: 'TRL 7 - Demostración de sistema operacional' },
+                  { value: 'TRL 8', label: 'TRL 8 - Sistema completo y calificado' },
+                  { value: 'TRL 9', label: 'TRL 9 - Sistema probado operacional' },
+                ]}
+                errors={errors}
               />
-            )}
+
+              {!esPid && (
+                <GenericInput
+                  name="empresaInstitucion"
+                  label="Empresa/Institución"
+                  placeholder="Empresa/Institución"
+                  register={register}
+                  errors={errors}
+                  width={{ base: '100%', md: '47.5%' }}
+                  isRequired
+                  mb={4}
+                />
+              )}
+            </Box>
 
             {/* Campos específicos para proyectos PID */}
             {esPid && (
@@ -354,6 +426,82 @@ export default function ModificarPIDs() {
                   </Box>
                 )}
               </>
+            )}
+
+            {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
+              <Card width="100%" mt={6} mb={6}>
+                <CardBody>
+                  <Text fontSize="md" fontWeight="bold">Agregar instituciones asociadas</Text>
+                  <br />
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Box display="flex" width="100%">
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        width="45%"
+                        gap="2%"
+                      >
+                        <GenericSelect
+                          placeholder="Instituciones..."
+                          isSearchable={true}
+                          options={[
+                            ...(dataRegionales?.regionales?.map((regional) => ({
+                              value: regional,
+                              label: regional,
+                            })) || []),
+                            { value: 'Otro', label: 'Otro' },
+                          ]}
+                          value={selectedInstitucion}
+                          onChange={(e) => {
+                            setSelectedInstitucion(e.target.value);
+                          }}
+                        />
+                        {selectedInstitucion === 'Otro' && (
+                          <GenericInput
+                            placeholder="Nombre de la institución..."
+                            value={otraInstitucion}
+                            onChange={(e) => {
+                              setOtraInstitucion(e.target.value);
+                            }}
+                          />
+                        )}
+                      </Box>
+                      <Box display="flex" justifyContent="flex-end" width="55%">
+                        <Button
+                          colorScheme="blue"
+                          variant="outline"
+                          onClick={agregarInstitucion}
+                        >
+                          Agregar
+                        </Button>
+                      </Box>
+                    </Box>
+                    <br />
+                    {institucionesSeleccionadas?.length > 0 && (
+                      <Box width="100%">
+                        <Tabla
+                          columnas={['Institución', 'Eliminar']}
+                          datos={institucionesSeleccionadas.map((item) => [
+                            item,
+                            <DeleteIcon
+                              key={`del-${item}`}
+                              cursor="pointer"
+                              onClick={() => eliminarInstitucion(item)}
+                            />,
+                          ])}
+                          paginado={false}
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                </CardBody>
+              </Card>
             )}
 
             <FormButtons

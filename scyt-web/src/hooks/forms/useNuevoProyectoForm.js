@@ -17,6 +17,8 @@ const nuevoProyectoSchema = yup.object({
     then: () => yup.string().required('El código PID es requerido'),
     otherwise: () => yup.string().nullable(),
   }),
+  fechaInicio: yup.string().nullable().notRequired(),
+  fechaFin: yup.string().nullable().notRequired(),
   denominacion: yup.string().required('La denominación es requerida'),
   convocatoria: yup
     .number()
@@ -26,7 +28,13 @@ const nuevoProyectoSchema = yup.object({
       return typeof value === 'number' && !isNaN(value);
     }),
   programa: yup.string().required('El programa es requerido'),
-  tipoProyecto: yup.string().required('El tipo de proyecto es requerido'),
+  tipoProyecto: yup.mixed().when('tipo', {
+    is: val => val === 'pid',
+    then: () => yup.string().required('El tipo de proyecto es requerido'),
+    otherwise: () => yup.string().nullable().notRequired(),
+  }),
+  trl: yup.string().nullable().notRequired(),
+  descripcionBreve: yup.string().nullable().notRequired(),
   tipoActividad: yup.mixed().when('tipo', {
     is: val => val === 'pid',
     then: () => yup.string().required('El tipo de actividad es requerido'),
@@ -67,6 +75,8 @@ const defaultValues = {
   idDirector: undefined,
   idCodirector: undefined,
   tipoProyecto: '',
+  trl: '',
+  descripcionBreve: '',
   prorrogado: 'false',
   nuevaFechaFin: undefined,
   nuevaDisposicion: undefined,
@@ -109,6 +119,9 @@ export const roles = [
 export const tipoProyectosInterinstitucionales = [
   'Inter-institucional (PID IN) con Incentivos',
   'Inter-institucional (PID IN) sin Incentivos',
+  'PID Interfacultad',
+  'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
+  'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
 ];
 
 /**
@@ -153,7 +166,9 @@ export const useNuevoProyectoForm = () => {
       const modifiedValues = {
         ...formData,
         prorrogado: formData.prorrogado === 'true',
-        instituciones: institucionesSeleccionadas, // Agregamos las instituciones del estado local
+        instituciones: tipoProyectosInterinstitucionales.includes(formData.tipoProyecto)
+          ? institucionesSeleccionadas
+          : [],
       };
       return await createProyecto(modifiedValues);
     },

@@ -37,13 +37,21 @@ const investigadorSchema = yup.object({
     }),
   fechaIngresoGrupo: yup
     .date()
-    .required('La fecha de ingreso al grupo es requerida')
+    .nullable()
+    .notRequired()
+    .transform((curr, orig) => (orig === '' || !orig ? null : curr))
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
   esBecario: yup.boolean(),
   legajo: yup
     .string()
-    .required('El legajo es requerido')
+    .nullable()
+    .notRequired()
+    .transform((val) => (val === '' ? null : val)),
+  orcid: yup
+    .string()
+    .nullable()
+    .notRequired()
     .trim(),
   tienePosgrado: yup.boolean().when('esBecario', {
     is: false,
@@ -72,6 +80,7 @@ const defaultValues = {
   activo: true,
   esBecario: false,
   legajo: '',
+  orcid: '',
   tienePosgrado: false,
   nivelPosgrado: '',
   otroPosgrado: '',
@@ -115,6 +124,7 @@ export const useNuevoInvestigadorForm = () => {
       fechaIngresoGrupo: formData.fechaIngresoGrupo ? new Date(formData.fechaIngresoGrupo).toISOString() : null,
       esBecario: formData.esBecario || false,
       legajo: formData.legajo?.trim() || null,
+      orcid: formData.orcid?.trim() || null,
     };
 
     // Solo incluir campos de posgrado si NO es becario
@@ -143,10 +153,9 @@ export const useNuevoInvestigadorForm = () => {
       !cleanedData.nombre ||
       !cleanedData.apellido ||
       !cleanedData.dni ||
-      !cleanedData.idGrupoInvestigacion ||
-      !cleanedData.fechaIngresoGrupo
+      !cleanedData.idGrupoInvestigacion
     ) {
-      throw new Error('Todos los campos son requeridos');
+      throw new Error('Nombre, apellido, DNI y grupo son requeridos');
     }
   };
 
