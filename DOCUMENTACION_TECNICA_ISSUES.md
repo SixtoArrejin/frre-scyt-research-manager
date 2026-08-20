@@ -63,15 +63,13 @@ Este documento contiene el detalle técnico completo de las modificaciones reali
 
 ---
 
-### Issue #145: Registrar la baja de un investigador en un proyecto con su fecha correspondiente
-- **Objetivo:** Indicar la desvinculación de un participante en un proyecto guardando la fecha de baja e historial.
+### Issue #145: Registrar la baja de un investigador en un proyecto con su fecha correspondiente y motivo opcional
+- **Objetivo:** Indicar la desvinculación de un participante en un proyecto guardando la fecha de baja, el motivo opcional y el historial completo.
 - **Archivos Modificados:**
-  - `scyt-api/src/repository/proyectosRepository.js`: Se implementó `bajaPersonaParticipaProyecto` ejecutando `prisma.participa.update` para asignar `fechaFin`.
-  - `scyt-api/src/services/proyectosService.js`: Se agregó `bajaPersonaParticipaProyectoService`.
-  - `scyt-api/src/controllers/proyectosController.js`: Se creó `bajaInvestigadorController` procesando `req.body.fechaFin`.
-  - `scyt-api/src/routes/proyectosRouter.js`: Se registró la ruta `PUT /:idProyecto/investigador/:idInvestigador/baja`.
-  - `scyt-web/src/utils/api/proyectosApi.js`: Se agregó la función helper `bajaInvestigador(idProyecto, idInvestigador, fechaFin)`.
-  - `scyt-web/src/pages/proyectos/DetalleProyecto.jsx`: Se agregaron las columnas "Estado En Proy." y "Fecha Baja", junto a un botón "Baja" con modal emergente para seleccionar la fecha de término.
+  - `scyt-api/prisma/schema.prisma`: Se incorporó el campo opcional `motivoBaja String? @db.VarChar(256)` en la entidad `participa` y se sincronizó con la base de datos PostgreSQL (`npx prisma db push`).
+  - `scyt-api/src/repository/proyectosRepository.js`, `proyectosService.js`, `proyectosController.js`: Se actualizó `bajaPersonaParticipaProyecto` para persistir `fechaFin` y `motivoBaja`.
+  - `scyt-web/src/utils/api/proyectosApi.js`: Se actualizó `bajaInvestigador` enviando `{ fechaFin, motivoBaja }`.
+  - `scyt-web/src/pages/proyectos/DetalleProyecto.jsx`: Se reemplazaron los botones apiñados por un menú de 3 puntos (Chakra `Menu`), manteniendo la tabla limpia y legible. Se agregó la opción "Dar de baja" (con modal `Textarea` para ingresar la fecha y motivo opcional) y la opción "Ver motivo de baja" (con modal dedicado para consultar la fecha y motivo registrados).
 
 ---
 

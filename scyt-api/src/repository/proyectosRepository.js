@@ -234,7 +234,7 @@ export async function delPersonaParticipaProyecto(idProyecto, idPersona) {
   }
 }
 
-export async function bajaPersonaParticipaProyecto(idProyecto, idPersona, fechaFin) {
+export async function bajaPersonaParticipaProyecto(idProyecto, idPersona, fechaFin, motivoBaja) {
   try {
     const updatedParticipante = await prisma.participa.update({
       where: {
@@ -245,6 +245,7 @@ export async function bajaPersonaParticipaProyecto(idProyecto, idPersona, fechaF
       },
       data: {
         fechaFin: fechaFin ? convertToISOString(fechaFin) : new Date(),
+        ...(motivoBaja !== undefined && { motivoBaja: motivoBaja || null }),
       },
     });
     return updatedParticipante;

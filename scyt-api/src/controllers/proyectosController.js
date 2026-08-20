@@ -287,9 +287,9 @@ export async function delInvestigador(req, res) {
 export async function bajaInvestigadorController(req, res) {
   const idProyecto = parseInt(req.params.idProyecto, 10);
   const idInvestigador = parseInt(req.params.idInvestigador, 10);
-  const { fechaFin } = req.body;
+  const { fechaFin, motivoBaja } = req.body;
   try {
-    const bajaParticipa = await bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin);
+    const bajaParticipa = await bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin, motivoBaja);
     res
       .status(200)
       .json({

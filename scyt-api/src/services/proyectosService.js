@@ -399,9 +399,9 @@ export async function delPersonaParticipaProyectoService(idProyecto, idInvestiga
   }
 }
 
-export async function bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin) {
+export async function bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin, motivoBaja) {
   try {
-    const bajaParticipante = await bajaPersonaParticipaProyecto(idProyecto, idInvestigador, fechaFin);
+    const bajaParticipante = await bajaPersonaParticipaProyecto(idProyecto, idInvestigador, fechaFin, motivoBaja);
     return bajaParticipante;
   } catch (error) {
     console.log(error.message);

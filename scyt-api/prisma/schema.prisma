@@ -37,6 +37,7 @@ model participa {
   rol         String    @db.VarChar(100)
   fechaInicio DateTime? @db.Date
   fechaFin    DateTime? @db.Date
+  motivoBaja  String?   @db.VarChar(256)
   personas    personas  @relation(fields: [idPersona], references: [idPersona], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_1")
   proyectos   proyectos @relation(fields: [idProyecto], references: [idProyecto], onDelete: NoAction, onUpdate: NoAction, map: "participa_ibfk_2")
 
