@@ -48,21 +48,14 @@ export default function DetalleInvestigador() {
   const { idPersona } = useParams();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery(['persona'], () => getPersonaById(idPersona));
+  const { data, isLoading } = useQuery(['persona', idPersona], () => getPersonaById(idPersona));
   const { data: dataProyectos } = useQuery(['proyectos', idPersona], () => getProyectosByPersonaId(idPersona));
   const { data: dataPropiedadIntelectual } = useQuery(['propiedadIntelectual', idPersona], () => getPropiedadIntelectualByIdPersona(idPersona));
 
   const toast = useToast();
 
-  useEffect(() => {
-    if (dataProyectos) {
-      console.log(dataProyectos);
-    }
-
-  }, [dataProyectos]);
-
-  const categoriasUTN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'utn');
-  const categoriasMIN = data?.persona.categorias.filter((categoria) => categoria.tipo === 'ministerio');
+  const categoriasUTN = data?.persona?.categorias?.filter((categoria) => categoria.tipo === 'utn');
+  const categoriasMIN = data?.persona?.categorias?.filter((categoria) => categoria.tipo === 'ministerio');
   categoriasUTN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   categoriasMIN?.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
@@ -75,7 +68,7 @@ export default function DetalleInvestigador() {
         status: 'info',
         isClosable: true,
       });
-      queryClient.refetchQueries(['persona']);
+      queryClient.refetchQueries(['persona', idPersona]);
     },
     onError: () => {
       toast({
@@ -87,11 +80,6 @@ export default function DetalleInvestigador() {
     },
   });
 
-  useEffect(() => {
-    console.log(categoriasUTN);
-    console.log(categoriasMIN);
-  }, [categoriasUTN, categoriasMIN]);
-
   if (isLoading) {
     return (
       <Box display='flex' height='calc(100vh - 80px - 16px - 1px - 16px)' width='100%' alignItems='center' justifyContent='center'>
@@ -100,10 +88,15 @@ export default function DetalleInvestigador() {
     );
   }
 
+  const persona = data?.persona;
+  const esBecario = persona?.esBecario;
+  const tienePosgrado = persona?.tienePosgrado;
+
   return (
     <Card>
       <CardBody>
         <Box display='flex' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+          {/* Cabecera superior con botón de regreso y título */}
           <HStack width='100%' justifyContent='space-between' mb={6}>
             <BackButton to='/investigadores' />
             <Heading as='h2' size='xl' textAlign='center'>
@@ -112,191 +105,254 @@ export default function DetalleInvestigador() {
             <Box /> {/* Spacer para centrar el título */}
           </HStack>
 
-          <br />
-          <br />
-
-          <Card width='100%'>
+          {/* Tarjeta 1: Datos del Investigador */}
+          <Card width='100%' mb={6}>
             <CardBody>
-              <Text fontSize='md' fontWeight='bold'>Datos del investigador</Text>
-              <br />
-              <Box display='flex' width='100%' alignItems='flex-start' justifyContent='flex-start' flexDirection='column'>
-                {/* Primera fila: Estado, Apellido, Nombre, DNI - Anchos iguales 21.25% con separación 5% */}
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
-                  <Box display='flex' flexDirection='column' width={{ base: '100%', md: '21.25%' }} mb={4}>
-                    <Text fontSize='sm' fontWeight='medium' color='gray.500' mb={2}>
-                      Estado
-                    </Text>
-                    <Box display='flex' alignItems='center' width='100%'>
-                      <Box
-                        width='8px'
-                        height='8px'
-                        borderRadius='100%'
-                        bg={data?.persona?.activo ? 'green.500' : 'red.500'}
-                        flexShrink={0}
-                        mr={2}
-                      />
-                      <Badge
-                        colorScheme={data?.persona?.activo ? 'green' : 'red'}
-                        fontSize='md'
-                        borderRadius='md'
-                        width='100%'
-                        textAlign='center'
-                        px={2}
-                        py={1}
-                      >
-                        {data?.persona?.activo ? 'Activo' : 'Inactivo'}
-                      </Badge>
-                    </Box>
-                  </Box>
+              {/* Encabezado con título original y badges solicitados */}
+              <Box
+                display='flex'
+                flexDirection={{ base: 'column', md: 'row' }}
+                alignItems={{ base: 'flex-start', md: 'center' }}
+                justifyContent='space-between'
+                width='100%'
+                mb={4}
+              >
+                <Box display='flex' alignItems='center' flexWrap='wrap' gap={3}>
+                  <Text fontSize='md' fontWeight='bold'>
+                    Datos del investigador
+                  </Text>
+                  <Badge
+                    colorScheme={persona?.activo ? 'green' : 'red'}
+                    borderRadius='md'
+                  >
+                    {persona?.activo ? 'Activo' : 'Inactivo'}
+                  </Badge>
+                  <Badge
+                    colorScheme={esBecario ? 'purple' : 'blue'}
+                    borderRadius='md'
+                  >
+                    {esBecario
+                      ? persona?.tipoBecario
+                        ? `Becario (${persona.tipoBecario})`
+                        : 'Becario'
+                      : 'Investigador'}
+                  </Badge>
+                </Box>
 
+                <PermissionGate module='investigadores' action='edit'>
+                  <Link to={'modificar'}>
+                    <Button colorScheme='blue' variant='outline' size='sm'>
+                      Modificar
+                    </Button>
+                  </Link>
+                </PermissionGate>
+              </Box>
+
+              {/* Grilla de campos perfectamente balanceada */}
+              <Box display='flex' width='100%' flexDirection='column'>
+                {/* Fila 1: Apellido y Nombre */}
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width='100%'
+                  gap={4}
+                  mb={4}
+                >
                   <DisplayField
                     label="Apellido"
-                    value={data?.persona?.apellido || ''}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.apellido || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
-
                   <DisplayField
                     label="Nombre"
-                    value={data?.persona?.nombre || ''}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.nombre || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
+                </Box>
 
+                {/* Fila 2: DNI y Legajo */}
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width='100%'
+                  gap={4}
+                  mb={4}
+                >
                   <DisplayField
                     label="DNI"
-                    value={data?.persona?.dni || ''}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.dni || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
-                </Box>
-
-                {/* Segunda fila: Tipo, Legajo, ORCID, Siglas, Fecha de Ingreso */}
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
-                  <DisplayField
-                    label="Tipo"
-                    value={data?.persona?.esBecario ? 'Becario' : 'Investigador'}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
-                  />
-
                   <DisplayField
                     label="Legajo"
-                    value={data?.persona?.legajo || '-'}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.legajo || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
+                </Box>
 
-                  <DisplayField
-                    label="Número ORCID"
-                    value={data?.persona?.orcid || '-'}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
-                  />
-
+                {/* Fila 3: Siglas del Grupo y Fecha de Ingreso al Grupo */}
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width='100%'
+                  gap={4}
+                  mb={4}
+                >
                   <DisplayField
                     label="Siglas del Grupo"
-                    value={data?.persona?.gruposinvestigacion?.siglas || ''}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.gruposinvestigacion?.siglas || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
-                </Box>
-
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
                   <DisplayField
                     label="Fecha de Ingreso al Grupo"
-                    value={data?.persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(data.persona.fechaIngresoGrupo) : '-'}
-                    width={{ base: '100%', md: '21.25%' }}
-                    mb={4}
+                    value={persona?.fechaIngresoGrupo ? formatoFechaISOaDDMMAAAA(persona.fechaIngresoGrupo) : '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
                   />
-
-                  {data?.persona?.esBecario && (
-                    <>
-                      <DisplayField
-                        label="Tipo de Becario"
-                        value={data?.persona?.tipoBecario || '-'}
-                        width={{ base: '100%', md: '21.25%' }}
-                        mb={4}
-                      />
-
-                      {data?.persona?.resolucionBeca && (
-                        <DisplayField
-                          label="Número de Resolución"
-                          value={data?.persona?.resolucionBeca}
-                          width={{ base: '100%', md: '21.25%' }}
-                          mb={4}
-                        />
-                      )}
-                    </>
-                  )}
                 </Box>
 
-                {/* Tercera fila: Posgrado (solo si no es becario) */}
-                {!data?.persona?.esBecario && (
-                  <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%' gap='5%'>
+                {/* Fila 4: Nombre completo del Grupo */}
+                {persona?.gruposinvestigacion?.nombre && (
+                  <Box
+                    display='flex'
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width='100%'
+                    gap={4}
+                    mb={4}
+                  >
                     <DisplayField
-                      label="Tiene Posgrado"
-                      value={data?.persona?.tienePosgrado ? 'Sí' : 'No'}
-                      width={{ base: '100%', md: '30%' }}
-                      mb={4}
+                      label="Nombre del Grupo"
+                      value={persona.gruposinvestigacion.nombre}
+                      width='100%'
+                      mb={0}
                     />
-
-                    {data?.persona?.tienePosgrado && (
-                      <>
-                        <DisplayField
-                          label="Nivel de Posgrado"
-                          value={
-                            data?.persona?.nivelPosgrado === 'doctorado' ? 'Doctorado' :
-                              data?.persona?.nivelPosgrado === 'maestria' ? 'Maestría' :
-                                data?.persona?.nivelPosgrado === 'especializacion' ? 'Especialización' :
-                                  data?.persona?.nivelPosgrado === 'diplomatura' ? 'Diplomatura' :
-                                    data?.persona?.nivelPosgrado === 'otro' ? 'Otro' : '-'
-                          }
-                          width={{ base: '100%', md: '30%' }}
-                          mb={4}
-                        />
-
-                        {data?.persona?.nivelPosgrado === 'otro' && data?.persona?.otroPosgrado && (
-                          <DisplayField
-                            label="Especificación"
-                            value={data?.persona?.otroPosgrado || '-'}
-                            width={{ base: '100%', md: '30%' }}
-                            mb={4}
-                          />
-                        )}
-                      </>
-                    )}
                   </Box>
                 )}
 
-                {/* Cuarta fila: Nombre del Grupo completo - 100% width */}
-                <Box display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='flex-start' justifyContent='flex-start' width='100%'>
+                {/* Fila 5: ORCID y Estado */}
+                <Box
+                  display='flex'
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width='100%'
+                  gap={4}
+                  mb={4}
+                >
                   <DisplayField
-                    label="Nombre del Grupo"
-                    value={data?.persona?.gruposinvestigacion?.nombre || '-'}
-                    width='100%'
-                    mb={4}
+                    label="Número ORCID"
+                    value={persona?.orcid || '-'}
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
+                  />
+                  <DisplayField
+                    label="Estado"
+                    width={{ base: '100%', md: '50%' }}
+                    mb={0}
+                    value={
+                      <Box display='flex' alignItems='center'>
+                        <Box
+                          width='8px'
+                          height='8px'
+                          borderRadius='100%'
+                          bg={persona?.activo ? 'green.500' : 'red.500'}
+                          mr={2}
+                        />
+                        <Text fontSize='md' color={persona?.activo ? 'green.600' : 'red.600'}>
+                          {persona?.activo ? 'Activo' : 'Inactivo'}
+                        </Text>
+                      </Box>
+                    }
                   />
                 </Box>
 
-                <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                  <PermissionGate module='investigadores' action='edit'>
-                    <Link to={'modificar'}>
-                      <Button colorScheme='blue' variant='outline'>
-                        Modificar
-                      </Button>
-                    </Link>
-                  </PermissionGate>
-                </Box>
+                {/* Fila 6: Clasificación Académica (Becario o Posgrado) */}
+                {esBecario ? (
+                  <Box
+                    display='flex'
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width='100%'
+                    gap={4}
+                    mb={4}
+                  >
+                    <DisplayField
+                      label="Tipo de Becario"
+                      value={persona?.tipoBecario || '-'}
+                      width={persona?.resolucionBeca ? { base: '100%', md: '50%' } : '100%'}
+                      mb={0}
+                    />
+                    {persona?.resolucionBeca && (
+                      <DisplayField
+                        label="Número de Resolución"
+                        value={persona.resolucionBeca}
+                        width={{ base: '100%', md: '50%' }}
+                        mb={0}
+                      />
+                    )}
+                  </Box>
+                ) : (
+                  <>
+                    <Box
+                      display='flex'
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      width='100%'
+                      gap={4}
+                      mb={4}
+                    >
+                      <DisplayField
+                        label="Tiene Posgrado"
+                        value={tienePosgrado ? 'Sí' : 'No'}
+                        width={tienePosgrado ? { base: '100%', md: '50%' } : '100%'}
+                        mb={0}
+                      />
+                      {tienePosgrado && (
+                        <DisplayField
+                          label="Nivel de Posgrado"
+                          value={
+                            persona?.nivelPosgrado === 'doctorado' ? 'Doctorado' :
+                              persona?.nivelPosgrado === 'maestria' ? 'Maestría' :
+                                persona?.nivelPosgrado === 'especializacion' ? 'Especialización' :
+                                  persona?.nivelPosgrado === 'diplomatura' ? 'Diplomatura' :
+                                    persona?.nivelPosgrado === 'otro' ? 'Otro' : '-'
+                          }
+                          width={{ base: '100%', md: '50%' }}
+                          mb={0}
+                        />
+                      )}
+                    </Box>
+
+                    {tienePosgrado && persona?.nivelPosgrado === 'otro' && persona?.otroPosgrado && (
+                      <Box
+                        display='flex'
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width='100%'
+                        gap={4}
+                        mb={4}
+                      >
+                        <DisplayField
+                          label="Especificación del Posgrado"
+                          value={persona.otroPosgrado}
+                          width='100%'
+                          mb={0}
+                        />
+                      </Box>
+                    )}
+                  </>
+                )}
               </Box>
             </CardBody>
           </Card>
 
-          <br />
-          <Card width='100%'>
+          {/* Tarjeta 2: Categorías (Ministerio y UTN) */}
+          <Card width='100%' mb={6}>
             <CardBody>
-              <Text fontSize='md' fontWeight='bold'>Categoría Ministerio</Text>
-              <br />
+              {/* Categoría Ministerio */}
+              <Text fontSize='md' fontWeight='bold' mb={3}>
+                Categoría Ministerio
+              </Text>
               {categoriasMIN?.length > 0 ? (
                 <Tabla
                   columnas={['Fecha', 'Categoría', 'Resolución', 'Comisión', '', '']}
@@ -313,7 +369,7 @@ export default function DetalleInvestigador() {
                           onClose={closeModal}
                           eliminar={true}
                           title='Eliminar categoria'
-                          content='Se eliminara la categoria UTN'
+                          content='Se eliminará la categoría de ministerio'
                           onSave={() => {
                             if (selectedCategoria) {
                               mutate(selectedCategoria.idCategoria);
@@ -339,12 +395,25 @@ export default function DetalleInvestigador() {
                   paginado={false}
                 />
               ) : (
-                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay categorías de ministerio para mostrar.' />
+                <ImgDefault src={NoData} alt='No Data' width='25%' text='No hay categorías de ministerio para mostrar.' />
               )}
 
-              <br />
-              <Text fontSize='md' fontWeight='bold'>Categoría UTN</Text>
-              <br />
+              <Box my={6} borderBottom='1px' borderColor='gray.200' />
+
+              {/* Categoría UTN */}
+              <HStack width='100%' justifyContent='space-between' alignItems='center' mb={3}>
+                <Text fontSize='md' fontWeight='bold'>
+                  Categoría UTN
+                </Text>
+                <PermissionGate module='investigadores' action='create'>
+                  <Link to={'nueva-categoria'}>
+                    <Button colorScheme='blue' variant='outline' size='sm'>
+                      Nueva Categoría
+                    </Button>
+                  </Link>
+                </PermissionGate>
+              </HStack>
+
               {categoriasUTN?.length > 0 ? (
                 <Tabla
                   columnas={['Fecha', 'Categoría', 'Resolución', 'Equiparación', 'Comisión', '', '']}
@@ -362,7 +431,7 @@ export default function DetalleInvestigador() {
                           onClose={closeModal}
                           eliminar={true}
                           title='Eliminar categoria'
-                          content='Se eliminara la categoria UTN'
+                          content='Se eliminará la categoría UTN'
                           onSave={() => {
                             if (selectedCategoria) {
                               mutate(selectedCategoria.idCategoria);
@@ -388,27 +457,18 @@ export default function DetalleInvestigador() {
                   paginado={false}
                 />
               ) : (
-                <ImgDefault src={NoData2} alt='No Data' width='30%' text='No hay categorías UTN para mostrar.' />
+                <ImgDefault src={NoData2} alt='No Data' width='25%' text='No hay categorías UTN para mostrar.' />
               )}
-              <br />
-              <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
-                <PermissionGate module='investigadores' action='create'>
-                  <Link to={'nueva-categoria'}>
-                    <Button colorScheme='blue' variant='outline'>
-                      Nueva Categoría
-                    </Button>
-                  </Link>
-                </PermissionGate>
-              </Box>
             </CardBody>
           </Card>
 
-          <br />
-          <Card width='100%'>
+          {/* Tarjeta 3: Proyectos */}
+          <Card width='100%' mb={6}>
             <CardBody>
-              <Text fontSize='md' fontWeight='bold'>Proyectos</Text>
-              <br />
-              {(dataProyectos?.proyectos?.length > 0) ? (
+              <Text fontSize='md' fontWeight='bold' mb={3}>
+                Proyectos
+              </Text>
+              {dataProyectos?.proyectos?.length > 0 ? (
                 <Tabla
                   columnas={['Fec. Inicio', 'Fec. Fin', 'Denominación', 'Tipo Act.', 'Estado', 'Ing. al proyecto', 'Rol', 'Más']}
                   datos={dataProyectos?.proyectos?.map((item) => [
@@ -426,18 +486,18 @@ export default function DetalleInvestigador() {
                   paginado={false}
                 />
               ) : (
-                <ImgDefault src={NoData3} alt='No Data' width='30%' text='No hay proyectos para mostrar.' />
+                <ImgDefault src={NoData3} alt='No Data' width='25%' text='No hay proyectos para mostrar.' />
               )}
-              <br />
             </CardBody>
           </Card>
 
-          <br />
-          <Card width='100%'>
+          {/* Tarjeta 4: Propiedad Intelectual */}
+          <Card width='100%' mb={6}>
             <CardBody>
-              <Text fontSize='md' fontWeight='bold'>Propiedad Intelectual</Text>
-              <br />
-              {(dataPropiedadIntelectual?.propiedadIntelectual?.length > 0) ? (
+              <Text fontSize='md' fontWeight='bold' mb={3}>
+                Propiedad Intelectual
+              </Text>
+              {dataPropiedadIntelectual?.propiedadIntelectual?.length > 0 ? (
                 <Tabla
                   columnas={['Tipo', 'N° Expediente', 'Proyecto', 'Participación (%)', 'Fec. Inicio', 'Más']}
                   datos={dataPropiedadIntelectual?.propiedadIntelectual?.map((item) => [
@@ -455,13 +515,13 @@ export default function DetalleInvestigador() {
                   paginado={false}
                 />
               ) : (
-                <ImgDefault src={NoData} alt='No Data' width='30%' text='No hay propiedad intelectual para mostrar.' />
+                <ImgDefault src={NoData} alt='No Data' width='25%' text='No hay propiedad intelectual para mostrar.' />
               )}
-              <br />
             </CardBody>
           </Card>
-          <br />
-          <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end'>
+
+          {/* Botón de acción: Reporte */}
+          <Box display='flex' width='100%' alignItems='center' justifyContent='flex-end' mb={4}>
             <Button colorScheme='blue' variant='outline' onClick={() => alert('Generar un reporte con los detalles del investigador')}>
               Generar Reporte
             </Button>
