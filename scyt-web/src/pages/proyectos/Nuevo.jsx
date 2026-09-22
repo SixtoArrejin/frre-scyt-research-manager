@@ -97,217 +97,207 @@ export default function NuevoPid() {
               </Heading>
               <Box /> {/* Spacer para centrar el título */}
             </HStack>
-            <br />
-            <Card width="100%">
+
+            <Card width="100%" mb={6}>
               <CardBody>
-                <Text fontSize="md" fontWeight="bold">Ingrese los datos del proyecto: </Text>
-                <br />
+                <Text fontSize="md" fontWeight="bold" mb={6}>
+                  Datos del proyecto
+                </Text>
+
                 <Box
                   display="flex"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
                   flexDirection="column"
+                  width={{ base: '100%', md: '95%', lg: '90%' }}
+                  maxW="1000px"
+                  mx="auto"
                 >
+                  {/* Fila 1: Tipo de proyecto y Código PID / Empresa */}
                   <Box
                     display="flex"
-                    width="70%"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
                     alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
+                    justifyContent="space-between"
+                    gap={{ base: 4, md: '4%' }}
+                    mb={4}
                   >
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <Box
-                        width={{ base: '100%', md: '20%' }}
-                        display="flex"
-                        justifyContent="center"
-                        mt="15px"
-                      >
-                        <GenericRadio
-                          name="tipo"
-                          direction="row"
-                          options={[
-                            { value: 'pid', label: 'PID' },
-                            { value: 'externo', label: 'Externo' },
-                          ]}
-                          register={register}
-                          defaultValue="pid"
-                          mb="5vh"
-                          width={'100%'}
-                        />
-                      </Box>
-                      {PidExterno === 'pid' && (
-                        <GenericInput
-                          name="codPid"
-                          placeholder="Código PID"
-                          register={register}
-                          errors={errors}
-                          label="Código PID"
-                          width={{ base: '100%', md: '80%' }}
-                          mb="5vh"
-                          isRequired
-                        />
-                      )}
+                    <Box width={{ base: '100%', md: '48%' }}>
+                      <GenericRadio
+                        name="tipo"
+                        label="Tipo de proyecto:"
+                        direction="row"
+                        options={[
+                          { value: 'pid', label: 'PID' },
+                          { value: 'externo', label: 'Externo' },
+                        ]}
+                        register={register}
+                        defaultValue="pid"
+                        width="100%"
+                      />
                     </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
+
+                    {PidExterno === 'pid' ? (
                       <GenericInput
-                        textArea
-                        name="denominacion"
-                        placeholder="Denominación"
+                        name="codPid"
+                        placeholder="Código PID"
                         register={register}
                         errors={errors}
-                        label="Denominación"
-                        width={{ base: '100%', md: '100%' }}
-                        mb="5vh"
+                        label="Código PID"
+                        width={{ base: '100%', md: '48%' }}
                         isRequired
                       />
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
+                    ) : (
                       <GenericInput
-                        textArea
-                        name="descripcionBreve"
-                        placeholder="Descripción breve del proyecto"
+                        name="empresaInstitucion"
+                        placeholder="Empresa / Institución"
                         register={register}
                         errors={errors}
-                        label="Descripción Breve"
-                        width={{ base: '100%', md: '100%' }}
-                        mb="5vh"
+                        label="Empresa / Institución"
+                        width={{ base: '100%', md: '48%' }}
                       />
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <GenericInput
-                        name="fechaInicio"
-                        type="date"
-                        register={register}
-                        label="Fecha Inicio"
-                        width={{ base: '100%', md: '30%' }}
-                        mb="5vh"
-                      />
+                    )}
+                  </Box>
 
-                      <GenericInput
-                        name="fechaFin"
-                        type="date"
-                        register={register}
-                        label="Fecha Fin"
-                        width={{ base: '100%', md: '30%' }}
-                        mb="5vh"
-                      />
-
-                      <GenericInput
-                        type="number"
-                        name="convocatoria"
-                        placeholder="Convocatoria"
-                        register={register}
-                        errors={errors}
-                        label="Convocatoria"
-                        width={{ base: '100%', md: '30%' }}
-                        mb="5vh"
-                        isRequired
-                      />
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
+                  {/* Fila 2: Denominación */}
+                  <Box display="flex" width="100%" mb={4}>
+                    <GenericInput
+                      textArea
+                      name="denominacion"
+                      placeholder="Denominación del proyecto"
+                      register={register}
+                      errors={errors}
+                      label="Denominación"
                       width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <GenericInput
-                        name="programa"
-                        placeholder="Programa"
-                        register={register}
-                        errors={errors}
-                        label="Programa"
-                        width={{ base: '100%', md: '47.5%' }}
-                        mb="5vh"
-                        isRequired
-                      />
+                      isRequired
+                    />
+                  </Box>
 
-                      <GenericSelect
-                        name="tipoProyecto"
-                        label="Tipo de proyecto"
-                        placeholder="Tipo de proyecto..."
-                        width={{ base: '100%', md: '47.5%' }}
-                        mb="5vh"
-                        register={register}
-                        options={(isLoadingGetTiposProyectos
-                          ? ['Cargando...']
-                          : (dataTiposProyectos?.tiposProyectos || [])
-                        ).map((tipo) => ({
-                          value: tipo,
-                          label: tipo,
-                        }))}
-                        errors={errors}
-                        onChange={handleTipoProyectoChange}
-                        isRequired={PidExterno === 'pid'}
-                      />
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection={{ base: 'column', md: 'row' }}
+                  {/* Fila 3: Descripción Breve */}
+                  <Box display="flex" width="100%" mb={4}>
+                    <GenericInput
+                      textArea
+                      name="descripcionBreve"
+                      placeholder="Descripción breve del proyecto"
+                      register={register}
+                      errors={errors}
+                      label="Descripción Breve"
                       width="100%"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <GenericSelect
-                        name="trl"
-                        label="Nivel TRL"
-                        placeholder="Seleccione TRL..."
-                        width={{ base: '100%', md: PidExterno !== 'pid' ? '47.5%' : '100%' }}
-                        mb="5vh"
-                        register={register}
-                        options={TRL_OPTIONS}
-                        errors={errors}
-                      />
-                      {PidExterno !== 'pid' && (
-                        <GenericInput
-                          name="empresaInstitucion"
-                          placeholder="Empresa/Institución"
-                          register={register}
-                          label="Empresa/Institución"
-                          width={{ base: '100%', md: '47.5%' }}
-                          mb="5vh"
-                        />
-                      )}
-                    </Box>
-                    {PidExterno === 'pid' && (
+                    />
+                  </Box>
+
+                  {/* Fila 4: Fecha Inicio y Fecha Fin */}
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap={{ base: 4, md: '4%' }}
+                    mb={4}
+                  >
+                    <GenericInput
+                      name="fechaInicio"
+                      type="date"
+                      register={register}
+                      label="Fecha Inicio"
+                      width={{ base: '100%', md: '48%' }}
+                    />
+                    <GenericInput
+                      name="fechaFin"
+                      type="date"
+                      register={register}
+                      label="Fecha Fin"
+                      width={{ base: '100%', md: '48%' }}
+                    />
+                  </Box>
+
+                  {/* Fila 5: Convocatoria y Programa */}
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap={{ base: 4, md: '4%' }}
+                    mb={4}
+                  >
+                    <GenericInput
+                      type="number"
+                      name="convocatoria"
+                      placeholder="Convocatoria"
+                      register={register}
+                      errors={errors}
+                      label="Convocatoria"
+                      width={{ base: '100%', md: '48%' }}
+                      isRequired
+                    />
+                    <GenericInput
+                      name="programa"
+                      placeholder="Programa"
+                      register={register}
+                      errors={errors}
+                      label="Programa"
+                      width={{ base: '100%', md: '48%' }}
+                      isRequired
+                    />
+                  </Box>
+
+                  {/* Fila 6: Tipo de Proyecto y Nivel TRL */}
+                  <Box
+                    display="flex"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    gap={{ base: 4, md: '4%' }}
+                    mb={4}
+                  >
+                    <GenericSelect
+                      name="tipoProyecto"
+                      label="Tipo de proyecto"
+                      placeholder="Tipo de proyecto..."
+                      width={{ base: '100%', md: '48%' }}
+                      register={register}
+                      options={(isLoadingGetTiposProyectos
+                        ? ['Cargando...']
+                        : (dataTiposProyectos?.tiposProyectos || [])
+                      ).map((tipo) => ({
+                        value: tipo,
+                        label: tipo,
+                      }))}
+                      errors={errors}
+                      onChange={handleTipoProyectoChange}
+                      isRequired={PidExterno === 'pid'}
+                    />
+                    <GenericSelect
+                      name="trl"
+                      label="Nivel TRL"
+                      placeholder="Seleccione TRL..."
+                      width={{ base: '100%', md: '48%' }}
+                      register={register}
+                      options={TRL_OPTIONS}
+                      errors={errors}
+                    />
+                  </Box>
+
+                  {/* Filas Condicionales para PID */}
+                  {PidExterno === 'pid' && (
+                    <>
+                      {/* Fila 7: Tipo de Actividad y Estado */}
                       <Box
                         display="flex"
                         flexDirection={{ base: 'column', md: 'row' }}
                         width="100%"
                         alignItems="center"
                         justifyContent="space-between"
+                        gap={{ base: 4, md: '4%' }}
+                        mb={4}
                       >
                         <GenericSelect
                           name="tipoActividad"
                           label="Tipo de actividad"
                           placeholder="Tipo de actividad..."
-                          width={{ base: '100%', md: '30%' }}
-                          mb="5vh"
+                          width={{ base: '100%', md: '48%' }}
                           isRequired
                           register={register}
                           options={tipoActividad.map((actividad) => ({
@@ -321,69 +311,71 @@ export default function NuevoPid() {
                           name="estado"
                           label="Estado"
                           placeholder="Estado..."
-                          width={{
-                            base: '100%',
-                            md: estado === 'HOMOLOGADO' ? '30%' : '65%',
-                          }}
-                          mb="5vh"
+                          width={{ base: '100%', md: '48%' }}
                           isRequired
                           register={register}
-                          options={estadoProyecto.map((estado) => ({
-                            value: estado,
-                            label: estado,
+                          options={estadoProyecto.map((itemEstado) => ({
+                            value: itemEstado,
+                            label: itemEstado,
                           }))}
                           errors={errors}
                           onChange={(e) => setEstado(e.target.value)}
                         />
+                      </Box>
 
-                        {estado === 'HOMOLOGADO' && (
+                      {/* Fila 8: Disposición y Prórroga */}
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width="100%"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        gap={{ base: 4, md: '4%' }}
+                        mb={4}
+                      >
+                        {estado === 'HOMOLOGADO' ? (
                           <GenericInput
                             name="disposicion"
                             placeholder="Disposición"
                             register={register}
                             label="Disposición"
-                            width={{ base: '100%', md: '30%' }}
-                            mb="5vh"
-                            isRequired={estado === 'HOMOLOGADO'}
+                            width={{ base: '100%', md: '48%' }}
+                            isRequired={true}
                             errors={errors}
                           />
-                        )}
-                      </Box>
-                    )}
-                      {PidExterno === 'pid' && (
+                        ) : null}
+
                         <Box
-                          width={{ base: '100%', md: '52.5%' }}
+                          width={{ base: '100%', md: estado === 'HOMOLOGADO' ? '48%' : '100%' }}
                           display="flex"
-                          justifyContent="flex-start"
-                          alignItems="flex-start"
-                          height="100%"
-                          mb="5%"
-                          ml="1%"
+                          alignItems="center"
                         >
-                          <Text mr="2%" as="b">
-                            Prorroga:
-                          </Text>
                           <GenericRadio
                             name="prorrogado"
+                            label="Prórroga:"
                             direction="row"
                             options={[
-                              { value: 'true', label: 'Si' },
+                              { value: 'true', label: 'Sí' },
                               { value: 'false', label: 'No' },
                             ]}
                             register={register}
                             defaultValue={prorrogado}
                             errors={errors}
+                            width="100%"
                           />
                         </Box>
-                      )}
-                      {PidExterno === 'pid' &&
-                        prorrogado === 'true' && (
+                      </Box>
+
+                      {/* Fila 9: Nueva Fecha Fin y Nueva Disposición si prórroga es activa */}
+                      {prorrogado === 'true' && (
                         <Box
                           display="flex"
                           flexDirection={{ base: 'column', md: 'row' }}
                           width="100%"
                           alignItems="center"
                           justifyContent="space-between"
+                          gap={{ base: 4, md: '4%' }}
+                          mb={4}
                         >
                           <GenericInput
                             name="nuevaFechaFin"
@@ -393,13 +385,9 @@ export default function NuevoPid() {
                             label="Nueva Fecha Finalización"
                             width={{
                               base: '100%',
-                              md: estado === 'HOMOLOGADO' ? '46.25%' : '100%',
+                              md: estado === 'HOMOLOGADO' ? '48%' : '100%',
                             }}
-                            mb="5vh"
-                            isRequired={
-                              PidExterno === 'pid' &&
-                                prorrogado === 'true'
-                            }
+                            isRequired={true}
                           />
                           {estado === 'HOMOLOGADO' && (
                             <GenericInput
@@ -408,317 +396,286 @@ export default function NuevoPid() {
                               register={register}
                               errors={errors}
                               label="Nueva Disposición"
-                              width={{ base: '100%', md: '46.25%' }}
-                              mb="5vh"
-                              isRequired={
-                                estado === 'HOMOLOGADO' &&
-                                  PidExterno === 'pid' &&
-                                  prorrogado === 'true'
-                              }
+                              width={{ base: '100%', md: '48%' }}
+                              isRequired={true}
                             />
                           )}
                         </Box>
                       )}
-                    </Box>
-                  </Box>
-                </CardBody>
-              </Card>
-            </Box>
+                    </>
+                  )}
+                </Box>
+              </CardBody>
+            </Card>
 
-          {/* ACA SE AGREGA LA TABLA DE GRUPOS */}
-          <br />
-          <br />
-          <Card width="100%">
-            <CardBody>
-              <Text fontSize="md" fontWeight="bold">
-                Agregar los grupos asociados al proyecto
-              </Text>
-              <br />
-              <Box
-                display="flex"
-                flexDirection="column"
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <br />
-                <Box display="flex" width="100%">
+            {/* TABLA DE GRUPOS ASOCIADOS */}
+            <Card width="100%" mb={6}>
+              <CardBody>
+                <Text fontSize="md" fontWeight="bold" mb={4}>
+                  Agregar los grupos asociados al proyecto
+                </Text>
+
+                <Box display="flex" flexDirection="column" width="100%">
                   <Box
                     display="flex"
-                    justifyContent="space-between"
-                    width="45%"
-                    marginLeft="2%"
+                    flexDirection={{ base: 'column', md: 'row' }}
+                    alignItems="center"
+                    gap={4}
+                    mb={4}
                   >
-                    <GenericSelect
-                      placeholder="Grupos..."
-                      isSearchable={true}
-                      options={grupos?.map((grupo) => ({
-                        value: grupo.idGrupoInvestigacion,
-                        label: grupo.siglas,
-                      }))}
-                      onChange={(e) => {
-                        setSelectedOptionsGrupos(e.target.value);
-                      }}
-                    />
-                  </Box>
-                  <Box display="flex" justifyContent="flex-end" width="55%">
+                    <Box flex="1" width={{ base: '100%', md: 'auto' }}>
+                      <GenericSelect
+                        placeholder="Seleccione grupo..."
+                        isSearchable={true}
+                        options={grupos?.map((grupo) => ({
+                          value: grupo.idGrupoInvestigacion,
+                          label: `${grupo.siglas} - ${grupo.nombre}`,
+                        }))}
+                        onChange={(e) => {
+                          setSelectedOptionsGrupos(e.target.value);
+                        }}
+                      />
+                    </Box>
                     <Button
                       colorScheme="blue"
                       variant="outline"
-                      mr="5"
                       onClick={agregarGrupo}
+                      width={{ base: '100%', md: 'auto' }}
                     >
                       Agregar
                     </Button>
                   </Box>
-                </Box>
-                <br />
-                <Tabla
-                  columnas={['Grupo', 'Eliminar']}
-                  datos={gruposSeleccionados?.map((item, index) => [
-                    item.siglas,
-                    <DeleteIcon
-                      key={item.idGrupoInvestigacion}
-                      cursor={'pointer'}
-                      onClick={() => {
-                        eliminarGrupo(item.idGrupoInvestigacion, index);
-                      }}
-                    />,
-                  ])}
-                  paginado={false}
-                />
-              </Box>
-            </CardBody>
-          </Card>
-
-          {/* ACA SE AGREGA LA TABLA DE INVESTIGADORES */}
-          <br />
-          {gruposSeleccionados.length > 0 && (
-            <Card width="100%">
-              <CardBody>
-                <Text fontSize="md" fontWeight="bold">
-                  Agregar los investigadores al proyecto
-                </Text>
-                <br />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <br />
-                  <Box display="flex" width="100%">
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      width="75%"
-                      marginLeft="2%"
-                    >
-                      <GenericSelect
-                        placeholder="Integrantes..."
-                        isSearchable={true}
-                        options={sortedInvestigadores?.map((investigador) => ({
-                          value: investigador.idPersona,
-                          label:
-                            investigador.apellido + ', ' + investigador.nombre,
-                        }))}
-                        onChange={(e) => {
-                          setSelectedOptions(e.target.value);
-                        }}
-                        width="30%"
-                      />
-                      <GenericSelect
-                        placeholder="Rol..."
-                        options={roles.map((rol) => ({
-                          value: rol,
-                          label: rol,
-                        }))}
-                        onChange={(e) => {
-                          setRolSelected(e.target.value);
-                        }}
-                        width="30%"
-                      />
-                      <GenericInput
-                        name="fechaInicio"
-                        label="Fecha ingreso"
-                        placeholder="Fecha de ingreso"
-                        type="date"
-                        width="30%"
-                        onChange={(e) => setFechaSelected(e.target.value)}
-                        value={fechaSelected}
-                      />
-                    </Box>
-                    <Box display="flex" justifyContent="flex-end" width="25%">
-                      <Button
-                        colorScheme="blue"
-                        variant="outline"
-                        mr="5"
-                        onClick={agregarInvestigador}
-                      >
-                        Agregar
-                      </Button>
-                    </Box>
-                  </Box>
-                  <br />
 
                   <Tabla
-                    columnas={[
-                      'Apellido y Nombre',
-                      'Grupo',
-                      'Rol',
-                      'Fecha de Inicio',
-                      'Eliminar',
-                    ]}
-                    datos={investigadoresFields?.map((item, index) => [
-                      <div key={`nombre-${item.idPersona}`}>
-                        {item.persona.apellido} {item.persona.nombre}
-                      </div>,
-                      <div key={`grupo-${item.persona.gruposinvestigacion.siglas}`}>{item.persona.gruposinvestigacion.siglas}</div>,
-                      <div key={`rol-${item.idPersona}`}>{item.rol}</div>,
-                      <div key={`fecha-${item.idPersona}`}>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
+                    columnas={['Grupo', 'Eliminar']}
+                    datos={gruposSeleccionados?.map((item, index) => [
+                      item.siglas,
                       <DeleteIcon
-                        key={`delete-${item.idPersona}`}
+                        key={item.idGrupoInvestigacion}
                         cursor={'pointer'}
                         onClick={() => {
-                          eliminarInvestigador(item.idPersona, index);
+                          eliminarGrupo(item.idGrupoInvestigacion, index);
                         }}
                       />,
                     ])}
                     paginado={false}
                   />
                 </Box>
-                <br />
               </CardBody>
             </Card>
-          )}
-          {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
-            <Card width="100%">
-              <CardBody>
-                <Text fontSize="md" fontWeight="bold">
-                  {selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
-                    ? 'Agregar facultades regionales asociadas'
-                    : 'Agregar instituciones asociadas'}
-                </Text>
-                <br />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <br />
-                  <Box display="flex" width="100%">
+
+            {/* TABLA DE INVESTIGADORES DEL PROYECTO */}
+            {gruposSeleccionados.length > 0 && (
+              <Card width="100%" mb={6}>
+                <CardBody>
+                  <Text fontSize="md" fontWeight="bold" mb={4}>
+                    Agregar los investigadores al proyecto
+                  </Text>
+
+                  <Box display="flex" flexDirection="column" width="100%">
                     <Box
                       display="flex"
-                      justifyContent="space-between"
-                      width="45%"
-                      marginLeft="2%"
-                      gap="2%"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      alignItems={{ base: 'stretch', md: 'flex-end' }}
+                      gap={4}
+                      mb={4}
                     >
-                      <GenericSelect
-                        placeholder={
-                          selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
-                            ? 'Seleccione facultad regional...'
-                            : 'Instituciones...'
-                        }
-                        isSearchable={true}
-                        options={[
-                          ...(dataRegionales?.regionales?.map((regional) => ({
-                            value: regional,
-                            label: regional,
-                          })) || []),
-                          { value: 'Otro', label: 'Otro' },
-                        ]}
-                        value={selectedInstitucion}
-                        onChange={(e) => {
-                          setSelectedInstitucion(e.target.value);
-                        }}
-                      />
-                      {selectedInstitucion === 'Otro' && (
-                        <GenericInput
-                          placeholder={
-                            selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
-                              ? 'Nombre de la facultad regional...'
-                              : 'Nombre de la institución...'
-                          }
-                          value={otraInstitucion}
+                      <Box flex={{ base: '1', md: '2' }}>
+                        <GenericSelect
+                          placeholder="Integrantes..."
+                          isSearchable={true}
+                          options={sortedInvestigadores?.map((investigador) => ({
+                            value: investigador.idPersona,
+                            label: `${investigador.apellido}, ${investigador.nombre}`,
+                          }))}
                           onChange={(e) => {
-                            setOtraInstitucion(e.target.value);
+                            setSelectedOptions(e.target.value);
                           }}
                         />
-                      )}
-                    </Box>
-                    <Box display="flex" justifyContent="flex-end" width="55%">
+                      </Box>
+                      <Box flex="1">
+                        <GenericSelect
+                          placeholder="Rol..."
+                          options={roles.map((rol) => ({
+                            value: rol,
+                            label: rol,
+                          }))}
+                          onChange={(e) => {
+                            setRolSelected(e.target.value);
+                          }}
+                        />
+                      </Box>
+                      <Box flex="1">
+                        <GenericInput
+                          name="fechaInicio"
+                          label="Fecha ingreso"
+                          placeholder="Fecha de ingreso"
+                          type="date"
+                          onChange={(e) => setFechaSelected(e.target.value)}
+                          value={fechaSelected}
+                        />
+                      </Box>
                       <Button
                         colorScheme="blue"
                         variant="outline"
-                        mr="5"
+                        onClick={agregarInvestigador}
+                        height="40px"
+                      >
+                        Agregar
+                      </Button>
+                    </Box>
+
+                    <Tabla
+                      columnas={[
+                        'Apellido y Nombre',
+                        'Grupo',
+                        'Rol',
+                        'Fecha de Inicio',
+                        'Eliminar',
+                      ]}
+                      datos={investigadoresFields?.map((item, index) => [
+                        <div key={`nombre-${item.idPersona}`}>
+                          {item.persona.apellido} {item.persona.nombre}
+                        </div>,
+                        <div key={`grupo-${item.persona.gruposinvestigacion.siglas}`}>{item.persona.gruposinvestigacion.siglas}</div>,
+                        <div key={`rol-${item.idPersona}`}>{item.rol}</div>,
+                        <div key={`fecha-${item.idPersona}`}>{formatoFechaISOaDDMMAAAA(item.fechaInicio)}</div>,
+                        <DeleteIcon
+                          key={`delete-${item.idPersona}`}
+                          cursor={'pointer'}
+                          onClick={() => {
+                            eliminarInvestigador(item.idPersona, index);
+                          }}
+                        />,
+                      ])}
+                      paginado={false}
+                    />
+                  </Box>
+                </CardBody>
+              </Card>
+            )}
+
+            {/* TABLA DE FACULTADES REGIONALES / INSTITUCIONES ASOCIADAS */}
+            {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
+              <Card width="100%" mb={6}>
+                <CardBody>
+                  <Text fontSize="md" fontWeight="bold" mb={4}>
+                    {selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                      ? 'Agregar facultades regionales asociadas'
+                      : 'Agregar instituciones asociadas'}
+                  </Text>
+
+                  <Box display="flex" flexDirection="column" width="100%">
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      alignItems="center"
+                      gap={4}
+                      mb={4}
+                    >
+                      <Box flex="1">
+                        <GenericSelect
+                          placeholder={
+                            selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                              ? 'Seleccione facultad regional...'
+                              : 'Instituciones...'
+                          }
+                          isSearchable={true}
+                          options={[
+                            ...(dataRegionales?.regionales?.map((regional) => ({
+                              value: regional.nombreRegional || regional,
+                              label: regional.nombreRegional || regional,
+                            })) || []),
+                            { value: 'Otro', label: 'Otro' },
+                          ]}
+                          value={selectedInstitucion}
+                          onChange={(e) => {
+                            setSelectedInstitucion(e.target.value);
+                          }}
+                        />
+                      </Box>
+                      {selectedInstitucion === 'Otro' && (
+                        <Box flex="1">
+                          <GenericInput
+                            placeholder={
+                              selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                                ? 'Nombre de la facultad regional...'
+                                : 'Nombre de la institución...'
+                            }
+                            value={otraInstitucion}
+                            onChange={(e) => {
+                              setOtraInstitucion(e.target.value);
+                            }}
+                          />
+                        </Box>
+                      )}
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
                         onClick={agregarInstitucion}
                       >
                         Agregar
                       </Button>
                     </Box>
-                  </Box>
-                  <br />
 
-                  <Tabla
-                    columnas={[
-                      selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
-                        ? 'Facultad Regional'
-                        : 'Institución',
-                      'Eliminar',
-                    ]}
-                    datos={institucionesSeleccionadas?.map((item, index) => [
-                      item,
-                      <DeleteIcon
-                        key={`delete-institucion-${item}-${index}`}
-                        cursor={'pointer'}
-                        onClick={() => {
-                          eliminarInstitucion(item);
-                        }}
-                      />,
-                    ])}
-                    paginado={false}
-                  />
-                </Box>
-                <br />
-              </CardBody>
-            </Card>
-          )}
-          <Box
-            display="flex"
-            width="100%"
-            alignItems="center"
-            justifyContent="center"
-            mt="2%"
-          >
-            <Button
-              colorScheme="gray"
-              variant="outline"
-              onClick={handleCancel}
-              mr="5%"
+                    <Tabla
+                      columnas={[
+                        selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                          ? 'Facultad Regional'
+                          : 'Institución',
+                        'Eliminar',
+                      ]}
+                      datos={institucionesSeleccionadas?.map((item, index) => [
+                        item,
+                        <DeleteIcon
+                          key={`delete-institucion-${item}-${index}`}
+                          cursor={'pointer'}
+                          onClick={() => {
+                            eliminarInstitucion(item);
+                          }}
+                        />,
+                      ])}
+                      paginado={false}
+                    />
+                  </Box>
+                </CardBody>
+              </Card>
+            )}
+
+            {/* BOTONES DE ACCIÓN */}
+            <Box
+              display="flex"
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+              gap={4}
+              mt={6}
+              mb={2}
             >
-              Cancelar
-            </Button>
-            <Button
-              onClick={handleOpenModal}
-              isLoading={isSubmitting}
-              colorScheme="blue"
-              variant="outline"
-              ml="5%"
-            >
-              Guardar
-            </Button>
-            <CustomModal
-              isOpen={isOpen}
-              onClose={closeModal}
-              guardar={true}
-              title="Guardar nuevo PID"
-              content="Se guardara el nuevo Proyecto"
-              onSave={handleSubmit(handleSubmitAndClose)}
-            />
+              <Button
+                colorScheme="gray"
+                variant="outline"
+                onClick={handleCancel}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleOpenModal}
+                isLoading={isSubmitting}
+                colorScheme="blue"
+                variant="outline"
+              >
+                Guardar
+              </Button>
+              <CustomModal
+                isOpen={isOpen}
+                onClose={closeModal}
+                guardar={true}
+                title="Guardar nuevo PID"
+                content="Se guardara el nuevo Proyecto"
+                onSave={handleSubmit(handleSubmitAndClose)}
+              />
+            </Box>
           </Box>
         </form>
       </CardBody>

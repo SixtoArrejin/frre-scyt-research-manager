@@ -91,25 +91,22 @@ export default function ModificarPIDs() {
         >
           <Box
             display="flex"
-            width="70%"
-            alignItems="center"
-            justifyContent="center"
             flexDirection="column"
+            width={{ base: '100%', md: '95%', lg: '90%' }}
+            maxW="1000px"
+            mx="auto"
           >
-            {/* Campos básicos */}
+            {/* Fila 1: Tipo de proyecto y Código PID / Empresa */}
             <Box
               display="flex"
               flexDirection={{ base: 'column', md: 'row' }}
               width="100%"
               alignItems="center"
               justifyContent="space-between"
+              gap={{ base: 4, md: '4%' }}
               mb={4}
             >
-              <Box
-                width={{ base: '100%', md: '30%' }}
-                display="flex"
-                alignItems="center"
-              >
+              <Box width={{ base: '100%', md: '48%' }}>
                 <GenericRadio
                   name="tipo"
                   label="Tipo de proyecto:"
@@ -125,60 +122,79 @@ export default function ModificarPIDs() {
                 />
               </Box>
 
-              {esPid && (
+              {esPid ? (
                 <GenericInput
                   name="codPid"
                   label="Código PID"
                   placeholder="Código PID"
                   register={register}
                   errors={errors}
-                  width={{ base: '100%', md: '65%' }}
+                  width={{ base: '100%', md: '48%' }}
+                  isRequired
+                />
+              ) : (
+                <GenericInput
+                  name="empresaInstitucion"
+                  label="Empresa / Institución"
+                  placeholder="Empresa / Institución"
+                  register={register}
+                  errors={errors}
+                  width={{ base: '100%', md: '48%' }}
                   isRequired
                 />
               )}
             </Box>
 
-            <GenericSelect
-              name="regional"
-              label="Regional asociada"
-              placeholder="Regional..."
-              width="100%"
-              mb={4}
-              isRequired
-              register={register}
-              options={regionalesOptions}
-              errors={errors}
-            />
+            {/* Fila 2: Regional asociada */}
+            <Box display="flex" width="100%" mb={4}>
+              <GenericSelect
+                name="regional"
+                label="Regional asociada"
+                placeholder="Regional..."
+                width="100%"
+                isRequired
+                register={register}
+                options={regionalesOptions}
+                errors={errors}
+              />
+            </Box>
 
-            <GenericInput
-              textArea
-              name="denominacion"
-              label="Denominación"
-              placeholder="Denominación"
-              register={register}
-              errors={errors}
-              width="100%"
-              isRequired
-              mb={4}
-            />
+            {/* Fila 3: Denominación */}
+            <Box display="flex" width="100%" mb={4}>
+              <GenericInput
+                textArea
+                name="denominacion"
+                label="Denominación"
+                placeholder="Denominación"
+                register={register}
+                errors={errors}
+                width="100%"
+                isRequired
+              />
+            </Box>
 
-            <GenericInput
-              textArea
-              name="descripcionBreve"
-              label="Descripción Breve"
-              placeholder="Descripción breve del proyecto"
-              register={register}
-              errors={errors}
-              width="100%"
-              mb={4}
-            />
+            {/* Fila 4: Descripción Breve */}
+            <Box display="flex" width="100%" mb={4}>
+              <GenericInput
+                textArea
+                name="descripcionBreve"
+                label="Descripción Breve"
+                placeholder="Descripción breve del proyecto"
+                register={register}
+                errors={errors}
+                width="100%"
+              />
+            </Box>
 
+            {/* Fila 5: Fecha Inicio y Fecha Fin */}
             <Box
               display="flex"
               flexDirection={{ base: 'column', md: 'row' }}
               width="100%"
               alignItems="center"
               justifyContent="space-between"
+              gap={{ base: 4, md: '4%' }}
+              mb={4}
             >
               <GenericInput
                 type="date"
@@ -186,8 +202,7 @@ export default function ModificarPIDs() {
                 label="Fecha Inicio"
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '30%' }}
-                mb={4}
+                width={{ base: '100%', md: '48%' }}
               />
               <GenericInput
                 type="date"
@@ -195,10 +210,20 @@ export default function ModificarPIDs() {
                 label="Fecha Fin"
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '30%' }}
-                mb={4}
+                width={{ base: '100%', md: '48%' }}
               />
+            </Box>
 
+            {/* Fila 6: Convocatoria y Programa */}
+            <Box
+              display="flex"
+              flexDirection={{ base: 'column', md: 'row' }}
+              width="100%"
+              alignItems="center"
+              justifyContent="space-between"
+              gap={{ base: 4, md: '4%' }}
+              mb={4}
+            >
               <GenericInput
                 type="number"
                 name="convocatoria"
@@ -206,92 +231,70 @@ export default function ModificarPIDs() {
                 placeholder="Convocatoria"
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '30%' }}
+                width={{ base: '100%', md: '48%' }}
                 isRequired
-                mb={4}
               />
-            </Box>
-
-            <Box
-              display="flex"
-              flexDirection={{ base: 'column', md: 'row' }}
-              width="100%"
-              alignItems="center"
-              justifyContent="space-between"
-            >
               <GenericInput
                 name="programa"
                 label="Programa"
                 placeholder="Programa"
                 register={register}
                 errors={errors}
-                width={{ base: '100%', md: '47.5%' }}
+                width={{ base: '100%', md: '48%' }}
                 isRequired
-                mb={4}
-              />
-
-              <GenericSelect
-                name="tipoProyecto"
-                label="Tipo de proyecto"
-                placeholder="Tipo de proyecto..."
-                width={{ base: '100%', md: '47.5%' }}
-                mb={4}
-                isRequired={esPid}
-                register={register}
-                options={tiposProyectoOptions}
-                errors={errors}
-                onChange={handleTipoProyectoChange}
               />
             </Box>
 
+            {/* Fila 7: Tipo de proyecto y Nivel TRL */}
             <Box
               display="flex"
               flexDirection={{ base: 'column', md: 'row' }}
               width="100%"
               alignItems="center"
               justifyContent="space-between"
+              gap={{ base: 4, md: '4%' }}
+              mb={4}
             >
+              <GenericSelect
+                name="tipoProyecto"
+                label="Tipo de proyecto"
+                placeholder="Tipo de proyecto..."
+                width={{ base: '100%', md: '48%' }}
+                isRequired={esPid}
+                register={register}
+                options={tiposProyectoOptions}
+                errors={errors}
+                onChange={handleTipoProyectoChange}
+              />
               <GenericSelect
                 name="trl"
                 label="Nivel TRL"
                 placeholder="Seleccione TRL..."
-                width={{ base: '100%', md: !esPid ? '47.5%' : '100%' }}
-                mb={4}
+                width={{ base: '100%', md: '48%' }}
                 register={register}
                 options={TRL_OPTIONS}
                 errors={errors}
               />
-
-              {!esPid && (
-                <GenericInput
-                  name="empresaInstitucion"
-                  label="Empresa/Institución"
-                  placeholder="Empresa/Institución"
-                  register={register}
-                  errors={errors}
-                  width={{ base: '100%', md: '47.5%' }}
-                  isRequired
-                  mb={4}
-                />
-              )}
             </Box>
 
             {/* Campos específicos para proyectos PID */}
             {esPid && (
               <>
+                {/* Fila 8: Tipo de Actividad y Estado */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   alignItems="center"
                   justifyContent="space-between"
+                  gap={{ base: 4, md: '4%' }}
+                  mb={4}
                 >
                   <GenericSelect
                     name="tipoActividad"
                     label="Tipo de actividad"
                     placeholder="Tipo de actividad..."
-                    width={{ base: '100%', md: '30%' }}
-                    mb={4}
+                    width={{ base: '100%', md: '48%' }}
                     isRequired
                     register={register}
                     options={tipoActividadOptions}
@@ -301,72 +304,44 @@ export default function ModificarPIDs() {
                     name="estado"
                     label="Estado"
                     placeholder="Estado..."
-                    width={{
-                      base: '100%',
-                      md: estado === 'HOMOLOGADO' ? '30%' : '65%',
-                    }}
-                    mb={4}
+                    width={{ base: '100%', md: '48%' }}
                     isRequired
                     register={register}
                     options={estadoProyectoOptions}
                     errors={errors}
                     onChange={(e) => setEstado(e.target.value)}
                   />
-
-                  {estado === 'HOMOLOGADO' && (
-                    <GenericInput
-                      name="disposicion"
-                      label="Disposición"
-                      placeholder="Disposición"
-                      register={register}
-                      errors={errors}
-                      width={{ base: '100%', md: '30%' }}
-                      isRequired={estado === 'HOMOLOGADO'}
-                      mb={4}
-                    />
-                  )}
                 </Box>
 
+                {/* Fila 9: Disposición (si homologado) y Completo */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   alignItems="center"
                   justifyContent="space-between"
+                  gap={{ base: 4, md: '4%' }}
+                  mb={4}
                 >
-                  <Box
-                    width={{ base: '100%', md: '50%' }}
-                    display="flex"
-                    justifyContent="center"
-                  >
-                    <GenericRadio
-                      name="prorrogado"
-                      label="Prorroga:"
-                      direction="row"
-                      options={[
-                        { value: 'true', label: 'Si' },
-                        { value: 'false', label: 'No' },
-                      ]}
+                  {estado === 'HOMOLOGADO' ? (
+                    <GenericInput
+                      name="disposicion"
+                      label="Disposición"
+                      placeholder="Disposición"
                       register={register}
-                      defaultValue={
-                        dataProyecto?.proyecto?.prorrogado ? 'true' : 'false'
-                      }
                       errors={errors}
-                      mb={4}
+                      width={{ base: '100%', md: '48%' }}
+                      isRequired={true}
                     />
-                  </Box>
+                  ) : null}
 
-                  <Box
-                    width={{ base: '100%', md: '50%' }}
-                    display="flex"
-                    justifyContent="center"
-                  >
+                  <Box width={{ base: '100%', md: estado === 'HOMOLOGADO' ? '48%' : '48%' }}>
                     <GenericRadio
                       name="completo"
                       label="Completo:"
                       direction="row"
                       options={[
-                        { value: 'true', label: 'Si' },
+                        { value: 'true', label: 'Sí' },
                         { value: 'false', label: 'No' },
                       ]}
                       register={register}
@@ -374,11 +349,41 @@ export default function ModificarPIDs() {
                         dataProyecto?.proyecto?.completo ? 'true' : 'false'
                       }
                       errors={errors}
-                      mb={4}
+                      width="100%"
                     />
                   </Box>
                 </Box>
 
+                {/* Fila 10: Prórroga */}
+                <Box
+                  display="flex"
+                  flexDirection={{ base: 'column', md: 'row' }}
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  gap={{ base: 4, md: '4%' }}
+                  mb={4}
+                >
+                  <Box width={{ base: '100%', md: '48%' }}>
+                    <GenericRadio
+                      name="prorrogado"
+                      label="Prórroga:"
+                      direction="row"
+                      options={[
+                        { value: 'true', label: 'Sí' },
+                        { value: 'false', label: 'No' },
+                      ]}
+                      register={register}
+                      defaultValue={
+                        dataProyecto?.proyecto?.prorrogado ? 'true' : 'false'
+                      }
+                      errors={errors}
+                      width="100%"
+                    />
+                  </Box>
+                </Box>
+
+                {/* Fila 11: Datos de Prórroga (si aplica) */}
                 {watch('prorrogado') === 'true' && (
                   <Box
                     display="flex"
@@ -386,6 +391,8 @@ export default function ModificarPIDs() {
                     width="100%"
                     alignItems="center"
                     justifyContent="space-between"
+                    gap={{ base: 4, md: '4%' }}
+                    mb={4}
                   >
                     <GenericInput
                       name="nuevaFechaFin"
@@ -395,10 +402,9 @@ export default function ModificarPIDs() {
                       label="Nueva Fecha Finalización"
                       width={{
                         base: '100%',
-                        md: estado === 'HOMOLOGADO' ? '47.5%' : '100%',
+                        md: estado === 'HOMOLOGADO' ? '48%' : '100%',
                       }}
-                      mb={4}
-                      isRequired={watch('prorrogado') === 'true'}
+                      isRequired={true}
                     />
                     {estado === 'HOMOLOGADO' && (
                       <GenericInput
@@ -406,12 +412,8 @@ export default function ModificarPIDs() {
                         placeholder="Nueva Disposición"
                         register={register}
                         label="Nueva Disposición"
-                        width={{ base: '100%', md: '46.25%' }}
-                        mb={4}
-                        isRequired={
-                          estado === 'HOMOLOGADO' &&
-                      watch('prorrogado') === 'true'
-                        }
+                        width={{ base: '100%', md: '48%' }}
+                        isRequired={true}
                       />
                     )}
                   </Box>
@@ -419,29 +421,28 @@ export default function ModificarPIDs() {
               </>
             )}
 
+            {/* TABLA DE FACULTADES REGIONALES / INSTITUCIONES ASOCIADAS */}
             {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
-              <Card width="100%" mt={6} mb={6}>
+              <Card width="100%" mt={4} mb={6}>
                 <CardBody>
-                  <Text fontSize="md" fontWeight="bold">
+                  <Text fontSize="md" fontWeight="bold" mb={4}>
                     {selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
                       ? 'Agregar facultades regionales asociadas'
                       : 'Agregar instituciones asociadas'}
                   </Text>
-                  <br />
                   <Box
                     display="flex"
                     flexDirection="column"
                     width="100%"
-                    alignItems="center"
-                    justifyContent="center"
                   >
-                    <Box display="flex" width="100%">
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        width="45%"
-                        gap="2%"
-                      >
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      alignItems="center"
+                      gap={4}
+                      mb={4}
+                    >
+                      <Box flex="1">
                         <GenericSelect
                           placeholder={
                             selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
@@ -451,8 +452,8 @@ export default function ModificarPIDs() {
                           isSearchable={true}
                           options={[
                             ...(dataRegionales?.regionales?.map((regional) => ({
-                              value: regional,
-                              label: regional,
+                              value: regional.nombreRegional || regional,
+                              label: regional.nombreRegional || regional,
                             })) || []),
                             { value: 'Otro', label: 'Otro' },
                           ]}
@@ -461,7 +462,9 @@ export default function ModificarPIDs() {
                             setSelectedInstitucion(e.target.value);
                           }}
                         />
-                        {selectedInstitucion === 'Otro' && (
+                      </Box>
+                      {selectedInstitucion === 'Otro' && (
+                        <Box flex="1">
                           <GenericInput
                             placeholder={
                               selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
@@ -473,39 +476,35 @@ export default function ModificarPIDs() {
                               setOtraInstitucion(e.target.value);
                             }}
                           />
-                        )}
-                      </Box>
-                      <Box display="flex" justifyContent="flex-end" width="55%">
-                        <Button
-                          colorScheme="blue"
-                          variant="outline"
-                          onClick={agregarInstitucion}
-                        >
-                          Agregar
-                        </Button>
-                      </Box>
+                        </Box>
+                      )}
+                      <Button
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={agregarInstitucion}
+                      >
+                        Agregar
+                      </Button>
                     </Box>
-                    <br />
+
                     {institucionesSeleccionadas?.length > 0 && (
-                      <Box width="100%">
-                        <Tabla
-                          columnas={[
-                            selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
-                              ? 'Facultad Regional'
-                              : 'Institución',
-                            'Eliminar',
-                          ]}
-                          datos={institucionesSeleccionadas.map((item) => [
-                            item,
-                            <DeleteIcon
-                              key={`del-${item}`}
-                              cursor="pointer"
-                              onClick={() => eliminarInstitucion(item)}
-                            />,
-                          ])}
-                          paginado={false}
-                        />
-                      </Box>
+                      <Tabla
+                        columnas={[
+                          selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                            ? 'Facultad Regional'
+                            : 'Institución',
+                          'Eliminar',
+                        ]}
+                        datos={institucionesSeleccionadas.map((item) => [
+                          item,
+                          <DeleteIcon
+                            key={`del-${item}`}
+                            cursor="pointer"
+                            onClick={() => eliminarInstitucion(item)}
+                          />,
+                        ])}
+                        paginado={false}
+                      />
                     )}
                   </Box>
                 </CardBody>

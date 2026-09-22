@@ -186,117 +186,171 @@ export default function DetalleProyectoPid() {
             </Heading>
             <Box /> {/* Spacer para centrar el título */}
           </HStack>
-          <br />
 
-          <Card width="100%">
+          <Card width="100%" mb={6}>
             <CardBody>
-              <Text fontSize="md" fontWeight="bold">Datos del proyecto</Text>
-              <br />
+              {/* Encabezado con título, badges informativos y botón de edición */}
               <Box
                 display="flex"
+                flexDirection={{ base: 'column', md: 'row' }}
+                alignItems={{ base: 'flex-start', md: 'center' }}
+                justifyContent="space-between"
                 width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
+                mb={4}
               >
+                <Box display="flex" alignItems="center" flexWrap="wrap" gap={3}>
+                  <Text fontSize="md" fontWeight="bold">
+                    Datos del proyecto
+                  </Text>
+                  <Badge
+                    colorScheme={esPid ? 'green' : 'purple'}
+                    borderRadius="md"
+                    px={2}
+                    py={0.5}
+                  >
+                    {esPid ? 'PID' : 'Externo'}
+                  </Badge>
+                  {data?.proyecto?.estado && (
+                    <Badge
+                      colorScheme={
+                        data?.proyecto?.estado === 'HOMOLOGADO'
+                          ? 'green'
+                          : data?.proyecto?.estado === 'EN TRÁMITE'
+                            ? 'orange'
+                            : data?.proyecto?.estado === 'CANCELADO'
+                              ? 'red'
+                              : 'blue'
+                      }
+                      borderRadius="md"
+                      px={2}
+                      py={0.5}
+                    >
+                      {data.proyecto.estado}
+                    </Badge>
+                  )}
+                  {data?.proyecto?.trl && (
+                    <Badge
+                      colorScheme="teal"
+                      borderRadius="md"
+                      px={2}
+                      py={0.5}
+                    >
+                      {data.proyecto.trl}
+                    </Badge>
+                  )}
+                </Box>
+
+                <PermissionGate module="proyectos" action="edit">
+                  <Link to={'modificar'}>
+                    <Button colorScheme="blue" variant="outline" size="sm">
+                      Modificar
+                    </Button>
+                  </Link>
+                </PermissionGate>
+              </Box>
+
+              {/* Grilla balanceada de datos en 2 columnas simétricas */}
+              <Box display="flex" width="100%" flexDirection="column">
+                {/* Fila 1: Código PID / Empresa + Regional */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   gap={4}
+                  mb={4}
                 >
-                  {esPid && (
+                  {esPid ? (
                     <DisplayField
                       label="Código PID"
                       width={{ base: '100%', md: '50%' }}
-                      value={data?.proyecto?.codPid}
-                      mb={4}
+                      value={data?.proyecto?.codPid || '-'}
+                      mb={0}
+                    />
+                  ) : (
+                    <DisplayField
+                      label="Empresa / Institución"
+                      width={{ base: '100%', md: '50%' }}
+                      value={data?.proyecto?.empresaInstitucion || '-'}
+                      mb={0}
                     />
                   )}
                   <DisplayField
                     label="Regional asociada"
-                    width={{
-                      base: '100%',
-                      md: esPid === true ? '50%' : '100%',
-                    }}
-                    value={data?.proyecto?.regional}
-                    mb={4}
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.regional || '-'}
+                    mb={0}
                   />
                 </Box>
-                <Box
-                  display="flex"
-                  flexDirection={{ base: 'column', md: 'row' }}
-                  width="100%"
-                  gap={4}
-                >
+
+                {/* Fila 2: Denominación a 100% */}
+                <Box display="flex" width="100%" mb={4}>
                   <DisplayField
                     label="Denominación"
-                    width={{ base: '100%', md: '100%' }}
-                    value={data?.proyecto?.denominacion}
-                    mb={4}
+                    width="100%"
+                    value={data?.proyecto?.denominacion || '-'}
+                    mb={0}
                   />
                 </Box>
+
+                {/* Fila 3: Descripción Breve a 100% (si existe) */}
                 {data?.proyecto?.descripcionBreve && (
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    gap={4}
-                  >
+                  <Box display="flex" width="100%" mb={4}>
                     <DisplayField
                       label="Descripción Breve"
-                      width={{ base: '100%', md: '100%' }}
+                      width="100%"
                       value={data?.proyecto?.descripcionBreve}
-                      mb={4}
+                      mb={0}
                     />
                   </Box>
                 )}
+
+                {/* Fila 4: Director y Codirector */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   gap={4}
+                  mb={4}
                 >
                   <DisplayField
                     label="Director"
                     width={{ base: '100%', md: '50%' }}
                     value={
-                      data?.proyecto?.director?.apellido +
-                        ', ' +
-                        data?.proyecto?.director?.nombre
+                      data?.proyecto?.director
+                        ? `${data.proyecto.director.apellido}, ${data.proyecto.director.nombre}`
+                        : '-'
                     }
-                    mb={4}
+                    mb={0}
                   />
                   <DisplayField
                     label="Codirector"
                     width={{ base: '100%', md: '50%' }}
                     value={
                       data?.proyecto?.codirector
-                        ? data?.proyecto?.codirector?.apellido +
-                            ', ' +
-                            data?.proyecto?.codirector?.nombre
+                        ? `${data.proyecto.codirector.apellido}, ${data.proyecto.codirector.nombre}`
                         : '-'
                     }
-                    mb={4}
+                    mb={0}
                   />
                 </Box>
+
+                {/* Fila 5: Fecha Inicio y Fecha Fin */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   gap={4}
+                  mb={4}
                 >
                   <DisplayField
                     label="Fecha Inicio"
                     width={{ base: '100%', md: '50%' }}
                     value={
                       data?.proyecto?.fechaInicio
-                        ? formatoFechaISOaDDMMAAAA(
-                          data?.proyecto?.fechaInicio,
-                        )
+                        ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaInicio)
                         : 'No cargado'
                     }
-                    mb={4}
+                    mb={0}
                   />
                   <DisplayField
                     label="Fecha Fin"
@@ -306,141 +360,136 @@ export default function DetalleProyectoPid() {
                         ? formatoFechaISOaDDMMAAAA(data?.proyecto?.fechaFin)
                         : 'No cargado'
                     }
-                    mb={4}
+                    mb={0}
                   />
                 </Box>
+
+                {/* Fila 6: Programa y Tipo de proyecto */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   gap={4}
+                  mb={4}
                 >
                   <DisplayField
                     label="Programa"
-                    width={{ base: '100%', md: '33.33%' }}
-                    value={data?.proyecto?.programa}
-                    mb={4}
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.programa || '-'}
+                    mb={0}
                   />
                   <DisplayField
                     label="Tipo de proyecto"
-                    width={{ base: '100%', md: '33.33%' }}
+                    width={{ base: '100%', md: '50%' }}
                     value={data?.proyecto?.tipoProyecto || 'No especificado'}
-                    mb={4}
-                  />
-                  <DisplayField
-                    label="Nivel TRL"
-                    width={{ base: '100%', md: '33.33%' }}
-                    value={data?.proyecto?.trl || '-'}
-                    mb={4}
+                    mb={0}
                   />
                 </Box>
-                {esPid && (
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    gap={4}
-                  >
-                    <DisplayField
-                      label="Tipo Actividad"
-                      width={{ base: '100%', md: '33.33%' }}
-                      value={data?.proyecto?.tipoActividad}
-                      mb={4}
-                    />
-                    <DisplayField
-                      label="Estado"
-                      width={{
-                        base: '100%',
-                        md: '33.33%',
-                      }}
-                      value={data?.proyecto?.estado}
-                      mb={4}
-                    />
-                    {data?.proyecto?.estado === 'HOMOLOGADO' && (
-                      <DisplayField
-                        label="Disposición"
-                        width={{ base: '100%', md: '33.33%' }}
-                        value={data?.proyecto?.disposicion}
-                        mb={4}
-                      />
-                    )}
-                  </Box>
-                )}
+
+                {/* Fila 7: Convocatoria y Nivel TRL */}
                 <Box
                   display="flex"
                   flexDirection={{ base: 'column', md: 'row' }}
                   width="100%"
                   gap={4}
+                  mb={esPid ? 4 : 0}
                 >
                   <DisplayField
                     label="Convocatoria"
                     width={{ base: '100%', md: '50%' }}
-                    value={data?.proyecto?.convocatoria}
-                    mb={4}
+                    value={data?.proyecto?.convocatoria || '-'}
+                    mb={0}
                   />
-                  {esPid && (
-                    <DisplayField
-                      label="Prorroga"
-                      width={{ base: '100%', md: '50%' }}
-                      value={data?.proyecto?.prorrogado ? 'Si' : 'No'}
-                      mb={4}
-                    />
-                  )}
-                  {!esPid && (
-                    <DisplayField
-                      label="Empresa/Institución"
-                      width={{ base: '100%', md: '50%' }}
-                      value={data?.proyecto?.empresaInstitucion}
-                      mb={4}
-                    />
-                  )}
+                  <DisplayField
+                    label="Nivel TRL"
+                    width={{ base: '100%', md: '50%' }}
+                    value={data?.proyecto?.trl || '-'}
+                    mb={0}
+                  />
                 </Box>
-                {esPid && data?.proyecto?.prorrogado && (
-                  <Box
-                    display="flex"
-                    flexDirection={{ base: 'column', md: 'row' }}
-                    width="100%"
-                    gap={4}
-                  >
-                    <DisplayField
-                      label="Nueva Fecha Fin"
-                      width={{ base: '100%', md: '50%' }}
-                      value={formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)}
+
+                {/* Filas exclusivas de PID */}
+                {esPid && (
+                  <>
+                    {/* Fila 8: Tipo Actividad y Estado */}
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      width="100%"
+                      gap={4}
                       mb={4}
-                    />
-                    {data?.proyecto?.estado === 'HOMOLOGADO' && (
+                    >
+                      <DisplayField
+                        label="Tipo Actividad"
+                        width={{ base: '100%', md: '50%' }}
+                        value={data?.proyecto?.tipoActividad || '-'}
+                        mb={0}
+                      />
+                      <DisplayField
+                        label="Estado"
+                        width={{ base: '100%', md: '50%' }}
+                        value={data?.proyecto?.estado || '-'}
+                        mb={0}
+                      />
+                    </Box>
+
+                    {/* Fila 9: Disposición y Prórroga */}
+                    <Box
+                      display="flex"
+                      flexDirection={{ base: 'column', md: 'row' }}
+                      width="100%"
+                      gap={4}
+                      mb={data?.proyecto?.prorrogado ? 4 : 0}
+                    >
                       <DisplayField
                         label="Disposición"
                         width={{ base: '100%', md: '50%' }}
-                        value={data?.proyecto?.disposicion}
-                        mb={4}
+                        value={data?.proyecto?.disposicion || '-'}
+                        mb={0}
                       />
+                      <DisplayField
+                        label="Prórroga"
+                        width={{ base: '100%', md: '50%' }}
+                        value={data?.proyecto?.prorrogado ? 'Sí' : 'No'}
+                        mb={0}
+                      />
+                    </Box>
+
+                    {/* Fila 10: Datos de Prórroga (si aplica) */}
+                    {data?.proyecto?.prorrogado && (
+                      <Box
+                        display="flex"
+                        flexDirection={{ base: 'column', md: 'row' }}
+                        width="100%"
+                        gap={4}
+                      >
+                        <DisplayField
+                          label="Nueva Fecha Fin"
+                          width={{ base: '100%', md: '50%' }}
+                          value={
+                            data?.proyecto?.nuevaFechaFin
+                              ? formatoFechaISOaDDMMAAAA(data?.proyecto?.nuevaFechaFin)
+                              : '-'
+                          }
+                          mb={0}
+                        />
+                        <DisplayField
+                          label="Nueva Disposición"
+                          width={{ base: '100%', md: '50%' }}
+                          value={data?.proyecto?.nuevaDisposicion || data?.proyecto?.disposicion || '-'}
+                          mb={0}
+                        />
+                      </Box>
                     )}
-                  </Box>
+                  </>
                 )}
-                <PermissionGate module="proyectos" action="edit">
-                  <Box
-                    display="flex"
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Link to={'modificar'}>
-                      <Button colorScheme="blue" variant="outline">
-                          Modificar
-                      </Button>
-                    </Link>
-                  </Box>
-                </PermissionGate>
               </Box>
             </CardBody>
           </Card>
 
-          <br />
-          <Card width="100%">
+          <Card width="100%" mb={6}>
             <CardBody>
-              <Text fontSize="md" fontWeight="bold">Integrantes del proyecto</Text>
-              <br />
+              <Text fontSize="md" fontWeight="bold" mb={4}>Integrantes del proyecto</Text>
 
               {integrantes?.length > 0 ? (
                 <Tabla
@@ -582,11 +631,9 @@ export default function DetalleProyectoPid() {
             </CardBody>
           </Card>
 
-          <br />
-          <Card width="100%">
+          <Card width="100%" mb={6}>
             <CardBody>
-              <Text fontSize="md" fontWeight="bold">Grupos</Text>
-              <br />
+              <Text fontSize="md" fontWeight="bold" mb={4}>Grupos</Text>
 
               {grupos?.length > 0 ? (
                 <Tabla
@@ -619,16 +666,16 @@ export default function DetalleProyectoPid() {
                   text="Este proyecto aún no tiene grupos."
                 />
               )}
-              <br />
               <PermissionGate module="proyectos" action="edit">
                 <Box
                   display="flex"
                   width="100%"
                   alignItems="center"
                   justifyContent="flex-end"
+                  mt={4}
                 >
                   <Link to={'agregar-grupo'}>
-                    <Button colorScheme="blue" variant="outline">
+                    <Button colorScheme="blue" variant="outline" size="sm">
                       Agregar Grupo
                     </Button>
                   </Link>
@@ -639,51 +686,45 @@ export default function DetalleProyectoPid() {
 
           {(tipoProyectosInterinstitucionales?.includes(data?.proyecto?.tipoProyecto) ||
             data?.proyecto?.institucionesAsociadas?.length > 0) && (
-            <>
-              <br />
-              <Card width="100%">
-                <CardBody>
-                  <Text fontSize="md" fontWeight="bold">
-                    {data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
-                      ? 'Facultades Regionales Asociadas'
-                      : 'Instituciones Asociadas'}
-                  </Text>
-                  <br />
+            <Card width="100%" mb={6}>
+              <CardBody>
+                <Text fontSize="md" fontWeight="bold" mb={4}>
+                  {data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                    ? 'Facultades Regionales Asociadas'
+                    : 'Instituciones Asociadas'}
+                </Text>
 
-                  {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
-                    <Tabla
-                      columnas={[
-                        data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
-                          ? 'Facultad Regional'
-                          : 'Institución',
-                      ]}
-                      datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
-                        item.nombreInstitucion,
-                      ])}
-                      paginado={false}
-                    />
-                  ) : (
-                    <ImgDefault
-                      src={NoData}
-                      alt="No Data"
-                      width="30%"
-                      text={
-                        data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
-                          ? 'Este proyecto no tiene facultades regionales asociadas.'
-                          : 'Este proyecto no tiene instituciones asociadas.'
-                      }
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </>
+                {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
+                  <Tabla
+                    columnas={[
+                      data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                        ? 'Facultad Regional'
+                        : 'Institución',
+                    ]}
+                    datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
+                      item.nombreInstitucion,
+                    ])}
+                    paginado={false}
+                  />
+                ) : (
+                  <ImgDefault
+                    src={NoData}
+                    alt="No Data"
+                    width="30%"
+                    text={
+                      data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                        ? 'Este proyecto no tiene facultades regionales asociadas.'
+                        : 'Este proyecto no tiene instituciones asociadas.'
+                    }
+                  />
+                )}
+              </CardBody>
+            </Card>
           )}
 
-          <br />
-          <Card width="100%">
+          <Card width="100%" mb={6}>
             <CardBody>
-              <Text fontSize="md" fontWeight="bold">Vinculaciones</Text>
-              <br />
+              <Text fontSize="md" fontWeight="bold" mb={4}>Vinculaciones</Text>
               {vinculaciones?.length > 0 ? (
                 <Tabla
                   columnas={[
@@ -710,28 +751,27 @@ export default function DetalleProyectoPid() {
                   text="Este proyecto aún no tiene vinculaciones."
                 />
               )}
-              <br />
               <PermissionGate module="vinculaciones" action="create">
                 <Box
                   display="flex"
                   width="100%"
                   alignItems="center"
                   justifyContent="flex-end"
+                  mt={4}
                 >
                   <Link to={'nueva-vinculacion'}>
-                    <Button colorScheme="blue" variant="outline">
-                        Nueva vinculación
+                    <Button colorScheme="blue" variant="outline" size="sm">
+                      Nueva vinculación
                     </Button>
                   </Link>
                 </Box>
               </PermissionGate>
             </CardBody>
           </Card>
-          <br />
-          <Card width="100%">
+
+          <Card width="100%" mb={6}>
             <CardBody>
-              <Text fontSize="md" fontWeight="bold">Propiedad Intelectual</Text>
-              <br />
+              <Text fontSize="md" fontWeight="bold" mb={4}>Propiedad Intelectual</Text>
               {propiedadIntelectual?.length > 0 ? (
                 <Tabla
                   columnas={[
@@ -758,29 +798,30 @@ export default function DetalleProyectoPid() {
                   text="Este proyecto aún no tiene propiedad intelectual."
                 />
               )}
-              <br />
               <PermissionGate module="propiedadIntelectual" action="create">
                 <Box
                   display="flex"
                   width="100%"
                   alignItems="center"
                   justifyContent="flex-end"
+                  mt={4}
                 >
                   <Link to={'nueva-propiedad-intelectual'}>
-                    <Button colorScheme="blue" variant="outline">
-                        Nueva PI
+                    <Button colorScheme="blue" variant="outline" size="sm">
+                      Nueva PI
                     </Button>
                   </Link>
                 </Box>
               </PermissionGate>
             </CardBody>
           </Card>
-          <br />
+
           <Box
             display="flex"
             width="100%"
             alignItems="center"
             justifyContent="flex-end"
+            mb={2}
           >
             <Button
               colorScheme="blue"
