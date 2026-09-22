@@ -16,6 +16,7 @@ import {
   roles,
   tipoProyectosInterinstitucionales,
 } from '../../hooks/forms/useNuevoProyectoForm';
+import { TRL_OPTIONS } from '../../config/trl';
 
 export default function NuevoPid() {
   const [isOpen, setIsOpen] = useState(false);
@@ -274,22 +275,12 @@ export default function NuevoPid() {
                     >
                       <GenericSelect
                         name="trl"
-                        label="Nivel TRL (Madurez Tecnológica)"
+                        label="Nivel TRL"
                         placeholder="Seleccione TRL..."
                         width={{ base: '100%', md: PidExterno !== 'pid' ? '47.5%' : '100%' }}
                         mb="5vh"
                         register={register}
-                        options={[
-                          { value: 'TRL 1', label: 'TRL 1 - Principios básicos observados' },
-                          { value: 'TRL 2', label: 'TRL 2 - Concepto tecnológico formulado' },
-                          { value: 'TRL 3', label: 'TRL 3 - Prueba de concepto experimental' },
-                          { value: 'TRL 4', label: 'TRL 4 - Validación en laboratorio' },
-                          { value: 'TRL 5', label: 'TRL 5 - Validación en entorno relevante' },
-                          { value: 'TRL 6', label: 'TRL 6 - Demostración en entorno relevante' },
-                          { value: 'TRL 7', label: 'TRL 7 - Demostración de sistema operacional' },
-                          { value: 'TRL 8', label: 'TRL 8 - Sistema completo y calificado' },
-                          { value: 'TRL 9', label: 'TRL 9 - Sistema probado operacional' },
-                        ]}
+                        options={TRL_OPTIONS}
                         errors={errors}
                       />
                       {PidExterno !== 'pid' && (
@@ -604,7 +595,11 @@ export default function NuevoPid() {
           {tipoProyectosInterinstitucionales?.includes(selectedTipoProyecto) && (
             <Card width="100%">
               <CardBody>
-                <Text fontSize="md" fontWeight="bold">Agregar instituciones asociadas</Text>
+                <Text fontSize="md" fontWeight="bold">
+                  {selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                    ? 'Agregar facultades regionales asociadas'
+                    : 'Agregar instituciones asociadas'}
+                </Text>
                 <br />
                 <Box
                   display="flex"
@@ -623,7 +618,11 @@ export default function NuevoPid() {
                       gap="2%"
                     >
                       <GenericSelect
-                        placeholder="Instituciones..."
+                        placeholder={
+                          selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                            ? 'Seleccione facultad regional...'
+                            : 'Instituciones...'
+                        }
                         isSearchable={true}
                         options={[
                           ...(dataRegionales?.regionales?.map((regional) => ({
@@ -639,7 +638,11 @@ export default function NuevoPid() {
                       />
                       {selectedInstitucion === 'Otro' && (
                         <GenericInput
-                          placeholder="Nombre de la institución..."
+                          placeholder={
+                            selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                              ? 'Nombre de la facultad regional...'
+                              : 'Nombre de la institución...'
+                          }
                           value={otraInstitucion}
                           onChange={(e) => {
                             setOtraInstitucion(e.target.value);
@@ -661,7 +664,12 @@ export default function NuevoPid() {
                   <br />
 
                   <Tabla
-                    columnas={['Institución', 'Eliminar']}
+                    columnas={[
+                      selectedTipoProyecto === 'PID Interfacultad' || selectedTipoProyecto?.includes('Multifacultad')
+                        ? 'Facultad Regional'
+                        : 'Institución',
+                      'Eliminar',
+                    ]}
                     datos={institucionesSeleccionadas?.map((item, index) => [
                       item,
                       <DeleteIcon

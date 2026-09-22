@@ -213,7 +213,7 @@ export const useModificarProyectoForm = () => {
       setValue('codPid', proyecto.codPid || '');
       setValue('denominacion', proyecto.denominacion || '');
       setValue('descripcionBreve', proyecto.descripcionBreve || '');
-      setValue('trl', proyecto.trl || '');
+      setValue('trl', proyecto.trl ? proyecto.trl.replace(/^TRL\s*/i, 'Nivel ') : '');
       setValue('programa', proyecto.programa || '');
       setValue('convocatoria', proyecto.convocatoria || 0);
       setValue('empresaInstitucion', proyecto.empresaInstitucion || '');

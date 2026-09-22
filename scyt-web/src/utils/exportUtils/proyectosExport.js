@@ -1,4 +1,5 @@
 import { formatoFechaISOaDDMMAAAA } from '../general';
+import { TRL_OPTIONS } from '../../config/trl';
 
 /**
  * Configuración de filtros y columnas para la exportación de proyectos
@@ -28,19 +29,9 @@ export const getProyectosExportConfig = (tiposProyectos = []) => {
       },
       {
         key: 'trl',
-        label: 'Nivel TRL (Madurez Tecnológica)',
+        label: 'Nivel TRL',
         type: 'select',
-        options: [
-          { value: 'TRL 1', label: 'TRL 1 - Principios básicos observados' },
-          { value: 'TRL 2', label: 'TRL 2 - Concepto tecnológico formulado' },
-          { value: 'TRL 3', label: 'TRL 3 - Prueba de concepto experimental' },
-          { value: 'TRL 4', label: 'TRL 4 - Validación en laboratorio' },
-          { value: 'TRL 5', label: 'TRL 5 - Validación en entorno relevante' },
-          { value: 'TRL 6', label: 'TRL 6 - Demostración en entorno relevante' },
-          { value: 'TRL 7', label: 'TRL 7 - Demostración de sistema operacional' },
-          { value: 'TRL 8', label: 'TRL 8 - Sistema completo y calificado' },
-          { value: 'TRL 9', label: 'TRL 9 - Sistema probado operacional' },
-        ],
+        options: TRL_OPTIONS,
       },
     ],
     columns: [
@@ -82,8 +73,12 @@ export const filterProyectos = (proyectos, filters) => {
     }
 
     // Filtro por nivel TRL
-    if (filters.trl && proyecto.trl !== filters.trl) {
-      return false;
+    if (filters.trl) {
+      const normFilter = filters.trl.replace(/^TRL\s*/i, 'Nivel ');
+      const normVal = (proyecto.trl || '').replace(/^TRL\s*/i, 'Nivel ');
+      if (normFilter !== normVal) {
+        return false;
+      }
     }
 
     return true;

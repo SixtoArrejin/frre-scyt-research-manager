@@ -46,11 +46,11 @@ Este documento contiene el detalle técnico completo de las modificaciones reali
 ---
 
 ### Issue #143: Agregar la opción PID Interfacultad como tipo de proyecto
-- **Objetivo:** Incorporar "PID Interfacultad" como clasificación válida en el sistema habilitando la carga e integración de Instituciones Asociadas.
+- **Objetivo:** Incorporar "PID Interfacultad" como clasificación válida en el sistema habilitando la carga e integración de Facultades Regionales Asociadas.
 - **Archivos Modificados:**
   - `scyt-api/src/repository/initDB.js`: Se añadió `'PID Interfacultad'` al array `tiposProyectosData` para la base de datos.
   - `scyt-web/src/hooks/forms/useNuevoProyectoForm.js` y `useModificarProyectoForm.js`: Se incorporó `'PID Interfacultad'` a la constante `tipoProyectosInterinstitucionales`.
-  - Con este ajuste, la carga (`Nuevo.jsx`), modificación (`Modificar.jsx`) y detalle (`DetalleProyecto.jsx`) despliegan y gestionan dinámicamente la tarjeta de "Instituciones Asociadas" para proyectos de tipo PID Interfacultad.
+  - `scyt-web/src/pages/proyectos/Nuevo.jsx`, `Modificar.jsx` y `DetalleProyecto.jsx`: Para los proyectos tipo "PID Interfacultad" (o multifacultad), la tarjeta y columna se adaptan dinámicamente mostrando el título **"Facultades Regionales Asociadas"** (en lugar de instituciones), cargando las facultades regionales de la UTN (Reconquista, Mar del Plata, Buenos Aires, etc.).
 
 ---
 
@@ -74,13 +74,15 @@ Este documento contiene el detalle técnico completo de las modificaciones reali
 ---
 
 ### Issue #146: Registrar y visualizar el nivel de madurez tecnológica (TRL) en los proyectos
-- **Objetivo:** Cargar y mostrar el nivel TRL (1 al 9) en los proyectos.
+- **Objetivo:** Cargar y mostrar el nivel TRL (1 al 9) en los proyectos con una lista seleccionable limpia.
 - **Archivos Modificados:**
+  - `scyt-web/src/config/trl.js`: Centralización de `TRL_OPTIONS` con los 9 niveles (`Nivel 1` a `Nivel 9`) sin texto explicativo a la derecha.
   - `scyt-api/src/repository/proyectosRepository.js` y `proyectosService.js`: Mapeo de `trl` en creación y actualización de proyectos.
-  - `scyt-web/src/hooks/forms/useNuevoProyectoForm.js` y `useModificarProyectoForm.js`: Registro del atributo `trl` en schema y defaultValues.
-  - `scyt-web/src/pages/proyectos/Nuevo.jsx` y `Modificar.jsx`: Se agregó un `GenericSelect` con las opciones normalizadas de TRL 1 a TRL 9.
+  - `scyt-web/src/hooks/forms/useNuevoProyectoForm.js` y `useModificarProyectoForm.js`: Registro del atributo `trl` en schema y normalización de valores.
+  - `scyt-web/src/pages/proyectos/Nuevo.jsx` y `Modificar.jsx`: Uso de `TRL_OPTIONS` en el selector de Nivel TRL.
   - `scyt-web/src/pages/proyectos/Proyectos.jsx`: Se añadió la columna **TRL** en la tabla principal de proyectos.
   - `scyt-web/src/pages/proyectos/DetalleProyecto.jsx`: Se incorporó el `DisplayField` para Nivel TRL.
+  - `scyt-web/src/utils/exportUtils/proyectosExport.js`: Opciones simplificadas y filtro normalizado para la exportación a Excel.
 
 ---
 

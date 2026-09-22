@@ -643,12 +643,20 @@ export default function DetalleProyectoPid() {
               <br />
               <Card width="100%">
                 <CardBody>
-                  <Text fontSize="md" fontWeight="bold">Instituciones Asociadas</Text>
+                  <Text fontSize="md" fontWeight="bold">
+                    {data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                      ? 'Facultades Regionales Asociadas'
+                      : 'Instituciones Asociadas'}
+                  </Text>
                   <br />
 
                   {data?.proyecto?.institucionesAsociadas?.length > 0 ? (
                     <Tabla
-                      columnas={['Institución']}
+                      columnas={[
+                        data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                          ? 'Facultad Regional'
+                          : 'Institución',
+                      ]}
                       datos={data?.proyecto?.institucionesAsociadas?.map((item) => [
                         item.nombreInstitucion,
                       ])}
@@ -659,7 +667,11 @@ export default function DetalleProyectoPid() {
                       src={NoData}
                       alt="No Data"
                       width="30%"
-                      text="Este proyecto no tiene instituciones asociadas."
+                      text={
+                        data?.proyecto?.tipoProyecto === 'PID Interfacultad' || data?.proyecto?.tipoProyecto?.includes('Multifacultad')
+                          ? 'Este proyecto no tiene facultades regionales asociadas.'
+                          : 'Este proyecto no tiene instituciones asociadas.'
+                      }
                     />
                   )}
                 </CardBody>
