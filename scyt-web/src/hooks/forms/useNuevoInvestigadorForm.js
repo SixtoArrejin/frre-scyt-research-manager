@@ -43,6 +43,12 @@ const investigadorSchema = yup.object({
     .max(new Date(), 'La fecha de ingreso no puede ser futura')
     .typeError('Debe ingresar una fecha válida'),
   esBecario: yup.boolean(),
+  tipoBecario: yup.string().when('esBecario', {
+    is: true,
+    then: (schema) => schema.required('Debe seleccionar el tipo de becario'),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+  resolucionBeca: yup.string().nullable().notRequired().trim(),
   legajo: yup
     .string()
     .nullable()
@@ -79,6 +85,8 @@ const defaultValues = {
   fechaIngresoGrupo: '',
   activo: true,
   esBecario: false,
+  tipoBecario: '',
+  resolucionBeca: '',
   legajo: '',
   orcid: '',
   tienePosgrado: false,
@@ -129,6 +137,8 @@ export const useNuevoInvestigadorForm = () => {
 
     // Solo incluir campos de posgrado si NO es becario
     if (!formData.esBecario) {
+      baseData.tipoBecario = null;
+      baseData.resolucionBeca = null;
       baseData.tienePosgrado = formData.tienePosgrado || false;
       if (formData.tienePosgrado) {
         baseData.nivelPosgrado = formData.nivelPosgrado || null;
@@ -138,7 +148,12 @@ export const useNuevoInvestigadorForm = () => {
         baseData.otroPosgrado = null;
       }
     } else {
-      // Si es becario, asegurar que estos campos sean null
+      // Si es becario, incluir tipoBecario y resolucionBeca (si corresponde)
+      baseData.tipoBecario = formData.tipoBecario || null;
+      baseData.resolucionBeca =
+        (formData.tipoBecario === 'BAR' || formData.tipoBecario === 'BINID')
+          ? formData.resolucionBeca?.trim() || null
+          : null;
       baseData.tienePosgrado = false;
       baseData.nivelPosgrado = null;
       baseData.otroPosgrado = null;

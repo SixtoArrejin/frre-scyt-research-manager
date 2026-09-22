@@ -41,6 +41,12 @@ const modificarInvestigadorSchema = yup.object({
     .typeError('Debe ingresar una fecha válida'),
   activo: yup.boolean().required('El estado es requerido'),
   esBecario: yup.boolean(),
+  tipoBecario: yup.string().when('esBecario', {
+    is: true,
+    then: (schema) => schema.required('Debe seleccionar el tipo de becario'),
+    otherwise: (schema) => schema.nullable().notRequired(),
+  }),
+  resolucionBeca: yup.string().nullable().notRequired().trim(),
   legajo: yup
     .string()
     .nullable()
@@ -77,6 +83,8 @@ const defaultValues = {
   fechaIngresoGrupo: '',
   activo: false,
   esBecario: false,
+  tipoBecario: '',
+  resolucionBeca: '',
   legajo: '',
   orcid: '',
   tienePosgrado: false,
@@ -149,6 +157,8 @@ export const useModificarInvestigadorForm = () => {
 
     // Solo incluir campos de posgrado si NO es becario
     if (!formData.esBecario) {
+      baseData.tipoBecario = null;
+      baseData.resolucionBeca = null;
       baseData.tienePosgrado = formData.tienePosgrado || false;
       if (formData.tienePosgrado) {
         baseData.nivelPosgrado = formData.nivelPosgrado || null;
@@ -158,7 +168,12 @@ export const useModificarInvestigadorForm = () => {
         baseData.otroPosgrado = null;
       }
     } else {
-      // Si es becario, asegurar que estos campos sean null
+      // Si es becario, incluir tipoBecario y resolucionBeca (si corresponde)
+      baseData.tipoBecario = formData.tipoBecario || null;
+      baseData.resolucionBeca =
+        (formData.tipoBecario === 'BAR' || formData.tipoBecario === 'BINID')
+          ? formData.resolucionBeca?.trim() || null
+          : null;
       baseData.tienePosgrado = false;
       baseData.nivelPosgrado = null;
       baseData.otroPosgrado = null;
@@ -201,6 +216,8 @@ export const useModificarInvestigadorForm = () => {
     if (investigador?.persona && form.setValue && !hasFilledForm.current) {
       form.setValue('activo', investigador.persona.activo);
       form.setValue('esBecario', investigador.persona.esBecario || false);
+      form.setValue('tipoBecario', investigador.persona.tipoBecario || '');
+      form.setValue('resolucionBeca', investigador.persona.resolucionBeca || '');
       form.setValue('nombre', investigador.persona.nombre);
       form.setValue('apellido', investigador.persona.apellido);
       form.setValue('dni', investigador.persona.dni);

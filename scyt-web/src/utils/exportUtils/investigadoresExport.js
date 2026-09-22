@@ -62,6 +62,8 @@ export const getInvestigadoresExportConfig = (grupos = [], categorias = []) => {
       { key: 'email', label: 'Email' },
       { key: 'telefono', label: 'Teléfono' },
       { key: 'dni', label: 'DNI' },
+      { key: 'tipoBecario', label: 'Tipo de Becario' },
+      { key: 'resolucionBeca', label: 'Resolución de Beca' },
     ],
   };
 };
@@ -127,6 +129,8 @@ export const prepareInvestigadoresForExport = (investigadores, selectedColumns) 
     'email',
     'telefono',
     'dni',
+    'tipoBecario',
+    'resolucionBeca',
   ];
 
   const columnsToExport = selectedColumns && selectedColumns.length > 0 ? selectedColumns : allColumns;
@@ -163,6 +167,12 @@ export const prepareInvestigadoresForExport = (investigadores, selectedColumns) 
     }
     if (columnsToExport.includes('dni')) {
       row['DNI'] = investigador.dni || '';
+    }
+    if (columnsToExport.includes('tipoBecario')) {
+      row['Tipo de Becario'] = investigador.esBecario ? (investigador.tipoBecario || 'Becario') : '-';
+    }
+    if (columnsToExport.includes('resolucionBeca')) {
+      row['Resolución de Beca'] = investigador.resolucionBeca || '-';
     }
 
     return row;

@@ -209,6 +209,26 @@ export default function DetalleInvestigador() {
                     width={{ base: '100%', md: '21.25%' }}
                     mb={4}
                   />
+
+                  {data?.persona?.esBecario && (
+                    <>
+                      <DisplayField
+                        label="Tipo de Becario"
+                        value={data?.persona?.tipoBecario || '-'}
+                        width={{ base: '100%', md: '21.25%' }}
+                        mb={4}
+                      />
+
+                      {data?.persona?.resolucionBeca && (
+                        <DisplayField
+                          label="Número de Resolución"
+                          value={data?.persona?.resolucionBeca}
+                          width={{ base: '100%', md: '21.25%' }}
+                          mb={4}
+                        />
+                      )}
+                    </>
+                  )}
                 </Box>
 
                 {/* Tercera fila: Posgrado (solo si no es becario) */}

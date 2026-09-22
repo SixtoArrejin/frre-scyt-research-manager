@@ -54,6 +54,8 @@ model personas {
   idGrupoInvestigacion     Int
   fechaIngresoGrupo        DateTime?           @db.Date
   esBecario                Boolean?            @default(false)
+  tipoBecario              String?             @db.VarChar(50)
+  resolucionBeca           String?             @db.VarChar(100)
   legajo                   String?             @db.VarChar(50)
   nivelPosgrado            String?             @db.VarChar(50)
   otroPosgrado             String?             @db.VarChar(100)
