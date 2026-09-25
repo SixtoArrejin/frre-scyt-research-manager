@@ -17,6 +17,7 @@ import {
   updateInstitucionesProyectoService,
   createPersonaParticipaProyectoService,
   delPersonaParticipaProyectoService,
+  bajaPersonaParticipaProyectoService,
   createProyectoTieneGrupoService,
   delProyectoTieneGrupoService,
 } from '../services/proyectosService.js';
@@ -189,8 +190,9 @@ export async function updateProyectoController(req, res) {
       console.log('grupos');
     }
     // Manejar actualización de instituciones
-    if (dataP.instituciones) {
-      await updateInstitucionesProyectoService(idProyecto, dataP.instituciones);
+    const instituciones = dataP.instituciones || dataP.proyecto?.instituciones;
+    if (instituciones !== undefined) {
+      await updateInstitucionesProyectoService(idProyecto, instituciones);
     }
     return res
       .status(200)
@@ -274,6 +276,26 @@ export async function delInvestigador(req, res) {
         message: 'Integrante eliminado.',
         success: true,
         vinculacion: delParticipa,
+      });
+
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message, success: false });
+  }
+}
+
+export async function bajaInvestigadorController(req, res) {
+  const idProyecto = parseInt(req.params.idProyecto, 10);
+  const idInvestigador = parseInt(req.params.idInvestigador, 10);
+  const { fechaFin, motivoBaja } = req.body;
+  try {
+    const bajaParticipa = await bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin, motivoBaja);
+    res
+      .status(200)
+      .json({
+        message: 'Investigador dado de baja correctamente.',
+        success: true,
+        vinculacion: bajaParticipa,
       });
 
   } catch (error) {

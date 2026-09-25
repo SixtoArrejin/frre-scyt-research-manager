@@ -17,8 +17,11 @@ import {
   deleteInstitucionesProyectosByProyecto,
   createPersonaParticipaProyecto,
   delPersonaParticipaProyecto,
+  bajaPersonaParticipaProyecto,
   createProyectoTieneGrupo,
   delProyectoTieneGrupo,
+  deletePid,
+  deleteProyectoExterno,
 } from '../repository/proyectosRepository.js';
 import convertToISOString from '../utils/funciones.js';
 
@@ -253,11 +256,11 @@ export async function updateInstitucionesProyectoService(idProyecto, institucion
   }
 }
 
-export async function updatePidService(idProyecto, data) {
+export async function updateProyectoDataService(idProyecto, data) {
   try {
     let projectUpdate = {};
     const proyectoSearch = await getProyectoById(idProyecto);
-    if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
+    if (proyectoSearch && proyectoSearch.idProyecto) {
       if (data) {
         const dataProyecto = {
           ...(data.fechaInicio && { fechaInicio: convertToISOString(data.fechaInicio) }),
@@ -265,80 +268,88 @@ export async function updatePidService(idProyecto, data) {
           denominacion: data.denominacion,
           regional: data.regional,
           convocatoria: data.convocatoria,
-          tipoProyecto: data.tipoProyecto,
+          tipoProyecto: data.tipoProyecto || null,
           programa: data.programa,
+          trl: data.trl || null,
+          descripcionBreve: data.descripcionBreve || null,
         };
-        const dataPID = {
-          codPid: data.codPid,
-          tipoActividad: data.tipoActividad,
-          completo: data.completo,
-          estado: data.estado,
-          disposicion: data.disposicion,
-          prorrogado: data.prorrogado,
-          ...(data.prorrogado && { nuevaDisposicion: data.nuevaDisposicion }),
-          ...(data.prorrogado && { nuevaFechaFin: convertToISOString(data.nuevaFechaFin) }),
-        };
-        let filter = { idProyecto: idProyecto };
+
+        const filter = { idProyecto: idProyecto };
         projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
-        if (projectUpdate) {
-          filter = { idPid: idProyecto };
-          projectUpdate.pid = await update('pids', filter, dataPID);
+
+        const esPidTarget = data.tipo ? data.tipo === 'pid' : Boolean(data.codPid);
+
+        if (esPidTarget) {
+          const dataPID = {
+            idProyecto: idProyecto,
+            codPid: data.codPid,
+            tipoActividad: data.tipoActividad,
+            completo: data.completo,
+            estado: data.estado,
+            disposicion: data.disposicion,
+            prorrogado: data.prorrogado,
+            ...(data.prorrogado && { nuevaDisposicion: data.nuevaDisposicion }),
+            ...(data.prorrogado && { nuevaFechaFin: convertToISOString(data.nuevaFechaFin) }),
+          };
+
+          // Si anteriormente era un proyecto Externo, eliminar registro de proyectosExternos
+          if (proyectoSearch.proyectoExterno) {
+            await deleteProyectoExterno(idProyecto);
+          }
+
+          // Si ya poseía registro PID, actualizarlo; si no, crearlo
+          if (proyectoSearch.pid) {
+            projectUpdate.pid = await update('pids', { idPid: idProyecto }, {
+              codPid: dataPID.codPid,
+              tipoActividad: dataPID.tipoActividad,
+              completo: dataPID.completo,
+              estado: dataPID.estado,
+              disposicion: dataPID.disposicion,
+              prorrogado: dataPID.prorrogado,
+              ...(data.prorrogado && { nuevaDisposicion: data.nuevaDisposicion }),
+              ...(data.prorrogado && { nuevaFechaFin: convertToISOString(data.nuevaFechaFin) }),
+            });
+          } else {
+            projectUpdate.pid = await createProyectoPID(dataPID);
+          }
+        } else {
+          const dataExterno = {
+            idProyecto: idProyecto,
+            empresaInstitucion: data.empresaInstitucion,
+          };
+
+          // Si anteriormente era un PID, eliminar registro de pids
+          if (proyectoSearch.pid) {
+            await deletePid(idProyecto);
+          }
+
+          // Si ya poseía registro Externo, actualizarlo; si no, crearlo
+          if (proyectoSearch.proyectoExterno) {
+            projectUpdate.pid = await update('proyectosExternos', { idProyectoExterno: idProyecto }, {
+              empresaInstitucion: data.empresaInstitucion,
+            });
+          } else {
+            projectUpdate.pid = await createProyectoExterno(dataExterno);
+          }
         }
       }
     } else {
       throw new Error(`El proyecto con id ${idProyecto} no existe`);
     }
 
-    // console.log(proyectoSearch);
-
-    // const updatedPid = await update('pids', filter, pidData);
-    // return updatedPid;
-    return projectUpdate;
-  } catch (error) {
-    console.log('maleta', error.message);
-    throw new Error(error.message);
-  }
-}
-
-export async function updateProyectoExternoService(idProyecto, data) {
-  try {
-    let projectUpdate = {};
-    const proyectoSearch = await getProyectoById(idProyecto);
-    if (proyectoSearch && proyectoSearch.idProyecto) { //Si existe el proyecto
-      if (data) {
-        const dataProyecto = {
-          ...(data.fechaInicio && { fechaInicio: convertToISOString(data.fechaInicio) }),
-          ...(data.fechaFin && { fechaFin: convertToISOString(data.fechaFin) }),
-          denominacion: data.denominacion,
-          regional: data.regional,
-          convocatoria: data.convocatoria,
-          tipoProyecto: data.tipoProyecto,
-          programa: data.programa,
-        };
-        const dataExterno = {
-          empresaInstitucion: data.empresaInstitucion,
-        };
-        let filter = { idProyecto: idProyecto };
-        projectUpdate.proyecto = await update('proyectos', filter, dataProyecto);
-        if (projectUpdate) {
-          filter = { idProyectoExterno: idProyecto };
-          console.log('asd');
-          projectUpdate.pid = await update('proyectosExternos', filter, dataExterno);
-        }
-      }
-    } else {
-      throw new Error(`El proyecto con id ${idProyecto} no existe`);
-    }
-
-    // console.log(proyectoSearch);
-
-    // const updatedPid = await update('pids', filter, pidData);
-    // return updatedPid;
     return projectUpdate;
   } catch (error) {
     console.log(error.message);
     throw new Error(error.message);
   }
+}
+
+export async function updatePidService(idProyecto, data) {
+  return await updateProyectoDataService(idProyecto, data);
+}
+
+export async function updateProyectoExternoService(idProyecto, data) {
+  return await updateProyectoDataService(idProyecto, data);
 }
 
 export async function createVinculacionService(idProyecto, dataVinculacion) {
@@ -382,6 +393,16 @@ export async function delPersonaParticipaProyectoService(idProyecto, idInvestiga
   try {
     const delParticipante = await delPersonaParticipaProyecto(idProyecto, idInvestigador);
     return delParticipante;
+  } catch (error) {
+    console.log(error.message);
+    throw new Error(error.message);
+  }
+}
+
+export async function bajaPersonaParticipaProyectoService(idProyecto, idInvestigador, fechaFin, motivoBaja) {
+  try {
+    const bajaParticipante = await bajaPersonaParticipaProyecto(idProyecto, idInvestigador, fechaFin, motivoBaja);
+    return bajaParticipante;
   } catch (error) {
     console.log(error.message);
     throw new Error(error.message);

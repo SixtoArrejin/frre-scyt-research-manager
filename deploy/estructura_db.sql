@@ -226,7 +226,9 @@ CREATE TABLE public.participa (
     "idPersona" integer NOT NULL,
     "idProyecto" integer NOT NULL,
     rol character varying(100) NOT NULL,
-    "fechaInicio" date
+    "fechaInicio" date,
+    "fechaFin" date,
+    "motivoBaja" character varying(256)
 );
 
 
@@ -245,10 +247,13 @@ CREATE TABLE public.personas (
     "idGrupoInvestigacion" integer NOT NULL,
     "fechaIngresoGrupo" date,
     "esBecario" boolean DEFAULT false,
+    "tipoBecario" character varying(50),
+    "resolucionBeca" character varying(100),
     legajo character varying(50),
     "nivelPosgrado" character varying(50),
     "otroPosgrado" character varying(100),
-    "tienePosgrado" boolean DEFAULT false
+    "tienePosgrado" boolean DEFAULT false,
+    orcid character varying(50)
 );
 
 
@@ -348,7 +353,9 @@ CREATE TABLE public.proyectos (
     "idDirector" integer,
     "idCodirector" integer,
     "tipoProyecto" character varying(256),
-    programa character varying(256)
+    programa character varying(256),
+    trl character varying(50),
+    "descripcionBreve" character varying(1000)
 );
 
 

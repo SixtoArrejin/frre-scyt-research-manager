@@ -50,6 +50,7 @@ const tiposProyectosData = [
   'PID Sin Incentivos',
   'PID Tecnología Educativa Multifacultad con Incentivos (PIDA)',
   'PID Tecnología Educativa Multifacultad sin Incentivos (PIDA)',
+  'PID Interfacultad',
   'Tutorado con Incentivo',
   'Tutorado sin Incentivo',
 ];
